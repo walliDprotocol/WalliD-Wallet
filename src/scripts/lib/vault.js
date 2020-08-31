@@ -22,8 +22,6 @@ export default class Vault {
     }
 
     constructor() {
-        console.log('constructor')
-
         this.#store = new StateStore(this.#initState)
     }
 
@@ -45,7 +43,8 @@ export default class Vault {
         }
 
         return Promise.resolve(WalletController.initFromMnemonic(mnemonic))
-            .then(wallet => passworder.encrypt(password, [wallet.serialize(),[]]))
+            .then(wallet => Promise.resolve([wallet.serialize(),mnemonic,[]]))
+            .then(data => passworder.encrypt(password, data))
             .then(vault => { this.#store.putLocal({ vault }); return vault })
             .then(vault => this.#store.putState({ vault, unlocked: false, empty: false }))
             //DEBUG LINE
@@ -100,9 +99,31 @@ export default class Vault {
         return this._getData(0)
     }
 
+    getSeedPhrase() {
+        return this._getData(1)
+    }
+
     // Returns a new ConnectionsController instance initialized with the vault's data
     getConnections() {
-        return this._getData(1)
+        return this._getData(2)
+    }
+
+    putConnections(conns, password) {
+        return Promise.resolve(this.submitPassword(password))
+            .then(data => Promise.resolve(data[3] = conns))
+            .then(data => Promise.resolve({ data, vault: passworder.encrypt(password, data) }))
+            .then(_data => {
+                let ul = this.isUnlocked()
+
+                this.#store.updateState({
+                    vault: _data.vault,
+                    unlocked: ul,
+                    data: ul? _data.data : null
+                })
+
+                return _data
+            })
+            .then(vault => this.#store.putLocal({ vault }))
     }
 
     isUnlocked() {
@@ -118,6 +139,6 @@ export default class Vault {
             return undefined
         }
 
-        return this.#store.getState().data[index]
+        return index? this.#store.getState().data[index] : this.#store.getState().data
     }
 }

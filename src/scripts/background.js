@@ -19,7 +19,8 @@ const App = new AppController()
 
 window.API = App.getAPI()
 
-console.log('BACKGROUND', App.getAPI())
+extension.runtime.onMessage(App.requestAPI.bind(App))
+
 
 extension.runtime.onSuspend.addListener(function() {
     console.log('SUSPEDN')

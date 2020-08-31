@@ -54,7 +54,7 @@ export default {
     methods: {
 		unlockPlugin() {
 			API.verifyPassword(this.password)
-				.then(r => console.log('RES', res))
+				.then(r => console.log('RES', r))
 				.catch(e => console.log('POPUP VERIFY PASSWORD ERROR', e))
 
 			//API.unlockApp(this.password)
@@ -70,10 +70,10 @@ export default {
 			API.deleteVault(this.password)
 			.then(this.refreshState())
 		},
+
 		refreshState() {
 			const appState = API.getState()
 
-	console.log('asas', appState)
 			this.initialized = appState.initialized
 			this.unlocked = appState.unlocked
 			this.address = appState.address

@@ -6,17 +6,18 @@ import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
 
 
-
 export default class AppController {
     #store
     #vault;
+    #initState = {
+        wallet: {},
+        connections: [],
+        password: ''
+    }
 
     constructor() {
-        console.log('NEW VAIL CONTroLER')
-        this.#store = new StateStore({
-            wallet: {},
-            connections: []        
-        })
+        console.log('NEW APP CONTroLER')
+        this.#store = new StateStore(this.#initState)
 
         this.#vault = new Vault()
 
@@ -37,58 +38,113 @@ export default class AppController {
         return {
             initialized: !this.#vault.isEmpty(),
             unlocked: this.#vault.isUnlocked(),
-            address: this.#vault.isUnlocked()? wallet.getAddress() : null
+            address: this.#vault.isUnlocked()? this.#vault.getSeedPhrase() : wallet.getAddress(),
+            mnemonic: this.#vault.getMnemonic()
         }
     }
 
+    //
+    //  VAULT MANAGEMENT FUNCTIONS
+    //
+
+    /**
+     * Creates a new vault with @password, persisting it to local storage.
+     * Creates a new wallet from the provided @mnemonic.
+     * Overwrites any pre-existing data.
+     * 
+     * @param {string} - mnemonic 
+     * @param {string} - password 
+     * 
+     * @returns {Promise}
+     */
     createNewVault(mnemonic, password) {
         return Promise.resolve(this.#vault.createNewAndPersist(mnemonic, password))
     }
 
-    resetVault(password, force = false) {
-        if(force) {
-            return Promise.resolve(this.#vault.fullReset())
-                .then(() => this.#store.putState({ wallet: {}, connections: [] }))
-        }
-        else {
-            return Promise.resolve(this.#vault.submitPassword(password))
-                .then(this.#vault.fullReset())
-                .then(() => this.#store.putState({ wallet: {}, connections: [] }))
-        }
+    /**
+     * Creates a new vault with @password, persisting it to local storage.
+     * Creates a new wallet from the provided @mnemonic.
+     * Overwrites any pre-existing data.
+     * 
+     * @param {string} - password 
+     * @param {object} - [force] 
+     * 
+     * @returns {Promise}
+     */
+    resetVault(password, { force = false }) {
+        return Promise.resolve(this.#vault.submitPassword(password))
+            .then(this.#vault.fullReset())
+            .then(() => this.#store.putState({ wallet: {}, connections: [] }))
     }
 
+    /**
+     * Tries to unlock the App with provided password.
+     * Loads wallet, connections and password to runtime state.
+     * Throws error if provided password is incorrect.
+     * 
+     * @param {string} - password 
+     * 
+     * @returns {Promise}
+     */
     unlockApp(password) {
         if(this.#vault.isEmpty()) {
             return Promise.reject('Vault is empty!')
         }
 
         return Promise.resolve(this.#vault.unlock(password))
-            .then(() => this.#store.updateState({ wallet: WalletController.deserialize(this.#vault.getWallet()) }))
-            //.then(() => this.#connections = ConnectionsController.deserialize(this.#vault.getConnections()))
+            .then(() => this.#store.updateState({
+                wallet: WalletController.deserialize(this.#vault.getWallet()),
+                connections: ConnectionsController.deserialize(this.#vault.getConnections()),
+                password
+            }))
     }
 
+    /**
+     * Locks the app and clears app's runtime state.
+     * App's state is wiped clean and vault is locked.
+     * 
+     * @returns {Promise}
+     */
     lockApp() {
         return Promise.resolve(this.#vault.lock())
-            .then(() => this.#store.putState({ wallet: {}, connections: [] }))
+            .then(() => this.#store.putState(this.#initState))
     }
 
+    /**
+     * Tries to unlock vault with @password.
+     * Resolves to true in case password is valid and to false otherwise.
+     * 
+     * @param {string} - password
+     * 
+     * @returns {Promise<boolean>} - verified
+     */
     verifyPassword(password) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await this.#vault.submitPassword(password)
-
-                resolve(true)
-            }
-            catch(error) {
-                console.log('Cath erro ', error)
-
-                resolve(false)
-            }
-        })
-        
         return Promise.resolve(this.#vault.submitPassword(password))
-            .then(Promise.resolve(true))
-            .catch(e => { return Promise.resolve(false) })
+            .then(() => Promise.resolve(true))
+            .catch(() => Promise.resolve(false))
+    }
+
+    //
+    //  CONNECTIONS MANAGEMENT FUNCTIONS
+    //
+
+    newConnection() {
+        return Promise.resolve(this.#store.getState().connections)
+            .then(conn => {
+
+            })
+    }
+
+    removeConnection() {
+
+    }
+
+    getUnnaprovedConnections() {
+
+    }
+
+    approveConnection() {
+
     }
 
     //=============================================================================
