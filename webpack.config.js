@@ -10,7 +10,8 @@ module.exports = {
     entry: {
         background: './src/scripts/background.js',
         popup: './src/scripts/popup.js',
-        options: './src/scripts/options.js'
+        content: './src/scripts/content-script.js',
+        injector: './src/scripts/injector.js',
     },
     devtool: 'inline-source-map',
     plugins: [

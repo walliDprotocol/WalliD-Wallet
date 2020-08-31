@@ -99,7 +99,7 @@ export default class Vault {
         return this._getData(0)
     }
 
-    getSeedPhrase() {
+    getMnemonic() {
         return this._getData(1)
     }
 

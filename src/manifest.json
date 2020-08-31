@@ -16,7 +16,13 @@
       "128": "images/get_started128.png"
     }
   },
-  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["*://www.google.com/*"],
+      "js": ["scripts/content.bundle.js"]
+    }
+  ],
+  "web_accessible_resources" : ["scripts/injector.bundle.js"],
   "icons": {
     "16": "images/get_started16.png",
     "32": "images/get_started32.png",

@@ -2,8 +2,10 @@
 
 import StateStore from './lib/store';
 import Vault from './lib/vault'
+import seed from './lib/seed-phrase'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
+import { mnemonicToSeedSync } from 'bip39';
 
 
 export default class AppController {
@@ -44,6 +46,38 @@ export default class AppController {
     }
 
     //
+    //  ONBOARDING FUNCTIONS
+    //
+
+    /**
+     * Returns a randomly generated, 12 word mnemonic phrase according to BIP39.
+     * 
+     * @returns {string} - seedphrase
+     */
+    generateSeedPhrase() {
+        return seed.generate()
+    }
+
+    /**
+     * Checks if provided string matches the currently stored mnemonic phrase.
+     * Validates string against BIP39.
+     * If vault not unlocked, promise is rejected.
+     * 
+     * @param {string} - test
+     * 
+     * @returns {Promise<boolean>} - valid
+     */
+    validateSeedPhrase(test) {
+        if(!this.isUnlocked()){
+            Promise.reject('Vault is locked')
+        }
+
+        let mnemonic = this.#store.getState().mnemonic
+
+        return Promise.resolve(seed.validate(test) && mnemonic == test)
+    }
+
+    //
     //  VAULT MANAGEMENT FUNCTIONS
     //
 
@@ -62,16 +96,15 @@ export default class AppController {
     }
 
     /**
-     * Creates a new vault with @password, persisting it to local storage.
+     * Tries to remove vault data from  a new vault with @password, persisting it to local storage.
      * Creates a new wallet from the provided @mnemonic.
-     * Overwrites any pre-existing data.
+     * Throws error if provided password is incorrect.
      * 
      * @param {string} - password 
-     * @param {object} - [force] 
      * 
      * @returns {Promise}
      */
-    resetVault(password, { force = false }) {
+    resetVault(password) {
         return Promise.resolve(this.#vault.submitPassword(password))
             .then(this.#vault.fullReset())
             .then(() => this.#store.putState({ wallet: {}, connections: [] }))
@@ -139,13 +172,10 @@ export default class AppController {
 
     }
 
-    getUnnaprovedConnections() {
-
-    }
-
     approveConnection() {
 
     }
+
 
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM

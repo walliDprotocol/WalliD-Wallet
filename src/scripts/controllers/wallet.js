@@ -57,18 +57,21 @@ export default class WalletController {
     signEthereumTransaction(tx) {
         const privateKey = this.#wallet.getPrivateKey()
         tx.sign(privateKey)
+        
         return Promise.resolve(tx)
     }
 
     encryptData(data) {
         const publicKey = this.#wallet.getPublicKey()
         const enc = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
+        
         return Promise.resolve(enc)
     }
 
     decryptData(data) {
         const privateKey = this.#wallet.getPrivateKey()
         const dec = ethSigUtil.decrypt(data, privateKey)
+        
         return Promise.resolve(dec)
     }
 }

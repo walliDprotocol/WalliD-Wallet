@@ -1,24 +1,19 @@
 class Connection {
-    url //url of the web app
-    status //unapproved, connected, blacklisted
-    name //user friendly name of the connected app
-    description //description of the connected app
-
-    constructor(_url, _status, _name, _description) {
-        this.status = _status || 'unnaproved'
+    constructor(_url, _name, _status, _description) {
+        this.status = _status
         this.url = _url
         this.name = _name
         this.description = _description
     }
 
     serialize() {
-        return JSON.stringify([this.url, this.status, this.status, this.description])
+        return JSON.stringify([this.url, this.name, this.status, this.description])
     }
 
     static deserialize(data) {
-        let init = JSON.parse(data)
+        let params = JSON.parse(data)
 
-        return new Connection(...init)
+        return new Connection(...params)
     }
 }
 
@@ -31,11 +26,11 @@ export default class ConnectionsController {
     }
 
     serialize() {
-        if(!this.#connections) {
-            return undefined
+        if(this.#connections.length == 0) {
+            return JSON.stringify([])
         }
 
-        return JSON.stringify(this.#connections)
+        return JSON.stringify(this.#connections.map(c => c.serialize()))
     }
 
     static deserialize(_conns) {
@@ -45,7 +40,7 @@ export default class ConnectionsController {
     }
 
     addConnection() {
-
+        this.#connections.push(new Connection())
     }
 
     isConnected(url) {

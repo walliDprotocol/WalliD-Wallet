@@ -19,8 +19,14 @@ const App = new AppController()
 
 window.API = App.getAPI()
 
-extension.runtime.onMessage(App.requestAPI.bind(App))
+//extension.runtime.onMessage.addListener(App.requestAPI.bind(App))
 
+extension.tabs.onCreated.addListener(function(tab) {
+    console.log('ON CREATED')
+    chrome.tabs.executeScript(tab.ib, {
+		file: 'scripts/content.bundle.js'
+	});
+})
 
 extension.runtime.onSuspend.addListener(function() {
     console.log('SUSPEDN')
