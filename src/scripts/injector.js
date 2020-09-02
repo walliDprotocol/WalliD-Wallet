@@ -1,5 +1,5 @@
-import client from './lib/client'
+import { ExternalConnectorFrontend } from './lib/connector'
 
-console.log('INJECTED')
+window.wallid = ExternalConnectorFrontend()
 
-window.wallid = client
+console.warn('WalliD: external app connector injected into webpage context',  )

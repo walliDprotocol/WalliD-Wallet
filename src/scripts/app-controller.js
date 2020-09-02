@@ -5,21 +5,31 @@ import Vault from './lib/vault'
 import seed from './lib/seed-phrase'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
+import { ExternalAPIController } from './controllers/api'
 import { mnemonicToSeedSync } from 'bip39';
 
+const InitState = {
+    wallet: {},
+    connections: [],
+    api: {},
+    password: '',
+}
+
+const RequestAPIMethods = [
+    'wallid_sign_token',
+    'wallid_token',
+    'wallet_encrypt',
+    'wallet_decrypt',
+    'getAddress'
+]
 
 export default class AppController {
     #store
     #vault;
-    #initState = {
-        wallet: {},
-        connections: [],
-        password: ''
-    }
 
     constructor() {
         console.log('NEW APP CONTroLER')
-        this.#store = new StateStore(this.#initState)
+        this.#store = new StateStore(InitState)
 
         this.#vault = new Vault()
 
@@ -28,6 +38,7 @@ export default class AppController {
 
     initController() {
         this.#vault.loadFromLocalStorage()
+        this.#store.updateState({ api: new ExternalAPIController() })
     }
 
     //=============================================================================
@@ -40,7 +51,7 @@ export default class AppController {
         return {
             initialized: !this.#vault.isEmpty(),
             unlocked: this.#vault.isUnlocked(),
-            address: this.#vault.isUnlocked()? this.#vault.getSeedPhrase() : wallet.getAddress(),
+            address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
             mnemonic: this.#vault.getMnemonic()
         }
     }
@@ -76,6 +87,10 @@ export default class AppController {
 
         return Promise.resolve(seed.validate(test) && mnemonic == test)
     }
+
+    //
+    //  WALLET MANAGEMENT FUNCTIONS
+    //
 
     //
     //  VAULT MANAGEMENT FUNCTIONS
@@ -130,6 +145,7 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(this.#vault.getConnections()),
                 password
             }))
+            .then(() => this.#store.updateState({ api: new ExternalAPIController(WalletController.deserialize(this.#vault.getWallet()), ConnectionsController.deserialize(this.#vault.getConnections())) }))
     }
 
     /**
@@ -140,7 +156,7 @@ export default class AppController {
      */
     lockApp() {
         return Promise.resolve(this.#vault.lock())
-            .then(() => this.#store.putState(this.#initState))
+            .then(() => this.#store.putState(InitState))
     }
 
     /**
@@ -176,6 +192,17 @@ export default class AppController {
 
     }
 
+    //=============================================================================
+    // EXTERNAL REQUEST API
+    //=============================================================================
+
+    requestAPI(method, params) {
+        if(!RequestAPIMethods.includes(method)) {
+            return Promise.reject('Invalid method call')
+        }
+ 
+        return Promise.resolve(this.#store.getState().api.getAddress())
+    }
 
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM

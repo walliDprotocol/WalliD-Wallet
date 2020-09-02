@@ -49,16 +49,22 @@ export default {
 	},
 	mounted() {
 		console.log('MOUNTED', this.initialized)
-		//API.createNewVault(bip39.generateMnemonic(), 'jamado')
+		//
 	},
     methods: {
 		unlockPlugin() {
-			API.verifyPassword(this.password)
-				.then(r => console.log('RES', r))
-				.catch(e => console.log('POPUP VERIFY PASSWORD ERROR', e))
+			//API.verifyPassword(this.password)
+			//	.then(r => console.log('RES', r))
+			//	.catch(e => console.log('POPUP VERIFY PASSWORD ERROR', e))
 
-			//API.unlockApp(this.password)
-			//.then(() => this.refreshState())
+			if(!this.initialized)
+				API.createNewVault(bip39.generateMnemonic(), 'jamado')
+				.then(API.unlockApp(this.password))
+				.then(() => this.refreshState())
+			else
+				API.unlockApp(this.password)
+				.then(() => this.refreshState())
+
 		},
 
 		lockPlugin() {

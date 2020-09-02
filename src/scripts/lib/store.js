@@ -52,7 +52,7 @@ export default class StateStore extends MemoryStore {
     getLocal(key) {
         return new Promise((resolve, _) => {
             this.#local.get(null, data => {
-                console.log('getLocals', data)
+                console.log('getLocal', data)
                 resolve(key? data[key] : data)
             })
         })

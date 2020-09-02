@@ -1,4 +1,5 @@
 import Wallet from 'ethereumjs-wallet'
+import ethUtil from 'ethereumjs-util'
 import ethSigUtil from 'eth-sig-util'
 import { hdkey } from 'ethereumjs-wallet'
 import * as bip39 from 'bip39'
@@ -61,6 +62,15 @@ export default class WalletController {
         return Promise.resolve(tx)
     }
 
+    signMessage (address, data, opts = {}) {
+        const message = ethUtil.stripHexPrefix(data)
+        const privateKey = this.#wallet.getPrivateKey()
+        const msgSig = ethUtil.ecsign(Buffer.from(message, 'hex'), privateKey)
+        const rawMsgSig = ethSigUtil.concatSig(msgSig.v, msgSig.r, msgSig.s)
+        
+        return Promise.resolve(rawMsgSig)
+    }
+
     encryptData(data) {
         const publicKey = this.#wallet.getPublicKey()
         const enc = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
@@ -68,10 +78,10 @@ export default class WalletController {
         return Promise.resolve(enc)
     }
 
-    decryptData(data) {
-        const privateKey = this.#wallet.getPrivateKey()
-        const dec = ethSigUtil.decrypt(data, privateKey)
+    decryptData(encryptedData) {
+        const privateKey = ethUtil.stripHexPrefix(this.#wallet.getPrivateKey())
+        const data = ethSigUtil.decrypt(encryptedData, privateKey)
         
-        return Promise.resolve(dec)
+        return Promise.resolve(data)
     }
 }

@@ -34,13 +34,21 @@ export default class ConnectionsController {
     }
 
     static deserialize(_conns) {
+        if(Array.isArray(_conns) && _conns.length == 0) {
+            return new ConnectionsController()
+        }
+
         let conns = JSON.parse(_conns)
 
         return new ConnectionsController(conns)
     }
 
-    addConnection() {
+    addConnection(url, name) {
         this.#connections.push(new Connection())
+    }
+
+    removeConnection() {
+
     }
 
     isConnected(url) {
