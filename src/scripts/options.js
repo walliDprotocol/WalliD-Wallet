@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Options from '../components/Options'
+import Options from '../views/Options'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
