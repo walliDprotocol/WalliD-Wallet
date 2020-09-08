@@ -43,7 +43,7 @@ export default class Vault {
         }
 
         return Promise.resolve(WalletController.initFromMnemonic(mnemonic))
-            .then(wallet => Promise.resolve([wallet.serialize(),mnemonic,[]]))
+            .then(wallet => Promise.resolve([wallet.serialize(), mnemonic, []]))
             .then(data => passworder.encrypt(password, data))
             .then(vault => { this.#store.putLocal({ vault }); return vault })
             .then(vault => this.#store.putState({ vault, unlocked: false, empty: false }))
@@ -99,7 +99,7 @@ export default class Vault {
         return this._getData(0)
     }
 
-    getSeedPhrase() {
+    getMnemonic() {
         return this._getData(1)
     }
 
@@ -139,6 +139,6 @@ export default class Vault {
             return undefined
         }
 
-        return index? this.#store.getState().data[index] : this.#store.getState().data
+        return index != undefined? this.#store.getState().data[index] : this.#store.getState().data
     }
 }

@@ -2,22 +2,34 @@
 
 import StateStore from './lib/store';
 import Vault from './lib/vault'
+import seed from './lib/seed-phrase'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
+import { ExternalAPIController } from './controllers/api'
+import { mnemonicToSeedSync } from 'bip39';
 
+const InitState = {
+    wallet: {},
+    connections: [],
+    api: {},
+    password: '',
+}
+
+const RequestAPIMethods = [
+    'wallid_sign_token',
+    'wallid_token',
+    'wallet_encrypt',
+    'wallet_decrypt',
+    'getAddress'
+]
 
 export default class AppController {
     #store
     #vault;
-    #initState = {
-        wallet: {},
-        connections: [],
-        password: ''
-    }
 
     constructor() {
         console.log('NEW APP CONTroLER')
-        this.#store = new StateStore(this.#initState)
+        this.#store = new StateStore(InitState)
 
         this.#vault = new Vault()
 
@@ -26,6 +38,7 @@ export default class AppController {
 
     initController() {
         this.#vault.loadFromLocalStorage()
+        this.#store.updateState({ api: new ExternalAPIController() })
     }
 
     //=============================================================================
@@ -38,10 +51,46 @@ export default class AppController {
         return {
             initialized: !this.#vault.isEmpty(),
             unlocked: this.#vault.isUnlocked(),
-            address: this.#vault.isUnlocked()? this.#vault.getSeedPhrase() : wallet.getAddress(),
+            address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
             mnemonic: this.#vault.getMnemonic()
         }
     }
+
+    //
+    //  ONBOARDING FUNCTIONS
+    //
+
+    /**
+     * Returns a randomly generated, 12 word mnemonic phrase according to BIP39.
+     * 
+     * @returns {string} - seedphrase
+     */
+    generateSeedPhrase() {
+        return seed.generate()
+    }
+
+    /**
+     * Checks if provided string matches the currently stored mnemonic phrase.
+     * Validates string against BIP39.
+     * If vault not unlocked, promise is rejected.
+     * 
+     * @param {string} - test
+     * 
+     * @returns {Promise<boolean>} - valid
+     */
+    validateSeedPhrase(test) {
+        if(!this.isUnlocked()){
+            Promise.reject('Vault is locked')
+        }
+
+        let mnemonic = this.#store.getState().mnemonic
+
+        return Promise.resolve(seed.validate(test) && mnemonic == test)
+    }
+
+    //
+    //  WALLET MANAGEMENT FUNCTIONS
+    //
 
     //
     //  VAULT MANAGEMENT FUNCTIONS
@@ -62,16 +111,15 @@ export default class AppController {
     }
 
     /**
-     * Creates a new vault with @password, persisting it to local storage.
+     * Tries to remove vault data from  a new vault with @password, persisting it to local storage.
      * Creates a new wallet from the provided @mnemonic.
-     * Overwrites any pre-existing data.
+     * Throws error if provided password is incorrect.
      * 
      * @param {string} - password 
-     * @param {object} - [force] 
      * 
      * @returns {Promise}
      */
-    resetVault(password, { force = false }) {
+    resetVault(password) {
         return Promise.resolve(this.#vault.submitPassword(password))
             .then(this.#vault.fullReset())
             .then(() => this.#store.putState({ wallet: {}, connections: [] }))
@@ -97,6 +145,7 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(this.#vault.getConnections()),
                 password
             }))
+            .then(() => this.#store.updateState({ api: new ExternalAPIController(WalletController.deserialize(this.#vault.getWallet()), ConnectionsController.deserialize(this.#vault.getConnections())) }))
     }
 
     /**
@@ -107,7 +156,7 @@ export default class AppController {
      */
     lockApp() {
         return Promise.resolve(this.#vault.lock())
-            .then(() => this.#store.putState(this.#initState))
+            .then(() => this.#store.putState(InitState))
     }
 
     /**
@@ -139,12 +188,20 @@ export default class AppController {
 
     }
 
-    getUnnaprovedConnections() {
+    approveConnection() {
 
     }
 
-    approveConnection() {
+    //=============================================================================
+    // EXTERNAL REQUEST API
+    //=============================================================================
 
+    requestAPI(method, params) {
+        if(!RequestAPIMethods.includes(method)) {
+            return Promise.reject('Invalid method call')
+        }
+ 
+        return Promise.resolve(this.#store.getState().api.getAddress())
     }
 
     //=============================================================================
