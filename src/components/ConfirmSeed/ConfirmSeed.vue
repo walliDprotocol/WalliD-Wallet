@@ -79,8 +79,8 @@ export default {
     this.sortedSeedWords = (this.seedPhrase.split(" ") || []).sort();
   },
   methods: {
-    stepBack(){
-this.$emit('stepBack')
+    stepBack() {
+      this.$emit("stepBack");
     },
     isValid() {
       const selectedSeedWords = this.selectedWordsIndex.map(

@@ -29,7 +29,7 @@
             <v-col cols="12" class="px-10">
               <p class="text">
                 {{ $t("create.import[0]") }}
-                <router-link class="links" to="import">
+                <router-link class="links mt-2" to="import">
                   {{ $t("create.import[1]") }}
                 </router-link>
               </p>

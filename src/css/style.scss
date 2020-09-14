@@ -10,6 +10,19 @@
   --turquoise-green: #00e284;
 }
 
+.mb-2px {
+  margin-bottom: 2px !important;
+}
+.mt-2px {
+  margin-top: 2px !important;
+}
+.mr-2px {
+  margin-right: 2px !important;
+}
+.ml-2px {
+  margin-left: 2px !important;
+}
+
 #addr {
   font-size: 0.5em;
 }
@@ -27,7 +40,22 @@
   width: 100%;
   height: 33%;
 }
+.error--text {
+  font-size: 13px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #e95e5e;
+}
+
 #app.plugin {
+  .v-overlay__scrim {
+    margin-top: 74px !important;
+    background-color: var(--black) !important;
+  }
+
   .password-input {
     .v-input .v-messages__wrapper {
       font-size: 13px;
@@ -140,6 +168,41 @@
       }
     }
   }
+
+  .cancel-btn {
+    border-radius: 3px;
+    width: 100%;
+    padding: 11px;
+    height: unset;
+    background-color: var(--very-light-grey);
+    .v-ripple__container {
+      color: #d8d8d8;
+    }
+    .v-btn__content {
+      font-family: Montserrat;
+      font-size: 16px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      text-transform: none;
+      color: var(--charcoal-grey);
+    }
+    &::before,
+    &:hover {
+      background-color: #d8d8d8;
+    }
+
+    &.v-btn--disabled {
+      border: solid 1px var(--very-light-grey);
+      background-color: var(--white);
+      .v-btn__content {
+        color: #d8d8d8;
+      }
+    }
+  }
   p.text {
     font-size: 14px;
     font-weight: 500;
@@ -160,11 +223,17 @@
     text-align: center;
     text-decoration: none;
     color: var(--teal-blue);
+    display: block;
+    text-align: inherit;
     &.v-btn {
       background-color: none;
       text-transform: none;
       text-align: center;
       width: 100%;
+    }
+    &.larger {
+      font-size: 16px;
+      line-height: normal;
     }
   }
 
@@ -180,14 +249,25 @@
   }
   .T2 {
     font-family: Montserrat;
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: var(--charcoal-grey);
+  }
+  .FIELD-TEXT {
+    font-family: Montserrat;
+    font-size: 13px;
     font-weight: 500;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #f89722;
+    color: var(--charcoal-grey);
   }
+
   .sub-title-fields {
     font-family: Montserrat;
     font-size: 16px;
@@ -216,7 +296,10 @@
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: var(--teal-blue);
+    color: var(--charcoal-grey);
+    &:hover {
+      color: var(--teal-blue);
+    }
   }
   .FIELD-NOTES {
     font-family: Montserrat;

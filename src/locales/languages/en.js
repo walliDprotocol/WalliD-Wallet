@@ -1,8 +1,71 @@
 export default {
+  state: {
+    connected: ["Connected", "Your wallet is connected to the website:"],
+    locked: [
+      "Not connected",
+      "Your wallet is not connected to this website. To do so find out if there is any wallet connection button on their page and click it.",
+    ],
+  },
+  request: {
+    connection: {
+      title: "Connection Request",
+      description: " is asking for your permission to connect to your wallet:",
+      alert: "Only connect with sites you fully trust.",
+    },
+    bScenes: "Know what's happening behind the scenes",
+  },
+  about: {
+    title: "About",
+    design: "Crafted by WalliD",
+    version: "version 1.0",
+    links: ["Links", "FAQ’s", "Terms and conditions", "Contact us"],
+  },
+  settings: {
+    title: "Settings",
+    general: {
+      title: "General",
+      language: "Current Language",
+    },
+    privacy: {
+      title: "Privacy and Security",
+      seed: [
+        "Your Seed Phrase",
+        "Reveal Seed Phrase",
+        "Learn more about your Seed Phrase",
+      ],
+      key: [
+        "Your Private key",
+        "Show Private Key",
+        "Learn more about your Private Key",
+      ],
+    },
+  },
+  sites: {
+    title: "Connected sites",
+    subtitle:
+      "Check out the history of the websites  connected to your wallet:",
+    tooltip: "Disconnect",
+    disconnect: ["Disconnect ", " site"],
+    confirm:
+      "Are you sure you want to disconnect? You may lose site funcionality.",
+    button: ["Cancel", "Disconnect"],
+  },
+  menu: {
+    title: "My WalliD",
+    details: "Wallet details ",
+    sites: "Connected sites",
+    settings: "Settings",
+    about: "About",
+    lock: "Lock",
+  },
+  home: {
+    title: "My WalliD",
+    address: "Your wallet address",
+  },
   restore: {
     title: "Restore your wallet",
     subtitle: "Enter your twelve word seed phrase to import your wallet.",
-    seedPhrase: ["Seed phrase", "Show seed phrase", 'Hide seed phrase'],
+    seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
     password: [
       "New password",
       "Confirm password",

@@ -1,27 +1,69 @@
 <template>
-  <MainContainer @refreshState="refreshState"></MainContainer>
+  <v-app class="plugin">
+    <MenuPlugin
+      v-if="!hideAppHeader"
+      @refreshState="refreshState"
+      :address="address"
+      @close="closeDrawer"
+      :showMenu="showMenu"
+    />
+
+    <v-app-bar
+      @click.stop="showMenu = !showMenu"
+      v-if="!hideAppHeader"
+      height="74"
+      flat
+      app
+      class="plugin-header"
+    >
+      <v-img
+        height="50"
+        max-width="50"
+        contain
+        src="../images/logo-header-wallid.png"
+      />
+      <v-spacer />
+      <div v-show="address" id="metamask-logo"></div>
+      <!-- -->
+    </v-app-bar>
+
+    <!-- Sizes your content based upon application components -->
+    <v-main style="padding-top:74px">
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid class="router-views">
+        <!-- If using vue-router -->
+        <router-view @refreshState="refreshState"></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 import * as bip39 from "bip39";
 import jazzicon from "jazzicon";
-import MainContainer from "./views/MainContainer";
+import MenuPlugin from "../components/MenuPlugin";
 import { mapGetters } from "vuex";
+
 export default {
   components: {
-    MainContainer,
+    MenuPlugin,
   },
-  props: ["hasPermissionsRequests"],
   computed: {
-    ...mapGetters(["address", "unlocked"]),
+    ...mapGetters(["address", "hideAppHeader"]),
   },
   watch: {
     unlocked(value) {
       if (value) {
         this.$router.push("/");
         this.setIcon();
-        // } else {
-        // this.$router.push("/login");
+      } else {
+        this.$router.push("/login");
+      }
+    },
+    hideAppHeader(value) {
+      console.log("hideAppHeader", this.address);
+      if (!value) {
+        this.$nextTick(() => this.setIcon());
       }
     },
   },
@@ -34,6 +76,7 @@ export default {
       ],
       showMenu: false,
       initialized: this.$API.getState().initialized,
+      unlocked: this.$API.getState().unlocked,
     };
   },
   mounted() {
@@ -58,8 +101,14 @@ export default {
   },
 
   methods: {
+    closeDrawer(e) {
+      console.log(e);
+      if (!e) {
+        this.showMenu = !this.showMenu;
+      }
+    },
     setIcon() {
-      if (!this.iconSet && this.address) {
+      if (this.address) {
         let body = document.getElementById("metamask-logo");
         let icon = document.getElementById("metamask-logo-icon");
         console.log("metamask-logo", body);
@@ -71,9 +120,12 @@ export default {
           el.setAttribute("style", styles);
           el.id = "metamask-logo-icon";
           body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
         }
       }
+    },
+
+    lockPlugin() {
+      API.lockApp().then(this.refreshState());
     },
 
     resetPlugin() {
@@ -85,7 +137,6 @@ export default {
 
       this.initialized = appState.initialized;
       this.unlocked = appState.unlocked;
-      this.address = appState.address;
     },
   },
 };
