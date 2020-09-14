@@ -1,13 +1,19 @@
+const Status = {
+    PEN: 'summer',
+    WINTER: 'winter',
+    SPRING: 'spring',
+}
+
 class Connection {
-    constructor(_url, _name, _status, _description) {
-        this.status = _status
+    constructor(_url, _icon, _name, _description) {
         this.url = _url
+        this.icon = _icon
         this.name = _name
         this.description = _description
     }
 
     serialize() {
-        return JSON.stringify([this.url, this.name, this.status, this.description])
+        return JSON.stringify([this.url, this.icon, this.name, this.description])
     }
 
     static deserialize(data) {
@@ -20,9 +26,11 @@ class Connection {
 
 export default class ConnectionsController {
     #connections; //array of connections
+    #pending;
 
     constructor(connections = []) {
         this.#connections = connections
+        this.#pending = []
     }
 
     serialize() {
@@ -30,11 +38,11 @@ export default class ConnectionsController {
             return JSON.stringify([])
         }
 
-        return JSON.stringify(this.#connections.map(c => c.serialize()))
+        return JSON.stringify(this.#connections)
     }
 
     static deserialize(_conns) {
-        if(Array.isArray(_conns) && _conns.length == 0) {
+        if(!_conns || !Array.isArray(_conns) || _conns.length == 0) {
             return new ConnectionsController()
         }
 
@@ -43,21 +51,68 @@ export default class ConnectionsController {
         return new ConnectionsController(conns)
     }
 
-    addConnection(url, name) {
-        this.#connections.push(new Connection())
+    newConnection(url, icon, name, description) {
+        if(this.#pending.findIndex(c => c.url == url) != -1) {
+            return Promise.reject(`Connection for url ${url} is already pending approval`)
+        }
+
+        if(this.#connections.findIndex(c => c.url == url) != -1) {
+            return Promise.reject(`Connection for url ${url} already exists`)
+        }
+
+        return Promise.resolve(this.#pending.push({ url, icon, name, description }))
     }
 
-    removeConnection() {
+    approvePending(url) {
+        let index = this.#pending.findIndex(c => c.url == url)
 
+        if(index == -1) {
+            return Promise.reject(`No pending connection for ${url}`)
+        }
+
+        this.#connections.push(this.#pending[index])
+        this.#pending.splice(index, 1)
+
+        return Promise.resolve()
+    }
+
+    rejectPending(url) {
+        let index = this.#pending.findIndex(c => c.url == url)
+
+        if(index == -1) {
+            return Promise.reject(`No pending connection for ${url}`)
+        }
+
+        this.#pending.splice(index, 1)
+
+        return Promise.resolve()
+    }
+    
+    getPending() {
+        return this.#pending
+    }
+
+    getConnected() {
+        return this.#connections
+    }
+
+    removeConnected(url) {
+        let index = this.#connections.findIndex(c => c.url == url)
+
+        if(index == -1) {
+            return Promise.reject(`Connection for ${url} does not exist`)
+        }
+
+        this.#connections.splice(index, 1)
+
+        return Promise.resolve()
     }
 
     isConnected(url) {
-        for(let it = 0; it < this.#connections.length; it++) {
-            if(this.#connections[it].url == url && this.#connections[it].status == 'connected') {
-                return true
-            }
+        if(this.#connections.findIndex(c => c.url == url) != -1) {
+            return Promise.resolve(true)
         }
 
-        return false
+        return Promise.resolve(false)
     }
 }

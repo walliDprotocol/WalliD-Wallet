@@ -59,7 +59,7 @@ export default class StateStore extends MemoryStore {
     }
 
     clearLocal() {
-        return Promise.resolve(this.#local.set({}))
+        return Promise.resolve(this.#local.clear())
     }
 
     removeLocal(key) {

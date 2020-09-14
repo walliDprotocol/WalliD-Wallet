@@ -28,6 +28,12 @@
 		<div>
 			<v-btn block color="secondary" dark @click="resetPlugin">Reset</v-btn>
 		</div>
+		<div>
+			<v-btn block color="secondary" dark @click="addConnection">New Connection</v-btn>
+		</div>
+		<div>
+			<v-btn block color="secondary" dark @click="approveConnection">Approve Connection</v-btn>
+		</div>
 	</div>
   </div>
 </template>
@@ -39,12 +45,13 @@ import * as bip39 from 'bip39'
 console.log('API', API)
 export default {
 	data() {
-		console.log('DATA', API.getState())
+		const state = API.getState()
+		console.log('DATA', state)
 		return {
 			password: "",
-			address: API.getState().address,
-			initialized: API.getState().initialized,
-			unlocked: API.getState().unlocked
+			address: state.address,
+			initialized: state.initialized,
+			unlocked: state.unlocked
 		}
 	},
 	mounted() {
@@ -59,7 +66,7 @@ export default {
 
 			if(!this.initialized)
 				API.createNewVault(bip39.generateMnemonic(), 'jamado')
-				.then(API.unlockApp(this.password))
+				.then(() => API.unlockApp(this.password))
 				.then(() => this.refreshState())
 			else
 				API.unlockApp(this.password)
@@ -69,11 +76,21 @@ export default {
 
 		lockPlugin() {
 			API.lockApp()
-			.then(this.refreshState())
+			.then(() => this.refreshState())
 		},
 
 		resetPlugin() {
 			API.deleteVault(this.password)
+			.then(this.refreshState())
+		},
+
+		addConnection() {
+			API.newConnection('developer.chrome.com', 'https://icons.io/dev_chrome', 'DevChrome')
+			.then(this.refreshState())
+		},
+
+		approveConnection() {
+			API.approvePendingConnection('developer.chrome.com')
 			.then(this.refreshState())
 		},
 
@@ -83,6 +100,8 @@ export default {
 			this.initialized = appState.initialized
 			this.unlocked = appState.unlocked
 			this.address = appState.address
+
+			console.log('APP STATE', appState)
 		}
     }
 }

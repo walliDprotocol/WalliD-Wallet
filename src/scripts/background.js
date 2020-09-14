@@ -1,6 +1,12 @@
 import extension from 'extensionizer'
 import AppController from './app-controller'
 
+// Initialize main application controller
+const App = new AppController()
+
+// Inject internal API into UI subsystem
+window.API = App.getAPI()
+
 extension.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
         
@@ -16,17 +22,16 @@ chrome.declarativeContent.onPageChanged.addRules([{
     actions: [new chrome.declarativeContent.ShowPageAction()]
 }]);
 
-const App = new AppController()
-
-window.API = App.getAPI()
-
 // Connects the external web connector to the App's RequestAPI
 extension.runtime.onMessage.addListener(function(request, res, f) {
     console.log('ON MESSAGE RECEIVED BACK', request)
 
     App.requestAPI(request.method, request.params)
-        .then(result => f(result))
+        .then(result => f({ data: result, error: null }))
+        .catch(error => f({ data: null, error }))
 })
 
 // Locks App when user closes the browser window
-chrome.windows.onRemoved.addListener(() => App.lockApp())
+extension.windows.onRemoved.addListener(() => App.lockApp())
+// Starts 
+//extension.windows.onCreated.addListener(initApp)

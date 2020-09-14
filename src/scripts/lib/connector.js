@@ -1,3 +1,5 @@
+'use strict'
+
 import extension from 'extensionizer'
 
 //Backend runs in content script
@@ -17,7 +19,7 @@ export function ExternalConnectorFrontend() {
     function newResponseListener(resolve, reject) {
         return function(event) {
             if(event.detail.error) reject(event.detail.error)
-            else resolve(event.detail)
+            else resolve(event.detail.data)
         }
     }
     function updateResponseListener(resolve, reject) {
