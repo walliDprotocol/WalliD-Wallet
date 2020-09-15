@@ -110,8 +110,8 @@ export default class Vault {
 
     putConnections(conns, password) {
         return Promise.resolve(this.submitPassword(password))
-            .then(data => Promise.resolve(data[3] = conns))
-            .then(data => Promise.resolve({ data, vault: passworder.encrypt(password, data) }))
+            .then(data => Promise.resolve(data[2] = conns).then(() => Promise.resolve(data)))
+            .then(data => passworder.encrypt(password, data).then(vault => Promise.resolve({ data, vault })))
             .then(_data => {
                 let ul = this.isUnlocked()
 
@@ -121,7 +121,7 @@ export default class Vault {
                     data: ul? _data.data : null
                 })
 
-                return _data
+                return _data.vault
             })
             .then(vault => this.#store.putLocal({ vault }))
     }

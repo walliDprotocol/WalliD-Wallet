@@ -10,18 +10,10 @@ import { mnemonicToSeedSync } from 'bip39';
 
 const InitState = {
     wallet: {},
-    connections: [],
+    connections: {},
     api: {},
     password: '',
 }
-
-const RequestAPIMethods = [
-    'wallid_sign_token',
-    'wallid_token',
-    'wallet_encrypt',
-    'wallet_decrypt',
-    'getAddress'
-]
 
 export default class AppController {
     #store
@@ -29,16 +21,21 @@ export default class AppController {
 
     constructor() {
         console.log('NEW APP CONTroLER')
-        this.#store = new StateStore(InitState)
-
-        this.#vault = new Vault()
-
         this.initController()
     }
 
     initController() {
+        this.#store = new StateStore(InitState)
+        this.#vault = new Vault()
+
         this.#vault.loadFromLocalStorage()
-        this.#store.updateState({ api: new ExternalAPIController() })
+
+        this.#store.updateState({
+            //vault: new Vault(),
+            api: new ExternalAPIController()
+        })
+
+        //this.#store.getState().vault.loadFromLocalStorage()
     }
 
     //=============================================================================
@@ -46,13 +43,23 @@ export default class AppController {
     //=============================================================================
 
     getState() {
-        let wallet = this.#store.getState().wallet
+        const wallet = this.#store.getState().wallet
+        const connections = this.#store.getState().connections
+
+        console.log('getState()',  {
+            initialized: !this.#vault.isEmpty(),
+            unlocked: this.#vault.isUnlocked(),
+            address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
+            connections: this.#vault.isUnlocked()? connections.getConnected() : undefined,
+            mnemonic: this.#vault.isUnlocked()? this.#vault.getMnemonic() : undefined
+        })
 
         return {
             initialized: !this.#vault.isEmpty(),
             unlocked: this.#vault.isUnlocked(),
             address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
-            mnemonic: this.#vault.getMnemonic()
+            connections: this.#vault.isUnlocked()? connections.getConnected() : undefined,
+            mnemonic: this.#vault.isUnlocked()? this.#vault.getMnemonic() : undefined
         }
     }
 
@@ -145,7 +152,7 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(this.#vault.getConnections()),
                 password
             }))
-            .then(() => this.#store.updateState({ api: new ExternalAPIController(WalletController.deserialize(this.#vault.getWallet()), ConnectionsController.deserialize(this.#vault.getConnections())) }))
+            .then(() => this.#store.updateState({ api: new ExternalAPIController(this.#store.getState().wallet, this.#store.getState().connections) }))
     }
 
     /**
@@ -176,32 +183,34 @@ export default class AppController {
     //
     //  CONNECTIONS MANAGEMENT FUNCTIONS
     //
-
-    newConnection() {
-        return Promise.resolve(this.#store.getState().connections)
-            .then(conn => {
-
-            })
-    }
-
-    removeConnection() {
-
-    }
-
-    approveConnection() {
-
-    }
-
-    //=============================================================================
-    // EXTERNAL REQUEST API
-    //=============================================================================
-
-    requestAPI(method, params) {
-        if(!RequestAPIMethods.includes(method)) {
-            return Promise.reject('Invalid method call')
+    approvePendingConnection(url) {
+        if(!this.#vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
         }
- 
-        return Promise.resolve(this.#store.getState().api.getAddress())
+
+        return Promise.resolve(this.#store.getState().connections)
+            .then(conn => conn.approvePending(url).then(() => Promise.resolve(conn)))
+            .then(console.log('PASSWORD', this.#store.password))
+            .then(conn => this.#vault.putConnections(conn.serialize(), this.#store.getState().password))
+    }
+
+    rejectPendingConnection(url) {
+        if(!this.#vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+
+        return Promise.resolve(this.#store.getState().connections)
+            .then(conn => conn.rejectPending(url))
+    }
+
+    removeConnected(url) {
+        if(!this.#vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+
+        return Promise.resolve(this.#store.getState().connections)
+            .then(conn => conn.removeConnected(url).then(Promise.resolve(conn)))
+            .then(conn => this.#vault.putConnections(conn.serialize(), this.#store.getState().password))
     }
 
     //=============================================================================
@@ -210,7 +219,7 @@ export default class AppController {
 
     /**
      * Returns an object with the controller's functions.
-     * Expose the controller functionalities to the UI susbsystem.  
+     * Expose the controller functionalities to the UI subsystem.  
      * 
      * @returns {Object} - api
      */
@@ -219,9 +228,37 @@ export default class AppController {
             getState: this.getState.bind(this),
             createNewVault: this.createNewVault.bind(this),
             resetVault: this.resetVault.bind(this),
+            verifyPassword: this.verifyPassword.bind(this),
             unlockApp: this.unlockApp.bind(this),
             lockApp: this.lockApp.bind(this),
-            verifyPassword: this.verifyPassword.bind(this)
+            newConnection: this.newPendingConnection.bind(this),
+            approvePendingConnection: this.approvePendingConnection.bind(this),
+            rejectPendingConnection: this.rejectPendingConnection.bind(this),
+            removeConnected: this.removeConnected.bind(this)
         }
+    }
+
+    newPendingConnection(url, icon, name, description) {
+        console.log('newnewPendingConnection')
+        return Promise.resolve(this.#store.getState().connections)
+            .then(conn => conn.newConnection(url, icon, name, description))
+    }
+
+    //=============================================================================
+    // EXTERNAL REQUEST API
+    //=============================================================================
+
+    requestAPI(method, params) {
+        const api = this.#store.getState().api
+
+        if(!api.isValidMethod(method)) {
+            return Promise.reject('Invalid method call')
+        }
+
+        if(!this.#vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+        
+        return Promise.resolve(this.#store.getState().api.getAddress())
     }
 }
