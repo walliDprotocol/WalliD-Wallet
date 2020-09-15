@@ -24,7 +24,7 @@ module.exports = {
             patterns: [
                 { from: 'manifest.json', to: path.join(process.cwd(), 'dist'), context: 'src' },
                 { from: 'popup.html', to: path.join(process.cwd(), 'dist'), context: 'src' },
-                { from: 'options.html', to: path.join(process.cwd(), 'dist'), context: 'src' },
+                { from: 'notification.html', to: path.join(process.cwd(), 'dist'), context: 'src' },
                 { from: 'images', to: path.join(process.cwd(), 'dist', 'images'), context: 'src' },
             ],
         }),

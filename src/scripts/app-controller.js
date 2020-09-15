@@ -8,6 +8,7 @@ import ConnectionsController from './controllers/connections'
 import { ExternalAPIController } from './controllers/api'
 import { mnemonicToSeedSync } from 'bip39';
 
+
 const InitState = {
     wallet: {},
     connections: {},
@@ -17,25 +18,18 @@ const InitState = {
 
 export default class AppController {
     #store
-    #vault;
 
     constructor() {
         console.log('NEW APP CONTroLER')
-        this.initController()
-    }
 
-    initController() {
         this.#store = new StateStore(InitState)
-        this.#vault = new Vault()
-
-        this.#vault.loadFromLocalStorage()
 
         this.#store.updateState({
-            //vault: new Vault(),
+            vault: new Vault(),
             api: new ExternalAPIController()
         })
 
-        //this.#store.getState().vault.loadFromLocalStorage()
+        this.#store.getState().vault.loadFromLocalStorage()
     }
 
     //=============================================================================
@@ -43,23 +37,24 @@ export default class AppController {
     //=============================================================================
 
     getState() {
+        const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
         const connections = this.#store.getState().connections
 
         console.log('getState()',  {
-            initialized: !this.#vault.isEmpty(),
-            unlocked: this.#vault.isUnlocked(),
-            address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
-            connections: this.#vault.isUnlocked()? connections.getConnected() : undefined,
-            mnemonic: this.#vault.isUnlocked()? this.#vault.getMnemonic() : undefined
+            initialized: !vault.isEmpty(),
+            unlocked: vault.isUnlocked(),
+            address: vault.isUnlocked()? wallet.getAddress() : undefined,
+            connections: vault.isUnlocked()? connections.getConnected() : undefined,
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : undefined
         })
 
         return {
-            initialized: !this.#vault.isEmpty(),
-            unlocked: this.#vault.isUnlocked(),
-            address: this.#vault.isUnlocked()? wallet.getAddress() : undefined,
-            connections: this.#vault.isUnlocked()? connections.getConnected() : undefined,
-            mnemonic: this.#vault.isUnlocked()? this.#vault.getMnemonic() : undefined
+            initialized: !vault.isEmpty(),
+            unlocked: vault.isUnlocked(),
+            address: vault.isUnlocked()? wallet.getAddress() : undefined,
+            connections: vault.isUnlocked()? connections.getConnected() : undefined,
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : undefined
         }
     }
 
@@ -79,7 +74,7 @@ export default class AppController {
     /**
      * Checks if provided string matches the currently stored mnemonic phrase.
      * Validates string against BIP39.
-     * If vault not unlocked, promise is rejected.
+     * Promise rejects if vault is locked.
      * 
      * @param {string} - test
      * 
@@ -114,7 +109,8 @@ export default class AppController {
      * @returns {Promise}
      */
     createNewVault(mnemonic, password) {
-        return Promise.resolve(this.#vault.createNewAndPersist(mnemonic, password))
+        const vault = this.#store.getState().vault
+        return Promise.resolve(vault.createNewAndPersist(mnemonic, password))
     }
 
     /**
@@ -126,10 +122,16 @@ export default class AppController {
      * 
      * @returns {Promise}
      */
-    resetVault(password) {
-        return Promise.resolve(this.#vault.submitPassword(password))
-            .then(this.#vault.fullReset())
-            .then(() => this.#store.putState({ wallet: {}, connections: [] }))
+    resetVault() {
+        const vault = this.#store.getState().vault
+        
+        if(!vault.isUnlocked()){
+            Promise.reject('Vault is locked')
+        }
+
+        return Promise.resolve(vault.submitPassword(this.#store.getState().password))
+            .then(vault.fullReset())
+            .then(() => this.#store.updateState(InitState))
     }
 
     /**
@@ -142,17 +144,21 @@ export default class AppController {
      * @returns {Promise}
      */
     unlockApp(password) {
-        if(this.#vault.isEmpty()) {
+        const vault = this.#store.getState().vault
+ 
+        if(vault.isEmpty()) {
             return Promise.reject('Vault is empty!')
         }
 
-        return Promise.resolve(this.#vault.unlock(password))
+        return Promise.resolve(vault.unlock(password))
             .then(() => this.#store.updateState({
-                wallet: WalletController.deserialize(this.#vault.getWallet()),
-                connections: ConnectionsController.deserialize(this.#vault.getConnections()),
+                wallet: WalletController.deserialize(vault.getWallet()),
+                connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
             }))
-            .then(() => this.#store.updateState({ api: new ExternalAPIController(this.#store.getState().wallet, this.#store.getState().connections) }))
+            .then(() => this.#store.updateState({
+                api: new ExternalAPIController(this.#store.getState().wallet, this.#store.getState().connections)
+            }))
     }
 
     /**
@@ -162,8 +168,10 @@ export default class AppController {
      * @returns {Promise}
      */
     lockApp() {
-        return Promise.resolve(this.#vault.lock())
-            .then(() => this.#store.putState(InitState))
+        console.log('lockAPP')
+        const vault = this.#store.getState().vault
+        return Promise.resolve(vault.lock())
+            .then(() => this.#store.updateState(InitState))
     }
 
     /**
@@ -175,42 +183,74 @@ export default class AppController {
      * @returns {Promise<boolean>} - verified
      */
     verifyPassword(password) {
-        return Promise.resolve(this.#vault.submitPassword(password))
+        const vault = this.#store.getState().vault
+        return Promise.resolve(vault.submitPassword(password))
             .then(() => Promise.resolve(true))
             .catch(() => Promise.resolve(false))
     }
 
+
     //
     //  CONNECTIONS MANAGEMENT FUNCTIONS
     //
+
+    /**
+     * Approves a pending connection request.
+     * Promise rejects if @url does not match any pending connections, or if vault is locked.
+     * 
+     * @param {string} - url Identifier of the pendding connection
+     * 
+     * @returns {Promise} - result
+     */
     approvePendingConnection(url) {
-        if(!this.#vault.isUnlocked()) {
+        const vault = this.#store.getState().vault
+        const connections = this.#store.getState().connections
+
+        if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
 
-        return Promise.resolve(this.#store.getState().connections)
-            .then(conn => conn.approvePending(url).then(() => Promise.resolve(conn)))
-            .then(console.log('PASSWORD', this.#store.password))
-            .then(conn => this.#vault.putConnections(conn.serialize(), this.#store.getState().password))
+        return Promise.resolve(connections.approvePending(url))
+            .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
+    /**
+     * Rejects a pending connection request.
+     * Promise rejects if @url does not match any pending connections, or if vault is locked.
+     * 
+     * @param {string} - url Identifier of the pendding connection
+     * 
+     * @returns {Promise} - result
+     */
     rejectPendingConnection(url) {
-        if(!this.#vault.isUnlocked()) {
+        const vault = this.#store.getState().vault
+        const connections = this.#store.getState().connections
+
+        if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
 
-        return Promise.resolve(this.#store.getState().connections)
-            .then(conn => conn.rejectPending(url))
+        return Promise.resolve(connections.rejectPending(url))
     }
 
+    /**
+     * Removes connection identified by @url from list of connected websites.
+     * Promise rejects if @url does not match any approved connections, or if vault is locked.
+     * 
+     * @param {string} - url Identifier of the pendding connection
+     * 
+     * @returns {Promise} - result
+     */
     removeConnected(url) {
-        if(!this.#vault.isUnlocked()) {
+        const vault = this.#store.getState().vault
+        const connections = this.#store.getState().connections
+
+        if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
 
-        return Promise.resolve(this.#store.getState().connections)
-            .then(conn => conn.removeConnected(url).then(Promise.resolve(conn)))
-            .then(conn => this.#vault.putConnections(conn.serialize(), this.#store.getState().password))
+        return Promise.resolve(connections.removeConnected(url))
+            .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
     //=============================================================================
@@ -226,6 +266,8 @@ export default class AppController {
     getAPI() {
         return {
             getState: this.getState.bind(this),
+            generateSeedPhrase: this.generateSeedPhrase.bind(this),
+            validateSeedPhrase: this.validateSeedPhrase.bind(this),
             createNewVault: this.createNewVault.bind(this),
             resetVault: this.resetVault.bind(this),
             verifyPassword: this.verifyPassword.bind(this),
@@ -249,16 +291,17 @@ export default class AppController {
     //=============================================================================
 
     requestAPI(method, params) {
+        const vault = this.#store.getState().vault
         const api = this.#store.getState().api
 
+        if(!vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+    
         if(!api.isValidMethod(method)) {
             return Promise.reject('Invalid method call')
         }
-
-        if(!this.#vault.isUnlocked()) {
-            return Promise.reject('Plugin is locked')
-        }
         
-        return Promise.resolve(this.#store.getState().api.getAddress())
+        return Promise.resolve(api.getAddress())
     }
 }

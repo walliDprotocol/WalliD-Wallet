@@ -42,7 +42,7 @@ export default class ConnectionsController {
     }
 
     static deserialize(_conns) {
-        if(!_conns || !Array.isArray(_conns) || _conns.length == 0) {
+        if(!_conns || (!Array.isArray(_conns) && typeof _conns != 'string') || _conns.length == 0) {
             return new ConnectionsController()
         }
 
@@ -60,7 +60,9 @@ export default class ConnectionsController {
             return Promise.reject(`Connection for url ${url} already exists`)
         }
 
-        return Promise.resolve(this.#pending.push({ url, icon, name, description }))
+        this.#pending.push({ url, icon, name, description })
+
+        return Promise.resolve()
     }
 
     approvePending(url) {

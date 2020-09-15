@@ -22,16 +22,29 @@ chrome.declarativeContent.onPageChanged.addRules([{
     actions: [new chrome.declarativeContent.ShowPageAction()]
 }]);
 
+var WINWIN = 0
 // Connects the external web connector to the App's RequestAPI
 extension.runtime.onMessage.addListener(function(request, res, f) {
     console.log('ON MESSAGE RECEIVED BACK', request)
 
-    App.requestAPI(request.method, request.params)
-        .then(result => f({ data: result, error: null }))
-        .catch(error => f({ data: null, error }))
+    if(request.method)
+    chrome.windows.create({
+        url: chrome.runtime.getURL("notification.html"),
+        type: "popup",
+        width: 360,
+        height: 550
+      }, win => WINWIN = win.id);
+    
+    //App.requestAPI(request.method, request.params)
+    //    .then(result => f({ data: result, error: null }))
+    //    .catch(error => f({ data: null, error }))
 })
 
 // Locks App when user closes the browser window
-extension.windows.onRemoved.addListener(() => App.lockApp())
+extension.windows.onRemoved.addListener(id => {
+    console.log(WINWIN)
+    if(id != WINWIN)
+        App.lockApp()
+})
 // Starts 
 //extension.windows.onCreated.addListener(initApp)

@@ -22,6 +22,14 @@
 			<p>Address:</p>
 			<p id="addr">{{ address }}</p>
 		</div>
+		<v-text-field
+			v-model="url"
+			name="input-10-2"
+			label="url"
+			type="text"
+			class="input-group--focused"
+			
+		></v-text-field>
 		<div>
 			<v-btn block color="secondary" dark @click="lockPlugin">Lock</v-btn>
 		</div>
@@ -48,6 +56,7 @@ export default {
 		const state = API.getState()
 		console.log('DATA', state)
 		return {
+			url: '',
 			password: "",
 			address: state.address,
 			initialized: state.initialized,
@@ -56,42 +65,38 @@ export default {
 	},
 	mounted() {
 		console.log('MOUNTED', this.initialized)
-		//
 	},
     methods: {
 		unlockPlugin() {
-			//API.verifyPassword(this.password)
-			//	.then(r => console.log('RES', r))
-			//	.catch(e => console.log('POPUP VERIFY PASSWORD ERROR', e))
-
 			if(!this.initialized)
-				API.createNewVault(bip39.generateMnemonic(), 'jamado')
-				.then(() => API.unlockApp(this.password))
-				.then(() => this.refreshState())
+				API.createNewVault(API.generateSeedPhrase(), 'jamado')
+					.then(() => API.unlockApp(this.password))
+					.then(() => this.refreshState())
 			else
 				API.unlockApp(this.password)
-				.then(() => this.refreshState())
+					.then(() => this.refreshState())
 
 		},
 
 		lockPlugin() {
 			API.lockApp()
-			.then(() => this.refreshState())
+				.then(() => this.refreshState())
 		},
 
 		resetPlugin() {
-			API.deleteVault(this.password)
-			.then(this.refreshState())
+			console.log('PASS', this.password)
+			API.resetVault(this.password)
+				.then(() => this.refreshState())
 		},
 
 		addConnection() {
-			API.newConnection('developer.chrome.com', 'https://icons.io/dev_chrome', 'DevChrome')
-			.then(this.refreshState())
+			API.newConnection(this.url, 'https://icons.io/dev_chrome', 'DevChrome')
+				.then(() => this.refreshState())
 		},
 
 		approveConnection() {
-			API.approvePendingConnection('developer.chrome.com')
-			.then(this.refreshState())
+			API.removeConnected(this.url)
+				.then(() => this.refreshState())
 		},
 
 		refreshState() {
