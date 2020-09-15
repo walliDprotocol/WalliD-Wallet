@@ -1,5 +1,9 @@
 <template>
-  <MainContainer @refreshState="refreshState"></MainContainer>
+  <v-app class="plugin">
+    <v-container fluid class="router-views">
+      <router-view :hideAppHeader="hideAppHeader"></router-view>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -11,20 +15,11 @@ export default {
   components: {
     MainContainer,
   },
-  props: ["hasPermissionsRequests"],
+  props: ["hideAppHeader"],
   computed: {
     ...mapGetters(["address", "unlocked"]),
   },
-  watch: {
-    unlocked(value) {
-      if (value) {
-        this.$router.push("/");
-        this.setIcon();
-        // } else {
-        // this.$router.push("/login");
-      }
-    },
-  },
+  watch: {},
 
   data() {
     return {
@@ -32,8 +27,6 @@ export default {
         { id: "pt", name: "Português" },
         { id: "en", name: "English" },
       ],
-      showMenu: false,
-      initialized: this.$API.getState().initialized,
     };
   },
   mounted() {
@@ -47,47 +40,9 @@ export default {
     });
 
     this.$i18n.locale = check.length > 0 ? check[0].id : "en";
-
-    // if (this.unlocked) {
-    //   this.$router.push("/");
-    //   console.log(this.address);
-    //   this.setIcon();
-    // } else {
-    //   this.$router.push("/login");
-    // }
   },
 
-  methods: {
-    setIcon() {
-      if (!this.iconSet && this.address) {
-        let body = document.getElementById("metamask-logo");
-        let icon = document.getElementById("metamask-logo-icon");
-        console.log("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(44, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 3px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-icon";
-          body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
-        }
-      }
-    },
-
-    resetPlugin() {
-      API.deleteVault(this.password).then(this.refreshState());
-    },
-
-    refreshState() {
-      const appState = this.$API.getState();
-
-      this.initialized = appState.initialized;
-      this.unlocked = appState.unlocked;
-      this.address = appState.address;
-    },
-  },
+  methods: {},
 };
 </script>
 

@@ -11,7 +11,7 @@
                 height="51"
                 class="ma-auto"
                 contain
-                src="../images/logo-wallid.png"
+                src="../images/wallid-logo-01@3x.jpg"
             /></v-col>
             <v-col cols="12" class="pt-5 pb-8 px-14">
               <h2 class="T1 mb-5 text-center">
@@ -29,7 +29,7 @@
             <v-col cols="12" class="px-10">
               <p class="text">
                 {{ $t("create.import[0]") }}
-                <router-link class="links mt-2" to="import">
+                <router-link class="links mt-2" to="restore">
                   {{ $t("create.import[1]") }}
                 </router-link>
               </p>
@@ -60,7 +60,7 @@
                   {{ $t("create.stepper[0].text") }}
                 </h3>
               </v-col>
-              <v-col cols="12" class="pt-0">
+              <v-col cols="12" class="pt-0 pb-2">
                 <label class="sub-title-fields ">{{
                   $t("create.stepper[0].password[0]")
                 }}</label>
@@ -81,7 +81,6 @@
                 <v-text-field
                   v-model="passwordMatch"
                   class="password-input mt-1"
-                  :hint="$t('create.stepper[0].password[2]')"
                   flat
                   solo
                   :error-messages="passwordMatchError"
@@ -262,7 +261,7 @@ export default {
       this.step += 1;
     },
     setReminder() {
-      this.step += 1;
+      this.step = 4;
     },
 
     checkForm() {
@@ -278,9 +277,7 @@ export default {
       }
       console.log(this.passwordMatch);
       if (this.passwordMatch) {
-        if (this.passwordMatch.length < 8) {
-          this.passwordMatchError = "Password not long enough";
-        } else if (this.passwordMatch != this.password) {
+        if (this.passwordMatch != this.password) {
           this.passwordMatchError = "Passwords don’t match";
         }
       } else {
@@ -303,7 +300,7 @@ export default {
   },
   data() {
     return {
-      step: 3,
+      step: 1,
       termsWallet: false,
       seedLocked: true,
       // Pass words as a string
@@ -325,7 +322,9 @@ export default {
   .v-stepper__content {
     padding: 0;
   }
-
+  .links {
+    display: contents !important;
+  }
   .terms {
     .v-input__slot {
       align-items: start;

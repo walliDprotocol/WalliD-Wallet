@@ -164,7 +164,7 @@ export default {
     };
   },
   mounted() {
-    console.log("MOUNTED Login", this.initialized);
+    this.debug("MOUNTED Login", this.initialized);
 
     // API.createNewVault(bip39.generateMnemonic(), 'jamado')
   },
@@ -176,13 +176,13 @@ export default {
       this.showSeedPhrase = !this.showSeedPhrase;
     },
     stepBack() {
-      this.$router.push("/");
+      this.$router.push("/home");
     },
     restorePassword() {
       // this.$API
       //   .verifyPassword(this.password)
-      //   .then((r) => console.log("RES", r))
-      //   .catch((e) => console.log("POPUP VERIFY PASSWORD ERROR", e));
+      //   .then((r) => this.debug("RES", r))
+      //   .catch((e) => this.debug("POPUP VERIFY PASSWORD ERROR", e));
       // this.$API.unlockApp(this.password).then(() => this.refreshState());
       // this.unlocked = true;
 
@@ -255,15 +255,22 @@ export default {
           font-weight: 500;
           font-stretch: normal;
           font-style: normal;
-          line-height: normal;
+          line-height: 1.85;
           letter-spacing: normal;
-          color: #b8b9bb;
+          color: var(--charcoal-grey);
+        }
+      }
+      .v-input__append-inner:hover {
+        margin-top: 7px;
+        svg path {
+          fill: var(--teal-blue);
         }
       }
     }
   }
 }
 .seed-phrase-tooltip {
+  margin-left: 2px;
   &.v-tooltip__content {
     border-radius: 3px;
     background-color: #eeeeee;

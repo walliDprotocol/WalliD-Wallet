@@ -1,15 +1,14 @@
 <template>
-  <v-app class="plugin">
+  <div>
     <MenuPlugin
       v-if="!hideAppHeader"
-      @refreshState="refreshState"
       :address="address"
       @close="closeDrawer"
       :showMenu="showMenu"
     />
 
     <v-app-bar
-      @click.stop="showMenu = !showMenu"
+      @click.stop="showMenu = !showMenu && address"
       v-if="!hideAppHeader"
       height="74"
       flat
@@ -32,10 +31,10 @@
       <!-- Provides the application the proper gutter -->
       <v-container fluid class="router-views">
         <!-- If using vue-router -->
-        <router-view @refreshState="refreshState"></router-view>
+        <router-view></router-view>
       </v-container>
     </v-main>
-  </v-app>
+  </div>
 </template>
 
 <script>
@@ -48,20 +47,23 @@ export default {
   components: {
     MenuPlugin,
   },
+  props: ["hideAppHeader"],
   computed: {
-    ...mapGetters(["address", "hideAppHeader"]),
+    ...mapGetters(["address", "unlocked"]),
   },
   watch: {
-    unlocked(value) {
+    address(value) {
       if (value) {
-        this.$router.push("/");
         this.setIcon();
-      } else {
+      }
+    },
+    unlocked(value) {
+      if (!value) {
         this.$router.push("/login");
       }
     },
     hideAppHeader(value) {
-      console.log("hideAppHeader", this.address);
+      this.debug("hideAppHeader", this.address);
       if (!value) {
         this.$nextTick(() => this.setIcon());
       }
@@ -75,12 +77,10 @@ export default {
         { id: "en", name: "English" },
       ],
       showMenu: false,
-      initialized: this.$API.getState().initialized,
-      unlocked: this.$API.getState().unlocked,
     };
   },
   mounted() {
-    console.log("MOUNTED", this.unlocked);
+    this.debug("MOUNTED", this.hideAppHeader);
     let browserLang = navigator.language.substring(0, 2);
     var check = this.langs.filter(function(elm) {
       if (elm.id == browserLang) {
@@ -90,19 +90,12 @@ export default {
     });
 
     this.$i18n.locale = check.length > 0 ? check[0].id : "en";
-
-    // if (this.unlocked) {
-    //   this.$router.push("/");
-    //   console.log(this.address);
-    //   this.setIcon();
-    // } else {
-    //   this.$router.push("/login");
-    // }
+    this.$nextTick(() => this.setIcon());
   },
 
   methods: {
     closeDrawer(e) {
-      console.log(e);
+      this.debug(e);
       if (!e) {
         this.showMenu = !this.showMenu;
       }
@@ -111,7 +104,7 @@ export default {
       if (this.address) {
         let body = document.getElementById("metamask-logo");
         let icon = document.getElementById("metamask-logo-icon");
-        console.log("metamask-logo", body);
+        this.debug("metamask-logo", body);
         if (body && !icon) {
           var el = jazzicon(44, this.address);
           var styles = el.getAttribute("style");
@@ -124,19 +117,8 @@ export default {
       }
     },
 
-    lockPlugin() {
-      API.lockApp().then(this.refreshState());
-    },
-
     resetPlugin() {
       API.deleteVault(this.password).then(this.refreshState());
-    },
-
-    refreshState() {
-      const appState = this.$API.getState();
-
-      this.initialized = appState.initialized;
-      this.unlocked = appState.unlocked;
     },
   },
 };

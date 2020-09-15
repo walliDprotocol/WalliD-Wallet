@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-2">
-          <v-btn text @click="$router.push('/')" class="back-btn">
+          <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1">

@@ -11,8 +11,10 @@ export default {
       title: "Connection Request",
       description: " is asking for your permission to connect to your wallet:",
       alert: "Only connect with sites you fully trust.",
+      button: "Connect",
     },
     bScenes: "Know what's happening behind the scenes",
+    cancel: "Cancel",
   },
   about: {
     title: "About",
@@ -63,7 +65,7 @@ export default {
     address: "Your wallet address",
   },
   restore: {
-    title: "Restore your wallet",
+    title: "Import your wallet",
     subtitle: "Enter your twelve word seed phrase to import your wallet.",
     seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
     password: [
@@ -71,19 +73,19 @@ export default {
       "Confirm password",
       "Must be at least 8 characters",
     ],
-    button: "Restore wallet",
+    button: "Import wallet",
   },
   login: {
     title: "Welcome back!",
     password: ["Password", "Incorrect password"],
     button: "Unlock wallet",
-    restore: ["Restore wallet?", "Import using wallet seed phrase"],
+    restore: ["Restore wallet?", "Restore using wallet seed phrase"],
   },
   create: {
     title: "Welcome to WalliD",
     text: "The digital wallet to manage all your Identity document",
     button: "Create your wallet",
-    import: ["Already have a wallet?", "Restore now using your seed phrase"],
+    import: ["Already have a wallet?", "Import now using your seed phrase"],
 
     stepper: [
       {

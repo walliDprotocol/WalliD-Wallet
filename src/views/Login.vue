@@ -2,7 +2,7 @@
   <v-container>
     <form @submit="unlockPlugin">
       <v-row>
-        <v-col cols="12" class="text-center my-8 pt-5">
+        <v-col cols="12" class="text-center my-6 pt-5">
           <v-img
             center
             width="192"
@@ -98,6 +98,11 @@ export default {
     refreshState() {
       console.log("Call REFRESH_STATE ");
       this.$store.dispatch("REFRESH_STATE");
+      if (this.$store.getters.hasPermissionsRequests) {
+        this.$router.push("/request");
+      } else {
+        this.$router.push("/home");
+      }
     },
   },
 };

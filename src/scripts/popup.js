@@ -8,6 +8,7 @@ import "../css/style.scss";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import store from "../store";
 import VueLogger from "vuejs-logger";
+import mixinPlugin from "../scripts/util";
 
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(Vuetify);
@@ -46,6 +47,8 @@ var filter = function(text, length, clamp) {
 };
 
 Vue.filter("truncate", filter);
+
+Vue.mixin(mixinPlugin);
 
 new Vue({
   vuetify: new Vuetify({}),

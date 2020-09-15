@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <div class="back-arrow mb-6">
-          <v-btn text @click="$router.push('/')" class="back-btn">
+          <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
@@ -27,8 +27,7 @@
           :options="{
             width: 140,
             margin: 0,
-            dark: '#373c43',
-            light: '#f7f7f7',
+            color: { dark: '#373c43', light: '#f7f7f7' },
           }"
         ></qrcode>
       </v-col>
@@ -44,7 +43,6 @@ import WalletAddress from "../components/WalletAddress";
 import WalletState from "../components/WalletState";
 import ArrowBack from "../images/icon-arrow-back.vue";
 import jazzicon from "jazzicon";
-import { checksumAddress } from "../scripts/util";
 import { mapGetters } from "vuex";
 
 export default {
@@ -54,7 +52,7 @@ export default {
     ArrowBack,
   },
   created() {
-    this.walletAddress = checksumAddress("0x" + this.address);
+    this.walletAddress = this.checksumAddress("0x" + this.address);
   },
   mounted() {
     this.setIcon();

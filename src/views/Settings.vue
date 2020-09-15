@@ -3,7 +3,7 @@
     <v-row v-if="!confirmDisconnect">
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-2">
-          <v-btn text @click="$router.push('/')" class="back-btn">
+          <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
@@ -182,7 +182,7 @@ export default {
 .settings {
   h4 {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;

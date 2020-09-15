@@ -14,7 +14,7 @@
 
     <v-container class="request">
       <v-row class="justify-space-around">
-        <v-col cols="12" class="mt-2px pt-7 mb-6 px-6">
+        <v-col cols="12" class="mt-3 pt-7 mb-6 px-6">
           <div class="back-arrow mb-2">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
@@ -47,8 +47,8 @@
           </router-link>
         </v-col>
 
-        <v-col cols="12" class="pt-0 pb-5 pr-6">
-          <div class="outer-box">
+        <v-col cols="12" class="pt-0 pb-5 ">
+          <div class="outer-box pr-6">
             <WarningIcon />
             <p class="links">{{ $t("request." + type + ".alert") }}</p>
           </div>
@@ -57,12 +57,12 @@
         <!-- Option buttons -->
         <v-col cols="6" class="pr-2">
           <v-btn text class="cancel-btn" @click="cancel">
-            {{ $t("sites.button[0]") }}
+            {{ $t("request.cancel") }}
           </v-btn>
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-btn text class="advance-btn" @click="authorizeRequest">
-            {{ $t("sites.button[1]") }}
+            {{ $t("request." + type + ".button") }}
           </v-btn>
         </v-col>
       </v-row>
@@ -77,7 +77,6 @@ import BrokenLine from "../images/broken-line";
 import WebSiteLogo from "../components/WebSiteLogo";
 import { CANCEL_REQUEST, AUTHORIZE_REQUEST } from "../store/actions";
 import axios from "axios";
-import { checksumAddress } from "../scripts/util";
 export default {
   components: {
     WarningIcon,
@@ -93,7 +92,7 @@ export default {
   },
   mounted() {
     this.setIconWallet();
-    this.walletAddress = checksumAddress("0x" + this.address);
+    this.walletAddress = this.checksumAddress("0x" + this.address);
   },
   props: {
     type: {
@@ -112,7 +111,7 @@ export default {
       //cancel request TO DO
       var request = { id: 1 };
       this.$store.dispatch(CANCEL_REQUEST, request.id);
-      this.$router.push("/");
+      this.$router.push("/home");
       //   this.$store.dispatch("LOCK_WALLET");
       //   this.$API.lockApp().catch((e) => {
       // console.error(e);
@@ -154,16 +153,22 @@ export default {
   border-radius: 50%;
   border: solid 1px #b8b9bb;
   margin: auto;
+  margin-bottom: 12px;
 }
 
 #metamask-logo-request + p {
-  max-width: 72px;
+  max-width: 76px;
   word-break: break-all;
 }
 
 .plugin-request {
+  .request {
+    padding: 12px !important;
+    padding-top: 74px !important;
+  }
   .links {
     font-size: 12px !important;
+    display: block;
   }
   .outer-box {
     padding: 12px 18px;

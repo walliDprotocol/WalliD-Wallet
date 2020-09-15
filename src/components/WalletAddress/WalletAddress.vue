@@ -30,7 +30,6 @@
 <script>
 import CopyHover from "../../images/icon-copyclipboard-selected";
 import Copy from "../../images/icon-copyclipboard-unselected";
-import { checksumAddress } from "../../scripts/util";
 
 export default {
   components: {
@@ -38,7 +37,7 @@ export default {
     Copy,
   },
   mounted() {
-    this.walletAddress = checksumAddress("0x" + this.address);
+    this.walletAddress = this.checksumAddress("0x" + this.address);
   },
   methods: {
     copyToClip() {

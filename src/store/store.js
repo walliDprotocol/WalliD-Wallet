@@ -10,17 +10,19 @@ export default new Vuex.Store({
   //initial state
   state: {
     address: API.getState().address,
-    initialized: API.getState().initialized,
-    unlocked: API.getState().unlocked,
-    pendingRequests: [{ id: 1 }],
+    completedOnboarding: true, //API.getState().completedOnboarding,
     hasPermissionsRequests: true, //this.$API.getState().hasPermissionsRequests
+    initialized: API.getState().initialized,
+    pendingRequests: [{ id: 1 }],
+    unlocked: API.getState().unlocked,
   },
   getters: {
-    state: (state) => state,
     address: (state) => state.address,
-    unlocked: (state) => state.unlocked,
+    completedOnboarding: (state) => state.completedOnboarding,
     hasPermissionsRequests: (state) => state.hasPermissionsRequests,
     hideAppHeader: (state) => state.hasPermissionsRequests,
+    unlocked: (state) => state.unlocked,
+    state: (state) => state,
   },
   actions: {
     [REFRESH_STATE]: ({ commit }) => {
@@ -68,9 +70,6 @@ export default new Vuex.Store({
     },
     updateInitialized(state, value) {
       state.initialized = value;
-    },
-    increment(state) {
-      state.count++;
     },
   },
 });

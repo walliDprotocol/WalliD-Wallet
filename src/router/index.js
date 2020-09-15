@@ -9,9 +9,12 @@ import Sites from "../views/ConnectedSites";
 import Settings from "../views/Settings";
 import About from "../views/About";
 import Request from "../views/Request";
+import MainContainer from "../views/MainContainer";
 
 import store from "../store";
+import mixinPlugin from "../scripts/util";
 
+const debug = mixinPlugin.methods.debug;
 Vue.use(Router);
 
 let router = new Router({
@@ -20,43 +23,54 @@ let router = new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home,
+      name: "main",
+      component: MainContainer,
+      props: {
+        hideAppHeader: false,
+      },
+      children: [
+        {
+          path: "/home",
+          name: "home",
+          component: Home,
+        },
+        {
+          path: "/restore",
+          name: "Restore",
+          component: Restore,
+        },
+        {
+          path: "/details",
+          name: "details",
+          component: Details,
+        },
+        {
+          path: "/sites",
+          name: "sites",
+          component: Sites,
+        },
+        {
+          path: "/settings",
+          name: "settings",
+          component: Settings,
+        },
+        {
+          path: "/about",
+          name: "About",
+          component: About,
+        },
+        {
+          path: "/login",
+          name: "login",
+          component: Login,
+        },
+      ],
     },
-    {
-      path: "/restore",
-      name: "Restore",
-      component: Restore,
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login,
-    },
+
     {
       path: "/create",
       name: "create",
       component: Create,
-    },
-    {
-      path: "/details",
-      name: "details",
-      component: Details,
-    },
-    {
-      path: "/sites",
-      name: "sites",
-      component: Sites,
-    },
-    {
-      path: "/settings",
-      name: "settings",
-      component: Settings,
-    },
-    {
-      path: "/about",
-      name: "About",
-      component: About,
     },
     {
       path: "/request",
@@ -74,26 +88,32 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const isInitializing = !store.getters.unlocked || !store.getters.address;
-  console.log(store.getters.unlocked);
-  console.log(store.getters.address);
-  console.log(to.path);
-  console.log(isInitializing);
+  const isUnlocked = store.getters.unlocked;
+  const completedOnboarding = store.getters.completedOnboarding;
+  debug("completedOnboarding", completedOnboarding);
+  debug("Path", to.path);
+  debug("isUnlocked", isUnlocked);
 
   if (to.path == "/login") {
-    console.log("Login Path");
-    return next();
+    debug("Login Path");
+    return next({ params: { hideAppHeader: false } });
   }
-  if (isInitializing && to.path !== "/login") {
+
+  if (!isUnlocked && to.path !== "/login") {
     return next("/login");
+  }
+
+  if (to.path == "/") {
+    debug("Home Path");
+    return next({ path: "/home" });
   }
   const isHandlingPermissionsRequest =
     to.path == "request" || store.getters.hasPermissionsRequests;
-  console.log(isHandlingPermissionsRequest);
+  debug("Has Requests ", isHandlingPermissionsRequest);
   if (isHandlingPermissionsRequest && to.path !== "/request") {
     next({ path: "/request", params: { hideAppHeader: true } });
   } else {
-    next();
+    next({ params: { hideAppHeader: false } });
   }
 });
 

@@ -50,17 +50,17 @@
           </h2>
         </div>
       </v-col>
-      <v-col cols="12" class="pt-0">
+      <v-col cols="12" class="pt-0 pr-4">
         <h3 class="sub-title-fields mb-2 text-left">
           {{ $t("sites.confirm") }}
         </h3>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="pr-2">
         <v-btn text class="cancel-btn" @click="cancel">
           {{ $t("sites.button[0]") }}
         </v-btn>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="pl-2">
         <v-btn text class="advance-btn" @click="setPendingDisconnect">
           {{ $t("sites.button[1]") }}
         </v-btn>

@@ -92,6 +92,7 @@ import IconAbout from "../../images/icon-about-unselected.vue";
 import IconLock from "../../images/icon-logout-unselected.vue";
 import jazzicon from "jazzicon";
 
+import { LOCK_WALLET } from "../../store/actions";
 import { DETAILS, SITES, SETTINGS, ABOUT } from "../../router/routes";
 
 export default {
@@ -109,71 +110,67 @@ export default {
     this.SETTINGS = SETTINGS;
     this.ABOUT = ABOUT;
   },
+  watch: {
+    address(value) {
+      if (value) {
+        this.setIcon();
+      }
+    },
+  },
   mounted() {
-    console.log(this.address);
-    console.log(this.value);
     this.setIcon();
   },
   methods: {
     close(input) {
-      console.log("close clicked");
       if (!input) {
         this.$emit("close", !this.showMenu);
       }
-      // this.$emit("input", !this.showMenu);
     },
 
     // se estiver ja na pagina fechar o menu
-
     goRoute(route) {
-      console.log("Menu Option: ", route);
-      console.log(this.$route.path);
-      let matchRoute = "/" + route;
-      console.log(matchRoute);
-      console.log(this.$route.path == matchRoute);
+      this.debug("Menu Option: ", route);
+      this.debug(this.$route.path);
+      this.debug(this.$route.path == route);
       this.$emit("close", !this.showMenu);
-      if (this.$route.path == matchRoute) {
-        console.log(this.showMenu);
-        // this.$emit("input", !this.closeDrawer);
-      } else {
+      if (this.$route.path != route) {
+        this.debug(this.showMenu);
         this.$router.push(route);
       }
     },
     details() {
-      console.log("Detail Page");
+      this.debug("Detail Page");
       this.$router.push("/details");
     },
     sites() {
-      console.log("sites Page");
+      this.debug("sites Page");
       this.$router.push("/sites");
     },
     settings() {
-      console.log("settings Page");
+      this.debug("settings Page");
       this.$router.push("/settings");
     },
     about() {
-      console.log("about Page");
+      this.debug("about Page");
       this.$router.push("/about");
     },
     lock() {
-      console.log("lock wallet");
+      this.debug("lock wallet");
 
-      this.$API
-        .lockApp()
-        .then(() => this.refreshState())
-        .catch((e) => {
-          console.error(e);
-        });
-    },
-    refreshState() {
-      this.$emit("close");
-      this.$emit("refreshState");
+      this.$store.dispatch(LOCK_WALLET);
+
+      // this.$API
+      //   .lockApp()
+      //   .then(() => this.refreshState())
+      //   .catch((e) => {
+      //     console.error(e);
+      //   });
     },
     setIcon() {
       if (!this.iconSet && this.address) {
         let body = document.getElementById("metamask-logo-menu");
         let icon = document.getElementById("metamask-logo-menu-icon");
-        console.log("metamask-logo", body);
+        this.debug("metamask-logo", body);
         if (body && !icon) {
           var el = jazzicon(32, this.address);
           var styles = el.getAttribute("style");
@@ -243,7 +240,7 @@ export default {
       .v-list-item__title {
         text-align: left;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: 600;
         font-stretch: normal;
         font-style: normal;
         line-height: normal;
