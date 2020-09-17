@@ -5,14 +5,13 @@ import Vault from './lib/vault'
 import seed from './lib/seed-phrase'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
-import { ExternalAPIController } from './controllers/api'
+import { RequestAPIController } from './controllers/requests'
 import { mnemonicToSeedSync } from 'bip39';
 
 
 const InitState = {
     wallet: {},
     connections: {},
-    api: {},
     password: '',
 }
 
@@ -26,7 +25,7 @@ export default class AppController {
 
         this.#store.updateState({
             vault: new Vault(),
-            api: new ExternalAPIController()
+            api: new RequestAPIController()
         })
 
         this.#store.getState().vault.loadFromLocalStorage()
@@ -40,21 +39,24 @@ export default class AppController {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
         const connections = this.#store.getState().connections
+        const api = this.#store.getState().api
 
         console.log('getState()',  {
             initialized: !vault.isEmpty(),
             unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : undefined,
-            connections: vault.isUnlocked()? connections.getConnected() : undefined,
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : undefined
+            address: vault.isUnlocked()? wallet.getAddress() : null,
+            connections: vault.isUnlocked()? connections.getAllConnections() : null,
+            //currentNotification: api.getNextRequest(),
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
         })
 
         return {
             initialized: !vault.isEmpty(),
             unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : undefined,
-            connections: vault.isUnlocked()? connections.getConnected() : undefined,
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : undefined
+            address: vault.isUnlocked()? wallet.getAddress() : null,
+            connections: vault.isUnlocked()? connections.getAllConnections() : null,
+            //currentNotification: api.getNextRequest(),
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
         }
     }
 
@@ -89,10 +91,6 @@ export default class AppController {
 
         return Promise.resolve(seed.validate(test) && mnemonic == test)
     }
-
-    //
-    //  WALLET MANAGEMENT FUNCTIONS
-    //
 
     //
     //  VAULT MANAGEMENT FUNCTIONS
@@ -155,9 +153,6 @@ export default class AppController {
                 wallet: WalletController.deserialize(vault.getWallet()),
                 connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
-            }))
-            .then(() => this.#store.updateState({
-                api: new ExternalAPIController(this.#store.getState().wallet, this.#store.getState().connections)
             }))
     }
 
@@ -253,13 +248,62 @@ export default class AppController {
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
+    //
+    // WALLET INTERFACE
+    //
+
+    getWalletAddress() {
+        const vault = this.#store.getState().vault
+        const wallet = this.#store.getState().wallet
+
+        if(!vault.isUnlocked()) {
+            return undefined
+        }
+
+        return wallet.getAddress()
+    }
+
+    signEthereumTransaction() {
+
+    }
+
+    encryptData(data) {
+        const vault = this.#store.getState().vault
+        const wallet = this.#store.getState().wallet
+
+        if(!vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+
+        return wallet.encryptData(data)
+    }
+
+    decryptData(data) {
+
+    }
+
+    /**
+     * Rejects the execution of the request referenced by @nonce .  
+     * 
+     * @returns {number} - nonce
+     */
+    rejectRequest(nonce) {
+        const api = this.#store.getState().api
+        return api.popFromQueue(nonce)
+    }
+
+    getNextNotification() {
+        const api = this.#store.getState().api
+        return api.getNextRequest()
+    }
+
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM
     //=============================================================================
 
     /**
      * Returns an object with the controller's functions.
-     * Expose the controller functionalities to the UI subsystem.  
+     * Exposes the controller's functionalities to the UI subsystem.  
      * 
      * @returns {Object} - api
      */
@@ -273,17 +317,12 @@ export default class AppController {
             verifyPassword: this.verifyPassword.bind(this),
             unlockApp: this.unlockApp.bind(this),
             lockApp: this.lockApp.bind(this),
-            newConnection: this.newPendingConnection.bind(this),
             approvePendingConnection: this.approvePendingConnection.bind(this),
             rejectPendingConnection: this.rejectPendingConnection.bind(this),
-            removeConnected: this.removeConnected.bind(this)
+            removeConnected: this.removeConnected.bind(this),
+            encryptData: this.encryptData.bind(this),
+            getNextNotification: this.getNextNotification.bind(this)
         }
-    }
-
-    newPendingConnection(url, icon, name, description) {
-        console.log('newnewPendingConnection')
-        return Promise.resolve(this.#store.getState().connections)
-            .then(conn => conn.newConnection(url, icon, name, description))
     }
 
     //=============================================================================
@@ -291,17 +330,8 @@ export default class AppController {
     //=============================================================================
 
     requestAPI(method, params) {
-        const vault = this.#store.getState().vault
         const api = this.#store.getState().api
 
-        if(!vault.isUnlocked()) {
-            return Promise.reject('Plugin is locked')
-        }
-    
-        if(!api.isValidMethod(method)) {
-            return Promise.reject('Invalid method call')
-        }
-        
-        return Promise.resolve(api.getAddress())
+        return api.pushNewRequest(method, params)
     }
 }

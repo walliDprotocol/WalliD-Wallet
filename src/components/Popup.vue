@@ -95,7 +95,7 @@ export default {
 		},
 
 		approveConnection() {
-			API.removeConnected(this.url)
+			API.approvePendingConnection(this.url)
 				.then(() => this.refreshState())
 		},
 

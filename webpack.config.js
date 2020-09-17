@@ -11,6 +11,7 @@ module.exports = {
         background: './src/scripts/background.js',
         popup: './src/scripts/popup.js',
         content: './src/scripts/content-script.js',
+        notification: './src/scripts/notification.js',
         injector: './src/scripts/injector.js',
     },
     devtool: 'inline-source-map',

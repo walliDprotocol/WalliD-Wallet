@@ -15,25 +15,28 @@ export function ExternalConnectorBackend() {
 
 //Frontend injected into webpage context
 export function ExternalConnectorFrontend() {
-    var listener = function(event) {}
-    function newResponseListener(resolve, reject) {
-        return function(event) {
-            if(event.detail.error) reject(event.detail.error)
-            else resolve(event.detail.data)
-        }
-    }
-    function updateResponseListener(resolve, reject) {
-        document.removeEventListener('wallid_response', listener)
-        listener = newResponseListener(resolve, reject)
-        document.addEventListener('wallid_response', listener)
+    var nonce = 0
+    function newResponseListener(resolve, reject, _nonce) {
+        var listener = function(event) {
+            if(event.detail.nonce == _nonce) {
+                if(event.detail.error) reject(event.detail.error)
+                else resolve(event.detail.data)
 
+                document.removeEventListener('wallid_response', listener)
+            }
+        }
+
+        document.addEventListener('wallid_response', listener)
     }
 
     return function(method, params) {
-        let event = new CustomEvent('wallid_request', { detail: { method, params }})
+        let event = new CustomEvent('wallid_request', { detail: { method, params, nonce }})
+        let promise = new Promise((resolve, reject) => newResponseListener(resolve, reject, nonce))
+
+        nonce++
 
         document.dispatchEvent(event)
 
-        return new Promise((resolve, reject) => updateResponseListener(resolve, reject))
+        return promise
     }
 }
