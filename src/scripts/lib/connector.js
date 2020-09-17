@@ -34,7 +34,6 @@ export function ExternalConnectorFrontend() {
         let promise = new Promise((resolve, reject) => newResponseListener(resolve, reject, nonce))
 
         nonce++
-
         document.dispatchEvent(event)
 
         return promise

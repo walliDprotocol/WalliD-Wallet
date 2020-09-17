@@ -1,18 +1,19 @@
 'use strict'
 
+import extension from 'extensionizer'
 import StateStore from './lib/store';
 import Vault from './lib/vault'
 import seed from './lib/seed-phrase'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
 import { RequestAPIController } from './controllers/requests'
-import { mnemonicToSeedSync } from 'bip39';
 
 
 const InitState = {
     wallet: {},
     connections: {},
     password: '',
+    popups : []
 }
 
 export default class AppController {
@@ -34,31 +35,6 @@ export default class AppController {
     //=============================================================================
     // APP CONTROLLER INTERFACE
     //=============================================================================
-
-    getState() {
-        const vault = this.#store.getState().vault
-        const wallet = this.#store.getState().wallet
-        const connections = this.#store.getState().connections
-        const api = this.#store.getState().api
-
-        console.log('getState()',  {
-            initialized: !vault.isEmpty(),
-            unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : null,
-            connections: vault.isUnlocked()? connections.getAllConnections() : null,
-            //currentNotification: api.getNextRequest(),
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
-        })
-
-        return {
-            initialized: !vault.isEmpty(),
-            unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : null,
-            connections: vault.isUnlocked()? connections.getAllConnections() : null,
-            //currentNotification: api.getNextRequest(),
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
-        }
-    }
 
     //
     //  ONBOARDING FUNCTIONS
@@ -297,9 +273,35 @@ export default class AppController {
         return api.getNextRequest()
     }
 
+    getActivePopups() {
+        return this.#store.getState().popups
+    }
+
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM
     //=============================================================================
+
+    getState() {
+        const vault = this.#store.getState().vault
+        const wallet = this.#store.getState().wallet
+        const connections = this.#store.getState().connections
+
+        console.log('getState()',  {
+            initialized: !vault.isEmpty(),
+            unlocked: vault.isUnlocked(),
+            address: vault.isUnlocked()? wallet.getAddress() : null,
+            connections: vault.isUnlocked()? connections.getAllConnections() : null,
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
+        })
+
+        return {
+            initialized: !vault.isEmpty(),
+            unlocked: vault.isUnlocked(),
+            address: vault.isUnlocked()? wallet.getAddress() : null,
+            connections: vault.isUnlocked()? connections.getAllConnections() : null,
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
+        }
+    }
 
     /**
      * Returns an object with the controller's functions.
@@ -332,6 +334,25 @@ export default class AppController {
     requestAPI(method, params) {
         const api = this.#store.getState().api
 
-        return api.pushNewRequest(method, params)
+        let response = api.pushNewRequest(method, params)
+
+        if(api.isPopup(method)) {
+            let updateActivePopups = function(id) {
+                let popups = this.#store.getState().popups
+
+                popups.push(id)
+
+                this.#store.updateState({ popups })
+            }.bind(this)
+
+            extension.windows.create({
+                url: extension.runtime.getURL("notification.html"),
+                type: "popup",
+                width: 360,
+                height: 550
+            }, win => updateActivePopups(win.id))
+        }
+
+        return response
     }
 }
