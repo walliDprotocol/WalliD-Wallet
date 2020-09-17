@@ -20,6 +20,24 @@ export default {
     version: "",
     links: ["", "", "", ""],
   },
+  privKey: {
+    title: "A sua chave privada",
+    text:
+      "A chave privada é o que prova que esta carteira é sua. Você é o seu único dono e por isso tem  também controlo total sobre ela.   Insira a password da sua carteira para aceder à sua chave privada.",
+    label: "A sua chave privada",
+    alert:
+      "Nunca revele esta chave. Qualquer pessoa que a tenha em sua posse pode ter acesso à sua carteira e aos seus documentos de identidade.",
+  },
+  seedPhrase: {
+    title: "A sua seed phrase",
+    text:
+      "Se mudar de browser ou de dispositivo, precisará da sua seed phrase para importar esta carteira e todos os documentos nela guardados.",
+    label: "A sua seed phrase",
+    alert:
+      "Não partilhe esta seed phrase com ninguém! É a única chave capaz de reconfigurar a sua carteira em qualquer dispositivo.",
+    copy: "Copiar clipboard",
+    csv: "Guardar como CSV",
+  },
   settings: {
     title: "Geral",
     general: {
@@ -123,5 +141,12 @@ export default {
         button: "Done",
       },
     ],
+  },
+  buttons: {
+    cancel: "Cancelar",
+    confirm: "Confirmar",
+    connect: "Conectar",
+    disconnect: "Disconectar",
+    done: "Done",
   },
 };

@@ -10,9 +10,32 @@ const mixinPlugin = {
       const checksummed = address ? toChecksumAddress(address) : "";
       return checksummed;
     },
+
+    getMethodName() {
+      let error = {};
+      try {
+        throw new Error("");
+      } catch (e) {
+        error = e;
+      }
+      // IE9 does not have .stack property
+      if (error.stack === undefined) {
+        return "";
+      }
+      let stackTrace = error.stack.split("\n")[3];
+      if (/ /.test(stackTrace)) {
+        stackTrace = stackTrace.trim().split(" ")[1];
+      }
+      if (stackTrace && stackTrace.indexOf(".") > -1) {
+        stackTrace = stackTrace.split(".")[1];
+      }
+      return stackTrace;
+    },
     debug(a, ...args) {
       if (this) {
-        this.$log.debug(a, ...args);
+        let methodName = this.getMethodName();
+
+        this.$log.debug(methodName + " | ", a, ...args);
       } else {
         console.log(a, ...args);
       }

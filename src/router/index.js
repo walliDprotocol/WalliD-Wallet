@@ -10,9 +10,12 @@ import Settings from "../views/Settings";
 import About from "../views/About";
 import Request from "../views/Request";
 import MainContainer from "../views/MainContainer";
-
+import Reveal from "../components/RevealSeedPhrase";
 import store from "../store";
 import mixinPlugin from "../scripts/util";
+
+import SeedPhrase from "../components/RevealSeedPhrase";
+import PrivKey from "../components/RevealPrivateKey";
 
 const debug = mixinPlugin.methods.debug;
 Vue.use(Router);
@@ -64,6 +67,16 @@ let router = new Router({
           name: "login",
           component: Login,
         },
+        {
+          path: "/revealSeedPhrase",
+          name: "seedPhrase",
+          component: SeedPhrase,
+        },
+        {
+          path: "/revealPrivKey",
+          name: "privKey",
+          component: PrivKey,
+        },
       ],
     },
 
@@ -76,13 +89,7 @@ let router = new Router({
       path: "/request",
       name: "Request",
       component: Request,
-      props: {
-        websiteData: {
-          url: "https://www.wallid.io/favicon.ico",
-          name: "wallid.io",
-        },
-        type: "connection",
-      },
+      props: { request: store.getters.getRequest },
     },
   ],
 });
@@ -103,7 +110,7 @@ router.beforeEach((to, from, next) => {
     return next("/login");
   }
 
-  if (to.path == "/") {
+  if (to.path == "/" || to.path == "/popup.html") {
     debug("Home Path");
     return next({ path: "/home" });
   }
@@ -113,7 +120,7 @@ router.beforeEach((to, from, next) => {
   if (isHandlingPermissionsRequest && to.path !== "/request") {
     next({ path: "/request", params: { hideAppHeader: true } });
   } else {
-    next({ params: { hideAppHeader: false } });
+    next();
   }
 });
 

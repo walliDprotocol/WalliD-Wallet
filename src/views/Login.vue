@@ -57,6 +57,8 @@
 <script>
 import * as bip39 from "bip39";
 
+import { CREATE_NEW_WALLET, UNLOCK_WALLET } from "../store/actions";
+
 export default {
   computed: {},
 
@@ -72,32 +74,27 @@ export default {
   },
   methods: {
     unlockPlugin() {
-      if (!this.initialized)
-        this.$API
-          .createNewVault(bip39.generateMnemonic(), "qwerty")
-          .then(this.$API.unlockApp(this.password))
-          .then(() => this.refreshState())
+      if (!this.initialized) {
+        this.$store.dispatch(CREATE_NEW_WALLET, this.password).catch((e) => {
+          this.passwordError = true;
+        });
+      } else {
+        this.$store
+          .dispatch(UNLOCK_WALLET, this.password)
+          .then(() => this.checkRequests())
           .catch((e) => {
-            console.error(e);
+            this.logError(e);
             this.passwordError = true;
           });
-      else
-        this.$API
-          .unlockApp(this.password)
-          .then(() => this.refreshState())
-          .catch((e) => {
-            console.error(e);
-            this.passwordError = true;
-          });
+      }
     },
 
     resetPlugin() {
       this.$API.deleteVault(this.password).then(this.refreshState());
     },
 
-    refreshState() {
-      console.log("Call REFRESH_STATE ");
-      this.$store.dispatch("REFRESH_STATE");
+    checkRequests() {
+      console.log("Check for Requests");
       if (this.$store.getters.hasPermissionsRequests) {
         this.$router.push("/request");
       } else {

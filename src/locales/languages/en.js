@@ -22,6 +22,24 @@ export default {
     version: "version 1.0",
     links: ["Links", "FAQ’s", "Terms and conditions", "Contact us"],
   },
+  privKey: {
+    title: "Show Private Key",
+    text:
+      "Your private key is the proof of your wallet ownership. You are its' sole owner and with it you have full control over your wallet. Type in your wallet password to display your private key.",
+    label: "Your Private Key",
+    alert:
+      "Never disclose this key. Anyone with it can have access to your wallet and Identity documents held within",
+  },
+  seedPhrase: {
+    title: "Reveal Seed Phrase",
+    text:
+      "If you ever change browsers or get a new desktop, you'll need the seed phrase to import this wallet and the identity documents held within.",
+    label: "Your Seed Phrase",
+    alert:
+      "DO NOT share this phrase with anyone! It is the ultimate key to setup and access your wallet",
+    copy: "Copy to clipboard",
+    csv: "Save as CSV file",
+  },
   settings: {
     title: "Settings",
     general: {
@@ -125,5 +143,12 @@ export default {
         button: "Done",
       },
     ],
+  },
+  buttons: {
+    cancel: "Cancel",
+    confirm: "Confirm",
+    connect: "Connect",
+    disconnect: "Disconnect",
+    done: "Done",
   },
 };

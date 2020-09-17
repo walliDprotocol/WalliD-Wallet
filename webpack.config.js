@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     background: "./src/scripts/background.js",
     popup: "./src/scripts/popup.js",
+    notification: "./src/scripts/notification.js",
     content: "./src/scripts/content-script.js",
     injector: "./src/scripts/injector.js",
   },
@@ -33,6 +34,11 @@ module.exports = {
         },
         {
           from: "options.html",
+          to: path.join(process.cwd(), "dist"),
+          context: "src",
+        },
+        {
+          from: "notification.html",
           to: path.join(process.cwd(), "dist"),
           context: "src",
         },

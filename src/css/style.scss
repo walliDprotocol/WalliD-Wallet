@@ -150,7 +150,8 @@
     .v-ripple__container {
       color: #87c2c9;
     }
-    .v-btn__content {
+    .v-btn__content,
+    & {
       font-family: Montserrat;
       font-size: 16px;
       font-weight: 600;
@@ -333,7 +334,7 @@
     letter-spacing: normal;
     color: var(--coral);
   }
-  .WARNING-NOTES-2 {
+  .alerts-font {
     font-family: Montserrat;
     font-size: 12px;
     font-weight: 500;

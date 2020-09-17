@@ -13,8 +13,9 @@ import mixinPlugin from "../scripts/util";
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(Vuetify);
 
+
 //Set global is notification var
-// Vue.prototype.$notification = true;
+Vue.prototype.$notification = true;
 
 const isProduction = process.env.NODE_ENV === "production";
 

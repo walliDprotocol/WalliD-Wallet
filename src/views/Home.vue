@@ -62,6 +62,7 @@ export default {
   },
   mounted() {
     this.setIcon();
+    this.debug("Connections", this.$store.getters.state.connections);
   },
   methods: {
     setIcon() {

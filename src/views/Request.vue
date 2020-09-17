@@ -13,9 +13,9 @@
     </v-app-bar>
 
     <v-container class="request">
-      <v-row class="justify-space-around">
-        <v-col cols="12" class="mt-3 pt-7 mb-6 px-6">
-          <div class="back-arrow mb-2">
+      <v-row class="justify-space-around mt-2px">
+        <v-col cols="12" class="my-3 py-7 px-6">
+          <div class="back-arrow">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
               {{ $t("request." + type + ".description") }}
@@ -24,19 +24,19 @@
         </v-col>
 
         <!-- website info and wallet -->
-        <v-col cols="4" class="pr-0">
+        <v-col cols="4" class="pr-0 pt-4">
           <WebSiteLogo
             class="mr-0"
-            :url="websiteData.url"
+            :url="websiteData.icon"
             :name="websiteData.name"
           />
         </v-col>
 
-        <v-col cols="4" class="px-0">
+        <v-col cols="4" class="px-0 pt-4">
           <v-divider class="dashed" />
         </v-col>
 
-        <v-col cols="4" class="pl-0">
+        <v-col cols="4" class="pl-0 pt-4">
           <div class="ml-0" id="metamask-logo-request"></div>
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
@@ -47,14 +47,15 @@
           </router-link>
         </v-col>
 
-        <v-col cols="12" class="pt-0 pb-5 ">
+        <v-col v-show="type == 'connection'" cols="12" class="pt-0 pb-5 ">
           <div class="outer-box pr-6">
             <WarningIcon />
             <p class="links">{{ $t("request." + type + ".alert") }}</p>
           </div>
         </v-col>
-
-        <!-- Option buttons -->
+      </v-row>
+      <!-- Option buttons -->
+      <v-row class="float-bottom">
         <v-col cols="6" class="pr-2">
           <v-btn text class="cancel-btn" @click="cancel">
             {{ $t("request.cancel") }}
@@ -77,11 +78,16 @@ import BrokenLine from "../images/broken-line";
 import WebSiteLogo from "../components/WebSiteLogo";
 import { CANCEL_REQUEST, AUTHORIZE_REQUEST } from "../store/actions";
 import axios from "axios";
+import { mapGetters } from "vuex";
+import { request } from "http";
 export default {
   components: {
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
+  },
+  computed: {
+    ...mapGetters(["address"]),
   },
   watch: {
     address(value) {
@@ -92,25 +98,50 @@ export default {
   },
   mounted() {
     this.setIconWallet();
+    console.log(this.request);
     this.walletAddress = this.checksumAddress("0x" + this.address);
   },
+  created() {
+    this.type = this.request.type;
+    switch (this.type) {
+      case "connection":
+        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        break;
+
+      default:
+        break;
+    }
+  },
   props: {
-    type: {
+    request: {
       required: true,
-    },
-    websiteData: {
-      required: false,
     },
   },
   methods: {
+    // getWebsiteInfo(info) {
+    //   let name = info.url.split("www.")[1].split("/")[0];
+    //   console.log(name);
+    //   let siteIcon = info.url + "/favicon.ico";
+    //   console.log(siteIcon);
+    //   return { name, siteIcon };
+    // },
     authorizeRequest() {
       // var request = { id: 1 };
-      // this.$store.dispatch(AUTHORIZE_REQUEST, request.id);
+      this.debug("Request", this.request);
+      this.debug("notification", this.$notification);
+
+      this.$store.dispatch(AUTHORIZE_REQUEST, {
+        request: this.request,
+        notification: this.$notification,
+      });
     },
     cancel() {
       //cancel request TO DO
       var request = { id: 1 };
-      this.$store.dispatch(CANCEL_REQUEST, request.id);
+      this.$store.dispatch(CANCEL_REQUEST, {
+        request: this.request,
+        notification: this.$notification,
+      });
       this.$router.push("/home");
       //   this.$store.dispatch("LOCK_WALLET");
       //   this.$API.lockApp().catch((e) => {
@@ -137,9 +168,10 @@ export default {
   },
   data() {
     return {
-      address: this.$API.getState().address,
       unlocked: this.$API.getState().unlocked,
       walletAddress: "",
+      type: "",
+      websiteData: {},
     };
   },
 };
@@ -162,6 +194,11 @@ export default {
 }
 
 .plugin-request {
+  .float-bottom {
+    position: absolute;
+    bottom: 14px;
+    width: 100%;
+  }
   .request {
     padding: 12px !important;
     padding-top: 74px !important;

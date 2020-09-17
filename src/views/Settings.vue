@@ -49,10 +49,15 @@
         <label class="sub-title-fields mb-1">
           {{ $t("settings.privacy.seed[0]") }}
         </label>
-        <v-btn text class="advance-btn mt-2">
+        <router-link
+          tag="button"
+          to="revealSeedPhrase"
+          text
+          class=" v-btn advance-btn mt-2"
+        >
           {{ $t("settings.privacy.seed[1]") }}
-        </v-btn>
-        <router-link to="about" class="links mt-2">
+        </router-link>
+        <router-link to="/about" class="links mt-2">
           {{ $t("settings.privacy.seed[2]") }}
         </router-link>
       </v-col>
@@ -61,9 +66,14 @@
         <label class="sub-title-fields mb-1">
           {{ $t("settings.privacy.key[0]") }}
         </label>
-        <v-btn text class="advance-btn mt-2">
+        <router-link
+          tag="button"
+          to="revealPrivKey"
+          text
+          class=" v-btn advance-btn mt-2"
+        >
           {{ $t("settings.privacy.key[1]") }}
-        </v-btn>
+        </router-link>
         <router-link to="about" class="links mt-2">
           {{ $t("settings.privacy.key[2]") }}
         </router-link>

@@ -222,10 +222,6 @@ export default {
       this.restorePassword();
     },
 
-    resetPlugin() {
-      this.$API.resetVault(this.password).then(this.refreshState());
-    },
-
     refreshState() {
       const appState = this.$API.getState();
 

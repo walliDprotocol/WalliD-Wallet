@@ -268,25 +268,18 @@ export default {
       this.passwordError = "";
       this.passwordMatchError = "";
 
-      if (this.password) {
-        if (this.password.length < 8) {
-          this.passwordError = "Password not long enough";
-        }
-      } else {
-        this.passwordError = "Required";
+      if (this.password && this.password.length < 8) {
+        this.passwordError = "Password not long enough";
       }
-      console.log(this.passwordMatch);
-      if (this.passwordMatch) {
-        if (this.passwordMatch != this.password) {
-          this.passwordMatchError = "Passwords don’t match";
-        }
-      } else {
-        this.passwordMatchError = "Required";
+
+      if (this.passwordMatch && this.passwordMatch != this.password) {
+        this.passwordMatchError = "Passwords don’t match";
       }
 
       if (this.passwordError || this.passwordMatchError) {
         return;
       }
+
       this.setPassword();
     },
 
