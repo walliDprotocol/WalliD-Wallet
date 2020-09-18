@@ -1,6 +1,6 @@
 import Wallet from 'ethereumjs-wallet'
-import ethUtil from 'ethereumjs-util'
-import ethSigUtil from 'eth-sig-util'
+import * as ethUtil from 'ethereumjs-util'
+import * as ethSigUtil from 'eth-sig-util'
 import { hdkey } from 'ethereumjs-wallet'
 import * as bip39 from 'bip39'
 

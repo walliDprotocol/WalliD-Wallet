@@ -5,6 +5,14 @@ import WalletController from '../controllers/wallet'
 import ConnectionsController from '../controllers/connections'
 import StateStore from './store'
 
+
+const InitState = {
+    vault: {},
+    data: {},
+    unlocked: false,
+    empty: true
+}
+
 /**
  * @class Vault
  * 
@@ -14,15 +22,9 @@ import StateStore from './store'
 
 export default class Vault {
     #store;
-    #initState = {
-        vault: {},
-        data: {},
-        unlocked: false,
-        empty: true
-    }
 
     constructor() {
-        this.#store = new StateStore(this.#initState)
+        this.#store = new StateStore(InitState)
     }
 
     // Tries to load instance with encrypted vault data from local storage, if available
@@ -51,11 +53,10 @@ export default class Vault {
             .then(() => console.log('New vault created and persisted to local storage', this.#store.getState().vault))
     }
 
-    // Fully resets the vault. Clears local storage and returns instance to initial state
+    // Fully resets the vault. Clears local storage and reverts instance to initial state
     fullReset() {
-        return Promise.resolve(this.#store.putState(this.#initState))
+        return Promise.resolve(this.#store.putState(InitState))
             .then(() => this.#store.removeLocal('vault'))
-            .then(() => console.log('full reset', this.#store.getState()))
     }
 
     // Locks vault. Clears all state data
@@ -71,7 +72,7 @@ export default class Vault {
         }))
     }
 
-    // Tests provided password. Throws an error if @password is wrong
+    // Tests @password. Throws an error if @password is wrong
     unlock(password) {
         if(this.isUnlocked() || this.isEmpty()) {
             return Promise.resolve()
@@ -94,7 +95,7 @@ export default class Vault {
             .then(vault => passworder.decrypt(password, vault))
     }
 
-    // Returns a new WalletController instance initialized with the vault's data
+    // Returns serialized WalletController
     getWallet() {
         return this._getData(0)
     }
@@ -103,22 +104,22 @@ export default class Vault {
         return this._getData(1)
     }
 
-    // Returns a new ConnectionsController instance initialized with the vault's data
+    // Returns serialized ConnectionsController
     getConnections() {
         return this._getData(2)
     }
 
+    // Updates vault with @conns
     putConnections(conns, password) {
+        console.log('putConnections')
         return Promise.resolve(this.submitPassword(password))
-            .then(data => Promise.resolve(data[2] = conns).then(() => Promise.resolve(data)))
+            .then(data => { data[2] = conns; return data })
             .then(data => passworder.encrypt(password, data).then(vault => Promise.resolve({ data, vault })))
             .then(_data => {
-                let ul = this.isUnlocked()
-
                 this.#store.updateState({
                     vault: _data.vault,
-                    unlocked: ul,
-                    data: ul? _data.data : null
+                    unlocked: this.isUnlocked(),
+                    data: this.isUnlocked()? _data.data : null
                 })
 
                 return _data.vault

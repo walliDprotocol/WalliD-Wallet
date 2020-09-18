@@ -27,11 +27,13 @@ extension.runtime.onMessage.addListener(function(request, res, f) {
     console.log('ON MESSAGE RECEIVED BACK', request)
 
     App.requestAPI(request.method, request.params)
-        .then(result => f({ data: result, error: null }))
-        .catch(error => f({ data: null, error }))
+        .then(result => f({ data: result, error: null, nonce: request.nonce }))
+        .catch(error => f({ data: null, error, nonce: request.nonce }))
+
+    return true
 })
 
 // Locks App when user closes the browser window
-extension.windows.onRemoved.addListener(() => App.lockApp())
+extension.windows.onRemoved.addListener(id => !App.getActivePopups().includes(id)? App.lockApp() : undefined )
 // Starts 
 //extension.windows.onCreated.addListener(initApp)
