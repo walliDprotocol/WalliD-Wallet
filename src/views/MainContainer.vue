@@ -29,7 +29,7 @@
     <!-- Sizes your content based upon application components -->
     <v-main style="padding-top:74px">
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="router-views">
+      <v-container fluid class="router-views pa-0">
         <!-- If using vue-router -->
         <router-view></router-view>
       </v-container>

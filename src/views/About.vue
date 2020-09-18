@@ -34,16 +34,16 @@
         </p>
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
-        <router-link to="/" class="links larger">
+        <router-link to="/faqs" class="links larger">
           {{ $t("about.links[1]") }}
         </router-link></v-col
       ><v-col cols="12" class="pt-1 pb-1">
-        <router-link to="/" class="links larger">
+        <router-link to="/terms" class="links larger">
           {{ $t("about.links[2]") }}</router-link
         >
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
-        <router-link to="/" class="links larger">
+        <router-link to="/contacts" class="links larger">
           {{ $t("about.links[3]") }}
         </router-link>
       </v-col>

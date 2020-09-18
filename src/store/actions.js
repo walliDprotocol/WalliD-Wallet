@@ -4,3 +4,7 @@ export const CANCEL_REQUEST = "CANCEL_REQUEST";
 export const AUTHORIZE_REQUEST = "AUTHORIZE_REQUEST";
 export const CREATE_NEW_WALLET = "CREATE_NEW_WALLET";
 export const UNLOCK_WALLET = "UNLOCK_WALLET";
+export const CONNECT = "CONNECT";
+export const DISCONNECT = "DISCONNECT";
+
+

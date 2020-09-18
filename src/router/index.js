@@ -10,7 +10,9 @@ import Settings from "../views/Settings";
 import About from "../views/About";
 import Request from "../views/Request";
 import MainContainer from "../views/MainContainer";
-import Reveal from "../components/RevealSeedPhrase";
+import FAQs from "../views/FAQs";
+import Terms from "../views/Terms";
+
 import store from "../store";
 import mixinPlugin from "../scripts/util";
 
@@ -77,6 +79,16 @@ let router = new Router({
           name: "privKey",
           component: PrivKey,
         },
+        {
+          path: "/faqs",
+          name: "FAQS",
+          component: FAQs,
+        },
+        {
+          path: "/terms",
+          name: "Terms",
+          component: Terms,
+        },
       ],
     },
 
@@ -93,7 +105,6 @@ let router = new Router({
     },
   ],
 });
-
 router.beforeEach((to, from, next) => {
   const isUnlocked = store.getters.unlocked;
   const completedOnboarding = store.getters.completedOnboarding;
@@ -115,7 +126,7 @@ router.beforeEach((to, from, next) => {
     return next({ path: "/home" });
   }
   const isHandlingPermissionsRequest =
-    to.path == "request" || store.getters.hasPermissionsRequests;
+    to.path == "request" || store.getters.getRequest;
   debug("Has Requests ", isHandlingPermissionsRequest);
   if (isHandlingPermissionsRequest && to.path !== "/request") {
     next({ path: "/request", params: { hideAppHeader: true } });

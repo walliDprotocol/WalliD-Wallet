@@ -33,11 +33,6 @@ module.exports = {
           context: "src",
         },
         {
-          from: "options.html",
-          to: path.join(process.cwd(), "dist"),
-          context: "src",
-        },
-        {
           from: "notification.html",
           to: path.join(process.cwd(), "dist"),
           context: "src",

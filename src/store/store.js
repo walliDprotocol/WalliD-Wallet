@@ -7,6 +7,8 @@ import {
   CREATE_NEW_WALLET,
   UNLOCK_WALLET,
   AUTHORIZE_REQUEST,
+  CONNECT,
+  DISCONNECT,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -18,30 +20,38 @@ export default new Vuex.Store({
   state: {
     address: API.getState().address,
     completedOnboarding: true, //API.getState().completedOnboarding,
-    connections: API.getState().connections,
-    hasPermissionsRequests: true, //this.$API.getState().hasPermissionsRequests
-    initialized: API.getState().initialized,
-    debug: null,
-    pendingRequests: [
+    connections: [
       {
-        id: 1,
-        type: "connection",
-        params: {
+        url: "https://www.wallid.io/",
+        icon: "https://www.wallid.io/favicon.ico",
+        name: "wallid.io",
+        description: "Site wallid",
+      },
+    ], //API.getState().connections,
+    initialized: API.getState().initialized,
+    request:
+      //  API.getNextNotification(),
+      {
+        type: "wallid_connect",
+        nonce: 1,
+        data: {
           url: "https://www.wallid.io/",
           icon: "https://www.wallid.io/favicon.ico",
           name: "wallid.io",
           description: "Site wallid",
         },
+        callback: "",
       },
-    ],
+    debug: null,
     unlocked: API.getState().unlocked,
   },
   getters: {
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
-    getRequest: (state) => state.pendingRequests[0],
-    hasPermissionsRequests: (state) => state.hasPermissionsRequests,
-    hideAppHeader: (state) => state.hasPermissionsRequests,
+    connections: (state) => state.connections,
+
+    getRequest: (state) => state.request,
+    hideAppHeader: (state) => state.getRequest,
     unlocked: (state) => state.unlocked,
     state: (state) => state,
   },
@@ -64,23 +74,49 @@ export default new Vuex.Store({
       commit("updateInitialized", API.getState().initialized);
       commit("updateConnections", API.getState().connections);
     },
+
+    [CONNECT]: ({ commit, state }, { params }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action CONNECT");
+        state.debug("URL: ", params.url);
+        state.debug("Connections: ", state.connections);
+        // state.debug("Notification: ", state.notification);
+
+        // API.approvePendingConnection(params.url)
+        //   .then(() => {
+        //     //Close window if its a notification popup
+        //     state.notification ? window.close() : "";
+            resolve(true);
+          // })
+          // .catch((e) => {
+          //   console.error("Error Authorizing request: ", e);
+          //   // reject(false);
+          //   resolve(true);
+
+          // });
+      });
+    },
+
     [AUTHORIZE_REQUEST]: (
       { state, commit, dispatch },
-      { request, notification }
+      { params, type, notification }
     ) => {
       return new Promise((resolve, reject) => {
         console.log("Action AUTHORIZE_REQUEST");
-        state.debug("URL: ", request.params.url);
+        state.notification = notification;
+        state.debug("Params: ", params);
         state.debug("Connections: ", state.connections);
 
-        API.approvePendingConnection(request.params.url)
-          .then(() => {
-            //Close window if its a notification popup
-            notification ? window.close() : "";
-          })
-          .catch((e) => {
-            console.error("Error Authorizing request: ", e);
-          });
+        switch (type) {
+          case "wallid_connect":
+            resolve(dispatch(CONNECT, { params })).catch((e) => {
+              resolve(e);
+            });
+            break;
+
+          default:
+            break;
+        }
 
         dispatch(REFRESH_STATE);
         state.debug("Connections: ", state.connections);
@@ -92,20 +128,29 @@ export default new Vuex.Store({
     ) => {
       console.log("Action CANCEL_REQUEST");
 
-      const arrayRemove = function(arr, id, value) {
-        return arr.filter(function(ele) {
-          return ele[id] != value;
-        });
-      };
-
-      commit(
-        "updatePendingRequests",
-        arrayRemove(state.pendingRequests, "id", request.id)
-      );
+      commit("updatePendingRequests");
       dispatch(REFRESH_STATE);
 
       //Close window if its a notification popup
       notification ? window.close() : "";
+    },
+
+    [DISCONNECT]: ({ commit, state }, url) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action DISCONNECT");
+        state.debug("URL: ", url);
+        state.debug("Connections: ", state.connections);
+
+        API.removeConnected(url)
+          .then(() => {
+            // resolve(commit("updateConnections", API.getState().connections));
+            resolve(state.connections.shift());
+          })
+          .catch((e) => {
+            console.error("Error Disconnecting site: ", e);
+            resolve(state.connections.shift());
+          });
+      });
     },
     [UNLOCK_WALLET]: ({ commit, dispatch }, password) => {
       return new Promise((resolve, reject) => {
@@ -126,13 +171,8 @@ export default new Vuex.Store({
     updateConnections(state, value) {
       state.connections = value;
     },
-    updatePendingRequests(state, value) {
-      // state.pendingRequests = value;
-      state.pendingRequests.shift();
-      if (state.pendingRequests.length == 0) {
-        console.log("No more requests");
-        state.hasPermissionsRequests = false;
-      }
+    updatePendingRequests(state) {
+      state.request = API.getNextNotification();
     },
     updateAddress(state, value) {
       state.address = value;

@@ -6,12 +6,105 @@ export default {
       "Your wallet is not connected to this website. To do so find out if there is any wallet connection button on their page and click it.",
     ],
   },
+  terms: {
+    title: "Terms and conditions",
+    text:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo. Vestibulum aliquam hendrerit molestie. Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero, vitae commodo nunc quam et ligula. Ut nec ipsum sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer id nisi nec nulla luctus lacinia non eu turpis. Etiam in ex imperdiet justo tincidunt egestas. Ut porttitor urna ac augue cursus tincidunt sit amet sed orci. Ut nec ipsum sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer id nisi nec nulla luctus lacinia non eu turpis. Etiam in ex imperdiet justo tincidunt egestas. Ut porttitor urna ac augue cursus tincidunt sit amet sed orci.",
+  },
+  faqs: {
+    title: "FAQ's",
+    questions: [
+      {
+        title: "What is this wallet used for?",
+        text:
+          "WalliD wallet plug-in is used to safely authenticate you on the web without requesting or storing any relevant identity information about yourself. It destroys the need to have a username and password and everything you do with keeps your online actions anonymous.",
+      },
+      {
+        title:
+          "Is it possible to store Eth or any other cryptocurrency in my wallet?",
+        text:
+          "No. At the moment WalliD web3 wallet only uses your public and private keys to authenticate you on dapps and services, encrypt, decrypt and manage your Identity documents.",
+      },
+      {
+        title: "Where is my Identity document data being stored?",
+        text:
+          "Your identity documents data is encrypted with your wallet keys and stored directly in your phone. This means that you are its sole owner as you are the only one with access to your keys through WalliD’s wallet. Only your wallet keys are able to decrypt the data stored in your device.",
+      },
+      {
+        title: "What is the seed phrase?",
+        text:
+          "The seed phrase is a list of 12 words than when put in a specific order allow you to recover your wallet’s private and public keys as they are the cryptographic result of those words with a serious of different computations. It is the only way to have access to any information related to your wallet usage and if you lose it, no one can retrieve your data.",
+      },
+      {
+        title: "How can I import a wallet from the seed phrase?",
+        text:
+          "Click in “import wallet”, provide the 12 word sequence from you seed phrase and your wallets’ public and private keys will be restored.",
+      },
+      {
+        title: "What are my private and public keys used for?",
+        text:
+          "Your private key is used to sign your wallet with different identity documents and to decrypt the data stored in your device. Your public key is used to encrypt that data and to authenticate you in online services.",
+      },
+      {
+        title: "How can I copy my wallet public address?",
+        text:
+          "You just need to click on top of your public key address displayed on your plug-in home page and it will automatically be copied to your clipboard.",
+      },
+      {
+        title: "What is a connection request?",
+        text:
+          "A connection request occurs every time you enter a dapp or website using web3 functionalities. It detects your browser has an web3 wallet such as WalliD running in it and request your authorisation to be able to send it futures authorisation requests to use your private and public keys through your wallet.",
+      },
+      {
+        title: "What is an authorisation request?",
+        text:
+          "It is a ping by a dapp or web3 connected website to access your wallets private or public keys features, depending on the specific action you are undertaking on that website.",
+      },
+      {
+        title:
+          "What is an authorisation request to associate a wallet to an identity document?",
+        text:
+          "It is a request to use your wallet private key to sign your identity document data. This will generate a wallet signature, that will be used in the future to prove online that that person with a certain Identity document is the owner of that digital wallet.",
+      },
+      {
+        title:
+          "What is an authorisation request to display identity document data?",
+        text: "",
+      },
+      {
+        title:
+          "What is an authorisation request to store an identity document?",
+        text:
+          "It is a request to use your public key to encrypt your identity document data so that only the usage of your own private keys could decrypt it back, keeping your data safe and away from any middle man (even WalliD doesn’t have access to it)",
+      },
+      {
+        title:
+          "What is an authorisation to display you identity document data?",
+        text:
+          "It is a request to use your private keys and decrypt your identity document data stored in your device",
+      },
+    ],
+  },
   request: {
-    connection: {
+    wallid_connect: {
       title: "Connection Request",
       description: " is asking for your permission to connect to your wallet:",
       alert: "Only connect with sites you fully trust.",
       button: "Connect",
+      success: "Successfully connected",
+      successText: " sucessfully conected with your wallet!",
+    },
+    wallet_encrypt: {
+      title: "Authorisation Request",
+      description:
+        " is requesting your authorisation to store your identity document in your wallet:",
+      button: "Authorise",
+    },
+    wallet_decrypt: {
+      title: "Authorisation Request",
+      description:
+        " is requesting your authorisation to display your identity document data:",
+      button: "Authorise",
     },
     bScenes: "Know what's happening behind the scenes",
     cancel: "Cancel",

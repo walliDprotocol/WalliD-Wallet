@@ -1,9 +1,9 @@
 <template>
   <v-container class="connected-sites">
     <v-row v-if="!confirmDisconnect">
-      <v-col cols="12">
-        <div class="back-arrow mb-6">
-          <v-btn text @click="$router.go(-1)" class="back-btn">
+      <v-col cols="12" class="pt-1">
+        <div class="back-arrow mb-3">
+          <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
@@ -12,15 +12,15 @@
         </div>
       </v-col>
       <v-col cols="12" class="pt-0">
-        <h3 class="sub-title-fields mb-2 text-left">
+        <h3 class="sub-title-fields mb-7 text-left">
           {{ $t("sites.subtitle") }}
         </h3>
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
         <v-list class="sites-list">
-          <v-list-item v-for="site in sites" :key="site.url">
+          <v-list-item v-for="site in connections" :key="site.url">
             <v-list-item-avatar>
-              <v-img :src="site.img" />
+              <v-img :src="site.icon" />
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -43,9 +43,9 @@
           <v-btn text @click="cancel" class="back-btn">
             <ArrowBack />
           </v-btn>
-          <h2 class="T1">
+          <h2 class="T1 text-left">
             {{ $t("sites.disconnect[0]") }}
-            {{ site.url }}
+            {{ site.name }}
             {{ $t("sites.disconnect[1]") }}
           </h2>
         </div>
@@ -70,8 +70,10 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import ArrowBack from "../images/icon-arrow-back.vue";
 import IconTrash from "../images/icon-trash-unselected.vue";
+import { DISCONNECT } from "../store/actions";
 
 export default {
   components: {
@@ -79,7 +81,9 @@ export default {
     IconTrash,
   },
   mounted() {},
-  computed: {},
+  computed: {
+    ...mapGetters(["connections"]),
+  },
   methods: {
     cancel() {
       this.site = {};
@@ -87,26 +91,20 @@ export default {
     },
     disconnect(site) {
       this.site = site;
-      console.log(site);
+      this.debug(site);
       this.confirmDisconnect = true;
     },
     setPendingDisconnect() {
-      //set pending disconnec
-      //   this.setState({
-      //     sitePendingDisconnect: {
-      //       domainKey,
-      //     },
-      //   });
+      this.$store.dispatch(DISCONNECT, this.site.url).then(() => {
+        this.cancel();
+      });
     },
   },
   data() {
     return {
       confirmDisconnect: false,
-      sites: [{ url: "wallid.io", name: "wallid" }],
-      site: {},
       connected: false,
-      address: this.$API.getState().address,
-      unlocked: this.$API.getState().unlocked,
+      site: "",
     };
   },
 };

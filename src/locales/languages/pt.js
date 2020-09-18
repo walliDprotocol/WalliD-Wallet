@@ -7,12 +7,28 @@ export default {
     ],
   },
   request: {
-    connection: {
-      title: "Connection Request",
-      description: " is asking for your permission to connect to your wallet:",
-      alert: "Only connect with sites you fully trust.",
+    wallid_connect: {
+      title: "Pedido de conexão",
+      description:
+        " está a pedir a sua permissão para conectar-se à sua carteira:",
+      alert: "Apenas conecte a sua carteira a sites que confie totalmente.",
+      button: "Conectar",
+      success: "Conectado com sucesso",
+      successText: " conectou-se com sucesso à sua carteira!",
     },
-    bScenes: "Know what's happening behind the scenes",
+    wallet_encrypt: {
+      title: "Pedido de autorização",
+      description:
+        " está a pedir a sua autorização para guardar o documento de identidade na sua carteira:",
+      button: "Autorizar",
+    },
+    wallet_decrypt: {
+      title: "Pedido de autorização",
+      description:
+        " está a pedir a sua autorização para mostrar  os dados do seu documento de identidade:",
+      button: "Autorizar",
+    },
+    bScenes: "Saiba o que se passa nos bastidores",
   },
   about: {
     title: "Sobre",

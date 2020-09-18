@@ -1,6 +1,6 @@
 <template>
   <v-app class="plugin">
-    <v-container fluid class="router-views">
+    <v-container fluid class="router-views pa-3">
       <router-view :hideAppHeader="hideAppHeader"></router-view>
     </v-container>
   </v-app>

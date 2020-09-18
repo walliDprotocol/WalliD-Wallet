@@ -7,13 +7,17 @@
         contain
         src="../images/logo-header-wallid.png"
       />
-      <h1 class="T2 ml-5">{{ $t("request." + type + ".title") }}</h1>
+      <h1 v-if="!success" class="T2 ml-5">
+        {{ $t("request." + type + ".title") }}
+      </h1>
+      <h1 v-else class="T2 ml-5">{{ $t("request." + type + ".success") }}</h1>
+
       <div class="arrow-down-header"></div>
       <!-- -->
     </v-app-bar>
 
     <v-container class="request">
-      <v-row class="justify-space-around mt-2px">
+      <v-row v-show="!success" class="justify-space-around mt-2px">
         <v-col cols="12" class="my-3 py-7 px-6">
           <div class="back-arrow">
             <h2 class="sub-title-fields">
@@ -47,7 +51,7 @@
           </router-link>
         </v-col>
 
-        <v-col v-show="type == 'connection'" cols="12" class="pt-0 pb-5 ">
+        <v-col v-show="type == 'wallid_connect'" cols="12" class="pt-0 pb-5 ">
           <div class="outer-box pr-6">
             <WarningIcon />
             <p class="links">{{ $t("request." + type + ".alert") }}</p>
@@ -55,7 +59,7 @@
         </v-col>
       </v-row>
       <!-- Option buttons -->
-      <v-row class="float-bottom">
+      <v-row v-show="!success" class="float-bottom">
         <v-col cols="6" class="pr-2">
           <v-btn text class="cancel-btn" @click="cancel">
             {{ $t("request.cancel") }}
@@ -67,6 +71,36 @@
           </v-btn>
         </v-col>
       </v-row>
+
+      <v-row v-show="success" class="justify-space-around mt-2px">
+        <v-col cols="12" class="my-3 py-7 px-6">
+          <div class="back-arrow">
+            <h2 class="sub-title-fields">
+              <b> {{ websiteData.name }}</b>
+              {{ $t("request." + type + ".successText") }}
+            </h2>
+          </div>
+        </v-col>
+
+        <!-- website info and wallet -->
+        <v-col cols="4" class="pr-0 pt-4">
+          <WebSiteLogo
+            class="mr-0"
+            :url="websiteData.icon"
+            :name="websiteData.name"
+          />
+        </v-col>
+
+        <v-col cols="4" class="px-0 pt-4">
+          <v-divider class="dashed" />
+        </v-col>
+
+        <v-col cols="4" class="pl-0 pt-4">
+          <div class="ml-0" id="metamask-logo-request"></div>
+          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
+        </v-col>
+      </v-row>
+      <!-- Option buttons -->
     </v-container>
   </v-app>
 </template>
@@ -79,7 +113,7 @@ import WebSiteLogo from "../components/WebSiteLogo";
 import { CANCEL_REQUEST, AUTHORIZE_REQUEST } from "../store/actions";
 import axios from "axios";
 import { mapGetters } from "vuex";
-import { request } from "http";
+
 export default {
   components: {
     WarningIcon,
@@ -89,13 +123,7 @@ export default {
   computed: {
     ...mapGetters(["address"]),
   },
-  watch: {
-    address(value) {
-      if (value) {
-        this.setIcon();
-      }
-    },
-  },
+  watch: {},
   mounted() {
     this.setIconWallet();
     console.log(this.request);
@@ -104,11 +132,23 @@ export default {
   created() {
     this.type = this.request.type;
     switch (this.type) {
-      case "connection":
+      case "wallid_connect":
+        this.websiteData = this.request.data; //this.getWebsiteInfo(this.request.params);
+        break;
+      case "wallid_disconnect":
         this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
         break;
-
+      case "wallid_address":
+        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        break;
+      case "wallet_encrypt":
+        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        break;
+      case "wallet_decrypt":
+        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        break;
       default:
+        console.log("Invalid Request Type");
         break;
     }
   },
@@ -130,16 +170,22 @@ export default {
       this.debug("Request", this.request);
       this.debug("notification", this.$notification);
 
-      this.$store.dispatch(AUTHORIZE_REQUEST, {
-        request: this.request,
-        notification: this.$notification,
-      });
+      this.$store
+        .dispatch(AUTHORIZE_REQUEST, {
+          params: this.request.data,
+          type: this.request.type,
+          notification: this.$notification,
+        })
+        .then((result) => {
+          this.success = true;
+          this.setIconWallet();
+        });
     },
     cancel() {
       //cancel request TO DO
-      var request = { id: 1 };
       this.$store.dispatch(CANCEL_REQUEST, {
-        request: this.request,
+        params: this.request.data,
+        type: this.request.type,
         notification: this.$notification,
       });
       this.$router.push("/home");
@@ -149,7 +195,7 @@ export default {
       //   });
     },
     setIconWallet() {
-      if (!this.iconSet && this.address) {
+      if (this.address) {
         let body = document.getElementById("metamask-logo-request");
         let icon = document.getElementById("metamask-logo-request-icon");
         console.log("metamask-logo", body);
@@ -168,9 +214,9 @@ export default {
   },
   data() {
     return {
-      unlocked: this.$API.getState().unlocked,
       walletAddress: "",
       type: "",
+      success: false,
       websiteData: {},
     };
   },
@@ -200,7 +246,6 @@ export default {
     width: 100%;
   }
   .request {
-    padding: 12px !important;
     padding-top: 74px !important;
   }
   .links {
