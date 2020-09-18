@@ -1,19 +1,20 @@
 'use strict'
 
-import extension from 'extensionizer'
 import StateStore from './lib/store';
-import Vault from './lib/vault'
+import VaultController from './controllers/vault'
 import seed from './lib/seed-phrase'
+import { getRequestDetails } from './lib/requests'
+import launchNotificationPopup from './lib/launch-notification-popup'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
-import { RequestAPIController } from './controllers/requests'
 
 
 const InitState = {
     wallet: {},
     connections: {},
     password: '',
-    popups : []
+    popups : [],
+    requests: []
 }
 
 export default class AppController {
@@ -21,15 +22,10 @@ export default class AppController {
 
     constructor() {
         console.log('NEW APP CONTroLER')
-
         this.#store = new StateStore(InitState)
-
-        this.#store.updateState({
-            vault: new Vault(),
-            api: new RequestAPIController()
-        })
-
-        this.#store.getState().vault.loadFromLocalStorage()
+        const vault = new VaultController()
+        vault.loadFromLocalStorage()
+        this.#store.updateState({ vault })
     }
 
     //=============================================================================
@@ -37,7 +33,7 @@ export default class AppController {
     //=============================================================================
 
     //
-    //  ONBOARDING FUNCTIONS
+    // ONBOARDING RELATED METHODS
     //
 
     /**
@@ -62,14 +58,13 @@ export default class AppController {
         if(!this.isUnlocked()){
             Promise.reject('Vault is locked')
         }
-
         let mnemonic = this.#store.getState().mnemonic
-
         return Promise.resolve(seed.validate(test) && mnemonic == test)
     }
 
+
     //
-    //  VAULT MANAGEMENT FUNCTIONS
+    // VAULT CONTROLLER INTERFACE
     //
 
     /**
@@ -96,11 +91,9 @@ export default class AppController {
      */
     resetVault() {
         const vault = this.#store.getState().vault
-        
         if(!vault.isUnlocked()){
             Promise.reject('Vault is locked')
         }
-
         return Promise.resolve(vault.submitPassword(this.#store.getState().password))
             .then(vault.fullReset())
             .then(() => this.#store.updateState(InitState))
@@ -117,11 +110,9 @@ export default class AppController {
      */
     unlockApp(password) {
         const vault = this.#store.getState().vault
- 
         if(vault.isEmpty()) {
             return Promise.reject('Vault is empty!')
         }
-
         return Promise.resolve(vault.unlock(password))
             .then(() => this.#store.updateState({
                 wallet: WalletController.deserialize(vault.getWallet()),
@@ -160,7 +151,7 @@ export default class AppController {
 
 
     //
-    //  CONNECTIONS MANAGEMENT FUNCTIONS
+    // CONNECTIONS CONTROLLER INTERFACE
     //
 
     /**
@@ -171,15 +162,13 @@ export default class AppController {
      * 
      * @returns {Promise} - result
      */
-    approveConnection(url) {
+    approveConnection(url, icon, name, description) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
-        return Promise.resolve(connections.addConnected(url))
+        return Promise.resolve(connections.addConnected(url, icon, name, description))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
@@ -194,60 +183,113 @@ export default class AppController {
     removeConnected(url) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
         return Promise.resolve(connections.removeConnected(url))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
+
     //
-    // WALLET INTERFACE
+    // WALLET CONTROLLER INTERFACE
     //
 
+    /**
+     * Encrypts @data using wallet.
+     * Rejects if plugin is locked.
+     * 
+     * @param {*} data - JSON serializable object to be encrypted
+     * 
+     * @returns {Promise<Object>} cipher - Ciphered data
+     */
     encryptData(data) {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
         return wallet.encryptData(data)
     }
 
+    /**
+     * Tries to decrypt @data using wallet.
+     * Rejects if plugin is locked.
+     * 
+     * @param {Object} data - Data as returned by <eth-sig-util>.encrypt method
+     * 
+     * @returns {Promise<*>} cipher - Decrypted JSON serializable data
+     */
     decryptData(data) {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
         return wallet.decryptData(data)
     }
 
 
+    //
+    // PENDING REQUESTS RELATED METHODS
+    //
+
     /**
-     * Pops and returns the next request on queue.
-     *
-     * @returns {Array} request - Request object with format { <type> <data> <callback> }
+     * Pushes a new pending request to the App's runtime requests queue.
+     * Requests pushed to this queue need user interaction to be handled.
+     * 
+     * @param {Object} _request - Object as generated by the request API
      */
-    getNextRequest() {
-        const api = this.#store.getState().api
-        return api.getNextRequest()
+    updatePendingRequests(_request) {
+        let requests = this.#store.getState().requests
+        requests.push(_request)
+        this.#store.updateState({ requests })
     }
 
     /**
-     * Returns the window ID of currently open popups.
+     * Pops and returns the next request on queue.
+     *
+     * @returns {Object} request - Object as generated by the request API
+     */
+    getNextRequest() {
+        let requests = this.#store.getState().requests
+        let next = requests.shift()
+        this.#store.updateState({ requests })
+        return next
+    }
+
+
+    //
+    // NOTIFICATION POPUP RELATED METHODS
+    //
+
+    /**
+     * Pushes @id to the App's active popups list.
+     * If @remove is set, tries to remove @id from the popups list.
      * 
-     * @returns {Array} popups - List of currentlu active popups' IDs
+     * @param {number} id - ID of active popup window 
+     * @param {boolean} remove - remove flag
+     */
+    updateActivePopups(id, remove) {
+        let popups = this.#store.getState().popups
+        if(remove) {
+            popups.splice(popups.indexOf(id), 1)
+        }
+        else {
+            popups.push(id)
+        }
+        this.#store.updateState({ popups })
+    }
+
+    /**
+     * Returns App's active popups list.
+     * 
+     * @returns {Array<number>} popups - List of currently active popup window IDs
      */
     getActivePopups() {
         return this.#store.getState().popups
     }
+
 
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM
@@ -257,15 +299,6 @@ export default class AppController {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
         const connections = this.#store.getState().connections
-
-        console.log('getState()',  {
-            initialized: !vault.isEmpty(),
-            unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : null,
-            connections: vault.isUnlocked()? connections.getAllConnections() : null,
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
-        })
-
         return {
             initialized: !vault.isEmpty(),
             unlocked: vault.isUnlocked(),
@@ -279,7 +312,7 @@ export default class AppController {
      * Returns an object with the controller's functions.
      * Exposes the controller's functionalities to the UI subsystem.  
      * 
-     * @returns {Object} - api
+     * @returns {Object} api
      */
     getAPI() {
         return {
@@ -291,6 +324,7 @@ export default class AppController {
             verifyPassword: this.verifyPassword.bind(this),
             unlockApp: this.unlockApp.bind(this),
             lockApp: this.lockApp.bind(this),
+            approveConnection: this.approveConnection.bind(this),
             removeConnected: this.removeConnected.bind(this),
             encryptData: this.encryptData.bind(this),
             decryptData: this.decryptData.bind(this),
@@ -303,28 +337,36 @@ export default class AppController {
     //=============================================================================
 
     requestAPI(method, params) {
-        const api = this.#store.getState().api
+        const requestHandler = function(details) {
+            let promise = {}
+            if(details.popup) {
+                promise = new Promise((resolve, reject) => {
+                    var _request = {
+                        type: method,
+                        data: params,
+                        callback: function(err, result) {
+                            if(err) return reject(err)
+                            else return resolve(result)
+                        }
+                    }
+                    this.updatePendingRequests(_request)
+                })
 
-        const promise = api.pushNewRequest(method, params)
+                launchNotificationPopup().then(id => this.updateActivePopups(id))
+            }
+            else {
+                const vault = this.#store.getState().vault
+                if(!vault.isUnlocked()) {
+                    promise = Promise.reject('Plugin is locked')
+                }
+                else {
+                    promise = this.#store.getState()[details.executor[0]][details.executor[1]](...params)
+                }
+            }
+            return promise
+        }.bind(this)
 
-        if(api.isPopup(method)) {
-            const updateActivePopups = function(id) {
-                let popups = this.#store.getState().popups
-                popups.push(id)
-                this.#store.updateState({ popups })
-            }.bind(this)
-
-            extension.windows.create({
-                url: extension.runtime.getURL("notification.html"),
-                type: "popup",
-                width: 360,
-                height: 550
-            }, win => updateActivePopups(win.id))
-        }
-        else {
-            api.executeMethod(method)
-        }
-
-        return promise
+        return Promise.resolve(getRequestDetails(method))
+            .then(requestHandler)
     }
 }

@@ -1,9 +1,7 @@
 import * as bip39 from 'bip39'
-import extension from 'extensionizer'
 import passworder from 'browser-passworder'
-import WalletController from '../controllers/wallet'
-import ConnectionsController from '../controllers/connections'
-import StateStore from './store'
+import WalletController from './wallet'
+import StateStore from '../lib/store'
 
 
 const InitState = {
