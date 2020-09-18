@@ -88,11 +88,9 @@ export default class AppController {
     }
 
     /**
-     * Tries to remove vault data from  a new vault with @password, persisting it to local storage.
-     * Creates a new wallet from the provided @mnemonic.
-     * Throws error if provided password is incorrect.
-     * 
-     * @param {string} - password 
+     * Resets the vault and clears plugin's local storage.
+     * This action is definitive. All plugin data is permanently lost.
+     * Throws error if plugin is locked.
      * 
      * @returns {Promise}
      */
@@ -113,7 +111,7 @@ export default class AppController {
      * Loads wallet, connections and password to runtime state.
      * Throws error if provided password is incorrect.
      * 
-     * @param {string} - password 
+     * @param {string} password 
      * 
      * @returns {Promise}
      */
@@ -149,7 +147,7 @@ export default class AppController {
      * Tries to unlock vault with @password.
      * Resolves to true in case password is valid and to false otherwise.
      * 
-     * @param {string} - password
+     * @param {string} password
      * 
      * @returns {Promise<boolean>} - verified
      */
@@ -167,13 +165,13 @@ export default class AppController {
 
     /**
      * Approves a pending connection request.
-     * Promise rejects if @url does not match any pending connections, or if vault is locked.
+     * Promise rejects if a connection with same @url already exists, or if vault is locked.
      * 
-     * @param {string} - url Identifier of the pendding connection
+     * @param {string} url - Identifier of the pendding connection
      * 
      * @returns {Promise} - result
      */
-    approvePendingConnection(url) {
+    approveConnection(url) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
 
@@ -181,34 +179,15 @@ export default class AppController {
             return Promise.reject('Plugin is locked')
         }
 
-        return Promise.resolve(connections.approvePending(url))
+        return Promise.resolve(connections.addConnected(url))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
-    }
-
-    /**
-     * Rejects a pending connection request.
-     * Promise rejects if @url does not match any pending connections, or if vault is locked.
-     * 
-     * @param {string} - url Identifier of the pendding connection
-     * 
-     * @returns {Promise} - result
-     */
-    rejectPendingConnection(url) {
-        const vault = this.#store.getState().vault
-        const connections = this.#store.getState().connections
-
-        if(!vault.isUnlocked()) {
-            return Promise.reject('Plugin is locked')
-        }
-
-        return Promise.resolve(connections.rejectPending(url))
     }
 
     /**
      * Removes connection identified by @url from list of connected websites.
      * Promise rejects if @url does not match any approved connections, or if vault is locked.
      * 
-     * @param {string} - url Identifier of the pendding connection
+     * @param {string} url - Identifier of the pendding connection
      * 
      * @returns {Promise} - result
      */
@@ -228,21 +207,6 @@ export default class AppController {
     // WALLET INTERFACE
     //
 
-    getWalletAddress() {
-        const vault = this.#store.getState().vault
-        const wallet = this.#store.getState().wallet
-
-        if(!vault.isUnlocked()) {
-            return undefined
-        }
-
-        return wallet.getAddress()
-    }
-
-    signEthereumTransaction() {
-
-    }
-
     encryptData(data) {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
@@ -255,24 +219,32 @@ export default class AppController {
     }
 
     decryptData(data) {
+        const vault = this.#store.getState().vault
+        const wallet = this.#store.getState().wallet
 
+        if(!vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+
+        return wallet.decryptData(data)
     }
+
 
     /**
-     * Rejects the execution of the request referenced by @nonce .  
-     * 
-     * @returns {number} - nonce
+     * Pops and returns the next request on queue.
+     *
+     * @returns {Array} request - Request object with format { <type> <data> <callback> }
      */
-    rejectRequest(nonce) {
-        const api = this.#store.getState().api
-        return api.popFromQueue(nonce)
-    }
-
-    getNextNotification() {
+    getNextRequest() {
         const api = this.#store.getState().api
         return api.getNextRequest()
     }
 
+    /**
+     * Returns the window ID of currently open popups.
+     * 
+     * @returns {Array} popups - List of currentlu active popups' IDs
+     */
     getActivePopups() {
         return this.#store.getState().popups
     }
@@ -319,11 +291,10 @@ export default class AppController {
             verifyPassword: this.verifyPassword.bind(this),
             unlockApp: this.unlockApp.bind(this),
             lockApp: this.lockApp.bind(this),
-            approvePendingConnection: this.approvePendingConnection.bind(this),
-            rejectPendingConnection: this.rejectPendingConnection.bind(this),
             removeConnected: this.removeConnected.bind(this),
             encryptData: this.encryptData.bind(this),
-            getNextNotification: this.getNextNotification.bind(this)
+            decryptData: this.decryptData.bind(this),
+            getNextRequest: this.getNextRequest.bind(this)
         }
     }
 
@@ -334,14 +305,12 @@ export default class AppController {
     requestAPI(method, params) {
         const api = this.#store.getState().api
 
-        let response = api.pushNewRequest(method, params)
+        const promise = api.pushNewRequest(method, params)
 
         if(api.isPopup(method)) {
-            let updateActivePopups = function(id) {
+            const updateActivePopups = function(id) {
                 let popups = this.#store.getState().popups
-
                 popups.push(id)
-
                 this.#store.updateState({ popups })
             }.bind(this)
 
@@ -352,7 +321,10 @@ export default class AppController {
                 height: 550
             }, win => updateActivePopups(win.id))
         }
+        else {
+            api.executeMethod(method)
+        }
 
-        return response
+        return promise
     }
 }

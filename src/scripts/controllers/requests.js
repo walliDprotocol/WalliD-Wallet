@@ -18,8 +18,6 @@ const MethodsPopupMap = {
 
 // External API controller imported to AppController
 export class RequestAPIController {
-    #nonce = -1
-    #popupIDs = []
     #pendingRequests = [] // { <type> <data> <executor> }
 
     constructor() {}
@@ -29,12 +27,9 @@ export class RequestAPIController {
             return Promise.reject('Invalid method call')
         }
 
-        this.#nonce++
-
         return new Promise((resolve, reject) => {
             var request = {
                 type: method,
-                nonce: this.#nonce,
                 data: params,
                 callback: function(err, result) {
                     if(err) return reject(err)
@@ -48,10 +43,6 @@ export class RequestAPIController {
 
     getNextRequest() {
         return this.#pendingRequests.shift()
-    }
-
-    getOpenNotificationPopups() {
-        return this.#popupIDs
     }
 
     isPopup(method) {

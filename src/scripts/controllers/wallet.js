@@ -72,15 +72,16 @@ export default class WalletController {
     }
 
     encryptData(data) {
-        const publicKey = this.#wallet.getPublicKey()
-        const enc = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
+        const privKey = ethUtil.toBuffer(this.#wallet.getPrivateKey())
+        const publicKey = ethSigUtil.getEncryptionPublicKey(privKey)
+        const cipher = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
         
-        return Promise.resolve(enc)
+        return Promise.resolve(cipher)
     }
 
-    decryptData(encryptedData) {
+    decryptData(cipher) {
         const privateKey = ethUtil.stripHexPrefix(this.#wallet.getPrivateKey())
-        const data = ethSigUtil.decrypt(encryptedData, privateKey)
+        const data = ethSigUtil.decrypt(cipher, privateKey)
         
         return Promise.resolve(data)
     }
