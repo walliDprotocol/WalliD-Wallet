@@ -75,6 +75,8 @@ export default {
 			else
 				API.unlockApp(this.password)
 					.then(() => this.refreshState())
+					.then(() => API.getAuthorizationToken('CC_PT', 'kyc'))
+					.then(token => console.log('TOKENSS:', token))
 
 		},
 

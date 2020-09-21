@@ -4,6 +4,7 @@ import StateStore from './lib/store';
 import VaultController from './controllers/vault'
 import seed from './lib/seed-phrase'
 import { getRequestDetails } from './lib/requests'
+import * as WalliD from './lib/wallid'
 import launchNotificationPopup from './lib/launch-notification-popup'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
@@ -119,6 +120,14 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
             }))
+            //.then(() => {
+            //    //let w = new WalliDController();
+            //    //w.getAuthorizationToken()
+            //    const wallet = this.#store.getState().wallet
+            //    wallet.signEthereumMessage(Buffer.from('CODIGO').toString('hex'))
+            //        .then(sig => wallet.verifyEthereumSignedMessage(Buffer.from('CODIGO').toString('hex'), sig))
+            //        .then(veri => console.log(veri))
+            //})
     }
 
     /**
@@ -162,13 +171,13 @@ export default class AppController {
      * 
      * @returns {Promise} - result
      */
-    approveConnection(url, icon, name, description) {
+    approveConnection(url, icon, name) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-        return Promise.resolve(connections.addConnected(url, icon, name, description))
+        return Promise.resolve(connections.addConnected(url, icon, name))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
@@ -192,7 +201,7 @@ export default class AppController {
 
 
     //
-    // WALLET CONTROLLER INTERFACE
+    // CRYPTOGRAPHIC INTERFACE
     //
 
     /**
@@ -229,7 +238,16 @@ export default class AppController {
         return wallet.decryptData(data)
     }
 
+    //
+    // WALLID RELATED METHODS
+    //
 
+    getAuthorizationToken(idt, operation) {
+        const wallet = this.#store.getState().wallet
+        return Promise.resolve(WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation))
+            .then(({ ok, status, body }) => ok? wallet.signEthereumMessage(body.challenge)
+                .then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature)) : Promise.reject(status))
+    }
     //
     // PENDING REQUESTS RELATED METHODS
     //
@@ -328,6 +346,7 @@ export default class AppController {
             removeConnected: this.removeConnected.bind(this),
             encryptData: this.encryptData.bind(this),
             decryptData: this.decryptData.bind(this),
+            getAuthorizationToken: this.getAuthorizationToken.bind(this),
             getNextRequest: this.getNextRequest.bind(this)
         }
     }
@@ -352,7 +371,8 @@ export default class AppController {
                     this.updatePendingRequests(_request)
                 })
 
-                launchNotificationPopup().then(id => this.updateActivePopups(id))
+                launchNotificationPopup()
+                    .then(id => this.updateActivePopups(id))
             }
             else {
                 const vault = this.#store.getState().vault
@@ -364,9 +384,9 @@ export default class AppController {
                 }
             }
             return promise
-        }.bind(this)
+        }
 
         return Promise.resolve(getRequestDetails(method))
-            .then(requestHandler)
+            .then(requestHandler.bind(this))
     }
 }
