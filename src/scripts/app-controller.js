@@ -120,14 +120,6 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
             }))
-            //.then(() => {
-            //    //let w = new WalliDController();
-            //    //w.getAuthorizationToken()
-            //    const wallet = this.#store.getState().wallet
-            //    wallet.signEthereumMessage(Buffer.from('CODIGO').toString('hex'))
-            //        .then(sig => wallet.verifyEthereumSignedMessage(Buffer.from('CODIGO').toString('hex'), sig))
-            //        .then(veri => console.log(veri))
-            //})
     }
 
     /**
@@ -218,7 +210,7 @@ export default class AppController {
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-        return wallet.encryptData(data)
+        return wallet.encryptData(JSON.stringify(data))
     }
 
     /**
@@ -235,19 +227,38 @@ export default class AppController {
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-        return wallet.decryptData(data)
+        return JSON.parse(wallet.decryptData(data))
     }
 
     //
     // WALLID RELATED METHODS
     //
 
+    /**
+     * Returns WalliD authorization token ready for use with WalliD API.
+     * Rejects with HTTP status code from server if request fail.
+     * 
+     * @param {string} idt 
+     * @param {string} operation 
+     */
     getAuthorizationToken(idt, operation) {
         const wallet = this.#store.getState().wallet
         return Promise.resolve(WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation))
             .then(({ ok, status, body }) => ok? wallet.signEthereumMessage(body.challenge)
                 .then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature)) : Promise.reject(status))
     }
+
+    /**
+     * Retrieves WalliD user's identity data.
+     * Rejects with HTTP status code from server if identity doesn't exists, or request fail.
+     * 
+     * @param {string} auth_token - WalliD authorization token 
+     */
+    extractIdentityData(auth_token) {
+        return Promise.resolve(WalliD.extractIdentity(auth_token))
+            .then(({ ok, status, body }) => ok && status != 202? Promise.resolve(body.data) : Promise.reject(status))
+    }
+
     //
     // PENDING REQUESTS RELATED METHODS
     //
@@ -347,6 +358,7 @@ export default class AppController {
             encryptData: this.encryptData.bind(this),
             decryptData: this.decryptData.bind(this),
             getAuthorizationToken: this.getAuthorizationToken.bind(this),
+            extractIdentityData: this.extractIdentityData.bind(this),
             getNextRequest: this.getNextRequest.bind(this)
         }
     }
@@ -371,8 +383,7 @@ export default class AppController {
                     this.updatePendingRequests(_request)
                 })
 
-                launchNotificationPopup()
-                    .then(id => this.updateActivePopups(id))
+                launchNotificationPopup().then(id => this.updateActivePopups(id))
             }
             else {
                 const vault = this.#store.getState().vault
@@ -380,7 +391,8 @@ export default class AppController {
                     promise = Promise.reject('Plugin is locked')
                 }
                 else {
-                    promise = this.#store.getState()[details.executor[0]][details.executor[1]](...params)
+                    const state = this.#store.getState()
+                    promise = state[details.executor[0]][details.executor[1]](...params)
                 }
             }
             return promise

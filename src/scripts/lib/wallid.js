@@ -20,7 +20,10 @@ export function buildAuthorizationToken_v1(token, signature) {
     return Promise.resolve(btoa(authToken))
 }
 
-export function extractIdentity() {
+export function extractIdentity(auth_token) {
     const url = `https://api.wallid.io/api/${API_VERSION}/extract`
-    
+    const headers = {
+        'WalliD-Authorization': auth_token
+    }
+    return get(url, { headers })
 }
