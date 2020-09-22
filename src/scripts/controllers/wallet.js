@@ -50,39 +50,48 @@ export default class WalletController {
     return new WalletController(firstChild.getWallet());
   }
 
-  // Returns
-  getAddress() {
-    return this.#wallet.getAddress().toString("hex");
-  }
+    // Returns
+    getAddress() {
+        return '0x' + this.#wallet.getAddress().toString('hex')
+    }
 
     // tx is an instance of 'ethereumjs-transaction' class
     signEthereumTransaction(tx) {
         const privateKey = this.#wallet.getPrivateKey()
         tx.sign(privateKey)
-        
         return Promise.resolve(tx)
     }
 
-    signMessage (address, data, opts = {}) {
-        const message = ethUtil.stripHexPrefix(data)
+    signEthereumMessage(_message) {
+        const message = ethUtil.stripHexPrefix(Buffer.from(_message))
+        const privateKey = this.#wallet.getPrivateKey()
+        const msgSig = ethSigUtil.personalSign(privateKey, { data: message })
+        return Promise.resolve(msgSig)
+    }
+
+    verifyEthereumSignedMessage(message, signature) {
+        const recovered = ethSigUtil.recoverPersonalSignature({ data: message, sig: signature })
+        return Promise.resolve(recovered == this.getAddress())
+    }
+
+    signMessage() {
+        const message = ethUtil.stripHexPrefix(Buffer.from(data))
         const privateKey = this.#wallet.getPrivateKey()
         const msgSig = ethUtil.ecsign(Buffer.from(message, 'hex'), privateKey)
         const rawMsgSig = ethSigUtil.concatSig(msgSig.v, msgSig.r, msgSig.s)
-        
         return Promise.resolve(rawMsgSig)
     }
 
     encryptData(data) {
-        const publicKey = this.#wallet.getPublicKey()
-        const enc = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
-        
-        return Promise.resolve(enc)
+        const privKey = ethUtil.toBuffer(this.#wallet.getPrivateKey())
+        const publicKey = ethSigUtil.getEncryptionPublicKey(privKey)
+        const cipher = ethSigUtil.encrypt(publicKey, { data }, 'x25519-xsalsa20-poly1305')
+        return Promise.resolve(cipher)
     }
 
-    decryptData(encryptedData) {
+    decryptData(cipher) {
         const privateKey = ethUtil.stripHexPrefix(this.#wallet.getPrivateKey())
-        const data = ethSigUtil.decrypt(encryptedData, privateKey)
-        
+        const data = ethSigUtil.decrypt(cipher, privateKey)
         return Promise.resolve(data)
     }
 }

@@ -7,11 +7,6 @@ const App = new AppController()
 // Inject internal API into UI subsystem
 window.API = App.getAPI()
 
-extension.runtime.onInstalled.addListener(function() {
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-        
-    });
-});
 
 chrome.declarativeContent.onPageChanged.addRules([{
     conditions: [
@@ -20,12 +15,10 @@ chrome.declarativeContent.onPageChanged.addRules([{
         })
     ],
     actions: [new chrome.declarativeContent.ShowPageAction()]
-}]);
+}])
 
 // Connects the external web connector to the App's RequestAPI
 extension.runtime.onMessage.addListener(function(request, res, f) {
-    console.log('ON MESSAGE RECEIVED BACK', request)
-
     App.requestAPI(request.method, request.params)
         .then(result => f({ data: result, error: null, nonce: request.nonce }))
         .catch(error => f({ data: null, error, nonce: request.nonce }))
@@ -34,6 +27,13 @@ extension.runtime.onMessage.addListener(function(request, res, f) {
 })
 
 // Locks App when user closes the browser window
-extension.windows.onRemoved.addListener(id => !App.getActivePopups().includes(id)? App.lockApp() : undefined )
-// Starts 
-//extension.windows.onCreated.addListener(initApp)
+extension.windows.onRemoved.addListener(id => {
+    const popups = App.getActivePopups()
+
+    if(!popups.includes(id)) {
+        App.lockApp()
+    }
+    else {
+        App.updateActivePopups(id, true)
+    }
+})

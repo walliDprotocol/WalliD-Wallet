@@ -1,19 +1,21 @@
 'use strict'
 
-import extension from 'extensionizer'
 import StateStore from './lib/store';
-import Vault from './lib/vault'
+import VaultController from './controllers/vault'
 import seed from './lib/seed-phrase'
+import { getRequestDetails } from './lib/requests'
+import * as WalliD from './lib/wallid'
+import launchNotificationPopup from './lib/launch-notification-popup'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
-import { RequestAPIController } from './controllers/requests'
 
 
 const InitState = {
     wallet: {},
     connections: {},
     password: '',
-    popups : []
+    popups : [],
+    requests: []
 }
 
 export default class AppController {
@@ -21,15 +23,10 @@ export default class AppController {
 
     constructor() {
         console.log('NEW APP CONTroLER')
-
         this.#store = new StateStore(InitState)
-
-        this.#store.updateState({
-            vault: new Vault(),
-            api: new RequestAPIController()
-        })
-
-        this.#store.getState().vault.loadFromLocalStorage()
+        const vault = new VaultController()
+        vault.loadFromLocalStorage()
+        this.#store.updateState({ vault })
     }
 
     //=============================================================================
@@ -37,7 +34,7 @@ export default class AppController {
     //=============================================================================
 
     //
-    //  ONBOARDING FUNCTIONS
+    // ONBOARDING RELATED METHODS
     //
 
     /**
@@ -62,14 +59,13 @@ export default class AppController {
         if(!this.isUnlocked()){
             Promise.reject('Vault is locked')
         }
-
         let mnemonic = this.#store.getState().mnemonic
-
         return Promise.resolve(seed.validate(test) && mnemonic == test)
     }
 
+
     //
-    //  VAULT MANAGEMENT FUNCTIONS
+    // VAULT CONTROLLER INTERFACE
     //
 
     /**
@@ -88,21 +84,17 @@ export default class AppController {
     }
 
     /**
-     * Tries to remove vault data from  a new vault with @password, persisting it to local storage.
-     * Creates a new wallet from the provided @mnemonic.
-     * Throws error if provided password is incorrect.
-     * 
-     * @param {string} - password 
+     * Resets the vault and clears plugin's local storage.
+     * This action is definitive. All plugin data is permanently lost.
+     * Throws error if plugin is locked.
      * 
      * @returns {Promise}
      */
     resetVault() {
         const vault = this.#store.getState().vault
-        
         if(!vault.isUnlocked()){
             Promise.reject('Vault is locked')
         }
-
         return Promise.resolve(vault.submitPassword(this.#store.getState().password))
             .then(vault.fullReset())
             .then(() => this.#store.updateState(InitState))
@@ -113,23 +105,29 @@ export default class AppController {
      * Loads wallet, connections and password to runtime state.
      * Throws error if provided password is incorrect.
      * 
-     * @param {string} - password 
+     * @param {string} password 
      * 
      * @returns {Promise}
      */
     unlockApp(password) {
         const vault = this.#store.getState().vault
- 
         if(vault.isEmpty()) {
             return Promise.reject('Vault is empty!')
         }
-
         return Promise.resolve(vault.unlock(password))
             .then(() => this.#store.updateState({
                 wallet: WalletController.deserialize(vault.getWallet()),
                 connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
             }))
+            //.then(() => {
+            //    //let w = new WalliDController();
+            //    //w.getAuthorizationToken()
+            //    const wallet = this.#store.getState().wallet
+            //    wallet.signEthereumMessage(Buffer.from('CODIGO').toString('hex'))
+            //        .then(sig => wallet.verifyEthereumSignedMessage(Buffer.from('CODIGO').toString('hex'), sig))
+            //        .then(veri => console.log(veri))
+            //})
     }
 
     /**
@@ -149,7 +147,7 @@ export default class AppController {
      * Tries to unlock vault with @password.
      * Resolves to true in case password is valid and to false otherwise.
      * 
-     * @param {string} - password
+     * @param {string} password
      * 
      * @returns {Promise<boolean>} - verified
      */
@@ -162,120 +160,154 @@ export default class AppController {
 
 
     //
-    //  CONNECTIONS MANAGEMENT FUNCTIONS
+    // CONNECTIONS CONTROLLER INTERFACE
     //
 
     /**
      * Approves a pending connection request.
-     * Promise rejects if @url does not match any pending connections, or if vault is locked.
+     * Promise rejects if a connection with same @url already exists, or if vault is locked.
      * 
-     * @param {string} - url Identifier of the pendding connection
+     * @param {string} url - Identifier of the pendding connection
      * 
      * @returns {Promise} - result
      */
-    approvePendingConnection(url) {
+    approveConnection(url, icon, name) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
-        return Promise.resolve(connections.approvePending(url))
+        return Promise.resolve(connections.addConnected(url, icon, name))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
-    }
-
-    /**
-     * Rejects a pending connection request.
-     * Promise rejects if @url does not match any pending connections, or if vault is locked.
-     * 
-     * @param {string} - url Identifier of the pendding connection
-     * 
-     * @returns {Promise} - result
-     */
-    rejectPendingConnection(url) {
-        const vault = this.#store.getState().vault
-        const connections = this.#store.getState().connections
-
-        if(!vault.isUnlocked()) {
-            return Promise.reject('Plugin is locked')
-        }
-
-        return Promise.resolve(connections.rejectPending(url))
     }
 
     /**
      * Removes connection identified by @url from list of connected websites.
      * Promise rejects if @url does not match any approved connections, or if vault is locked.
      * 
-     * @param {string} - url Identifier of the pendding connection
+     * @param {string} url - Identifier of the pendding connection
      * 
      * @returns {Promise} - result
      */
     removeConnected(url) {
         const vault = this.#store.getState().vault
         const connections = this.#store.getState().connections
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
         return Promise.resolve(connections.removeConnected(url))
             .then(vault.putConnections(connections.serialize(), this.#store.getState().password))
     }
 
+
     //
-    // WALLET INTERFACE
+    // CRYPTOGRAPHIC INTERFACE
     //
 
-    getWalletAddress() {
-        const vault = this.#store.getState().vault
-        const wallet = this.#store.getState().wallet
-
-        if(!vault.isUnlocked()) {
-            return undefined
-        }
-
-        return wallet.getAddress()
-    }
-
-    signEthereumTransaction() {
-
-    }
-
+    /**
+     * Encrypts @data using wallet.
+     * Rejects if plugin is locked.
+     * 
+     * @param {*} data - JSON serializable object to be encrypted
+     * 
+     * @returns {Promise<Object>} cipher - Ciphered data
+     */
     encryptData(data) {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
-
         if(!vault.isUnlocked()) {
             return Promise.reject('Plugin is locked')
         }
-
         return wallet.encryptData(data)
     }
 
+    /**
+     * Tries to decrypt @data using wallet.
+     * Rejects if plugin is locked.
+     * 
+     * @param {Object} data - Data as returned by <eth-sig-util>.encrypt method
+     * 
+     * @returns {Promise<*>} cipher - Decrypted JSON serializable data
+     */
     decryptData(data) {
+        const vault = this.#store.getState().vault
+        const wallet = this.#store.getState().wallet
+        if(!vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+        return wallet.decryptData(data)
+    }
 
+    //
+    // WALLID RELATED METHODS
+    //
+
+    getAuthorizationToken(idt, operation) {
+        const wallet = this.#store.getState().wallet
+        return Promise.resolve(WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation))
+            .then(({ ok, status, body }) => ok? wallet.signEthereumMessage(body.challenge)
+                .then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature)) : Promise.reject(status))
+    }
+    //
+    // PENDING REQUESTS RELATED METHODS
+    //
+
+    /**
+     * Pushes a new pending request to the App's runtime requests queue.
+     * Requests pushed to this queue need user interaction to be handled.
+     * 
+     * @param {Object} _request - Object as generated by the request API
+     */
+    updatePendingRequests(_request) {
+        let requests = this.#store.getState().requests
+        requests.push(_request)
+        this.#store.updateState({ requests })
     }
 
     /**
-     * Rejects the execution of the request referenced by @nonce .  
-     * 
-     * @returns {number} - nonce
+     * Pops and returns the next request on queue.
+     *
+     * @returns {Object} request - Object as generated by the request API
      */
-    rejectRequest(nonce) {
-        const api = this.#store.getState().api
-        return api.popFromQueue(nonce)
+    getNextRequest() {
+        let requests = this.#store.getState().requests
+        let next = requests.shift()
+        this.#store.updateState({ requests })
+        return next
     }
 
-    getNextNotification() {
-        const api = this.#store.getState().api
-        return api.getNextRequest()
+
+    //
+    // NOTIFICATION POPUP RELATED METHODS
+    //
+
+    /**
+     * Pushes @id to the App's active popups list.
+     * If @remove is set, tries to remove @id from the popups list.
+     * 
+     * @param {number} id - ID of active popup window 
+     * @param {boolean} remove - remove flag
+     */
+    updateActivePopups(id, remove) {
+        let popups = this.#store.getState().popups
+        if(remove) {
+            popups.splice(popups.indexOf(id), 1)
+        }
+        else {
+            popups.push(id)
+        }
+        this.#store.updateState({ popups })
     }
 
+    /**
+     * Returns App's active popups list.
+     * 
+     * @returns {Array<number>} popups - List of currently active popup window IDs
+     */
     getActivePopups() {
         return this.#store.getState().popups
     }
+
 
     //=============================================================================
     // EXPOSED TO THE UI SUBSYSTEM
@@ -285,15 +317,6 @@ export default class AppController {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
         const connections = this.#store.getState().connections
-
-        console.log('getState()',  {
-            initialized: !vault.isEmpty(),
-            unlocked: vault.isUnlocked(),
-            address: vault.isUnlocked()? wallet.getAddress() : null,
-            connections: vault.isUnlocked()? connections.getAllConnections() : null,
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
-        })
-
         return {
             initialized: !vault.isEmpty(),
             unlocked: vault.isUnlocked(),
@@ -307,7 +330,7 @@ export default class AppController {
      * Returns an object with the controller's functions.
      * Exposes the controller's functionalities to the UI subsystem.  
      * 
-     * @returns {Object} - api
+     * @returns {Object} api
      */
     getAPI() {
         return {
@@ -319,11 +342,12 @@ export default class AppController {
             verifyPassword: this.verifyPassword.bind(this),
             unlockApp: this.unlockApp.bind(this),
             lockApp: this.lockApp.bind(this),
-            approvePendingConnection: this.approvePendingConnection.bind(this),
-            rejectPendingConnection: this.rejectPendingConnection.bind(this),
+            approveConnection: this.approveConnection.bind(this),
             removeConnected: this.removeConnected.bind(this),
             encryptData: this.encryptData.bind(this),
-            getNextNotification: this.getNextNotification.bind(this)
+            decryptData: this.decryptData.bind(this),
+            getAuthorizationToken: this.getAuthorizationToken.bind(this),
+            getNextRequest: this.getNextRequest.bind(this)
         }
     }
 
@@ -332,27 +356,37 @@ export default class AppController {
     //=============================================================================
 
     requestAPI(method, params) {
-        const api = this.#store.getState().api
+        const requestHandler = function(details) {
+            let promise = {}
+            if(details.popup) {
+                promise = new Promise((resolve, reject) => {
+                    var _request = {
+                        type: method,
+                        data: params,
+                        callback: function(err, result) {
+                            if(err) return reject(err)
+                            else return resolve(result)
+                        }
+                    }
+                    this.updatePendingRequests(_request)
+                })
 
-        let response = api.pushNewRequest(method, params)
-
-        if(api.isPopup(method)) {
-            let updateActivePopups = function(id) {
-                let popups = this.#store.getState().popups
-
-                popups.push(id)
-
-                this.#store.updateState({ popups })
-            }.bind(this)
-
-            extension.windows.create({
-                url: extension.runtime.getURL("notification.html"),
-                type: "popup",
-                width: 360,
-                height: 550
-            }, win => updateActivePopups(win.id))
+                launchNotificationPopup()
+                    .then(id => this.updateActivePopups(id))
+            }
+            else {
+                const vault = this.#store.getState().vault
+                if(!vault.isUnlocked()) {
+                    promise = Promise.reject('Plugin is locked')
+                }
+                else {
+                    promise = this.#store.getState()[details.executor[0]][details.executor[1]](...params)
+                }
+            }
+            return promise
         }
 
-        return response
+        return Promise.resolve(getRequestDetails(method))
+            .then(requestHandler.bind(this))
     }
 }

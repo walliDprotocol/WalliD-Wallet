@@ -25,7 +25,6 @@ export function ExternalConnectorFrontend() {
                 document.removeEventListener('wallid_response', listener)
             }
         }
-
         document.addEventListener('wallid_response', listener)
     }
 

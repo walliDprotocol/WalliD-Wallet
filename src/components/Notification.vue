@@ -28,7 +28,7 @@ export default {
 			address: _state.address,
 			initialized: _state.initialized,
             unlocked: _state.unlocked,
-            notification: API.getNextNotification()
+            notification: API.getNextRequest()
 		}
 
 		console.log('DATA', state)

@@ -23,12 +23,12 @@ export default class ConnectionsController {
         return new ConnectionsController(conns)
     }
 
-    addConnected(url, icon, name, description) {
+    addConnected(url, icon, name) {
         if(this.#connections.findIndex(c => c.url == url) != -1) {
             return Promise.reject(`Connection for url ${url} already exists`)
         }
 
-        this.#connections.push({ url, icon, name, description })
+        this.#connections.push({ url, icon, name })
 
         return Promise.resolve()
     }
