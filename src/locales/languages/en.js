@@ -175,7 +175,7 @@ export default {
     title: "My WalliD",
     address: "Your wallet address",
   },
-  restore: {
+  import: {
     title: "Import your wallet",
     subtitle: "Enter your twelve word seed phrase to import your wallet.",
     seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
@@ -185,6 +185,17 @@ export default {
       "Must be at least 8 characters",
     ],
     button: "Import wallet",
+  },
+  restore: {
+    title: "Restore your wallet",
+    subtitle: "Enter your twelve word seed phrase to restore your wallet.",
+    seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
+    password: [
+      "New password",
+      "Confirm password",
+      "Must be at least 8 characters",
+    ],
+    button: "Restore wallet",
   },
   login: {
     title: "Welcome back!",
@@ -236,6 +247,10 @@ export default {
         button: "Done",
       },
     ],
+  },
+  passwordErrors: {
+    lenght: "Password not long enough",
+    match: "Passwords don’t match",
   },
   buttons: {
     cancel: "Cancel",

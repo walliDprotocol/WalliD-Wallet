@@ -8,7 +8,7 @@
         @mouseleave="delay()"
       >
         <div class="wallet-address ">
-          <p>0x{{ address | truncate(6, "...") }}</p>
+          <p>{{ address | truncate(6, "...") }}</p>
           <input type="hidden" id="walletCopy" :value="walletAddress" />
           <Copy v-if="!copy"></Copy>
           <CopyHover v-else> </CopyHover>
@@ -37,7 +37,7 @@ export default {
     Copy,
   },
   mounted() {
-    this.walletAddress = this.checksumAddress("0x" + this.address);
+    this.walletAddress = this.address; //this.checksumAddress
   },
   methods: {
     copyToClip() {

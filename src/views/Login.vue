@@ -1,10 +1,6 @@
 <template>
   <v-container>
-    <v-form
-      ref="form"
-      @submit.prevent="unlockPlugin"
-      lazy-validation
-    >
+    <v-form ref="form" @submit.prevent="unlockPlugin" lazy-validation>
       <v-row>
         <v-col cols="12" class="text-center my-6 pt-5">
           <v-img
@@ -15,8 +11,8 @@
             contain
             src="../images/logo-wallid.png"
         /></v-col>
-        <v-col cols="12" class="pt-3 pb-6 px-14">
-          <h2 class="T1 mb-5 text-center">
+        <v-col cols="12" class="pb-6 px-14">
+          <h2 class="T1 mb-2 text-center">
             {{ $t("login.title") }}
           </h2>
         </v-col>
@@ -45,7 +41,7 @@
             {{ $t("login.button") }}
           </v-btn>
         </v-col>
-        <v-col cols="12" class="pt-4 text-left">
+        <v-col cols="12" class=" text-left">
           <p class="links mt-2 text-left" style="color: #373c43;">
             {{ $t("login.restore[0]") }}<br />
             <router-link to="/restore" class="links">
@@ -70,15 +66,15 @@ export default {
     return {
       password: "",
       passwordError: false,
-      initialized: this.$API.getState().initialized,
+      completedOnboarding: this.$API.getState().initialized,
     };
   },
   mounted() {
-    console.log("MOUNTED Login", this.initialized);
+    console.log("MOUNTED Login", this.completedOnboarding);
   },
   methods: {
     unlockPlugin() {
-      if (!this.initialized) {
+      if (!this.completedOnboarding) {
         this.debug("Onboarding not completed");
         this.$router.push("/create");
       } else {

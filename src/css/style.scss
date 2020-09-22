@@ -77,7 +77,6 @@
       padding: 0 15px;
       border-radius: 3px;
       border: solid 1px #b8b9bb;
-      margin-bottom: 10px;
       input {
         font-size: 13px;
         font-weight: 500;
@@ -98,6 +97,7 @@
       line-height: normal;
       letter-spacing: normal;
       color: #e95e5e;
+      margin: 10px 0;
       .v-input__slot {
         border-color: #e95e5e;
       }
@@ -227,7 +227,7 @@
   }
   .links {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.43;

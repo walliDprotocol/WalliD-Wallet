@@ -21,10 +21,14 @@ export default {
     max-height: 74px;
     max-width: 74px;
     border-radius: 50%;
-    border: solid 1px #b8b9bb;
+    border: solid 2px #b8b9bb;
     margin: auto;
     margin-right: 0;
     margin-bottom: 12px;
+
+    .connected & {
+      border: solid 2px var(--turquoise-green);
+    }
   }
   &--name {
     position: absolute;

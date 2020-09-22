@@ -8,17 +8,17 @@
               <ArrowBack />
             </v-btn>
             <h2 class="T1">
-              {{ $t("restore.title") }}
+              {{ $t("import.title") }}
             </h2>
           </div>
           <h2 class="sub-title-fields text-left">
-            {{ $t("restore.subtitle") }}
+            {{ $t("import.subtitle") }}
           </h2>
         </v-col>
 
         <v-col cols="12" class="text-left pb-1 pt-2">
           <label class="sub-title-fields">
-            {{ $t("restore.seedPhrase[0]") }}
+            {{ $t("import.seedPhrase[0]") }}
           </label>
 
           <v-text-field
@@ -41,10 +41,10 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("restore.seedPhrase[1]") }}
+                  {{ $t("import.seedPhrase[1]") }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("restore.seedPhrase[2]") }}
+                  {{ $t("import.seedPhrase[2]") }}
                 </p>
               </v-tooltip>
             </template>
@@ -69,10 +69,10 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("restore.seedPhrase[1]") }}
+                  {{ $t("import.seedPhrase[1]") }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("restore.seedPhrase[2]") }}
+                  {{ $t("import.seedPhrase[2]") }}
                 </p>
               </v-tooltip>
             </template>
@@ -80,13 +80,13 @@
         </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
           <label class="sub-title-fields">
-            {{ $t("restore.password[0]") }}
+            {{ $t("import.password[0]") }}
           </label>
           <v-text-field
             v-model="password"
             solo
             flat
-            :hint="$t('create.stepper[0].password[2]')"
+            :hint="$t('import.password[2]')"
             class="password-input mt-1"
             name="input-password-login"
             type="password"
@@ -96,7 +96,7 @@
 
         <v-col cols="12" class="text-left pb-0 pt-1">
           <label class="sub-title-fields">
-            {{ $t("restore.password[1]") }}
+            {{ $t("import.password[1]") }}
           </label>
           <v-text-field
             v-model="passwordMatch"
@@ -115,7 +115,7 @@
             @click="checkForm"
             class="advance-btn"
           >
-            {{ $t("restore.button") }}
+            {{ $t("import.button") }}
           </v-btn>
         </v-col>
       </v-row>
@@ -141,7 +141,7 @@ import * as bip39 from "bip39";
 import ArrowBack from "../images/icon-arrow-back.vue";
 import EyeUnselected from "../images/icon-eye-unselected.vue";
 import EyeSelected from "../images/icon-eye-selected.vue";
-import { RESTORE_PASSWORD } from "../store/actions";
+import { IMPORT_PASSWORD } from "../store/actions";
 
 export default {
   components: {
@@ -178,7 +178,7 @@ export default {
     },
     restorePassword() {
       this.$store
-        .dispatch(RESTORE_PASSWORD, {
+        .dispatch(IMPORT_PASSWORD, {
           seed: this.seedPhrase,
           password: this.password,
         })

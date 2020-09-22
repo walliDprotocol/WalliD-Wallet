@@ -11,6 +11,7 @@ import {
   DISCONNECT,
   REVEAL_SEED_PHRASE,
   GENERATE_NEW_SEED_PHRASE,
+  RESTORE_PASSWORD,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -31,18 +32,18 @@ export default new Vuex.Store({
       },
     ], //API.getState().connections,
     initialized: API.getState().initialized,
-    request: API.getNextNotification(),
-    // {
-    //   type: "wallid_connect",
-    //   nonce: 1,
-    //   data: {
-    //     url: "https://www.wallid.io/",
-    //     icon: "https://www.wallid.io/favicon.ico",
-    //     name: "wallid.io",
-    //     description: "Site wallid",
-    //   },
-    //   callback: "",
-    // },
+    //API.getNextRequest(),
+    request: {
+      type: "wallid_connect",
+      nonce: 1,
+      data: {
+        url: "https://www.wallid.io/",
+        icon: "https://www.wallid.io/favicon.ico",
+        name: "wallid.io",
+        description: "Site wallid",
+      },
+      callback: "",
+    },
     debug: null,
     unlocked: API.getState().unlocked,
   },
@@ -55,6 +56,19 @@ export default new Vuex.Store({
     state: (state) => state,
   },
   actions: {
+    [RESTORE_PASSWORD]: ({ state, commit, dispatch }, { seed, password }) => {
+      console.log("Action RESTORE_PASSWORD");
+      return new Promise((resolve, reject) => {
+        API.validateSeedPhrase(seed)
+          .then((res) => {
+            state.debug(res);
+          })
+          .catch((e) => {
+            console.error(res);
+          });
+      });
+    },
+
     [CREATE_NEW_WALLET]: ({ commit, dispatch }, { seed, password }) => {
       console.log("Action CREATE_NEW_WALLET");
       return new Promise((resolve, reject) => {
@@ -96,7 +110,6 @@ export default new Vuex.Store({
       console.log("Action REFRESH_STATE");
       commit("updateAddress", API.getState().address);
       commit("updateUnlocked", API.getState().unlocked);
-      commit("updateInitialized", API.getState().initialized);
       commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
     },
@@ -195,22 +208,19 @@ export default new Vuex.Store({
   },
   mutations: {
     updateOnboarding(state, value) {
-      state.initialized = value;
+      state.completedOnboarding = value;
     },
     updateConnections(state, value) {
       state.connections = value;
     },
     updatePendingRequests(state) {
-      state.request = API.getNextNotification();
+      state.request = API.getNextRequest();
     },
     updateAddress(state, value) {
       state.address = value;
     },
     updateUnlocked(state, value) {
       state.unlocked = value;
-    },
-    updateInitialized(state, value) {
-      state.initialized = value;
     },
     appendLogger(state, logger) {
       state.debug = logger;

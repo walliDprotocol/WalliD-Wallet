@@ -52,7 +52,7 @@ export default {
     ArrowBack,
   },
   created() {
-    this.walletAddress = this.checksumAddress("0x" + this.address);
+    this.walletAddress = this.address; //this.checksumAddress
   },
   mounted() {
     this.setIcon();

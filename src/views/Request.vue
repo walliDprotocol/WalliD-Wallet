@@ -45,7 +45,7 @@
             :address="address"
             :id="'request'"
             :size="62"
-            :margin="4"
+            :margin="3"
           />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
@@ -59,7 +59,9 @@
         <v-col v-show="type == 'wallid_connect'" cols="12" class="pt-0 pb-5 ">
           <div class="outer-box pr-6">
             <WarningIcon />
-            <p class="links">{{ $t("request." + type + ".alert") }}</p>
+            <p class="links text-left">
+              {{ $t("request." + type + ".alert") }}
+            </p>
           </div>
         </v-col>
       </v-row>
@@ -77,8 +79,8 @@
         </v-col>
       </v-row>
 
-      <v-row v-show="success" class="justify-space-around mt-2px">
-        <v-col cols="12" class="my-3 py-7 px-6">
+      <v-row v-show="success" class="justify-space-around connected mt-2px">
+        <v-col cols="12" class="my-3 py-7 px-14">
           <div class="back-arrow">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
@@ -96,7 +98,9 @@
           />
         </v-col>
 
-        <v-col cols="4" class="px-0 pt-4">
+        <v-col cols="4" class="px-0 pt-4 check">
+          <v-divider class="dashed" />
+          <CheckSuccessIcon />
           <v-divider class="dashed" />
         </v-col>
 
@@ -105,7 +109,7 @@
             :address="address"
             :id="'request-2'"
             :size="62"
-            :margin="4"
+            :margin="3"
           />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
@@ -118,6 +122,7 @@
 <script>
 import WarningIcon from "../images/icon-warning-blue";
 import BrokenLine from "../images/broken-line";
+import CheckSuccessIcon from "../images/icon-sucessfully";
 import WebSiteLogo from "../components/WebSiteLogo";
 import JazzIcon from "../components/jazzicon";
 
@@ -127,6 +132,7 @@ import { mapGetters } from "vuex";
 
 export default {
   components: {
+    CheckSuccessIcon,
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
@@ -138,7 +144,7 @@ export default {
   watch: {},
   mounted() {
     console.log(this.request);
-    this.walletAddress = this.checksumAddress("0x" + this.address);
+    this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
     this.type = this.request.type;
@@ -210,14 +216,17 @@ export default {
 </script>
 
 <style lang="scss">
-[id^="metamask-logo-request"] {
+[id^="metamask-logo-request"]:not([class*="icon"]) {
   max-height: 72px;
   max-width: 72px;
 
   border-radius: 50%;
-  border: solid 1px #b8b9bb;
+  border: solid 2px #b8b9bb;
   margin: auto;
   margin-bottom: 12px;
+  .connected & {
+    border: solid 2px var(--turquoise-green);
+  }
 }
 
 [id^="metamask-logo-request"] + p {
@@ -244,6 +253,9 @@ export default {
 
     background-color: var(--pale-blue);
     display: flex;
+    svg {
+      align-self: center;
+    }
     p {
       margin-left: 16px !important;
       margin-top: 2px !important;
@@ -263,6 +275,19 @@ export default {
   .dashed {
     margin-top: 38px;
     border: dashed thin #b8b9bb;
+  }
+  .connected {
+    .dashed {
+      border: solid thin var(--turquoise-green);
+    }
+    .check {
+      display: flex;
+      svg {
+        height: 32px;
+        width: 32px;
+        margin-top: 22px;
+      }
+    }
   }
 }
 </style>

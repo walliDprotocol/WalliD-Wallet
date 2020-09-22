@@ -29,7 +29,7 @@
             <v-col cols="12" class="px-10">
               <p class="text">
                 {{ $t("create.import[0]") }}
-                <router-link class="links mt-2" to="restore">
+                <router-link class="links mt-2" to="import">
                   {{ $t("create.import[1]") }}
                 </router-link>
               </p>
@@ -44,10 +44,11 @@
           ref="form"
           @submit.prevent="checkForm"
           lazy-validation
+          style="height:520px"
         >
           <v-container class="text-left">
             <v-row>
-              <v-col cols="12">
+              <v-col cols="12" class="pb-2">
                 <div class="back-arrow mb-6">
                   <v-btn text @click="stepBack" class="back-btn">
                     <ArrowBack />
@@ -88,7 +89,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" class="pl-0 ">
+              <v-col cols="12" class="pl-0 py-2 ">
                 <v-checkbox
                   v-model="termsWallet"
                   required
@@ -110,18 +111,16 @@
                   </div>
                 </v-checkbox>
               </v-col>
-              <v-col cols="12" class="pt-2">
-                <v-btn
-                  text
-                  @click="checkForm"
-                  :disabled="isDisabled"
-                  class="advance-btn"
-                >
-                  {{ $t("create.stepper[0].button") }}
-                </v-btn>
-              </v-col>
             </v-row>
           </v-container>
+          <v-btn
+            text
+            @click="checkForm"
+            :disabled="isDisabled"
+            class="advance-btn float"
+          >
+            {{ $t("create.stepper[0].button") }}
+          </v-btn>
         </v-form>
       </v-stepper-content>
 
@@ -262,7 +261,8 @@ export default {
       this.step += 1;
     },
     setReminder() {
-      this.step = 4;
+      this.createWallet();
+      this.step = 5;
     },
     createWallet() {
       this.$store
@@ -271,7 +271,7 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.step += 1;
+          this.step = 5;
         })
         .catch((e) => {
           console.log(e);
@@ -282,11 +282,11 @@ export default {
       this.passwordMatchError = "";
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = "Password not long enough";
+        this.passwordError = this.$t("passwordErrors.lenght");
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = "Passwords don’t match";
+        this.passwordMatchError = this.$t("passwordErrors.match");
       }
 
       if (this.passwordError || this.passwordMatchError) {
@@ -327,12 +327,17 @@ export default {
     };
   },
 };
-</script>
+</script>broccoli yard urge net habit bridge rubber erase scout cabbage off assume
 
 <style lang="scss">
 .stepper-create {
   box-shadow: none;
-
+  .advance-btn.float {
+    position: absolute;
+    bottom: 12px;
+    max-width: 360px;
+    left: 8px;
+  }
   .v-stepper__content {
     padding: 0;
   }

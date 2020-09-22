@@ -52,7 +52,7 @@ export default class WalletController {
 
     // Returns
     getAddress() {
-        return '0x' + this.#wallet.getAddress().toString('hex')
+        return this.#wallet.getAddress().toString('hex')
     }
 
     // tx is an instance of 'ethereumjs-transaction' class

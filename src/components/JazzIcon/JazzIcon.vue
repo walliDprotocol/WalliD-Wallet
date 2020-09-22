@@ -27,6 +27,7 @@ export default {
 
           el.setAttribute("style", styles);
           el.id = "metamask-logo-" + id + "-icon";
+          el.classList.add("icon");
           body.insertBefore(el, body.firstChild);
           //   this.iconSet = true;
         }

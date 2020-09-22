@@ -4,6 +4,7 @@ import Home from "../views/Home";
 import Login from "../views/Login";
 import Create from "../views/Create";
 import Restore from "../views/Restore";
+import Import from "../views/Import";
 import Details from "../views/Details";
 import Sites from "../views/ConnectedSites";
 import Settings from "../views/Settings";
@@ -43,6 +44,11 @@ let router = new Router({
           path: "/restore",
           name: "Restore",
           component: Restore,
+        },
+        {
+          path: "/import",
+          name: "Import",
+          component: Import,
         },
         {
           path: "/details",
@@ -112,8 +118,13 @@ router.beforeEach((to, from, next) => {
   debug("Path", to.path);
   debug("isUnlocked", isUnlocked);
 
-  if (to.path == "/login" && to.path == "/create") {
-    debug("Login/Create Path");
+  if (
+    to.path == "/login" ||
+    to.path == "/create" ||
+    to.path == "/restore" ||
+    to.path == "/import"
+  ) {
+    debug("Login/Create/Restore Path");
     return next();
   }
 

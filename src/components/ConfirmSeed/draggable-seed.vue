@@ -138,7 +138,7 @@ export default {
     border-radius: 3px;
     border: solid 1px #b8b9bb;
     padding: 3px 7px;
-    margin-bottom: 16px;
+    margin-bottom: 6px;
     //Enable when draggin is implemented
     // .confirm-seed-phrase__selected-seed-word {
     //   cursor: move;

@@ -96,67 +96,89 @@ export default {
     title: "A minha WalliD",
     address: "Endereço da sua carteira",
   },
-  restore: {
-    title: "Restore your wallet",
-    subtitle: "Enter your twelve word seed phrase to import your wallet.",
-    seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
+  import: {
+    title: "Importar carteira",
+    subtitle:
+      "Insira a sua seed phrase de doze palavras para importar a sua carteira.",
+    seedPhrase: ["Seed phrase", "Mostrar seed phrase", "Esconder seed phrase"],
     password: [
-      "New password",
-      "Confirm password",
-      "Must be at least 8 characters",
+      "Nova password",
+      "Confirmar password",
+      "Deve ter no mínimo 8 caracteres",
     ],
-    button: "Restore wallet",
+    button: "Importar carteira",
+  },
+  restore: {
+    title: "Recuperar carteira",
+    subtitle:
+      "Insira a sua seed phrase de doze palavras para importar a sua carteira.",
+    seedPhrase: ["Seed phrase", "Mostrar seed phrase", "Esconder seed phrase"],
+    password: [
+      "Nova password",
+      "Confirmar password",
+      "Deve ter no mínimo 8 caracteres",
+    ],
+    button: "Recuperar carteira",
   },
   login: {
-    title: "Welcome back!",
-    password: ["Password", "Incorrect password"],
-    button: "Unlock wallet",
-    restore: ["Restore wallet?", "Import using wallet seed phrase"],
+    title: "Bem-vindo de volta!",
+    password: ["Password", "Password incorrecta"],
+    button: "Desbloquear carteira",
+    restore: [
+      "Recuperar carteira?",
+      "Importar através da seed phrase da carteira",
+    ],
   },
   create: {
-    title: "Welcome to WalliD",
-    text: "The digital wallet to manage all your Identity document",
-    button: "Create your wallet",
-    import: ["Already have a wallet?", "Import now using your seed phrase"],
+    title: "Bem-vindo à WalliD",
+    text:
+      "A carteira digital para gerir todos os seus documentos de identidade",
+    button: "Criar carteira",
+    import: ["Já tem uma carteira?", "Importe agora usando a sua seed phrase"],
 
     stepper: [
       {
-        title: "Set up your password",
+        title: "Configure a sua password",
         text:
-          "This password will be used to unlock your wallet whenever you wish to come back online and use your identity documents.",
+          "Esta password será utilizada para desbloquear a sua carteira sempre que quiser utilizar os seus documentos de identidade online.",
         password: [
-          "New password",
-          "Confirm password",
-          "Must be at least 8 characters",
+          "Nova password",
+          "Confirmar password",
+          "Deve ter no mínimo 8 caracteres",
         ],
-        terms: ["I have read and agree with", "WalliD’s Terms and conditions"],
-        button: "Set up password",
+        terms: ["Eu li e aceito os ", "Termos e Condições da WalliD."],
+        button: "Configurar password",
       },
       {
-        title: "Secure your wallet",
+        title: "Proteja a sua carteira",
         text:
-          "The seed phrase is the ultimate key to your wallet and the only way to recover or access it from another device. Write it downs and keep it in a safe place.",
+          "A seed phrase é a chave definitiva da sua carteira e a única forma de recuperá-la ou de ter acesso a partir de outro dispositivo. Anote e guarde-a num local seguro.",
         seed: [
-          "Your seed phrase",
-          "revealed",
-          "Click here to reveal you seed phrase",
-          "Make sure no one is watching your screen",
+          "A sua seed phrase",
+          "revelada",
+          "Clique aqui para revelar a sua seed phrase",
+          "Certifique-se que ninguém está a olhar para o seu ecrã",
         ],
-        later: "Remind me later (not recommended)",
-        button: "I wrote down my seed phrase",
+        later: "Lembrar-me depois (não recomendado)",
+        button: "Eu escrevi a minha seed phrase",
       },
       {
-        title: "Secure your wallet",
-        text: "Select each word in the order it was presented to you.",
-        button: "Verify",
-      },
-      {
-        title: "Congratulations",
+        title: "Proteja a sua carteira",
         text:
-          "You’ve successfully protected your wallet. Remember to keep your seed phrase safe, it’s your responsibility and the reason why your data is only accessible to you.",
-        button: "Done",
+          "Selecione cada palavra da seed phrase e ordene pela ordem que lhe foi apresentada.",
+        button: "Verificar",
+      },
+      {
+        title: "Sucesso",
+        text:
+          "Protegeu com sucesso a sua carteira. Lembre-se que manter a sua seed phrase em segurança é da sua responsabilidade e a única razão pela qual apenas você tem acesso aos seus dados.",
+        button: "Concluído",
       },
     ],
+  },
+  passwordErrors: {
+    lenght: "A password não tem o número mínimo de caracteres necessários",
+    match: "As passwords não coincidem",
   },
   buttons: {
     cancel: "Cancelar",

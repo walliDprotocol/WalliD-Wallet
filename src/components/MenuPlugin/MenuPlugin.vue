@@ -19,7 +19,7 @@
             {{ $t("menu.title") }}</v-list-item-title
           >
           <v-list-item-subtitle class="subtitle"
-            >0x{{ address | truncate(6, "...") }}</v-list-item-subtitle
+            >{{ address | truncate(6, "...") }}</v-list-item-subtitle
           >
         </v-list-item-content>
       </v-list-item>
