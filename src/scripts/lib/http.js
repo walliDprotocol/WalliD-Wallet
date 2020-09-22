@@ -4,17 +4,27 @@ function queryParams(params) {
         .join('&');
 }
 
-export function get(url, headers, query) {
+export function get(url, options) {
     const config = {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
     }
 
-    if(query) {
+    if(options && options.query) {
         url += (url.indexOf('?') === -1 ? '?' : '&') + queryParams(query);
     }
 
+    if(options && options.headers) {
+        config.headers = options.headers
+    }
+
     return fetch(url, config)
-        .then(response => response.json())
+        .then(response => Promise.resolve(response.json())
+        .then(data => Promise.resolve({
+            ok: response.ok,
+            status: response.status,
+            body: data
+        })))
         .catch(err => Promise.reject(err))
 }
 
