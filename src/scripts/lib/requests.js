@@ -4,7 +4,8 @@ const RequestAPIMethods = {
         popup: false,
         executor: ['connections', 'removeConnected']
     },
-    'wallid_address': {
+    'wallid_extract': { popup: true },
+    'wallet_address': {
         popup: false,
         executor: ['wallet', 'getAddress']
     },
