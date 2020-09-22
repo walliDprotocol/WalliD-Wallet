@@ -22,7 +22,7 @@
               </h3>
             </v-col>
             <v-col cols="12" class="py-4">
-              <v-btn text @click="createWallet" class="advance-btn">
+              <v-btn text @click="startOnboarding" class="advance-btn">
                 {{ $t("create.button") }}
               </v-btn>
             </v-col>
@@ -200,7 +200,7 @@
       <v-stepper-content step="4">
         <ConfirmSeed
           @stepBack="stepBack"
-          @step="step += 1"
+          @step="createWallet"
           :seedPhrase="seedPhrase"
         />
       </v-stepper-content>
@@ -236,6 +236,7 @@ import ArrowBack from "../images/icon-arrow-back.vue";
 import Unlock from "../images/icon-unlock.vue";
 import ConfirmSeed from "../components/ConfirmSeed";
 import Sucessfully from "../images/icon-sucessfully.vue";
+import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from "../store/actions";
 
 export default {
   name: "Create",
@@ -254,7 +255,7 @@ export default {
     stepBack() {
       this.step -= 1;
     },
-    createWallet() {
+    startOnboarding() {
       this.step += 1;
     },
     setSeedPhrase() {
@@ -263,7 +264,19 @@ export default {
     setReminder() {
       this.step = 4;
     },
-
+    createWallet() {
+      this.$store
+        .dispatch(CREATE_NEW_WALLET, {
+          seed: this.seedPhrase,
+          password: this.password,
+        })
+        .then(() => {
+          this.step += 1;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     checkForm() {
       this.passwordError = "";
       this.passwordMatchError = "";
@@ -284,7 +297,16 @@ export default {
     },
 
     setPassword() {
-      this.step += 1;
+      this.$store
+        .dispatch(GENERATE_NEW_SEED_PHRASE, this.password)
+        .then((seed) => {
+          this.debug(seed);
+          this.seedPhrase = seed;
+          this.step += 1;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
 
     goToLogin() {
@@ -297,8 +319,7 @@ export default {
       termsWallet: false,
       seedLocked: true,
       // Pass words as a string
-      seedPhrase:
-        "foster million smart lady december maple bench nose quarter film eye goat",
+      seedPhrase: "",
       password: "",
       passwordMatch: "",
       passwordError: "",

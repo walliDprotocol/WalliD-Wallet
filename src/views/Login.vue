@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <form @submit="unlockPlugin">
+    <v-form
+      ref="form"
+      @submit.prevent="unlockPlugin"
+      lazy-validation
+    >
       <v-row>
         <v-col cols="12" class="text-center my-6 pt-5">
           <v-img
@@ -50,14 +54,14 @@
           </p>
         </v-col>
       </v-row>
-    </form>
+    </v-form>
   </v-container>
 </template>
 
 <script>
 import * as bip39 from "bip39";
 
-import { CREATE_NEW_WALLET, UNLOCK_WALLET } from "../store/actions";
+import { UNLOCK_WALLET } from "../store/actions";
 
 export default {
   computed: {},
@@ -75,9 +79,8 @@ export default {
   methods: {
     unlockPlugin() {
       if (!this.initialized) {
-        this.$store.dispatch(CREATE_NEW_WALLET, this.password).catch((e) => {
-          this.passwordError = true;
-        });
+        this.debug("Onboarding not completed");
+        this.$router.push("/create");
       } else {
         this.$store
           .dispatch(UNLOCK_WALLET, this.password)

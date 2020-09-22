@@ -41,7 +41,12 @@
         </v-col>
 
         <v-col cols="4" class="pl-0 pt-4">
-          <div class="ml-0" id="metamask-logo-request"></div>
+          <jazz-icon
+            :address="address"
+            :id="'request'"
+            :size="62"
+            :margin="4"
+          />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
 
@@ -96,7 +101,12 @@
         </v-col>
 
         <v-col cols="4" class="pl-0 pt-4">
-          <div class="ml-0" id="metamask-logo-request"></div>
+          <jazz-icon
+            :address="address"
+            :id="'request-2'"
+            :size="62"
+            :margin="4"
+          />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
       </v-row>
@@ -106,10 +116,11 @@
 </template>
 
 <script>
-import jazzicon from "jazzicon";
 import WarningIcon from "../images/icon-warning-blue";
 import BrokenLine from "../images/broken-line";
 import WebSiteLogo from "../components/WebSiteLogo";
+import JazzIcon from "../components/jazzicon";
+
 import { CANCEL_REQUEST, AUTHORIZE_REQUEST } from "../store/actions";
 import axios from "axios";
 import { mapGetters } from "vuex";
@@ -119,13 +130,13 @@ export default {
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
+    JazzIcon,
   },
   computed: {
     ...mapGetters(["address"]),
   },
   watch: {},
   mounted() {
-    this.setIconWallet();
     console.log(this.request);
     this.walletAddress = this.checksumAddress("0x" + this.address);
   },
@@ -133,7 +144,7 @@ export default {
     this.type = this.request.type;
     switch (this.type) {
       case "wallid_connect":
-        this.websiteData = this.request.data; //this.getWebsiteInfo(this.request.params);
+        this.websiteData = this.request.data;
         break;
       case "wallid_disconnect":
         this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
@@ -158,13 +169,6 @@ export default {
     },
   },
   methods: {
-    // getWebsiteInfo(info) {
-    //   let name = info.url.split("www.")[1].split("/")[0];
-    //   console.log(name);
-    //   let siteIcon = info.url + "/favicon.ico";
-    //   console.log(siteIcon);
-    //   return { name, siteIcon };
-    // },
     authorizeRequest() {
       // var request = { id: 1 };
       this.debug("Request", this.request);
@@ -178,7 +182,6 @@ export default {
         })
         .then((result) => {
           this.success = true;
-          this.setIconWallet();
         });
     },
     cancel() {
@@ -194,23 +197,6 @@ export default {
       // console.error(e);
       //   });
     },
-    setIconWallet() {
-      if (this.address) {
-        let body = document.getElementById("metamask-logo-request");
-        let icon = document.getElementById("metamask-logo-request-icon");
-        console.log("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(62, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 4px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-home-icon";
-          body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
-        }
-      }
-    },
   },
   data() {
     return {
@@ -224,7 +210,7 @@ export default {
 </script>
 
 <style lang="scss">
-#metamask-logo-request {
+[id^="metamask-logo-request"] {
   max-height: 72px;
   max-width: 72px;
 
@@ -234,7 +220,7 @@ export default {
   margin-bottom: 12px;
 }
 
-#metamask-logo-request + p {
+[id^="metamask-logo-request"] + p {
   max-width: 76px;
   word-break: break-all;
 }

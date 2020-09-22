@@ -1,6 +1,6 @@
 <template>
   <v-container class="reveal">
-    <v-row v-if="!confirmDisconnect">
+    <v-row>
       <v-col cols="12" class="pt-1 pb-2">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/settings')" class="back-btn">
@@ -84,6 +84,7 @@
 <script>
 import ArrowBack from "../../images/icon-arrow-back.vue";
 import IconAlert from "../../images/icon-warning-red.vue";
+import { REVEAL_SEED_PHRASE } from "../../store/actions";
 export default {
   components: {
     ArrowBack,
@@ -96,7 +97,19 @@ export default {
     },
     revealSeedPhrase() {
       this.debug("revealSeedPhrase");
-      this.showSeedPhrase = true;
+
+      this.$store
+        .dispatch("REVEAL_SEED_PHRASE", this.password)
+        .then((result) => {
+          this.debug("SeedPhrase", result);
+          this.passwordError = false;
+          this.seedPhrase = result;
+          this.showSeedPhrase = true;
+        })
+        .catch((e) => {
+          console.error(e);
+          this.passwordError = true;
+        });
     },
     copySeedPhrase() {
       this.debug("copySeedPhrase");
@@ -149,9 +162,10 @@ export default {
   },
   data() {
     return {
+      password: "",
+      passwordError: false,
       showSeedPhrase: false,
-      seedPhrase:
-        "foster million smart lady december maple bench nose quarter film eye goat",
+      seedPhrase: "",
     };
   },
 };

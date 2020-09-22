@@ -69,15 +69,20 @@ export default {
     DraggableSeed,
     ArrowBack,
   },
+  watch: {
+    seedPhrase(value) {
+      if (value) {
+        this.sortedSeedWords = (this.seedPhrase.split(" ") || []).sort();
+      }
+    },
+  },
   computed: {
     isDisabled() {
       return this.selectedWordsIndex.length != this.sortedSeedWords.length;
     },
   },
   props: ["seedPhrase"],
-  mounted() {
-    this.sortedSeedWords = (this.seedPhrase.split(" ") || []).sort();
-  },
+  mounted() {},
   methods: {
     stepBack() {
       this.$emit("stepBack");

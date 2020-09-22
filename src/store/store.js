@@ -9,6 +9,8 @@ import {
   AUTHORIZE_REQUEST,
   CONNECT,
   DISCONNECT,
+  REVEAL_SEED_PHRASE,
+  GENERATE_NEW_SEED_PHRASE,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -19,7 +21,7 @@ export default new Vuex.Store({
   //initial state
   state: {
     address: API.getState().address,
-    completedOnboarding: true, //API.getState().completedOnboarding,
+    completedOnboarding: API.getState().initialized,
     connections: [
       {
         url: "https://www.wallid.io/",
@@ -29,19 +31,18 @@ export default new Vuex.Store({
       },
     ], //API.getState().connections,
     initialized: API.getState().initialized,
-    request:
-      //  API.getNextNotification(),
-      {
-        type: "wallid_connect",
-        nonce: 1,
-        data: {
-          url: "https://www.wallid.io/",
-          icon: "https://www.wallid.io/favicon.ico",
-          name: "wallid.io",
-          description: "Site wallid",
-        },
-        callback: "",
-      },
+    request: API.getNextNotification(),
+    // {
+    //   type: "wallid_connect",
+    //   nonce: 1,
+    //   data: {
+    //     url: "https://www.wallid.io/",
+    //     icon: "https://www.wallid.io/favicon.ico",
+    //     name: "wallid.io",
+    //     description: "Site wallid",
+    //   },
+    //   callback: "",
+    // },
     debug: null,
     unlocked: API.getState().unlocked,
   },
@@ -49,19 +50,43 @@ export default new Vuex.Store({
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
-
     getRequest: (state) => state.request,
-    hideAppHeader: (state) => state.getRequest,
     unlocked: (state) => state.unlocked,
     state: (state) => state,
   },
   actions: {
-    [CREATE_NEW_WALLET]: ({ commit, dispatch }, password) => {
+    [CREATE_NEW_WALLET]: ({ commit, dispatch }, { seed, password }) => {
       console.log("Action CREATE_NEW_WALLET");
       return new Promise((resolve, reject) => {
-        API.createNewVault(API.generateSeedPhrase(), password)
-          .then(API.unlockApp(password))
-          .then(() => resolve(dispatch(REFRESH_STATE)))
+        API.createNewVault(seed, password)
+          .then(() => dispatch(REFRESH_STATE))
+          .then(() => resolve(seed))
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    },
+
+    [GENERATE_NEW_SEED_PHRASE]: ({ commit, dispatch }, password) => {
+      console.log("Action GENERATE_NEW_SEED_PHRASE");
+      return new Promise((resolve, reject) => {
+        let seed = API.generateSeedPhrase();
+        resolve(seed);
+      });
+    },
+
+    [REVEAL_SEED_PHRASE]: ({ commit, dispatch }, password) => {
+      console.log("Action REVEAL_SEED_PHRASE");
+      return new Promise((resolve, reject) => {
+        API.verifyPassword(password)
+          .then((result) => {
+            if (result) {
+              resolve(API.getState().mnemonic);
+            } else {
+              reject("Wrong Password");
+            }
+            console.log(result);
+          })
           .catch((e) => {
             reject(e);
           });
@@ -73,6 +98,7 @@ export default new Vuex.Store({
       commit("updateUnlocked", API.getState().unlocked);
       commit("updateInitialized", API.getState().initialized);
       commit("updateConnections", API.getState().connections);
+      commit("updateOnboarding", API.getState().initialized);
     },
 
     [CONNECT]: ({ commit, state }, { params }) => {
@@ -86,14 +112,14 @@ export default new Vuex.Store({
         //   .then(() => {
         //     //Close window if its a notification popup
         //     state.notification ? window.close() : "";
-            resolve(true);
-          // })
-          // .catch((e) => {
-          //   console.error("Error Authorizing request: ", e);
-          //   // reject(false);
-          //   resolve(true);
+        resolve(true);
+        // })
+        // .catch((e) => {
+        //   console.error("Error Authorizing request: ", e);
+        //   // reject(false);
+        //   resolve(true);
 
-          // });
+        // });
       });
     },
 
@@ -168,6 +194,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    updateOnboarding(state, value) {
+      state.initialized = value;
+    },
     updateConnections(state, value) {
       state.connections = value;
     },
