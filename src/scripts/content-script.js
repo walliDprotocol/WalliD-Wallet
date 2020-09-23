@@ -1,4 +1,4 @@
-import { ExternalConnectorBackend } from './lib/connector'
+import { ExternalConnectorBackend } from './lib/web-connector'
 
 function injectScript(file) {
     var head = document.getElementsByTagName('head')[0]

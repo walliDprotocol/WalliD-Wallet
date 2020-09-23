@@ -7,7 +7,6 @@ const App = new AppController()
 // Inject internal API into UI subsystem
 window.API = App.getAPI()
 
-
 chrome.declarativeContent.onPageChanged.addRules([{
     conditions: [
         new chrome.declarativeContent.PageStateMatcher({
@@ -19,7 +18,7 @@ chrome.declarativeContent.onPageChanged.addRules([{
 
 // Connects the external web connector to the App's RequestAPI
 extension.runtime.onMessage.addListener(function(request, res, f) {
-    App.requestAPI(request.method, request.params)
+    App.requestAPI(request.method, request.params, request.origin)
         .then(result => f({ data: result, error: null, nonce: request.nonce }))
         .catch(error => f({ data: null, error, nonce: request.nonce }))
 
@@ -29,11 +28,5 @@ extension.runtime.onMessage.addListener(function(request, res, f) {
 // Locks App when user closes the browser window
 extension.windows.onRemoved.addListener(id => {
     const popups = App.getActivePopups()
-
-    if(!popups.includes(id)) {
-        App.lockApp()
-    }
-    else {
-        App.updateActivePopups(id, true)
-    }
+    popups.includes(id)? App.updateActivePopups(id, true) : App.lockApp()
 })

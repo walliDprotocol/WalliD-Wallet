@@ -359,7 +359,8 @@ export default class AppController {
             decryptData: this.decryptData.bind(this),
             getAuthorizationToken: this.getAuthorizationToken.bind(this),
             extractIdentityData: this.extractIdentityData.bind(this),
-            getNextRequest: this.getNextRequest.bind(this)
+            getNextRequest: this.getNextRequest.bind(this),
+            accessControl: this.accessControl.bind(this)
         }
     }
 
@@ -367,7 +368,28 @@ export default class AppController {
     // EXTERNAL REQUEST API
     //=============================================================================
 
-    requestAPI(method, params) {
+    /**
+     * Resolves to a bool indicating if @origin has access level @level .
+     * 
+     * @param {string} origin - url of the caller web site
+     * @param {Number} level - request access level
+     * 
+     * @returns {Promise<boolean>} - has access bool
+     */
+    accessControl(origin, level) {
+        const vault = this.#store.getState().vault
+        if(!vault.isUnlocked()) {
+            return undefined
+        }
+
+        const connections = this.#store.getState().connections
+        const url = new URL(origin)
+        
+        return Promise.resolve(connections.getConnectionAccessLevel(url.host))
+            .then(al => level == al)
+    }
+
+    requestAPI(method, params, origin) {
         const requestHandler = function(details) {
             let promise = {}
             if(details.popup) {
@@ -375,6 +397,7 @@ export default class AppController {
                     var _request = {
                         type: method,
                         data: params,
+                        level: details.level,
                         callback: function(err, result) {
                             if(err) return reject(err)
                             else return resolve(result)
@@ -391,8 +414,9 @@ export default class AppController {
                     promise = Promise.reject('Plugin is locked')
                 }
                 else {
-                    const state = this.#store.getState()
-                    promise = state[details.executor[0]][details.executor[1]](...params)
+                    promise = Promise.resolve(this.accessControl(origin, details.level))
+                        .then(acc => acc? Promise.resolve(this.#store.getState()) : Promise.reject(`Caller does not have permission to execute ${method}`))
+                        .then(state => state[details.executor[0]][details.executor[1]](...params))
                 }
             }
             return promise

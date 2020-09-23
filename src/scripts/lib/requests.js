@@ -1,16 +1,30 @@
 const RequestAPIMethods = {
-    'wallid_connect': { popup: true },
+    'wallid_connect': {
+        popup: true,
+        level: 0
+    },
     'wallid_disconnect': {
         popup: false,
+        level: 1,
         executor: ['connections', 'removeConnected']
     },
-    'wallid_extract': { popup: true },
+    'wallid_extract': {
+        popup: true,
+        level: 1
+    },
     'wallet_address': {
         popup: false,
+        level: 1,
         executor: ['wallet', 'getAddress']
     },
-    'wallet_encrypt': { popup: true },
-    'wallet_decrypt': { popup: true }
+    'wallet_encrypt': {
+        popup: true,
+        level: 1
+    },
+    'wallet_decrypt': {
+        popup: true,
+        level: 1
+    },
 }
 
 export function getRequestDetails(method) {

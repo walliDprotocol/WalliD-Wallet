@@ -25,5 +25,6 @@ export function extractIdentity(auth_token) {
     const headers = {
         'WalliD-Authorization': auth_token
     }
+
     return get(url, { headers })
 }
