@@ -73,7 +73,10 @@ export default new Vuex.Store({
       console.log("Action CREATE_NEW_WALLET");
       return new Promise((resolve, reject) => {
         API.createNewVault(seed, password)
-          .then(() => dispatch(REFRESH_STATE))
+          .then((res) => {
+            console.log(res);
+            dispatch(REFRESH_STATE);
+          })
           .then(() => resolve(seed))
           .catch((e) => {
             reject(e);
@@ -110,7 +113,7 @@ export default new Vuex.Store({
       console.log("Action REFRESH_STATE");
       commit("updateAddress", API.getState().address);
       commit("updateUnlocked", API.getState().unlocked);
-      commit("updateConnections", API.getState().connections);
+      // commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
     },
 

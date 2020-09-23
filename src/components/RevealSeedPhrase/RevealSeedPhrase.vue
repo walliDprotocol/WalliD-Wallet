@@ -176,12 +176,12 @@ export default {
   .alert {
     display: flex;
     padding: 16px;
-    padding-right: 0;
+    padding-right: 20px;
     border-radius: 3px;
     background: rgba(233, 94, 94, 0.19);
     svg {
       min-width: 22px;
-      margin-top: 8px;
+      align-self: center;
     }
     p {
       margin-left: 18px !important;
@@ -195,7 +195,7 @@ export default {
     background-color: var(--very-light-grey);
     border: solid 1px #b8b9bb;
 
-    padding: 12px 62px !important;
+    padding: 12px 42px !important;
     margin-top: 0;
     font-size: 16px;
     font-weight: 600;

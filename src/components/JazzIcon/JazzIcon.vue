@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-0" :id="'metamask-logo-' + id"></div>
+  <div class="" :id="'metamask-logo-' + id"></div>
 </template>
 
 <script>
@@ -21,7 +21,8 @@ export default {
         let icon = document.getElementById("metamask-logo-" + id + "-icon");
         console.log("metamask-logo", body);
         if (body && !icon) {
-          var el = jazzicon(size, address);
+          let acc = parseInt(address.slice(2, 10), 16);
+          var el = jazzicon(size, acc);
           var styles = el.getAttribute("style");
           styles = styles.concat(" margin: " + margin + "px;");
 

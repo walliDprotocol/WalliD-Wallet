@@ -1,7 +1,7 @@
 <template>
   <v-container class="restore mt-n2">
-    <form @submit="checkForm">
-      <v-row>
+    <v-row v-if="!imported">
+      <form @submit="checkForm">
         <v-col cols="12">
           <div class="back-arrow mb-6">
             <v-btn text @click="stepBack" class="back-btn">
@@ -118,35 +118,41 @@
             {{ $t("import.button") }}
           </v-btn>
         </v-col>
-      </v-row>
-    </form>
+      </form>
+    </v-row>
+    <v-row v-else>
+      <v-col cols="12" class="text-center mt-13 pt-14 pb-1">
+        <Sucessfully
+      /></v-col>
+      <v-col cols="12" class="pt-1">
+        <h2 class="T1 mb-5 text-center">
+          {{ $t("create.stepper[3].title") }}
+        </h2>
+        <h3 class="sub-title-fields text-center">
+          {{ $t("import.text") }}
+        </h3>
+      </v-col>
+      <v-col cols="12">
+        <v-btn text @click="goToLogin" class="advance-btn">
+          {{ $t("create.stepper[3].button") }}
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
-
-  <!-- <div class="main-box" v-else>
-    <div class="third-height">
-      <p>Address:</p>
-      <p id="addr">{{ address }}</p>
-    </div>
-    <div>
-      <v-btn block color="secondary" dark @click="lockPlugin">Lock</v-btn>
-    </div>
-    <div>
-      <v-btn block color="secondary" dark @click="resetPlugin">Reset</v-btn>
-    </div>
-  </div> -->
 </template>
 
 <script>
-import * as bip39 from "bip39";
 import ArrowBack from "../images/icon-arrow-back.vue";
 import EyeUnselected from "../images/icon-eye-unselected.vue";
 import EyeSelected from "../images/icon-eye-selected.vue";
-import { IMPORT_PASSWORD } from "../store/actions";
+import Sucessfully from "../images/icon-sucessfully.vue";
+import { CREATE_NEW_WALLET } from "../store/actions";
 
 export default {
   components: {
     ArrowBack,
     EyeUnselected,
+    Sucessfully,
     EyeSelected,
   },
   computed: {
@@ -157,6 +163,7 @@ export default {
 
   data() {
     return {
+      imported: false,
       showSeedPhrase: true,
       seedPhrase: "",
       password: "",
@@ -167,6 +174,9 @@ export default {
   },
   mounted() {},
   methods: {
+    goToLogin() {
+      this.$router.push("/login");
+    },
     validSeedPhrase() {
       return this.seedPhrase.split(" ").length == 12;
     },
@@ -178,12 +188,15 @@ export default {
     },
     restorePassword() {
       this.$store
-        .dispatch(IMPORT_PASSWORD, {
+        .dispatch(CREATE_NEW_WALLET, {
           seed: this.seedPhrase,
           password: this.password,
         })
         .then(() => {
-          this.passwordError = true;
+          this.imported = true;
+        })
+        .catch((e) => {
+          console.error(e);
         });
     },
 

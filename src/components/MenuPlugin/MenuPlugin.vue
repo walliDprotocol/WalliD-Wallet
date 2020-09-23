@@ -11,16 +11,16 @@
     <template v-slot:prepend>
       <v-list-item two-line>
         <v-list-item-avatar>
-          <div id="metamask-logo-menu"></div>
+          <jazz-icon :address="address" :id="'menu'" :size="32" :margin="2" />
         </v-list-item-avatar>
 
         <v-list-item-content>
           <v-list-item-title class="T1" style="margin-bottom: 7px">
             {{ $t("menu.title") }}</v-list-item-title
           >
-          <v-list-item-subtitle class="subtitle"
-            >{{ address | truncate(6, "...") }}</v-list-item-subtitle
-          >
+          <v-list-item-subtitle class="subtitle">{{
+            address | truncate(6, "...")
+          }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -90,7 +90,7 @@ import IconSites from "../../images/icon-connect-unselected.vue";
 import IconSettings from "../../images/icon-settings-unselected.vue";
 import IconAbout from "../../images/icon-about-unselected.vue";
 import IconLock from "../../images/icon-logout-unselected.vue";
-import jazzicon from "jazzicon";
+import JazzIcon from "../../components/jazzicon";
 
 import { LOCK_WALLET } from "../../store/actions";
 import { DETAILS, SITES, SETTINGS, ABOUT } from "../../router/routes";
@@ -98,6 +98,7 @@ import { DETAILS, SITES, SETTINGS, ABOUT } from "../../router/routes";
 export default {
   props: ["address", "showMenu"],
   components: {
+    JazzIcon,
     IconWallet,
     IconSites,
     IconSettings,
@@ -110,16 +111,8 @@ export default {
     this.SETTINGS = SETTINGS;
     this.ABOUT = ABOUT;
   },
-  watch: {
-    address(value) {
-      if (value) {
-        this.setIcon();
-      }
-    },
-  },
-  mounted() {
-    this.setIcon();
-  },
+  watch: {},
+  mounted() {},
   methods: {
     close(input) {
       if (!input) {
@@ -165,23 +158,6 @@ export default {
       //   .catch((e) => {
       //     console.error(e);
       //   });
-    },
-    setIcon() {
-      if (!this.iconSet && this.address) {
-        let body = document.getElementById("metamask-logo-menu");
-        let icon = document.getElementById("metamask-logo-menu-icon");
-        this.debug("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(32, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 2px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-menu-icon";
-          body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
-        }
-      }
     },
   },
   data() {

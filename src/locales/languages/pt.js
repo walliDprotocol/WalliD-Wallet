@@ -25,10 +25,11 @@ export default {
     wallet_decrypt: {
       title: "Pedido de autorização",
       description:
-        " está a pedir a sua autorização para mostrar  os dados do seu documento de identidade:",
+        " está a pedir a sua autorização para mostrar os dados do seu documento de identidade:",
       button: "Autorizar",
     },
     bScenes: "Saiba o que se passa nos bastidores",
+    cancel: "Cancelar",
   },
   about: {
     title: "Sobre",
@@ -106,6 +107,8 @@ export default {
       "Confirmar password",
       "Deve ter no mínimo 8 caracteres",
     ],
+    text:
+      "Importou com sucesso a sua carteira. Lembre-se que, manter a sua seed phrase em segurança, é da sua responsabilidade e a única razão pela qual apenas você tem acesso aos seus dados.",
     button: "Importar carteira",
   },
   restore: {
@@ -126,7 +129,7 @@ export default {
     button: "Desbloquear carteira",
     restore: [
       "Recuperar carteira?",
-      "Importar através da seed phrase da carteira",
+      "Recuperar através da seed phrase da carteira",
     ],
   },
   create: {

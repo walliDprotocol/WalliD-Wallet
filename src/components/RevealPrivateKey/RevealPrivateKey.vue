@@ -111,12 +111,12 @@ export default {
   .alert {
     display: flex;
     padding: 8px 16px;
-    padding-right: 0;
+    padding-right: 20px;
     border-radius: 3px;
     background: rgba(233, 94, 94, 0.19);
     svg {
       min-width: 22px;
-      margin-top: 14px;
+      align-self: center;
     }
     p {
       margin-left: 18px !important;

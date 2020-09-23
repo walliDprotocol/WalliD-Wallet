@@ -184,6 +184,7 @@ export default {
       "Confirm password",
       "Must be at least 8 characters",
     ],
+    text: "You’ve successfully imported your wallet. Remember to keep your seed phrase safe, it’s your responsibility and the reason why your data is only accessible to you.",
     button: "Import wallet",
   },
   restore: {

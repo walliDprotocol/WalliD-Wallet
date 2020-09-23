@@ -18,19 +18,33 @@
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
         <v-list class="sites-list">
-          <v-list-item v-for="site in connections" :key="site.url">
+          <v-list-item class="pl-0" v-for="site in connections" :key="site.url">
             <v-list-item-avatar>
-              <v-img :src="site.icon" />
+              <v-img
+                contain
+                class="site-logo"
+                width="35"
+                height="35"
+                :src="site.icon"
+              />
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-text="site.url"></v-list-item-title>
+              <v-list-item-title
+                class="text-left"
+                v-text="site.url"
+              ></v-list-item-title>
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-btn @click="disconnect(site)" icon>
-                <icon-trash />
-              </v-btn>
+              <v-tooltip content-class="wallet-tooltip" bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" @click="disconnect(site)" icon>
+                    <icon-trash />
+                  </v-btn>
+                </template>
+                {{ $t("sites.tooltip") }}
+              </v-tooltip>
             </v-list-item-action>
           </v-list-item>
         </v-list>
@@ -80,7 +94,9 @@ export default {
     ArrowBack,
     IconTrash,
   },
-  mounted() {},
+  mounted() {
+    console.log(this.connections);
+  },
   computed: {
     ...mapGetters(["connections"]),
   },
@@ -116,7 +132,17 @@ export default {
     border-top: solid 1px #eeeeee;
     .v-list-item {
       border-bottom: solid 1px #eeeeee;
-
+      .site-logo {
+        max-width: 40px;
+        max-height: 40px;
+        border: solid 1px #b8b9bb;
+        .v-image__image {
+          width: 32px;
+          height: 32px;
+          right: 0;
+          margin: auto;
+        }
+      }
       .v-list-item__action {
         &:hover path {
           fill: #009fb1;

@@ -8,7 +8,6 @@
 
 <script>
 import * as bip39 from "bip39";
-import jazzicon from "jazzicon";
 import MainContainer from "./views/MainContainer";
 import { mapGetters } from "vuex";
 export default {

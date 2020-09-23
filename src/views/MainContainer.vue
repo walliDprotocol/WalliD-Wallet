@@ -22,7 +22,13 @@
         src="../images/logo-header-wallid.png"
       />
       <v-spacer />
-      <div v-show="address" id="metamask-logo"></div>
+      <jazz-icon
+        v-show="address"
+        :address="address"
+        :id="''"
+        :size="44"
+        :margin="3"
+      />
       <!-- -->
     </v-app-bar>
 
@@ -39,24 +45,20 @@
 
 <script>
 import * as bip39 from "bip39";
-import jazzicon from "jazzicon";
+import JazzIcon from "../components/jazzicon";
 import MenuPlugin from "../components/MenuPlugin";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     MenuPlugin,
+    JazzIcon,
   },
   props: ["hideAppHeader"],
   computed: {
     ...mapGetters(["address", "unlocked"]),
   },
   watch: {
-    address(value) {
-      if (value) {
-        this.setIcon();
-      }
-    },
     unlocked(value) {
       if (!value) {
         this.$router.push("/login");
@@ -64,9 +66,6 @@ export default {
     },
     hideAppHeader(value) {
       this.debug("hideAppHeader", this.address);
-      if (!value) {
-        this.$nextTick(() => this.setIcon());
-      }
     },
   },
 
@@ -81,16 +80,6 @@ export default {
   },
   mounted() {
     this.debug("MOUNTED", this.hideAppHeader);
-    let browserLang = navigator.language.substring(0, 2);
-    var check = this.langs.filter(function(elm) {
-      if (elm.id == browserLang) {
-        return elm.id; // returns length = 1 (object exists in array)
-      }
-      // return self.$i18n.locale;
-    });
-
-    this.$i18n.locale = check.length > 0 ? check[0].id : "en";
-    this.$nextTick(() => this.setIcon());
   },
 
   methods: {
@@ -98,22 +87,6 @@ export default {
       this.debug(e);
       if (!e) {
         this.showMenu = !this.showMenu;
-      }
-    },
-    setIcon() {
-      if (this.address) {
-        let body = document.getElementById("metamask-logo");
-        let icon = document.getElementById("metamask-logo-icon");
-        this.debug("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(44, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 3px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-icon";
-          body.insertBefore(el, body.firstChild);
-        }
       }
     },
 
@@ -131,7 +104,7 @@ export default {
     .v-toolbar__content {
       padding: 12px 20px;
     }
-    #metamask-logo {
+    #metamask-logo- {
       max-height: 54px;
       max-width: 54px;
 

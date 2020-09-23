@@ -14,7 +14,7 @@
     </v-row>
     <v-row class="darker-background mt-10">
       <v-col cols="12" class="pt-0 pb-2">
-        <div id="metamask-logo-details"></div>
+        <jazz-icon :address="address" :id="'details'" :size="71" :margin="4" />
       </v-col>
       <v-col cols="12" class="pt-1">
         <h2 class="T1 mb-2">{{ $t("menu.title") }}</h2>
@@ -42,7 +42,7 @@
 import WalletAddress from "../components/WalletAddress";
 import WalletState from "../components/WalletState";
 import ArrowBack from "../images/icon-arrow-back.vue";
-import jazzicon from "jazzicon";
+import JazzIcon from "../components/jazzicon";
 import { mapGetters } from "vuex";
 
 export default {
@@ -50,13 +50,12 @@ export default {
     WalletAddress,
     WalletState,
     ArrowBack,
+    JazzIcon,
   },
   created() {
     this.walletAddress = this.address; //this.checksumAddress
   },
-  mounted() {
-    this.setIcon();
-  },
+  mounted() {},
   computed: {
     ...mapGetters(["address"]),
     isConnected() {
@@ -76,28 +75,10 @@ export default {
     },
   },
   methods: {
-    setIcon() {
-      if (!this.iconSet && this.address) {
-        let body = document.getElementById("metamask-logo-details");
-        let icon = document.getElementById("metamask-logo-details-icon");
-        console.log("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(71, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 4px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-details-icon";
-          body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
-        }
-      }
-    },
     stepBack() {},
   },
   data() {
     return {
-      iconSet: false,
       connected: false,
       walletAddress: "",
     };

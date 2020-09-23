@@ -188,6 +188,9 @@ export default {
         })
         .then((result) => {
           this.success = true;
+          setTimeout(() => {
+            this.$router.push('/home')
+          } ,  5 * 100)
         });
     },
     cancel() {
@@ -224,6 +227,7 @@ export default {
   border: solid 2px #b8b9bb;
   margin: auto;
   margin-bottom: 12px;
+  margin-left: 0;
   .connected & {
     border: solid 2px var(--turquoise-green);
   }

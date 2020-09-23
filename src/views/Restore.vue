@@ -141,7 +141,7 @@ import * as bip39 from "bip39";
 import ArrowBack from "../images/icon-arrow-back.vue";
 import EyeUnselected from "../images/icon-eye-unselected.vue";
 import EyeSelected from "../images/icon-eye-selected.vue";
-import { RESTORE_PASSWORD } from "../store/actions";
+import { CREATE_NEW_WALLET } from "../store/actions";
 
 export default {
   components: {
@@ -178,12 +178,13 @@ export default {
     },
     restorePassword() {
       this.$store
-        .dispatch(RESTORE_PASSWORD, {
+        .dispatch(CREATE_NEW_WALLET, {
           seed: this.seedPhrase,
           password: this.password,
         })
         .then(() => {
-          this.passwordError = true;
+          this.$router.push("/login");
+          // this.passwordError = true;
         });
     },
 

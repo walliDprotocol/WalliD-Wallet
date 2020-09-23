@@ -365,7 +365,7 @@ export default {
     margin: 0;
     border-radius: 3px;
     background-color: #eeeeee;
-    padding: 36px 63px !important;
+    padding: 36px 43px !important;
     margin-top: 0;
     text-align: center;
     font-size: 16px;
