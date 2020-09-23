@@ -6,7 +6,7 @@ import extension from 'extensionizer'
 export function ExternalConnectorBackend() {
     document.addEventListener('wallid_request', function (event) {
         extension.runtime.sendMessage(event.detail, function(response) {
-            let event = new CustomEvent('wallid_response', { detail: response })
+            const event = new CustomEvent('wallid_response', { detail: response })
 
             document.dispatchEvent(event)
         })
@@ -29,8 +29,9 @@ export function ExternalConnectorFrontend() {
     }
 
     return function(method, params) {
-        let event = new CustomEvent('wallid_request', { detail: { method, params, nonce }})
-        let promise = new Promise((resolve, reject) => newResponseListener(resolve, reject, nonce))
+        const detail = { method, params, nonce, origin: window.location.href }
+        const event = new CustomEvent('wallid_request', { detail })
+        const promise = new Promise((resolve, reject) => newResponseListener(resolve, reject, nonce))
 
         nonce++
         document.dispatchEvent(event)
