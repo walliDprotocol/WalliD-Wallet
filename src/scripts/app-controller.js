@@ -413,14 +413,12 @@ export default class AppController {
       (al) => level == al
     );
   }
-
-  requestAPI(method, params, origin) {
+  requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
       if (details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {
-            origin,
             type: method,
             data: params,
             level: details.level,
