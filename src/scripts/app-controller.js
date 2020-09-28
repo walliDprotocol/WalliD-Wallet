@@ -389,7 +389,7 @@ export default class AppController {
             .then(al => level == al)
     }
 
-    requestAPI(method, params, origin) {
+    requestAPI(method, params = [], origin) {
         const requestHandler = function(details) {
             let promise = {}
             if(details.popup) {
