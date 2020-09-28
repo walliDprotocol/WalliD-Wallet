@@ -28,6 +28,9 @@ export function ExternalConnectorFrontend() {
         document.addEventListener('wallid_response', listener)
     }
 
+    const ready_event = new Event('wallid_plugin_ready')
+    document.dispatchEvent(ready_event)
+
     return function(method, params) {
         const detail = { method, params, nonce, origin: window.location.href }
         const event = new CustomEvent('wallid_request', { detail })
