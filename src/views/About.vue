@@ -60,37 +60,6 @@ export default {
     ArrowBack,
     IconTrash,
   },
-  mounted() {},
-  computed: {},
-  methods: {
-    cancel() {
-      this.site = {};
-      this.confirmDisconnect = false;
-    },
-    disconnect(site) {
-      this.site = site;
-      console.log(site);
-      this.confirmDisconnect = true;
-    },
-    setPendingDisconnect() {
-      //set pending disconnec
-      //   this.setState({
-      //     sitePendingDisconnect: {
-      //       domainKey,
-      //     },
-      //   });
-    },
-  },
-  data() {
-    return {
-      confirmDisconnect: false,
-      sites: [{ url: "wallid.io", name: "wallid" }],
-      site: {},
-      connected: false,
-      address: this.$API.getState().address,
-      unlocked: this.$API.getState().unlocked,
-    };
-  },
 };
 </script>
 

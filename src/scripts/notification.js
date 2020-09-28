@@ -13,7 +13,6 @@ import mixinPlugin from "../scripts/util";
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(Vuetify);
 
-
 //Set global is notification var
 Vue.prototype.$notification = true;
 

@@ -5,8 +5,8 @@ export default function() {
         extension.windows.create({
             url: extension.runtime.getURL("notification.html"),
             type: "popup",
-            width: 360,
-            height: 550
+            width: 420,
+            height: 640
         }, win => resolve(win.id))
     })
 }

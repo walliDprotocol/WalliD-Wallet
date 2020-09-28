@@ -107,7 +107,9 @@ let router = new Router({
       path: "/request",
       name: "Request",
       component: Request,
-      props: { request: store.getters.getRequest },
+      props: {
+        request: store.getters.getRequest,
+      },
     },
   ],
 });

@@ -55,22 +55,15 @@
 </template>
 
 <script>
-import * as bip39 from "bip39";
-
 import { UNLOCK_WALLET } from "../store/actions";
 
 export default {
-  computed: {},
-
   data() {
     return {
       password: "",
       passwordError: false,
       completedOnboarding: this.$API.getState().initialized,
     };
-  },
-  mounted() {
-    console.log("MOUNTED Login", this.completedOnboarding);
   },
   methods: {
     unlockPlugin() {
@@ -88,12 +81,8 @@ export default {
       }
     },
 
-    resetPlugin() {
-      this.$API.deleteVault(this.password).then(this.refreshState());
-    },
-
     checkRequests() {
-      console.log("Check for Requests");
+      this.debug("Check for Requests");
       if (this.$store.getters.hasPermissionsRequests) {
         this.$router.push("/request");
       } else {
@@ -103,5 +92,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

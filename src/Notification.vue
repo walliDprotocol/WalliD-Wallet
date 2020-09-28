@@ -1,5 +1,5 @@
 <template>
-  <v-app class="plugin">
+  <v-app class="plugin notification">
     <v-container fluid class="router-views">
       <router-view :hideAppHeader="hideAppHeader"></router-view>
     </v-container>
@@ -48,6 +48,11 @@ export default {
 
 <style lang="scss">
 #app.plugin {
+  &.notification {
+    max-width: 400px;
+    max-height: 600px;
+    margin: auto;
+  }
   .plugin-header {
     background: #eeeeee;
     .v-toolbar__content {

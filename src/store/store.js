@@ -8,10 +8,13 @@ import {
   UNLOCK_WALLET,
   AUTHORIZE_REQUEST,
   CONNECT,
+  ENCRYPT,
+  DECRYPT,
   DISCONNECT,
+  ACCESS_LEVEL,
+  GET_TOKEN,
   REVEAL_SEED_PHRASE,
   GENERATE_NEW_SEED_PHRASE,
-  RESTORE_PASSWORD,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -23,27 +26,9 @@ export default new Vuex.Store({
   state: {
     address: API.getState().address,
     completedOnboarding: API.getState().initialized,
-    connections: [
-      {
-        url: "https://www.wallid.io/",
-        icon: "https://www.wallid.io/favicon.ico",
-        name: "wallid.io",
-        description: "Site wallid",
-      },
-    ], //API.getState().connections,
+    connections: API.getState().connections,
     initialized: API.getState().initialized,
-    //API.getNextRequest(),
-    request: {
-      type: "wallid_connect",
-      nonce: 1,
-      data: {
-        url: "https://www.wallid.io/",
-        icon: "https://www.wallid.io/favicon.ico",
-        name: "wallid.io",
-        description: "Site wallid",
-      },
-      callback: "",
-    },
+    request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
   },
@@ -56,15 +41,31 @@ export default new Vuex.Store({
     state: (state) => state,
   },
   actions: {
-    [RESTORE_PASSWORD]: ({ state, commit, dispatch }, { seed, password }) => {
-      console.log("Action RESTORE_PASSWORD");
+    currentSite: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
-        API.validateSeedPhrase(seed)
+        API.currentTab(resolve);
+      });
+    },
+
+    [ACCESS_LEVEL]: ({ commit, state }, { url, level }) => {
+      return new Promise((resolve, reject) => {
+        API.accessControl(url, level).then((res) => {
+          resolve(res);
+        });
+      });
+    },
+
+    [GET_TOKEN]: ({ commit, state }, { idt, operation }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action GET_TOKEN");
+        state.debug("Data: ", idt, operation);
+        API.getAuthorizationToken(idt, operation)
           .then((res) => {
-            state.debug(res);
+            resolve(JSON.parse(res));
           })
           .catch((e) => {
-            console.error(res);
+            console.error(e);
+            reject(e);
           });
       });
     },
@@ -74,7 +75,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         API.createNewVault(seed, password)
           .then((res) => {
-            console.log(res);
             dispatch(REFRESH_STATE);
           })
           .then(() => resolve(seed))
@@ -102,7 +102,6 @@ export default new Vuex.Store({
             } else {
               reject("Wrong Password");
             }
-            console.log(result);
           })
           .catch((e) => {
             reject(e);
@@ -113,46 +112,87 @@ export default new Vuex.Store({
       console.log("Action REFRESH_STATE");
       commit("updateAddress", API.getState().address);
       commit("updateUnlocked", API.getState().unlocked);
-      // commit("updateConnections", API.getState().connections);
+      commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
     },
 
-    [CONNECT]: ({ commit, state }, { params }) => {
+    [CONNECT]: ({ commit, state }, { origin, name }) => {
       return new Promise((resolve, reject) => {
         console.log("Action CONNECT");
-        state.debug("URL: ", params.url);
+        state.debug("URL: ", origin);
         state.debug("Connections: ", state.connections);
         // state.debug("Notification: ", state.notification);
-
-        // API.approvePendingConnection(params.url)
-        //   .then(() => {
-        //     //Close window if its a notification popup
-        //     state.notification ? window.close() : "";
-        resolve(true);
-        // })
-        // .catch((e) => {
-        //   console.error("Error Authorizing request: ", e);
-        //   // reject(false);
-        //   resolve(true);
-
-        // });
+        let icon = origin + "favicon.ico";
+        API.approveConnection(origin, icon, name)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+    [ENCRYPT]: ({ commit, state }, { data }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action ENCRYPT");
+        state.debug("Data: ", data);
+        API.encryptData(data)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+    [DECRYPT]: ({ commit, state }, { data }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action DECRYPT");
+        state.debug("Data: ", data);
+        API.decryptData(data)
+          .then((res) => {
+            resolve(JSON.parse(res));
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
       });
     },
 
     [AUTHORIZE_REQUEST]: (
       { state, commit, dispatch },
-      { params, type, notification }
+      { data, type, callback, origin }
     ) => {
       return new Promise((resolve, reject) => {
         console.log("Action AUTHORIZE_REQUEST");
-        state.notification = notification;
-        state.debug("Params: ", params);
-        state.debug("Connections: ", state.connections);
+        state.debug("Params: ", data);
+        state.debug("Connections: ", type);
+        state.debug("Origin: ", origin);
+
+        commit("clearPendingRequests");
 
         switch (type) {
           case "wallid_connect":
-            resolve(dispatch(CONNECT, { params })).catch((e) => {
-              resolve(e);
+            dispatch(CONNECT, { origin }).then((res) => {
+              console.log(res);
+              resolve(res);
+            });
+            break;
+
+          case "wallet_encrypt":
+            dispatch(ENCRYPT, { data }).then((res) => {
+              console.log(res);
+              resolve(callback(null, res));
+            });
+            break;
+
+          case "wallet_decrypt":
+            dispatch(DECRYPT, { data }).then((res) => {
+              let _res = JSON.parse(res);
+              resolve(callback(null, _res));
             });
             break;
 
@@ -185,8 +225,7 @@ export default new Vuex.Store({
 
         API.removeConnected(url)
           .then(() => {
-            // resolve(commit("updateConnections", API.getState().connections));
-            resolve(state.connections.shift());
+            resolve(commit("updateConnections", API.getState().connections));
           })
           .catch((e) => {
             console.error("Error Disconnecting site: ", e);
@@ -215,6 +254,9 @@ export default new Vuex.Store({
     },
     updateConnections(state, value) {
       state.connections = value;
+    },
+    clearPendingRequests(state) {
+      state.request = null;
     },
     updatePendingRequests(state) {
       state.request = API.getNextRequest();

@@ -29,7 +29,6 @@ export default {
     };
   },
   mounted() {
-    console.log("MOUNTED", this.unlocked);
     this.$store.commit("appendLogger", this.debug);
     let browserLang = navigator.language.substring(0, 2);
     var check = this.langs.filter(function(elm) {

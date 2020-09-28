@@ -93,7 +93,28 @@
             :error-messages="passwordError"
           ></v-text-field>
         </v-col>
-
+        <v-col cols="12" class="pl-0 py-2 ">
+          <v-checkbox
+            v-model="termsWallet"
+            required
+            class="terms mt-0 pl-3 text-left"
+            color="#009fb1"
+            hide-details
+          >
+            <div slot="label">
+              {{ $t("create.stepper[0].terms[0]") }}
+              <a
+                class="links"
+                target="_blank"
+                color="#01a3b0"
+                href="https://www.wallid.io"
+                @click.stop
+              >
+                {{ $t("create.stepper[0].terms[1]") }}
+              </a>
+            </div>
+          </v-checkbox>
+        </v-col>
         <v-col cols="12" class="text-left pb-0 pt-1">
           <label class="sub-title-fields">
             {{ $t("import.password[1]") }}
@@ -157,7 +178,12 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.validSeedPhrase() || !this.password || !this.passwordMatch;
+      return (
+        !this.validSeedPhrase() ||
+        !this.password ||
+        !this.passwordMatch ||
+        !this.termsWallet
+      );
     },
   },
 
@@ -170,6 +196,7 @@ export default {
       passwordMatch: "",
       passwordError: "",
       passwordMatchError: "",
+      termsWallet: false,
     };
   },
   mounted() {},
@@ -226,6 +253,21 @@ export default {
 
 <style lang="scss">
 .restore {
+  .terms {
+    .v-input__slot {
+      align-items: start;
+    }
+    div {
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: left;
+      color: var(--charcoal-grey);
+    }
+  }
   .seed-phrase-revealed.v-textarea.v-input {
     .v-input__control {
       min-height: unset;

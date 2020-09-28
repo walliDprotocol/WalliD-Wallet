@@ -8,7 +8,7 @@
         <h2 class="T1 mb-2 text-center">
           {{ $t("home.title") }}
         </h2>
-        <WalletState :isConnected="isConnected" :website="'WallidD.io'">
+        <WalletState :isConnected="isConnected" :website="connected.name">
         </WalletState>
       </v-col>
       <v-col cols="12" class="pt-4 pb-9 px-14">
@@ -44,7 +44,7 @@ export default {
     JazzIcon,
   },
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(["address", "connections"]),
     isConnected() {
       if (this.connected) {
         return {
@@ -62,26 +62,19 @@ export default {
     },
   },
   mounted() {
-    this.setIcon();
     this.debug("Connections", this.$store.getters.state.connections);
+
+    this.checkConnected();
   },
   methods: {
-    setIcon() {
-      if (!this.iconSet && this.address) {
-        let body = document.getElementById("metamask-logo-home");
-        let icon = document.getElementById("metamask-logo-home-icon");
-        console.log("metamask-logo", body);
-        if (body && !icon) {
-          var el = jazzicon(100, this.address);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: 5px;");
-
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-home-icon";
-          body.insertBefore(el, body.firstChild);
-          this.iconSet = true;
-        }
-      }
+    checkConnected() {
+      this.$store.dispatch("currentSite").then((site) => {
+        this.debug("Current site: ", site);
+        this.debug("Existing connections: ", this.connections);
+        this.connected = this.connections.find((e) => {
+          return this.getDomain(e.url) == this.getDomain(site.url) ? e : "";
+        });
+      });
     },
   },
   data() {

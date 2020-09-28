@@ -17,14 +17,16 @@
     </v-app-bar>
 
     <v-container class="request">
-      <v-row v-show="!success" class="justify-space-around mt-2px">
-        <v-col cols="12" class="my-3 py-7 px-6">
-          <div class="back-arrow">
-            <h2 class="sub-title-fields">
-              <b> {{ websiteData.name }}</b>
-              {{ $t("request." + type + ".description") }}
-            </h2>
-          </div>
+      <v-row
+        v-show="!success"
+        class="justify-space-around mt-2px"
+        style="height:500px"
+      >
+        <v-col cols="12" class="my-3 py-7 ">
+          <h2 class="sub-title-fields">
+            <b> {{ websiteData.name }}</b>
+            {{ $t("request." + type + ".description") }}
+          </h2>
         </v-col>
 
         <!-- website info and wallet -->
@@ -50,7 +52,7 @@
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
 
-        <v-col cols="10" class="px-16 pt-13 pb-8">
+        <v-col cols="10" class="px-16 pt-11 pb-8">
           <router-link class="links" to="/">
             {{ $t("request.bScenes") }}
           </router-link>
@@ -64,16 +66,19 @@
             </p>
           </div>
         </v-col>
-      </v-row>
-      <!-- Option buttons -->
-      <v-row v-show="!success" class="float-bottom">
-        <v-col cols="6" class="pr-2">
+        <!-- Option buttons -->
+        <v-col v-show="!success" cols="6" class="pr-2 pb-0" align-self="end">
           <v-btn text class="cancel-btn" @click="cancel">
             {{ $t("request.cancel") }}
           </v-btn>
         </v-col>
-        <v-col cols="6" class="pl-2">
-          <v-btn text class="advance-btn" @click="authorizeRequest">
+        <v-col v-show="!success" cols="6" class="pl-2 pb-0" align-self="end">
+          <v-btn
+            text
+            class="advance-btn"
+            :disabled="disableButtonRequest"
+            @click="authorizeRequest"
+          >
             {{ $t("request." + type + ".button") }}
           </v-btn>
         </v-col>
@@ -126,7 +131,12 @@ import CheckSuccessIcon from "../images/icon-sucessfully";
 import WebSiteLogo from "../components/WebSiteLogo";
 import JazzIcon from "../components/jazzicon";
 
-import { CANCEL_REQUEST, AUTHORIZE_REQUEST } from "../store/actions";
+import {
+  CANCEL_REQUEST,
+  AUTHORIZE_REQUEST,
+  ACCESS_LEVEL,
+  CONNECT,
+} from "../store/actions";
 import axios from "axios";
 import { mapGetters } from "vuex";
 
@@ -143,26 +153,49 @@ export default {
   },
   watch: {},
   mounted() {
-    console.log(this.request);
+    this.debug("Request: ", this.request);
     this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
     this.type = this.request.type;
+    this.debug("Request type: ", this.type);
     switch (this.type) {
       case "wallid_connect":
-        this.websiteData = this.request.data;
+        this.websiteData = this.getWebsiteInfo(this.request.origin);
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess);
+            if (hasAccess) {
+              this.$notification ? window.close() : this.$router.push("/home");
+            }
+          });
         break;
       case "wallid_disconnect":
-        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        console.error("Invalid Request Type");
         break;
       case "wallid_address":
-        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        console.error("Invalid Request Type");
         break;
       case "wallet_encrypt":
-        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
-        break;
       case "wallet_decrypt":
-        this.websiteData = this.request.params; //this.getWebsiteInfo(this.request.params);
+        this.websiteData = this.getWebsiteInfo(this.request.origin);
+        var params;
+        params = {
+          url: this.request.origin,
+          icon: this.request.origin + "favicon.ico",
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, { params }).then(() => {
+                this.debug("Connected");
+              });
+            }
+          });
         break;
       default:
         console.log("Invalid Request Type");
@@ -175,44 +208,51 @@ export default {
     },
   },
   methods: {
-    authorizeRequest() {
-      // var request = { id: 1 };
-      this.debug("Request", this.request);
-      this.debug("notification", this.$notification);
+    getWebsiteInfo(origin) {
+      let name = origin.split("//")[1].split("/")[0];
+      let icon = origin + "/favicon.ico";
+      return { name: name, icon: icon };
+    },
 
+    authorizeRequest() {
+      this.disableButtonRequest = true;
       this.$store
         .dispatch(AUTHORIZE_REQUEST, {
+          data: this.request.data,
+          type: this.request.type,
+          callback: this.request.callback,
+          origin: this.request.origin,
+          name: this.websiteData.name,
+        })
+        .then(() => {
+          if (this.request.type == "wallid_connect") this.success = true;
+
+          setTimeout(() => {
+            this.$notification ? window.close() : this.$router.push("/home");
+          }, 8 * 100);
+        });
+    },
+    cancel() {
+      this.$store
+        .dispatch(CANCEL_REQUEST, {
           params: this.request.data,
           type: this.request.type,
           notification: this.$notification,
         })
-        .then((result) => {
-          this.success = true;
+        .then(() => {
           setTimeout(() => {
-            this.$router.push('/home')
-          } ,  5 * 100)
+            this.$notification ? window.close() : this.$router.push("/home");
+          }, 8 * 100);
         });
-    },
-    cancel() {
-      //cancel request TO DO
-      this.$store.dispatch(CANCEL_REQUEST, {
-        params: this.request.data,
-        type: this.request.type,
-        notification: this.$notification,
-      });
-      this.$router.push("/home");
-      //   this.$store.dispatch("LOCK_WALLET");
-      //   this.$API.lockApp().catch((e) => {
-      // console.error(e);
-      //   });
     },
   },
   data() {
     return {
+      disableButtonRequest: false,
       walletAddress: "",
       type: "",
       success: false,
-      websiteData: {},
+      websiteData: { name: "", icon: "" },
     };
   },
 };

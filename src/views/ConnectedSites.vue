@@ -94,9 +94,6 @@ export default {
     ArrowBack,
     IconTrash,
   },
-  mounted() {
-    console.log(this.connections);
-  },
   computed: {
     ...mapGetters(["connections"]),
   },

@@ -274,7 +274,7 @@ export default {
           this.step = 5;
         })
         .catch((e) => {
-          console.log(e);
+          console.error(e);
         });
     },
     checkForm() {
@@ -305,7 +305,7 @@ export default {
           this.step += 1;
         })
         .catch((e) => {
-          console.log(e);
+          console.error(e);
         });
     },
 
@@ -327,7 +327,7 @@ export default {
     };
   },
 };
-</script>broccoli yard urge net habit bridge rubber erase scout cabbage off assume
+</script>
 
 <style lang="scss">
 .stepper-create {

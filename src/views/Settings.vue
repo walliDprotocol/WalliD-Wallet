@@ -1,6 +1,6 @@
 <template>
   <v-container class="settings">
-    <v-row v-if="!confirmDisconnect">
+    <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/home')" class="back-btn">
@@ -14,7 +14,7 @@
     </v-row>
     <v-divider class="full-divider"></v-divider>
     <v-row>
-      <v-col cols="12" class="pt-6 text-left">
+      <v-col cols="12" class="pt-5 text-left">
         <h4 class="mb-2 ">
           {{ $t("settings.general.title") }}
         </h4>
@@ -41,7 +41,7 @@
           </template>
         </v-select>
       </v-col>
-      <v-col cols="12" class="pt-4 pb-1 text-left">
+      <v-col cols="12" class="pt-3 pb-1 text-left">
         <h4 class=" mb-2 text-left">
           {{ $t("settings.privacy.title") }}
         </h4>
@@ -91,39 +91,12 @@ export default {
     ArrowBack,
     IconDropdown,
   },
-  mounted() {},
-  computed: {},
-  methods: {
-    cancel() {
-      this.site = {};
-      this.confirmDisconnect = false;
-    },
-    disconnect(site) {
-      this.site = site;
-      console.log(site);
-      this.confirmDisconnect = true;
-    },
-    setPendingDisconnect() {
-      //set pending disconnec
-      //   this.setState({
-      //     sitePendingDisconnect: {
-      //       domainKey,
-      //     },
-      //   });
-    },
-  },
   data() {
     return {
-      confirmDisconnect: false,
       langs: [
         { id: "pt", name: "Português" },
         { id: "en", name: "English" },
       ],
-      sites: [{ url: "wallid.io", name: "wallid" }],
-      site: {},
-      connected: false,
-      address: this.$API.getState().address,
-      unlocked: this.$API.getState().unlocked,
     };
   },
 };
