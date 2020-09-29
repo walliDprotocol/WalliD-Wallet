@@ -9,7 +9,7 @@ const RequestAPIMethods = {
         executor: ['connections', 'removeConnected']
     },
     'wallid_token': {
-        popup: false,
+        popup: true,
         level: 1,
         executor: ['getAuthorizationToken']
     },
