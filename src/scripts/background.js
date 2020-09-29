@@ -17,10 +17,10 @@ chrome.declarativeContent.onPageChanged.addRules([{
 }])
 
 // Connects the external web connector to the App's RequestAPI
-extension.runtime.onMessage.addListener(function(request, res, f) {
-    App.requestAPI(request.method, request.params, request.origin)
-        .then(result => f({ data: result, error: null, nonce: request.nonce }))
-        .catch(error => f({ data: null, error, nonce: request.nonce }))
+extension.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    App.requestAPI(request.method, request.params, sender.origin)
+        .then(result => sendResponse({ data: result, error: null, nonce: request.nonce }))
+        .catch(error => sendResponse({ data: null, error, nonce: request.nonce }))
 
     return true
 })

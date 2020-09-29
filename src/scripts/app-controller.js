@@ -1,11 +1,12 @@
 'use strict'
 
 import StateStore from './lib/store';
-import VaultController from './controllers/vault'
 import seed from './lib/seed-phrase'
 import { getRequestDetails } from './lib/requests'
 import * as WalliD from './lib/wallid'
 import launchNotificationPopup from './lib/launch-notification-popup'
+import { eventPipeIn } from './lib/event-pipe'
+import VaultController from './controllers/vault'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
 
@@ -120,6 +121,7 @@ export default class AppController {
                 connections: ConnectionsController.deserialize(vault.getConnections()),
                 password
             }))
+            .then(() => eventPipeIn('wallid_event_unlock', { hello: 'world' }))
     }
 
     /**
@@ -129,10 +131,10 @@ export default class AppController {
      * @returns {Promise}
      */
     lockApp() {
-        console.log('lockAPP')
         const vault = this.#store.getState().vault
         return Promise.resolve(vault.lock())
             .then(() => this.#store.updateState(InitState))
+            .then(() => eventPipeIn('wallid_event_lock', { bye: 'world' }))
     }
 
     /**
