@@ -28,7 +28,7 @@ export function ExternalConnectorFrontend() {
         document.addEventListener('wallid_response', listener)
     }
 
-    const ready_event = new Event('wallid_plugin_ready')
+    const ready_event = new Event('wallid_event_ready')
     document.dispatchEvent(ready_event)
 
     return function(method, params) {
