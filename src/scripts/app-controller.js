@@ -1,14 +1,14 @@
 "use strict";
 
 import StateStore from "./lib/store";
-import VaultController from "./controllers/vault";
 import seed from "./lib/seed-phrase";
 import { getRequestDetails } from "./lib/requests";
 import * as WalliD from "./lib/wallid";
 import launchNotificationPopup from "./lib/launch-notification-popup";
+import { eventPipeIn } from "./lib/event-pipe";
+import VaultController from "./controllers/vault";
 import WalletController from "./controllers/wallet";
 import ConnectionsController from "./controllers/connections";
-import extension from "extensionizer";
 
 const InitState = {
   wallet: {},
@@ -61,6 +61,147 @@ export default class AppController {
     }
     let mnemonic = this.#store.getState().mnemonic;
     return Promise.resolve(seed.validate(test) && mnemonic == test);
+  }
+
+  //
+  // VAULT CONTROLLER INTERFACE
+  //
+
+  /**
+   * Creates a new vault with @password, persisting it to local storage.
+   * Creates a new wallet from the provided @mnemonic.
+   * Overwrites any pre-existing data.
+   *
+   * @param {string} - mnemonic
+   * @param {string} - password
+   *
+   * @returns {Promise}
+   */
+  createNewVault(mnemonic, password) {
+    const vault = this.#store.getState().vault;
+    return Promise.resolve(vault.createNewAndPersist(mnemonic, password));
+  }
+
+  /**
+   * Resets the vault and clears plugin's local storage.
+   * This action is definitive. All plugin data is permanently lost.
+   * Throws error if plugin is locked.
+   *
+   * @returns {Promise}
+   */
+  resetVault() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      Promise.reject("Vault is locked");
+    }
+    return Promise.resolve(
+      vault.submitPassword(this.#store.getState().password)
+    )
+      .then(vault.fullReset())
+      .then(() => this.#store.updateState(InitState));
+  }
+
+  /**
+   * Tries to unlock the App with provided password.
+   * Loads wallet, connections and password to runtime state.
+   * Throws error if provided password is incorrect.
+   *
+   * @param {string} password
+   *
+   * @returns {Promise}
+   */
+  unlockApp(password) {
+    const vault = this.#store.getState().vault;
+    if (vault.isEmpty()) {
+      return Promise.reject("Vault is empty!");
+    }
+    return Promise.resolve(vault.unlock(password))
+      .then(() =>
+        this.#store.updateState({
+          wallet: WalletController.deserialize(vault.getWallet()),
+          connections: ConnectionsController.deserialize(
+            vault.getConnections()
+          ),
+          password,
+        })
+      )
+      .then(() => eventPipeIn("wallid_event_unlock", { hello: "world" }));
+  }
+
+  /**
+   * Locks the app and clears app's runtime state.
+   * App's state is wiped clean and vault is locked.
+   *
+   * @returns {Promise}
+   */
+  lockApp() {
+    const vault = this.#store.getState().vault;
+    return Promise.resolve(vault.lock())
+      .then(() => this.#store.updateState(InitState))
+      .then(() => eventPipeIn("wallid_event_lock", { bye: "world" }));
+  }
+
+  /**
+   * Tries to unlock vault with @password.
+   * Resolves to true in case password is valid and to false otherwise.
+   *
+   * @param {string} password
+   *
+   * @returns {Promise<boolean>} - verified
+   */
+  verifyPassword(password) {
+    const vault = this.#store.getState().vault;
+    return Promise.resolve(vault.submitPassword(password))
+      .then(() => Promise.resolve(true))
+      .catch(() => Promise.resolve(false));
+  }
+
+  //
+  // CONNECTIONS CONTROLLER INTERFACE
+  //
+
+  /**
+   * Approves a pending connection request.
+   * Promise rejects if a connection with same @url already exists, or if vault is locked.
+   *
+   * @param {string} url - Identifier of the pendding connection
+   *
+   * @returns {Promise} - result
+   */
+  approveConnection(url, icon, name) {
+    const vault = this.#store.getState().vault;
+    const connections = this.#store.getState().connections;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    return Promise.resolve(connections.addConnected(url, icon, name)).then(
+      vault.putConnections(
+        connections.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+
+  /**
+   * Removes connection identified by @url from list of connected websites.
+   * Promise rejects if @url does not match any approved connections, or if vault is locked.
+   *
+   * @param {string} url - Identifier of the pendding connection
+   *
+   * @returns {Promise} - result
+   */
+  removeConnected(url) {
+    const vault = this.#store.getState().vault;
+    const connections = this.#store.getState().connections;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    return Promise.resolve(connections.removeConnected(url)).then(
+      vault.putConnections(
+        connections.serialize(),
+        this.#store.getState().password
+      )
+    );
   }
 
   //

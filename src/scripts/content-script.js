@@ -1,4 +1,5 @@
-import { ExternalConnectorBackend } from "./lib/web-connector";
+import { ExternalConnectorBackend } from './lib/web-connector'
+import { eventPipeOut } from './lib/event-pipe'
 
 function injectScript(file) {
   // var script = document.createElement("script");
@@ -14,6 +15,10 @@ function injectScript(file) {
   container.insertBefore(scriptTag, container.children[0]);
 }
 
-injectScript(chrome.extension.getURL("/scripts/injector.bundle.js"));
+function init() {
+    injectScript(chrome.extension.getURL('/scripts/injector.bundle.js'));
+    ExternalConnectorBackend()
+    eventPipeOut()
+}
 
-ExternalConnectorBackend();
+init()

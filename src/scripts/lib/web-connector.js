@@ -2,7 +2,7 @@
 
 import extension from 'extensionizer'
 
-//Backend runs in content script
+//Backend runs in content-script
 export function ExternalConnectorBackend() {
     document.addEventListener('wallid_request', function (event) {
         extension.runtime.sendMessage(event.detail, function(response) {
@@ -28,7 +28,7 @@ export function ExternalConnectorFrontend() {
         document.addEventListener('wallid_response', listener)
     }
 
-    const ready_event = new Event('wallid_plugin_ready')
+    const ready_event = new Event('wallid_event_ready')
     document.dispatchEvent(ready_event)
 
     return function(method, params) {
