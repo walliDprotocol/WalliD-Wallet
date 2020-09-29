@@ -32,7 +32,7 @@ export function ExternalConnectorFrontend() {
     document.dispatchEvent(ready_event)
 
     return function(method, params) {
-        const detail = { method, params, nonce, origin: window.location.href }
+        const detail = { method, params, nonce, origin: window.location.origin }
         const event = new CustomEvent('wallid_request', { detail })
         const promise = new Promise((resolve, reject) => newResponseListener(resolve, reject, nonce))
 
