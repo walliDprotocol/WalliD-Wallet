@@ -419,6 +419,7 @@ export default class AppController {
       if (details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {
+            origin,
             type: method,
             data: params,
             level: details.level,
