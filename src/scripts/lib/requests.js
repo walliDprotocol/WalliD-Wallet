@@ -10,8 +10,7 @@ const RequestAPIMethods = {
     },
     'wallid_token': {
         popup: true,
-        level: 1,
-        executor: ['getAuthorizationToken']
+        level: 1
     },
     'wallid_extract': {
         popup: true,
