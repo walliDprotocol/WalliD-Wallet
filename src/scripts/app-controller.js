@@ -418,8 +418,7 @@ export default class AppController {
                 else {
                     promise = Promise.resolve(this.accessControl(origin, details.level))
                         .then(acc => acc? Promise.resolve(this.#store.getState()) : Promise.reject(`Caller does not have permission to execute ${method}`))
-                        .then(state => details.executor.length == 1? 
-                            state[details.executor[0]](...params) : state[details.executor[0]][details.executor[1]](...params))
+                        .then(state => state[details.executor[0]][details.executor[1]](...params))
                 }
             }
             return promise
