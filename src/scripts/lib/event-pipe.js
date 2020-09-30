@@ -6,12 +6,14 @@
 
 import extension from 'extensionizer'
 
+// Used by background to pipe events to the content-script
 export function eventPipeIn(event, data) {
     extension.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         extension.tabs.sendMessage(tabs[0].id, { event, data })
     })
 }
 
+// Used by contentScript to relay events emitted from the background
 export function eventPipeOut() {
     extension.runtime.onMessage.addListener(function(request) {
         document.dispatchEvent(new CustomEvent(request.event, { detail: request.data }))
