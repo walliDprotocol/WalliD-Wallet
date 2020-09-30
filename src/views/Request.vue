@@ -183,7 +183,7 @@ export default {
         var params;
         params = {
           url: this.request.origin,
-          icon: this.request.origin + "favicon.ico",
+          icon: this.request.origin + "/favicon.ico",
           name: this.getDomain(this.request.origin),
         };
         this.$store
@@ -237,12 +237,13 @@ export default {
         .dispatch(CANCEL_REQUEST, {
           params: this.request.data,
           type: this.request.type,
+          callback: this.request.callback,
           notification: this.$notification,
         })
         .then(() => {
           setTimeout(() => {
             this.$notification ? window.close() : this.$router.push("/home");
-          }, 8 * 100);
+          }, 3 * 100);
         });
     },
   },

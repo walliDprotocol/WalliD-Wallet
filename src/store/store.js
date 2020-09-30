@@ -61,7 +61,8 @@ export default new Vuex.Store({
         state.debug("Data: ", idt, operation);
         API.getAuthorizationToken(idt, operation)
           .then((res) => {
-            resolve(JSON.parse(res));
+            console.log(res);
+            resolve(res);
           })
           .catch((e) => {
             console.error(e);
@@ -122,7 +123,7 @@ export default new Vuex.Store({
         state.debug("URL: ", origin);
         state.debug("Connections: ", state.connections);
         // state.debug("Notification: ", state.notification);
-        let icon = origin + "favicon.ico";
+        let icon = origin + "/favicon.ico";
         API.approveConnection(origin, icon, name)
           .then((res) => {
             resolve(res);
@@ -153,7 +154,8 @@ export default new Vuex.Store({
         state.debug("Data: ", data);
         API.decryptData(data)
           .then((res) => {
-            resolve(JSON.parse(res));
+            console.log(res);
+            resolve(res);
           })
           .catch((e) => {
             console.error(e);
@@ -169,12 +171,20 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log("Action AUTHORIZE_REQUEST");
         state.debug("Params: ", data);
-        state.debug("Connections: ", type);
+        state.debug("Type: ", type);
         state.debug("Origin: ", origin);
 
         commit("clearPendingRequests");
 
         switch (type) {
+          case "wallid_token":
+            dispatch(GET_TOKEN, { idt: data[0], operation: data[1] }).then(
+              (res) => {
+                console.log(res);
+                resolve(callback(null, res));
+              }
+            );
+            break;
           case "wallid_connect":
             dispatch(CONNECT, { origin }).then((res) => {
               console.log(res);
@@ -206,15 +216,15 @@ export default new Vuex.Store({
     },
     [CANCEL_REQUEST]: (
       { commit, dispatch, state },
-      { request, notification }
+      { request, notification, callback }
     ) => {
-      console.log("Action CANCEL_REQUEST");
+      return new Promise((resolve, reject) => {
+        console.log("Action CANCEL_REQUEST" , callback);
+        resolve(callback("REJECTED"));
 
-      commit("updatePendingRequests");
-      dispatch(REFRESH_STATE);
-
-      //Close window if its a notification popup
-      notification ? window.close() : "";
+        commit("updatePendingRequests");
+        dispatch(REFRESH_STATE);
+      });
     },
 
     [DISCONNECT]: ({ commit, state }, url) => {
