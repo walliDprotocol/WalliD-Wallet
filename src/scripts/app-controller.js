@@ -1,7 +1,7 @@
 'use strict'
 
 import StateStore from './lib/store';
-import seed from './lib/seed-phrase'
+import * as seed from './lib/seed-phrase'
 import { getRequestDetails } from './lib/requests'
 import * as WalliD from './lib/wallid'
 import launchNotificationPopup from './lib/launch-notification-popup'
