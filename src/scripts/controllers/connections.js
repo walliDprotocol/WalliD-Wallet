@@ -26,7 +26,7 @@ export default class ConnectionsController {
             if(this.#connections.findIndex(c => c.url == url) != -1) {
                 return reject(`Connection for url ${url} already exists`)
             }
-            this.#connections.push({ url, icon, name })
+            this.#connections.push({ url, icon, name, level: 1 })
             return resolve()
         })
         
@@ -44,6 +44,11 @@ export default class ConnectionsController {
     isConnected(url) {
         return Promise.resolve(this.#connections.findIndex(c => c.url == url))
             .then(index => index != -1)
+    }
+
+    getConnectionAccessLevel(url) {
+        return Promise.resolve(this.#connections.findIndex(c => c.url == url))
+            .then(index => index == -1? Promise.resolve(0) : Promise.resolve(this.#connections[index].level))
     }
 }
 
