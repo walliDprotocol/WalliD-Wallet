@@ -1,7 +1,7 @@
 "use strict";
 
 import StateStore from "./lib/store";
-import seed from "./lib/seed-phrase";
+import * as seed from "./lib/seed-phrase";
 import { getRequestDetails } from "./lib/requests";
 import * as WalliD from "./lib/wallid";
 import launchNotificationPopup from "./lib/launch-notification-popup";
@@ -9,10 +9,12 @@ import { eventPipeIn } from "./lib/event-pipe";
 import VaultController from "./controllers/vault";
 import WalletController from "./controllers/wallet";
 import ConnectionsController from "./controllers/connections";
+import IdentitiesController from "./controllers/identities";
 
 const InitState = {
   wallet: {},
   connections: {},
+  identities: {},
   password: "",
   popups: [],
   requests: [],
@@ -122,6 +124,7 @@ export default class AppController {
           connections: ConnectionsController.deserialize(
             vault.getConnections()
           ),
+          identities: IdentitiesController.deserialize(vault.getIdentities()),
           password,
         })
       )
@@ -140,7 +143,7 @@ export default class AppController {
       .then(() => this.#store.updateState(InitState))
       .then(() => eventPipeIn("wallid_event_lock"));
   }
-
+  
   /**
    * Tries to unlock vault with @password.
    * Resolves to true in case password is valid and to false otherwise.
@@ -264,9 +267,6 @@ export default class AppController {
    */
   getAuthorizationToken(idt, operation) {
     const wallet = this.#store.getState().wallet;
-    console.log(idt);
-    console.log(operation);
-
     return Promise.resolve(
       WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation)
     ).then(({ ok, status, body }) =>
@@ -291,6 +291,26 @@ export default class AppController {
       WalliD.extractIdentity(auth_token)
     ).then(({ ok, status, body }) =>
       ok && status != 202 ? Promise.resolve(body.data) : Promise.reject(status)
+    );
+  }
+  /**
+   * Imports a new identity of type @idt into WalliD Plugin.
+   *
+   * @param {string} idt - WalliD identity type tag
+   * @param {string} data - encrypted identity data
+   * @param {*} ow - overwrite flag
+   */
+  importIdentity_v2(idt, data, ow = false) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    const identities = this.#store.getState().identities;
+    return Promise.resolve(identities.addIdentity(idt, data, ow)).then(
+      vault.putIdentities(
+        identities.serialize(),
+        this.#store.getState().password
+      )
     );
   }
 

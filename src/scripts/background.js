@@ -7,15 +7,6 @@ const App = new AppController()
 // Inject internal API into UI subsystem
 window.API = App.getAPI()
 
-chrome.declarativeContent.onPageChanged.addRules([{
-    conditions: [
-        new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: { hostEquals: 'google.com' },
-        })
-    ],
-    actions: [new chrome.declarativeContent.ShowPageAction()]
-}])
-
 // Connects the external web connector to the App's RequestAPI
 extension.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     App.requestAPI(request.method, request.params, sender.origin)

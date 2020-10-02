@@ -110,19 +110,13 @@ export default class Vault {
     // Updates vault with @conns
     putConnections(conns, password) {
         console.log('putConnections')
-        return Promise.resolve(this.submitPassword(password))
-            .then(data => { data[2] = conns; return data })
-            .then(data => passworder.encrypt(password, data).then(vault => Promise.resolve({ data, vault })))
-            .then(_data => {
-                this.#store.updateState({
-                    vault: _data.vault,
-                    unlocked: this.isUnlocked(),
-                    data: this.isUnlocked()? _data.data : null
-                })
+        return Promise.resolve(this._putData(2, conns, password))
+    }
 
-                return _data.vault
-            })
-            .then(vault => this.#store.putLocal({ vault }))
+    // Updates vault with @conns
+    putIdentities(ids, password) {
+        console.log('putIdentities')
+        return Promise.resolve(this._putData(3, ids, password))
     }
 
     isUnlocked() {
@@ -139,5 +133,21 @@ export default class Vault {
         }
 
         return index != undefined? this.#store.getState().data[index] : this.#store.getState().data
+    }
+
+    _putData(index, _data, password) {
+        return Promise.resolve(this.submitPassword(password))
+            .then(data => { data[index] = _data; return data })
+            .then(data => passworder.encrypt(password, data).then(vault => Promise.resolve({ data, vault })))
+            .then(_vault => {
+                this.#store.updateState({
+                    vault: _vault.vault,
+                    unlocked: this.isUnlocked(),
+                    data: this.isUnlocked()? _vault.data : null
+                })
+
+                return _vault.vault
+            })
+            .then(vault => this.#store.putLocal({ vault }))
     }
 }

@@ -17,32 +17,24 @@ export default class ConnectionsController {
         if(!_conns || (!Array.isArray(_conns) && typeof _conns != 'string') || _conns.length == 0) {
             return new ConnectionsController()
         }
-
         let conns = JSON.parse(_conns)
-
         return new ConnectionsController(conns)
     }
 
     addConnected(url, icon, name) {
-        if(this.#connections.findIndex(c => c.url == url) != -1) {
-            return Promise.reject(`Connection for url ${url} already exists`)
-        }
-
-        this.#connections.push({ url, icon, name, level: 1 })
-
-        return Promise.resolve()
+        return new Promise((resolve, reject) => {
+            if(this.#connections.findIndex(c => c.url == url) != -1) {
+                return reject(`Connection for url ${url} already exists`)
+            }
+            this.#connections.push({ url, icon, name, level: 1 })
+            return resolve()
+        })
+        
     }
 
     removeConnected(url) {
-        let index = this.#connections.findIndex(c => c.url == url)
-
-        if(index == -1) {
-            return Promise.reject(`Connection for ${url} does not exist`)
-        }
-
-        this.#connections.splice(index, 1)
-
-        return Promise.resolve()
+        return Promise.resolve(this.#connections.findIndex(c => c.url == url))
+            .then(index => { if(index != -1) this.#connections.splice(index, 1) })
     }
 
     getAllConnections() {
@@ -50,22 +42,13 @@ export default class ConnectionsController {
     }
 
     isConnected(url) {
-        if(this.#connections.findIndex(c => c.url == url) != -1) {
-            return Promise.resolve(true)
-        }
-
-        return Promise.resolve(false)
+        return Promise.resolve(this.#connections.findIndex(c => c.url == url))
+            .then(index => index != -1)
     }
 
     getConnectionAccessLevel(url) {
-        let index = this.#connections.findIndex(c => c.url == url)
-
-        if(index == -1) {
-            return Promise.resolve(0)
-        }
-        else {
-            return Promise.resolve(this.#connections[index].level)
-        }
+        return Promise.resolve(this.#connections.findIndex(c => c.url == url))
+            .then(index => index == -1? Promise.resolve(0) : Promise.resolve(this.#connections[index].level))
     }
 }
 

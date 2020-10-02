@@ -1,8 +1,11 @@
 'use strict'
 
 import { get, post } from './http'
+import StateStore from './store'
 
 const API_VERSION = 'v1'
+
+const store = new StateStore()
 
 export function getAuthenticationChallenge(wallet, idt, operation) {
     const url = `https://api.wallid.io/api/${API_VERSION}/auth`
