@@ -31,9 +31,3 @@ export function extractIdentity(auth_token) {
 
     return get(url, { headers })
 }
-
-export function importIdentity_v1(data, ) {
-    return Promise.resolve(store.getLocal('identities'))
-        //.then(identities => identities.p)
-    //store.putLocal({ ids})
-}

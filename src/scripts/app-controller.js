@@ -9,11 +9,13 @@ import { eventPipeIn } from './lib/event-pipe'
 import VaultController from './controllers/vault'
 import WalletController from './controllers/wallet'
 import ConnectionsController from './controllers/connections'
+import IdentitiesController from './controllers/identities'
 
 
 const InitState = {
     wallet: {},
     connections: {},
+    identities: {},
     password: '',
     popups : [],
     requests: []
@@ -119,9 +121,10 @@ export default class AppController {
             .then(() => this.#store.updateState({
                 wallet: WalletController.deserialize(vault.getWallet()),
                 connections: ConnectionsController.deserialize(vault.getConnections()),
+                identities: IdentitiesController.deserialize(vault.getIdentities()),
                 password
             }))
-            .then(() => eventPipeIn('wallid_event_unlock', { hello: 'world' }))
+            .then(() => eventPipeIn('wallid_event_unlock'))
     }
 
     /**
@@ -256,9 +259,26 @@ export default class AppController {
      * 
      * @param {string} auth_token - WalliD authorization token 
      */
-    extractIdentityData(auth_token) {
+    extractIdentityData_v1(auth_token) {
         return Promise.resolve(WalliD.extractIdentity(auth_token))
             .then(({ ok, status, body }) => ok && status != 202? Promise.resolve(body.data) : Promise.reject(status))
+    }
+
+    /**
+     * Imports a new identity of type @idt into WalliD Plugin.
+     * 
+     * @param {string} idt - WalliD identity type tag
+     * @param {string} data - encrypted identity data 
+     * @param {*} ow - overwrite flag
+     */
+    importIdentity_v2(idt, data, ow = false) {
+        const vault = this.#store.getState().vault
+        if(!vault.isUnlocked()) {
+            return Promise.reject('Plugin is locked')
+        }
+        const identities = this.#store.getState().identities
+        return Promise.resolve(identities.addIdentity(idt, data, ow))
+            .then(vault.putIdentities(identities.serialize(), this.#store.getState().password))
     }
 
     //
@@ -360,7 +380,7 @@ export default class AppController {
             encryptData: this.encryptData.bind(this),
             decryptData: this.decryptData.bind(this),
             getAuthorizationToken: this.getAuthorizationToken.bind(this),
-            extractIdentityData: this.extractIdentityData.bind(this),
+            extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
             getNextRequest: this.getNextRequest.bind(this),
             accessControl: this.accessControl.bind(this)
         }
