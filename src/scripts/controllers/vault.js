@@ -43,7 +43,7 @@ export default class Vault {
         }
 
         return Promise.resolve(WalletController.initFromMnemonic(mnemonic))
-            .then(wallet => Promise.resolve([wallet.serialize(), mnemonic, []]))
+            .then(wallet => Promise.resolve([wallet.serialize(), mnemonic, [], []]))
             .then(data => passworder.encrypt(password, data))
             .then(vault => { this.#store.putLocal({ vault }); return vault })
             .then(vault => this.#store.putState({ vault, unlocked: false, empty: false }))
@@ -82,6 +82,7 @@ export default class Vault {
 
         return Promise.resolve(this.submitPassword(password))  
             .then(data => this.#store.updateState({ data, unlocked: true }))
+            .then(() => console.log('Vault unlocked', this.#store.getState().vault))
     }
 
     submitPassword(password) {
@@ -105,6 +106,11 @@ export default class Vault {
     // Returns serialized ConnectionsController
     getConnections() {
         return this._getData(2)
+    }
+    
+    // Returns serialized IdentitiesController
+    getIdentities() {
+        return this._getData(3)
     }
 
     // Updates vault with @conns

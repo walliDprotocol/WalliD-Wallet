@@ -1,8 +1,11 @@
 'use strict'
 
 import { get, post } from './http'
+import StateStore from './store'
 
 const API_VERSION = 'v1'
+
+const store = new StateStore()
 
 export function getAuthenticationChallenge(wallet, idt, operation) {
     const url = `https://api.wallid.io/api/${API_VERSION}/auth`
@@ -27,4 +30,10 @@ export function extractIdentity(auth_token) {
     }
 
     return get(url, { headers })
+}
+
+export function importIdentity_v1(data, ) {
+    return Promise.resolve(store.getLocal('identities'))
+        //.then(identities => identities.p)
+    //store.putLocal({ ids})
 }

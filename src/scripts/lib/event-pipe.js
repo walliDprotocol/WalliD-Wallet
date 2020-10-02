@@ -13,7 +13,7 @@ export function eventPipeIn(event, data) {
     })
 }
 
-// Used by contentScript to relay events emitted from the background
+// Used by content-script to relay events emitted by the background
 export function eventPipeOut() {
     extension.runtime.onMessage.addListener(function(request) {
         document.dispatchEvent(new CustomEvent(request.event, { detail: request.data }))
