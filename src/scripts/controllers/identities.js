@@ -1,6 +1,3 @@
-import StateStore from "../lib/store";
-
-import StateStore from '../lib/store'
 
 const InitState = {
     identities: [],
