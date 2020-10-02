@@ -157,9 +157,15 @@ export default {
     this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
+    this.debug("Address: ", this.address);
+    this.debug("Request: ", this.request);
+
     this.type = this.request.type;
     this.debug("Request type: ", this.type);
     switch (this.type) {
+      case "wallid_token":
+        this.websiteData = this.getWebsiteInfo(this.request.origin);
+        break;
       case "wallid_connect":
         this.websiteData = this.getWebsiteInfo(this.request.origin);
         this.$store

@@ -93,6 +93,20 @@
             :error-messages="passwordError"
           ></v-text-field>
         </v-col>
+        <v-col cols="12" class="text-left pb-0 pt-1">
+          <label class="sub-title-fields">
+            {{ $t("import.password[1]") }}
+          </label>
+          <v-text-field
+            v-model="passwordMatch"
+            solo
+            flat
+            class="password-input mt-1"
+            name="input-password-login"
+            type="password"
+            :error-messages="passwordMatchError"
+          ></v-text-field>
+        </v-col>
         <v-col cols="12" class="pl-0 py-2 ">
           <v-checkbox
             v-model="termsWallet"
@@ -115,20 +129,7 @@
             </div>
           </v-checkbox>
         </v-col>
-        <v-col cols="12" class="text-left pb-0 pt-1">
-          <label class="sub-title-fields">
-            {{ $t("import.password[1]") }}
-          </label>
-          <v-text-field
-            v-model="passwordMatch"
-            solo
-            flat
-            class="password-input mt-1"
-            name="input-password-login"
-            type="password"
-            :error-messages="passwordMatchError"
-          ></v-text-field>
-        </v-col>
+
         <v-col cols="12" class="pt-2">
           <v-btn
             text
@@ -253,6 +254,9 @@ export default {
 
 <style lang="scss">
 .restore {
+  overflow: hidden auto;
+  height: 523px;
+
   .terms {
     .v-input__slot {
       align-items: start;

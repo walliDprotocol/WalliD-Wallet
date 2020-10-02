@@ -106,6 +106,12 @@ export default {
         " is requesting your authorisation to display your identity document data:",
       button: "Authorise",
     },
+    wallid_token: {
+      title: "Authorisation Request",
+      description:
+        " is requesting your authorisation to associate your wallet to this identity document:",
+      button: "Authorise",
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: "Cancel",
   },
@@ -184,7 +190,8 @@ export default {
       "Confirm password",
       "Must be at least 8 characters",
     ],
-    text: "You’ve successfully imported your wallet. Remember to keep your seed phrase safe, it’s your responsibility and the reason why your data is only accessible to you.",
+    text:
+      "You’ve successfully imported your wallet. Remember to keep your seed phrase safe, it’s your responsibility and the reason why your data is only accessible to you.",
     button: "Import wallet",
   },
   restore: {

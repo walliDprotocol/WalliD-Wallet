@@ -188,7 +188,7 @@ export default new Vuex.Store({
           case "wallid_connect":
             dispatch(CONNECT, { origin }).then((res) => {
               console.log(res);
-              resolve(res);
+              resolve(callback(null, res));
             });
             break;
 
@@ -219,7 +219,7 @@ export default new Vuex.Store({
       { request, notification, callback }
     ) => {
       return new Promise((resolve, reject) => {
-        console.log("Action CANCEL_REQUEST" , callback);
+        console.log("Action CANCEL_REQUEST", callback);
         resolve(callback("REJECTED"));
 
         commit("updatePendingRequests");

@@ -28,6 +28,12 @@ export default {
         " está a pedir a sua autorização para mostrar os dados do seu documento de identidade:",
       button: "Autorizar",
     },
+    wallid_token: {
+      title: "Pedido de autorização",
+      description:
+        "está a pedir a sua permissão para associar a sua carteira a este documento de identidade:",
+      button: "Autorizar",
+    },
     bScenes: "Saiba o que se passa nos bastidores",
     cancel: "Cancelar",
   },
