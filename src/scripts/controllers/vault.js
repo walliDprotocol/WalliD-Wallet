@@ -107,6 +107,11 @@ export default class Vault {
         return this._getData(2)
     }
 
+    // Returns serialized IdentitiesController
+    getIdentities() {
+        return this._getData(3)
+    }
+
     // Updates vault with @conns
     putConnections(conns, password) {
         console.log('putConnections')
