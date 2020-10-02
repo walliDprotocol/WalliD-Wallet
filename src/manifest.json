@@ -1,7 +1,7 @@
 {
-  "name": "Getting Started Example",
-  "version": "1.0",
-  "description": "Build an Extension!",
+  "name": "WalliD Wallet",
+  "version": "1.0.0",
+  "description": "WalliD Wallet Plugin",
   "permissions": [
     "storage",
     "declarativeContent",
@@ -26,7 +26,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["https://*.wallid.io/*"],
       "js": ["scripts/content.bundle.js"],
       "run_at":"document_start"
     }

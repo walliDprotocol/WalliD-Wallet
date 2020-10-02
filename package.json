@@ -1,7 +1,7 @@
 {
-  "name": "plugin",
+  "name": "wallid-wallet",
   "version": "1.0.0",
-  "description": "",
+  "description": "wallid",
   "private": true,
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.2",
