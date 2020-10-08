@@ -1,2 +1,4 @@
-node_modules
-dist
+# Ignore everything in the root
+/*
+# Un-ignore all of subtree
+/dist/
