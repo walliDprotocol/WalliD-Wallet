@@ -1,4 +1,6 @@
+node_modules
 # Ignore everything in the root
 /*
 # Un-ignore all of subtree
-/dist/
+!/dist/
+!.gitignore
