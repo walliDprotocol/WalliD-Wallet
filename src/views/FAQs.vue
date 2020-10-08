@@ -13,9 +13,9 @@
       </v-col>
     </v-row>
 
-    <v-divider class="full-divider"></v-divider>
+    <v-divider class=""></v-divider>
     <v-row>
-      <v-col class="force-scrol" cols="12">
+      <v-col class="force-scrol pt-0" cols="12">
         <v-expansion-panels accordion flat tile class="faqs-panel">
           <v-expansion-panel
             v-for="(item, i) in $t('faqs.questions')"
@@ -76,13 +76,11 @@ export default {
   }
   .faqs-panel {
     .v-expansion-panel {
-      border-bottom: solid 2px var(--very-light-grey);
+      border-bottom: solid 1px var(--very-light-grey);
     }
     .v-expansion-panel-header {
       min-height: unset;
-    }
-    .v-expansion-panel:nth-child(1) .v-expansion-panel-header {
-      padding-top: 0;
+      padding-right: 10px;
     }
     .v-expansion-panel-header:hover {
       i {
@@ -94,6 +92,7 @@ export default {
     }
     .v-expansion-panel-content__wrap {
       padding-left: 0;
+      padding-right: 0;
     }
   }
 }

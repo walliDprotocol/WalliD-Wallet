@@ -27,6 +27,7 @@ export default new Vuex.Store({
     address: API.getState().address,
     completedOnboarding: API.getState().initialized,
     connections: API.getState().connections,
+    connected: false,
     initialized: API.getState().initialized,
     request: API.getNextRequest(),
     debug: null,
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
+    connected: (state) => state.connected,
     getRequest: (state) => state.request,
     unlocked: (state) => state.unlocked,
     state: (state) => state,
@@ -235,7 +237,11 @@ export default new Vuex.Store({
 
         API.removeConnected(url)
           .then(() => {
-            resolve(commit("updateConnections", API.getState().connections));
+            commit("updateConnections", API.getState().connections);
+            if (url == state.connected.url) {
+              commit("updateConnected", false);
+            }
+            resolve();
           })
           .catch((e) => {
             console.error("Error Disconnecting site: ", e);
@@ -261,6 +267,10 @@ export default new Vuex.Store({
   mutations: {
     updateOnboarding(state, value) {
       state.completedOnboarding = value;
+    },
+    updateConnected(state, value) {
+      console.log("store", value);
+      state.connected = value;
     },
     updateConnections(state, value) {
       state.connections = value;

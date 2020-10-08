@@ -47,6 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 #app.plugin {
   &.notification {
     max-width: 400px;

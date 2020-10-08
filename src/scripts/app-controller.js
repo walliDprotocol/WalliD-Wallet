@@ -163,6 +163,16 @@ export default class AppController {
   // CONNECTIONS CONTROLLER INTERFACE
   //
 
+
+  currentTab(f) {
+    var query = { active: true, lastFocusedWindow: true };
+    function callback(tabs) {
+      var currentTab = tabs[0]; // there will be only one in this array
+      f(currentTab);
+    }
+    chrome.tabs.query(query, callback);
+  }
+
   /**
    * Approves a pending connection request.
    * Promise rejects if a connection with same @url already exists, or if vault is locked.
@@ -245,14 +255,6 @@ export default class AppController {
     return wallet.decryptData(data);
   }
 
-  currentTab(f) {
-    var query = { active: true, lastFocusedWindow: true };
-    function callback(tabs) {
-      var currentTab = tabs[0]; // there will be only one in this array
-      f(currentTab);
-    }
-    chrome.tabs.query(query, callback);
-  }
 
   //
   // WALLID RELATED METHODS

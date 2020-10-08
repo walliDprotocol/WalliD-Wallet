@@ -116,41 +116,5 @@ export default {
     margin-right: 22px !important;
   }
 }
-.wallet-tooltip {
-  &.v-tooltip__content {
-    width: 170px;
-    height: 43px;
-    background-color: transparent;
-    opacity: 1 !important;
-  }
-  &.v-tooltip__content .metamask-login {
-    border-radius: 3px;
-    background-color: #eeeeee;
-    padding: 10px 15px;
-    margin: auto;
-    width: fit-content;
-  }
-  p {
-    margin: 0;
-    font-size: 12px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
-    text-align: center;
-    color: var(--charcoal-grey);
-  }
-  .arrow-seed-tooltip {
-    background-color: #eeeeee;
-    transform: rotate(45deg);
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    margin-left: -7px;
-    z-index: -1;
-  }
-}
+
 </style>

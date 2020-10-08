@@ -1,6 +1,6 @@
 <template>
   <v-container class="restore mt-n2">
-    <form @submit="checkForm">
+    <form @submit="restorePassword">
       <v-row>
         <v-col cols="12">
           <div class="back-arrow mb-6">
@@ -16,7 +16,7 @@
           </h2>
         </v-col>
 
-        <v-col cols="12" class="text-left pb-1 pt-2">
+        <v-col cols="12" class="text-left pt-1 pb-0">
           <label class="sub-title-fields">
             {{ $t("restore.seedPhrase[0]") }}
           </label>
@@ -25,8 +25,12 @@
             v-model="seedPhrase"
             solo
             flat
+            @input="validSeedPhrase"
             v-show="showSeedPhrase"
             class="password-input seed-phrase mt-1"
+            :class="{
+              'error-seed-phrase': errorSeedPhrase,
+            }"
             name="input-password-login"
             :type="'password'"
             hide-details
@@ -52,11 +56,13 @@
           <v-textarea
             v-show="!showSeedPhrase"
             class="seed-phrase-revealed mt-1"
+            :class="{ 'error-seed-phrase': errorSeedPhrase }"
             no-resize
             rows="2"
             hide-details
             solo
             flat
+            @input="validSeedPhrase"
             v-model="seedPhrase"
           >
             <template v-slot:append>
@@ -77,8 +83,9 @@
               </v-tooltip>
             </template>
           </v-textarea>
+          <p class="error--text mt-2" style="height:10px">{{ seedPhraseErrorMessage }}</p>
         </v-col>
-        <v-col cols="12" class="text-left pb-1 pt-1">
+        <v-col cols="12" class="text-left py-0">
           <label class="sub-title-fields">
             {{ $t("restore.password[0]") }}
           </label>
@@ -86,6 +93,7 @@
             v-model="password"
             solo
             flat
+            @input="checkForm"
             :hint="$t('create.stepper[0].password[2]')"
             class="password-input mt-1"
             name="input-password-login"
@@ -102,6 +110,7 @@
             v-model="passwordMatch"
             solo
             flat
+            @input="checkForm"
             class="password-input mt-1"
             name="input-password-login"
             type="password"
@@ -112,7 +121,7 @@
           <v-btn
             text
             :disabled="isDisabled"
-            @click="checkForm"
+            @click="restorePassword"
             class="advance-btn"
           >
             {{ $t("restore.button") }}
@@ -142,7 +151,6 @@ import ArrowBack from "../images/icon-arrow-back.vue";
 import EyeUnselected from "../images/icon-eye-unselected.vue";
 import EyeSelected from "../images/icon-eye-selected.vue";
 import { CREATE_NEW_WALLET } from "../store/actions";
-
 export default {
   components: {
     ArrowBack,
@@ -151,7 +159,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.validSeedPhrase() || !this.password || !this.passwordMatch;
+      return this.errorSeedPhrase || !this.password || !this.passwordMatch;
     },
   },
 
@@ -163,12 +171,20 @@ export default {
       passwordMatch: "",
       passwordError: "",
       passwordMatchError: "",
+      errorSeedPhrase: false,
+      seedPhraseErrorMessage: null,
     };
   },
   mounted() {},
   methods: {
     validSeedPhrase() {
-      return this.seedPhrase.split(" ").length == 12;
+      this.seedPhrase = this.seedPhrase.trim();
+      let valid = this.seedPhrase.split(" ").length == 12;
+      this.errorSeedPhrase = !valid;
+      this.seedPhraseErrorMessage = valid
+        ? ""
+        : this.$t("restore.seedPhrase[3]");
+      return valid;
     },
     show() {
       this.showSeedPhrase = !this.showSeedPhrase;
@@ -185,6 +201,12 @@ export default {
         .then(() => {
           this.$router.push("/login");
           // this.passwordError = true;
+        })
+        .catch((err) => {
+          if ((err = this.INVALID)) {
+            this.errorSeedPhrase = true;
+          }
+          console.error(err);
         });
     },
 
@@ -203,8 +225,6 @@ export default {
       if (this.passwordError || this.passwordMatchError) {
         return;
       }
-
-      this.restorePassword();
     },
 
     refreshState() {},
@@ -214,33 +234,37 @@ export default {
 
 <style lang="scss">
 .restore {
+  .error-seed-phrase .v-input__slot {
+    border-color: var(--coral) !important;
+  }
+
   .seed-phrase-revealed.v-textarea.v-input {
     .v-input__control {
       min-height: unset;
       .v-input__slot {
         margin: 0;
-        padding: 5px 15px;
+        padding: 2px 15px 2px 10px;
         border-radius: 3px;
         border: solid 1px #b8b9bb;
         .v-text-field__slot {
           align-self: flex-end;
           textarea {
-            height: 32px;
+            height: 38px;
             margin-top: 0 !important;
             font-size: 13px;
             font-weight: 500;
             font-stretch: normal;
             font-style: normal;
-            line-height: 1.85;
+            line-height: 1.5;
             letter-spacing: normal;
             color: var(--charcoal-grey);
           }
         }
         .v-input__append-inner {
-          margin-top: 7px;
+          margin-top: 10px;
         }
         .v-input__append-inner:hover {
-          margin-top: 7px;
+          margin-top: 10px;
 
           svg path {
             fill: var(--teal-blue);

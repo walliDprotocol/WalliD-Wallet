@@ -16,6 +16,13 @@ extension.runtime.onMessage.addListener(function(request, sender, sendResponse) 
     return true
 })
 
+// extension.runtime.onInstalled.addListener(function (object) {
+//     chrome.tabs.create({url: `https://www.dev.wallid.io/import`}, function (tab) {
+//         console.log("options page opened ");
+//     });
+// });
+
+
 // Locks App when user closes the browser window
 extension.windows.onRemoved.addListener(id => {
     const popups = App.getActivePopups()

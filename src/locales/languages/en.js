@@ -69,7 +69,8 @@ export default {
       {
         title:
           "What is an authorisation request to display identity document data?",
-        text: "",
+        text:
+          "It is a request to use your private keys and decrypt your identity document data stored in your device",
       },
       {
         title:
@@ -164,9 +165,10 @@ export default {
     subtitle:
       "Check out the history of the websites  connected to your wallet:",
     tooltip: "Disconnect",
+    noSites: "Seems like you don't have any websites connected to this wallet",
     disconnect: ["Disconnect ", " site"],
     confirm:
-      "Are you sure you want to disconnect? You may lose site funcionality.",
+      "Are you sure you want to disconnect? <br> You may lose site funcionality.",
     button: ["Cancel", "Disconnect"],
   },
   menu: {
@@ -197,7 +199,12 @@ export default {
   restore: {
     title: "Restore your wallet",
     subtitle: "Enter your twelve word seed phrase to restore your wallet.",
-    seedPhrase: ["Seed phrase", "Show seed phrase", "Hide seed phrase"],
+    seedPhrase: [
+      "Seed phrase",
+      "Show seed phrase",
+      "Hide seed phrase",
+      "Seed phrases contain 12 words",
+    ],
     password: [
       "New password",
       "Confirm password",

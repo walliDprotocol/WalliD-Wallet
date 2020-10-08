@@ -2,14 +2,18 @@
   <v-container class="home">
     <v-row class="pt-3 mt-2px">
       <v-col cols="12" class="pt-5 pb-0">
-        <jazz-icon :address="address" :id="'home'" :size="100" :margin="5" />
+        <jazz-icon
+          :address="address"
+          :id="'home'"
+          :size="100"
+          :margin="5"
+        />
       </v-col>
       <v-col cols="12" class="pt-4 pb-6 px-14">
         <h2 class="T1 mb-2 text-center">
           {{ $t("home.title") }}
         </h2>
-        <WalletState :isConnected="isConnected" :website="connected.name">
-        </WalletState>
+        <WalletState :website="connected.url"> </WalletState>
       </v-col>
       <v-col cols="12" class="pt-4 pb-9 px-14">
         <p class="normal-text mb-3 text-center">
@@ -44,43 +48,17 @@ export default {
     JazzIcon,
   },
   computed: {
-    ...mapGetters(["address", "connections"]),
-    isConnected() {
-      if (this.connected) {
-        return {
-          msg: this.$i18n.t("state.connected[0]"),
-          color: "#00e284",
-          status: 1,
-        };
-      } else {
-        return {
-          msg: this.$i18n.t("state.locked[0]"),
-          color: "#b8b9bb",
-          status: 0,
-        };
-      }
-    },
+    ...mapGetters(["address"]),
   },
   mounted() {
-    this.debug("Connections", this.$store.getters.state.connections);
-
-    this.checkConnected();
+  
   },
   methods: {
-    checkConnected() {
-      this.$store.dispatch("currentSite").then((site) => {
-        this.debug("Current site: ", site);
-        this.debug("Existing connections: ", this.connections);
-        this.connected = this.connections.find((e) => {
-          return this.getDomain(e.url) == this.getDomain(site.url) ? e : "";
-        });
-      });
-    },
+
   },
   data() {
     return {
       iconSet: false,
-      connected: false,
     };
   },
 };

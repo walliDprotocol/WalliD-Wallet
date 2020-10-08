@@ -16,14 +16,13 @@
       <v-col cols="12" class="pt-0 pb-2">
         <jazz-icon :address="address" :id="'details'" :size="71" :margin="4" />
       </v-col>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="pt-2">
         <h2 class="T1 mb-2">{{ $t("menu.title") }}</h2>
-        <WalletState :isConnected="isConnected" :website="'WallidD.io'">
-        </WalletState>
+        <WalletState :website="connected.url"> </WalletState>
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
         <qrcode
-          :value="walletAddress"
+          :value="address"
           :options="{
             width: 140,
             margin: 0,
@@ -52,35 +51,13 @@ export default {
     ArrowBack,
     JazzIcon,
   },
-  created() {
-    this.walletAddress = this.address; //this.checksumAddress
-  },
+  created() {},
   mounted() {},
   computed: {
     ...mapGetters(["address"]),
-    isConnected() {
-      if (this.connected) {
-        return {
-          msg: this.$i18n.t("state.connected[0]"),
-          color: "#00e284",
-          status: 1,
-        };
-      } else {
-        return {
-          msg: this.$i18n.t("state.locked[0]"),
-          color: "#b8b9bb",
-          status: 0,
-        };
-      }
-    },
-  },
-  methods: {
-    stepBack() {},
   },
   data() {
     return {
-      connected: false,
-      walletAddress: "",
     };
   },
 };

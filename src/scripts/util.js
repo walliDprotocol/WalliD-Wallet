@@ -1,10 +1,31 @@
 import { toChecksumAddress } from "ethereumjs-util";
+import { mapGetters } from "vuex";
 
 /* eslint-disable */
+const INVALID = "Invalid mnemonic phrase";
 
 const mixinPlugin = {
   name: "mixinPlugin",
   components: {},
+  computed: {
+    ...mapGetters(["connections", "connected"]),
+    isConnected() {
+      if (this.connected) {
+        console.log("updateIsConnected");
+        return {
+          msg: this.$i18n.t("state.connected[0]"),
+          color: "#00e284",
+          status: 1,
+        };
+      } else {
+        return {
+          msg: this.$i18n.t("state.locked[0]"),
+          color: "#b8b9bb",
+          status: 0,
+        };
+      }
+    },
+  },
   methods: {
     checksumAddress(address) {
       const checksummed = address ? toChecksumAddress(address) : "";
@@ -65,7 +86,7 @@ const mixinPlugin = {
     },
   },
   data() {
-    return {};
+    return { INVALID: INVALID };
   },
 };
 

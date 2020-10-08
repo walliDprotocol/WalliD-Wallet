@@ -13,7 +13,6 @@
         <v-list-item-avatar>
           <jazz-icon :address="address" :id="'menu'" :size="32" :margin="2" />
         </v-list-item-avatar>
-
         <v-list-item-content>
           <v-list-item-title class="T1" style="margin-bottom: 7px">
             {{ $t("menu.title") }}</v-list-item-title

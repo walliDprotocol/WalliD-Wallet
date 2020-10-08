@@ -9,7 +9,43 @@
   --coral: #e95e5e;
   --turquoise-green: #00e284;
 }
-
+.wallet-tooltip {
+  &.v-tooltip__content {
+    width: 170px;
+    height: 43px;
+    background-color: transparent;
+    opacity: 1 !important;
+  }
+  &.v-tooltip__content .metamask-login {
+    border-radius: 3px;
+    background-color: #eeeeee;
+    padding: 10px 15px;
+    margin: auto;
+    width: fit-content;
+  }
+  p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--charcoal-grey);
+  }
+  .arrow-seed-tooltip {
+    background-color: #eeeeee;
+    transform: rotate(45deg);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    margin-left: -7px;
+    z-index: -1;
+  }
+}
 .mb-2px {
   margin-bottom: 2px !important;
 }
@@ -51,6 +87,9 @@
 }
 
 #app.plugin {
+  .connected-site {
+    border-color: var(--turquoise-green) !important;
+  }
   .v-overlay__scrim {
     margin-top: 74px !important;
     background-color: var(--black) !important;
@@ -97,7 +136,7 @@
       line-height: normal;
       letter-spacing: normal;
       color: #e95e5e;
-      margin: 10px 0;
+      margin: 0;
       .v-input__slot {
         border-color: #e95e5e;
       }
@@ -154,7 +193,7 @@
     & {
       font-family: Montserrat;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 500;
       font-stretch: normal;
       font-style: normal;
       line-height: normal;
@@ -217,7 +256,7 @@
   }
   p.text {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.43;
@@ -227,7 +266,7 @@
   }
   .links {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.43;
@@ -276,7 +315,7 @@
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
-    line-height: normal;
+    line-height: 1.5;
     letter-spacing: normal;
     color: var(--charcoal-grey);
   }
@@ -307,7 +346,7 @@
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
-    line-height: normal;
+    line-height: 1.5;
     letter-spacing: normal;
     color: var(--charcoal-grey);
     &:hover {
@@ -320,7 +359,7 @@
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
-    line-height: normal;
+    line-height: 1.85;
     letter-spacing: normal;
     color: #b8b9bb;
   }

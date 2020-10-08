@@ -32,7 +32,6 @@
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-0 pt-4">
           <WebSiteLogo
-            class="mr-0"
             :url="websiteData.icon"
             :name="websiteData.name"
           />
@@ -97,7 +96,6 @@
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-0 pt-4">
           <WebSiteLogo
-            class="mr-0"
             :url="websiteData.icon"
             :name="websiteData.name"
           />
@@ -173,7 +171,9 @@ export default {
           .then((hasAccess) => {
             this.debug("hasAccess", hasAccess);
             if (hasAccess) {
-              this.$notification ? window.close() : this.$router.push("/home");
+              Promise.resolve(
+                this.request.callback(null, "EXECUTED")
+              ).then(() => window.close());
             }
           });
         break;
@@ -233,9 +233,9 @@ export default {
         .then(() => {
           if (this.request.type == "wallid_connect") this.success = true;
 
-          setTimeout(() => {
-            this.$notification ? window.close() : this.$router.push("/home");
-          }, 8 * 100);
+          // setTimeout(() => {
+          //   this.$notification ? window.close() : this.$router.push("/home");
+          // }, 10 * 100);
         });
     },
     cancel() {
@@ -249,7 +249,7 @@ export default {
         .then(() => {
           setTimeout(() => {
             this.$notification ? window.close() : this.$router.push("/home");
-          }, 3 * 100);
+          }, 5 * 100);
         });
     },
   },

@@ -1,9 +1,13 @@
 <template>
-  <div class="" :id="'metamask-logo-' + id"></div>
+  <div
+    :class="connected ? 'connected-site' : ''"
+    :id="'metamask-logo-' + id"
+  ></div>
 </template>
 
 <script>
 import jazzicon from "jazzicon";
+import { mapGetters } from "vuex";
 export default {
   props: ["size", "margin", "id", "address"],
   watch: {

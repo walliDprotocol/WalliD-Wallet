@@ -42,7 +42,7 @@
         <v-form
           class="cmd-form"
           ref="form"
-          @submit.prevent="checkForm"
+          @submit.prevent="setPassword"
           lazy-validation
           style="height:520px"
         >
@@ -71,6 +71,7 @@
                   :hint="$t('create.stepper[0].password[2]')"
                   flat
                   solo
+                  @input="checkForm"
                   :error-messages="passwordError"
                   type="password"
                 ></v-text-field>
@@ -84,6 +85,7 @@
                   class="password-input mt-1"
                   flat
                   solo
+                  @input="checkForm"
                   :error-messages="passwordMatchError"
                   type="password"
                 ></v-text-field>
@@ -115,7 +117,7 @@
           </v-container>
           <v-btn
             text
-            @click="checkForm"
+            @click="setPassword"
             :disabled="isDisabled"
             class="advance-btn float"
           >
@@ -293,7 +295,6 @@ export default {
         return;
       }
 
-      this.setPassword();
     },
 
     setPassword() {
@@ -350,7 +351,7 @@ export default {
     }
     div {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       font-stretch: normal;
       font-style: normal;
       line-height: 1.43;

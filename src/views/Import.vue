@@ -1,7 +1,7 @@
 <template>
   <v-container class="restore mt-n2">
     <v-row v-if="!imported">
-      <form @submit="checkForm">
+      <form @submit="restorePassword">
         <v-col cols="12">
           <div class="back-arrow mb-6">
             <v-btn text @click="stepBack" class="back-btn">
@@ -25,8 +25,12 @@
             v-model="seedPhrase"
             solo
             flat
+            @input="validSeedPhrase"
             v-show="showSeedPhrase"
             class="password-input seed-phrase mt-1"
+            :class="{
+              'error-seed-phrase': errorSeedPhrase,
+            }"
             name="input-password-login"
             :type="'password'"
             hide-details
@@ -56,6 +60,9 @@
             rows="2"
             hide-details
             solo
+            :class="{
+              'error-seed-phrase': errorSeedPhrase,
+            }"
             flat
             v-model="seedPhrase"
           >
@@ -77,6 +84,7 @@
               </v-tooltip>
             </template>
           </v-textarea>
+          <p class="error--text mt-2">{{ seedPhraseErrorMessage }}</p>
         </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
           <label class="sub-title-fields">
@@ -85,6 +93,7 @@
           <v-text-field
             v-model="password"
             solo
+            @input="validSeedPhrase"
             flat
             :hint="$t('import.password[2]')"
             class="password-input mt-1"
@@ -100,6 +109,7 @@
           <v-text-field
             v-model="passwordMatch"
             solo
+            @input="checkForm"
             flat
             class="password-input mt-1"
             name="input-password-login"
@@ -134,7 +144,7 @@
           <v-btn
             text
             :disabled="isDisabled"
-            @click="checkForm"
+            @click="restorePassword"
             class="advance-btn"
           >
             {{ $t("import.button") }}
@@ -180,7 +190,7 @@ export default {
   computed: {
     isDisabled() {
       return (
-        !this.validSeedPhrase() ||
+        !this.errorSeedPhrase ||
         !this.password ||
         !this.passwordMatch ||
         !this.termsWallet
@@ -197,6 +207,8 @@ export default {
       passwordMatch: "",
       passwordError: "",
       passwordMatchError: "",
+      errorSeedPhrase: false,
+      seedPhraseErrorMessage: "",
       termsWallet: false,
     };
   },
@@ -206,7 +218,13 @@ export default {
       this.$router.push("/login");
     },
     validSeedPhrase() {
-      return this.seedPhrase.split(" ").length == 12;
+      this.seedPhrase = this.seedPhrase.trim();
+      let valid = this.seedPhrase.split(" ").length == 12;
+      this.errorSeedPhrase = !valid;
+      this.seedPhraseErrorMessage = valid
+        ? ""
+        : this.$t("restore.seedPhrase[3]");
+      return valid;
     },
     show() {
       this.showSeedPhrase = !this.showSeedPhrase;
@@ -224,7 +242,10 @@ export default {
           this.imported = true;
         })
         .catch((e) => {
-          console.error(e);
+          if ((e = this.INVALID)) {
+            this.errorSeedPhrase = true;
+          }
+          console.error(err);
         });
     },
 
@@ -243,8 +264,6 @@ export default {
       if (this.passwordError || this.passwordMatchError) {
         return;
       }
-
-      this.restorePassword();
     },
 
     refreshState() {},
@@ -270,44 +289,6 @@ export default {
       letter-spacing: normal;
       text-align: left;
       color: var(--charcoal-grey);
-    }
-  }
-  .seed-phrase-revealed.v-textarea.v-input {
-    .v-input__control {
-      min-height: unset;
-      .v-input__slot {
-        margin: 0;
-        padding: 5px 15px;
-        border-radius: 3px;
-        border: solid 1px #b8b9bb;
-        .v-text-field__slot {
-          align-self: flex-end;
-          textarea {
-            height: 32px;
-            margin-top: 0 !important;
-            font-size: 13px;
-            font-weight: 500;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.85;
-            letter-spacing: normal;
-            color: var(--charcoal-grey);
-          }
-        }
-        .v-input__append-inner {
-          margin-top: 7px;
-        }
-        .v-input__append-inner:hover {
-          margin-top: 7px;
-
-          svg path {
-            fill: var(--teal-blue);
-          }
-          svg path:nth-child(2) {
-            stroke: var(--teal-blue);
-          }
-        }
-      }
     }
   }
   .seed-phrase.password-input {

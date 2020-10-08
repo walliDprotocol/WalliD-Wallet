@@ -11,20 +11,20 @@
           </h2>
         </div>
       </v-col>
-      <v-col cols="12" class="pt-0">
+      <v-col v-show="connections.length != 0" cols="12" class="pt-0">
         <h3 class="sub-title-fields mb-7 text-left">
           {{ $t("sites.subtitle") }}
         </h3>
       </v-col>
-      <v-col cols="12" class="pt-2 pb-1">
+      <v-col v-show="connections.length != 0" cols="12" class="pt-2 pb-1">
         <v-list class="sites-list">
           <v-list-item class="pl-0" v-for="site in connections" :key="site.url">
             <v-list-item-avatar>
               <v-img
                 contain
                 class="site-logo"
-                width="35"
-                height="35"
+                width="40"
+                height="40"
                 :src="site.icon"
               />
             </v-list-item-avatar>
@@ -37,17 +37,25 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-tooltip content-class="wallet-tooltip" bottom>
+              <v-tooltip content-class="sites-tooltip" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn v-on="on" @click="disconnect(site)" icon>
                     <icon-trash />
                   </v-btn>
                 </template>
-                {{ $t("sites.tooltip") }}
+                <div class="arrow-seed-tooltip"></div>
+                <div class="metamask-login">
+                  <p>{{ $t("sites.tooltip") }}</p>
+                </div>
               </v-tooltip>
             </v-list-item-action>
           </v-list-item>
         </v-list>
+      </v-col>
+      <v-col v-show="connections.length == 0" cols="12" class="pt-2 pb-1 px-10">
+        <p class="sub-title-fields text-center mt-12 ">
+          {{ $t("sites.noSites") }}
+        </p>
       </v-col>
     </v-row>
 
@@ -59,15 +67,16 @@
           </v-btn>
           <h2 class="T1 text-left">
             {{ $t("sites.disconnect[0]") }}
-            {{ site.name }}
+            {{ site.url }}
             {{ $t("sites.disconnect[1]") }}
           </h2>
         </div>
       </v-col>
       <v-col cols="12" class="pt-0 pr-4">
-        <h3 class="sub-title-fields mb-2 text-left">
-          {{ $t("sites.confirm") }}
-        </h3>
+        <h3
+          class="sub-title-fields mb-2 text-left"
+          v-html="$t('sites.confirm')"
+        ></h3>
       </v-col>
       <v-col cols="6" class="pr-2">
         <v-btn text class="cancel-btn" @click="cancel">
@@ -116,7 +125,6 @@ export default {
   data() {
     return {
       confirmDisconnect: false,
-      connected: false,
       site: "",
     };
   },
@@ -124,6 +132,44 @@ export default {
 </script>
 
 <style lang="scss">
+.sites-tooltip {
+  &.v-tooltip__content {
+    width: 170px;
+    height: 43px;
+    background-color: transparent;
+    opacity: 1 !important;
+    left: 262px !important;
+  }
+  &.v-tooltip__content .metamask-login {
+    border-radius: 3px;
+    background-color: #eeeeee;
+    padding: 10px 15px;
+    margin: auto;
+    width: fit-content;
+  }
+  p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--charcoal-grey);
+  }
+  .arrow-seed-tooltip {
+    background-color: #eeeeee;
+    transform: rotate(45deg);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    margin-left: -7px;
+    z-index: -1;
+  }
+}
 .connected-sites {
   .sites-list {
     border-top: solid 1px #eeeeee;
@@ -134,10 +180,10 @@ export default {
         max-height: 40px;
         border: solid 1px #b8b9bb;
         .v-image__image {
-          width: 32px;
-          height: 32px;
+          width: 30px;
+          height: 30px;
           right: 0;
-          margin: auto;
+          margin: 4px 0 0 4px;
         }
       }
       .v-list-item__action {

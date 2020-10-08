@@ -1,5 +1,5 @@
 <template>
-  <v-container style="width:74px" class="pa-0 text-center website-logo">
+  <v-container class="pa-0 text-center website-logo">
     <div id="website-logo-request">
       <img width="54" height="48" :src="url" />
     </div>
@@ -17,13 +17,13 @@ export default {
 
 <style lang="scss">
 .website-logo {
+  margin-right: -22px;
   #website-logo-request {
     max-height: 74px;
     max-width: 74px;
     border-radius: 50%;
     border: solid 2px #b8b9bb;
     margin: auto;
-    margin-right: 0;
     margin-bottom: 12px;
 
     .connected & {
@@ -31,12 +31,14 @@ export default {
     }
   }
   &--name {
-    position: absolute;
-    max-width: 74px;
-    width: 74px;
+    // position: absolute;
+    max-width: 116px;
+
     p {
       margin: auto !important;
       word-break: break-all;
+      height: 24px;
+      max-width: 116px;
     }
   }
   img {

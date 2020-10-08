@@ -86,6 +86,8 @@ export default {
     subtitle:
       "Confira o histórico dos sites que estão conectados à sua carteira:",
     tooltip: "Desconectar",
+    noSites: "Parece que não tem sites conectados a esta wallet",
+
     disconnect: ["Desconectar o site ", ""],
     confirm:
       "Tem a certeza que pretende desconectar a sua carteira deste site? Pode perder algumas funcionalidades.",
@@ -121,7 +123,12 @@ export default {
     title: "Recuperar carteira",
     subtitle:
       "Insira a sua seed phrase de doze palavras para importar a sua carteira.",
-    seedPhrase: ["Seed phrase", "Mostrar seed phrase", "Esconder seed phrase"],
+    seedPhrase: [
+      "Seed phrase",
+      "Mostrar seed phrase",
+      "Esconder seed phrase",
+      "Seed phrases tem que ter 12 palavras",
+    ],
     password: [
       "Nova password",
       "Confirmar password",

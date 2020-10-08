@@ -26,7 +26,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.wallid.io/*"],
+      "matches": ["https://*.wallid.io/*","http://localhost/*"],
       "js": ["scripts/content.bundle.js"],
       "run_at":"document_start"
     }

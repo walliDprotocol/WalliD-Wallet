@@ -151,6 +151,7 @@ export default {
         padding: 8px;
       }
       .v-list-item__title {
+        color: #373c43;
         font-size: 12px;
       }
     }

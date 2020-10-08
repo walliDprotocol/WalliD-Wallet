@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  props: ["isConnected", "website"],
+  props: ["website"],
 };
 </script>
 
