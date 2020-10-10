@@ -1,5 +1,5 @@
 <template>
-  <v-container class="restore mt-n2">
+  <v-container id="import-form" class="restore mt-n2">
     <v-row v-if="!imported">
       <form @submit="restorePassword">
         <v-col cols="12">
@@ -139,9 +139,9 @@
             </div>
           </v-checkbox>
         </v-col>
-
         <v-col cols="12" class="pt-2">
           <v-btn
+            id="import-button"
             text
             :disabled="isDisabled"
             @click="restorePassword"
@@ -190,7 +190,7 @@ export default {
   computed: {
     isDisabled() {
       return (
-        !this.errorSeedPhrase ||
+        this.errorSeedPhrase ||
         !this.password ||
         !this.passwordMatch ||
         !this.termsWallet
@@ -224,8 +224,12 @@ export default {
       this.seedPhraseErrorMessage = valid
         ? ""
         : this.$t("restore.seedPhrase[3]");
+      if (valid) {
+        this.scrollInto("import-form", 120);
+      }
       return valid;
     },
+
     show() {
       this.showSeedPhrase = !this.showSeedPhrase;
     },

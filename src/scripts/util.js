@@ -27,6 +27,25 @@ const mixinPlugin = {
     },
   },
   methods: {
+    scrollInto(id_top, offset) {
+      this.$nextTick(() => {
+        // var element = document.getElementById(id_top);
+        // var myElement = document.getElementById("element_within_div");
+        // var topPos = element.offsetTop;
+
+        document.getElementById(id_top).scrollTop = offset;
+
+        // var headerOffset = offset;
+        // var elementPosition =
+        //   element.getBoundingClientRect().top + window.scrollY;
+        // var offsetPosition = elementPosition - headerOffset;
+        // var behavior = "smooth";
+        // window.scrollTo({
+        //   top: offsetPosition,
+        //   behavior: behavior,
+        // });
+      });
+    },
     checksumAddress(address) {
       const checksummed = address ? toChecksumAddress(address) : "";
       return checksummed;
