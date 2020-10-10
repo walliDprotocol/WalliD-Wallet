@@ -52,11 +52,13 @@ export default {
     this.$store.dispatch("currentSite").then((site) => {
       this.debug("Current site: ", site);
       this.debug("Existing connections: ", this.connections);
-      let connectedSite = this.connections.find((e) => {
-        return this.getDomain(e.url) == this.getDomain(site.url) ? e : "";
-      });
-      if (connectedSite) {
-        this.$store.commit("updateConnected", connectedSite);
+      if (this.connections) {
+        let connectedSite = this.connections.find((e) => {
+          return this.getDomain(e.url) == this.getDomain(site.url) ? e : "";
+        });
+        if (connectedSite) {
+          this.$store.commit("updateConnected", connectedSite);
+        }
       }
     });
   },
