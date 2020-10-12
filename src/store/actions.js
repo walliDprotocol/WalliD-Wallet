@@ -1,0 +1,17 @@
+export const REFRESH_STATE = "REFRESH_STATE";
+export const LOCK_WALLET = "LOCK_WALLET";
+export const UNLOCK_WALLET = "UNLOCK_WALLET";
+
+export const CREATE_NEW_WALLET = "CREATE_NEW_WALLET";
+export const GENERATE_NEW_SEED_PHRASE = "GENERATE_NEW_SEED_PHRASE";
+export const REVEAL_SEED_PHRASE = "REVEAL_SEED_PHRASE";
+
+export const DISCONNECT = "DISCONNECT";
+export const CONNECT = "CONNECT";
+export const ENCRYPT = "ENCRYPT";
+export const DECRYPT = "DECRYPT";
+export const GET_TOKEN = "GET_TOKEN";
+export const ACCESS_LEVEL = "ACCESS_LEVEL";
+
+export const AUTHORIZE_REQUEST = "AUTHORIZE_REQUEST";
+export const CANCEL_REQUEST = "CANCEL_REQUEST";

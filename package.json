@@ -1,9 +1,10 @@
 {
-  "name": "plugin",
+  "name": "wallid-wallet",
   "version": "1.0.0",
-  "description": "",
+  "description": "wallid",
   "private": true,
   "dependencies": {
+    "@chenfengyuan/vue-qrcode": "^1.0.2",
     "axios": "^0.20.0",
     "bip39": "^3.0.2",
     "browser-passworder": "^2.0.3",
@@ -11,9 +12,14 @@
     "ethereumjs-util": "^7.0.4",
     "ethereumjs-wallet": "^1.0.0",
     "extensionizer": "^1.0.1",
+    "jazzicon": "^1.5.0",
     "obs-store": "^4.0.3",
     "vue": "^2.6.12",
-    "vuetify": "^2.3.9"
+    "vue-i18n": "^8.21.0",
+    "vue-router": "^3.4.3",
+    "vuejs-logger": "^1.5.4",
+    "vuetify": "^2.3.9",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
@@ -25,6 +31,8 @@
     "css-loader": "^4.2.1",
     "deepmerge": "^4.2.2",
     "fibers": "^5.0.0",
+    "file-loader": "^6.1.0",
+    "node-sass": "^4.14.1",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.1",
     "style-loader": "^1.2.1",
