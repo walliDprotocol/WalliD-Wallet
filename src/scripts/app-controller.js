@@ -350,12 +350,14 @@ export default class AppController {
         const vault = this.#store.getState().vault
         const wallet = this.#store.getState().wallet
         const connections = this.#store.getState().connections
+        const identities = this.#store.getState().identities
         return {
             initialized: !vault.isEmpty(),
             unlocked: vault.isUnlocked(),
             address: vault.isUnlocked()? wallet.getAddress() : null,
             connections: vault.isUnlocked()? connections.getAllConnections() : null,
-            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null
+            mnemonic: vault.isUnlocked()? vault.getMnemonic() : null,
+            identities: vault.isUnlocked()? identities.get() : null,
         }
     }
 
@@ -381,6 +383,7 @@ export default class AppController {
             decryptData: this.decryptData.bind(this),
             getAuthorizationToken: this.getAuthorizationToken.bind(this),
             extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
+            importIdentity_v2: this.importIdentity_v2.bind(this),
             getNextRequest: this.getNextRequest.bind(this),
             accessControl: this.accessControl.bind(this)
         }

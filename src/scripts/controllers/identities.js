@@ -14,7 +14,6 @@ export default class IdentitiesController {
         if(this.#identities.length == 0) {
             return JSON.stringify([])
         }
-
         return JSON.stringify(this.#identities)
     }
 
@@ -30,12 +29,17 @@ export default class IdentitiesController {
         return new Promise((resolve, reject) => {
             const index = this.#identities.findIndex(id => id.idt == idt)
             if(index != -1 && ow) {
-                this.#identities.splice(index, 1, { idt, data })
+                console.log('ALREADY EXISTs w/ OW', index)
+                this.#identities.splice(index, 1)
             }
             else if(index != -1) {
+                console.log('ALREADY EXISTs', index)
+
                 return reject(`Identity type ${idt} already exists`)
             }
             this.#identities.push({ idt, data })
+            console.log('AFTER ADD', this.#identities)
+
             return resolve()
         })
     }
@@ -43,5 +47,9 @@ export default class IdentitiesController {
     deleteIdentity(idt) {
         return Promise.resolve(this.#identities.findIndex(id => id.idt == idt))
             .then(index => { if(index != -1) this.#identities.splice(index, 1) })
+    }
+
+    get() {
+        return this.#identities
     }
 }

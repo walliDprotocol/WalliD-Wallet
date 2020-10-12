@@ -2,7 +2,7 @@
   <div class="main-box">
 	<div class="title third-height">
 		<p style="font-weight: bold">WalliD Plugin</p>
-		<p>Locked: {{ !unlocked }} &nbsp;&nbsp; Init: {{ initialized }}</p>
+		<p>Locked: {{ !unlocked }} &nbsp;&nbsp; Init: {{ initialized }} &nbsp;&nbsp; IDS: {{ ids.length != 0? ids[0].idt : 'NONE' }}</p>
 	</div>
 	<div class="main-box" v-if="!unlocked">
 		<v-text-field
@@ -42,6 +42,9 @@
 		<div>
 			<v-btn block color="secondary" dark @click="approveConnection">Approve Connection</v-btn>
 		</div>
+		<div>
+			<v-btn block color="secondary" dark @click="addIdentity">Add Identity</v-btn>
+		</div>
 	</div>
   </div>
 </template>
@@ -60,7 +63,8 @@ export default {
 			password: "",
 			address: state.address,
 			initialized: state.initialized,
-			unlocked: state.unlocked
+			unlocked: state.unlocked,
+			ids: state.identities || []
 		}
 	},
 	mounted() {
@@ -101,12 +105,19 @@ export default {
 				.then(() => this.refreshState())
 		},
 
+		addIdentity() {
+			API.encryptData({ hello: 'world' })
+				.then(enc => API.importIdentity_v2('SHUFTI_CC_PT', enc, true))
+				.then(() => this.refreshState())
+		},
+
 		refreshState() {
 			const appState = API.getState()
 
 			this.initialized = appState.initialized
 			this.unlocked = appState.unlocked
 			this.address = appState.address
+			this.ids = appState.identities || []
 
 			console.log('APP STATE', appState)
 		}
