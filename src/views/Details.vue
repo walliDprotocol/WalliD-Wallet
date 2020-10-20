@@ -41,7 +41,6 @@
 import WalletAddress from "../components/WalletAddress";
 import WalletState from "../components/WalletState";
 import ArrowBack from "../images/icon-arrow-back.vue";
-import JazzIcon from "../components/jazzicon";
 import { mapGetters } from "vuex";
 
 export default {
@@ -49,7 +48,6 @@ export default {
     WalletAddress,
     WalletState,
     ArrowBack,
-    JazzIcon,
   },
   created() {},
   mounted() {},

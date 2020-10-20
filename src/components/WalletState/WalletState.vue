@@ -15,8 +15,8 @@
       </p>
       <p v-else-if="isConnected.status == 1">
         {{ $t("state.connected[1]") }}
-        <br />
-        <br />
+      </p>
+      <p>
         <b> {{ website }}</b>
       </p>
     </div>
@@ -52,11 +52,12 @@ export default {
     background-color: #eeeeee;
     padding: 10px 15px;
     width: 257px;
-    height: 93px;
+    min-height: 80px;
     opacity: 1 !important;
   }
   p {
     margin: 0;
+    margin-bottom: 8px;
     font-size: 12px;
     font-weight: normal;
     font-stretch: normal;
