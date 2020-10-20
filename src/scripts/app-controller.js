@@ -143,7 +143,7 @@ export default class AppController {
       .then(() => this.#store.updateState(InitState))
       .then(() => eventPipeIn("wallid_event_lock"));
   }
-  
+
   /**
    * Tries to unlock vault with @password.
    * Resolves to true in case password is valid and to false otherwise.
@@ -162,7 +162,6 @@ export default class AppController {
   //
   // CONNECTIONS CONTROLLER INTERFACE
   //
-
 
   currentTab(f) {
     var query = { active: true, lastFocusedWindow: true };
@@ -254,7 +253,6 @@ export default class AppController {
     }
     return wallet.decryptData(data);
   }
-
 
   //
   // WALLID RELATED METHODS

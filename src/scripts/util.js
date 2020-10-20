@@ -1,12 +1,15 @@
 import { toChecksumAddress } from "ethereumjs-util";
 import { mapGetters } from "vuex";
+import JazzIcon from "../components/JazzIcon";
 
 /* eslint-disable */
 const INVALID = "Invalid mnemonic phrase";
 
 const mixinPlugin = {
   name: "mixinPlugin",
-  components: {},
+  components: {
+    JazzIcon,
+  },
   computed: {
     ...mapGetters(["connections", "connected"]),
     isConnected() {

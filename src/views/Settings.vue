@@ -134,13 +134,17 @@ export default {
     .v-list {
       padding: 2px 0;
       .v-list-item--active {
-        color: var(--teal-blue);
+        color: var(--teal-blue) !important;
+        background: #c7eaee;
       }
       .v-ripple__container {
         display: none;
       }
       .v-list-item {
         min-height: 28px;
+        &:focus:before {
+          opacity: 0;
+        }
       }
       .v-list-item--link:hover {
       }

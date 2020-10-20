@@ -15,6 +15,7 @@
     "jazzicon": "^1.5.0",
     "obs-store": "^4.0.3",
     "vue": "^2.6.12",
+    "vue-grid-layout": "^2.3.11",
     "vue-i18n": "^8.21.0",
     "vue-router": "^3.4.3",
     "vuejs-logger": "^1.5.4",

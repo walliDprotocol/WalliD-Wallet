@@ -2,7 +2,7 @@
   <v-container class="restore mt-n2">
     <form @submit="restorePassword">
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" class="pb-1">
           <div class="back-arrow mb-6">
             <v-btn text @click="stepBack" class="back-btn">
               <ArrowBack />
@@ -85,7 +85,7 @@
           </v-textarea>
           <p class="error--text mt-2" style="height:10px">{{ seedPhraseErrorMessage }}</p>
         </v-col>
-        <v-col cols="12" class="text-left py-0">
+        <v-col cols="12" class="text-left pt-1 pb-0">
           <label class="sub-title-fields">
             {{ $t("restore.password[0]") }}
           </label>
@@ -117,7 +117,7 @@
             :error-messages="passwordMatchError"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" class="pt-2">
+        <v-col cols="12" >
           <v-btn
             text
             :disabled="isDisabled"

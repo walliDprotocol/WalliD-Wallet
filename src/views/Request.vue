@@ -31,10 +31,7 @@
 
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-0 pt-4">
-          <WebSiteLogo
-            :url="websiteData.icon"
-            :name="websiteData.name"
-          />
+          <WebSiteLogo :url="websiteData.icon" :name="websiteData.name" />
         </v-col>
 
         <v-col cols="4" class="px-0 pt-4">
@@ -95,10 +92,7 @@
 
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-0 pt-4">
-          <WebSiteLogo
-            :url="websiteData.icon"
-            :name="websiteData.name"
-          />
+          <WebSiteLogo :url="websiteData.icon" :name="websiteData.name" />
         </v-col>
 
         <v-col cols="4" class="px-0 pt-4 check">
@@ -127,7 +121,6 @@ import WarningIcon from "../images/icon-warning-blue";
 import BrokenLine from "../images/broken-line";
 import CheckSuccessIcon from "../images/icon-sucessfully";
 import WebSiteLogo from "../components/WebSiteLogo";
-import JazzIcon from "../components/jazzicon";
 
 import {
   CANCEL_REQUEST,
@@ -144,7 +137,6 @@ export default {
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
-    JazzIcon,
   },
   computed: {
     ...mapGetters(["address"]),
@@ -232,10 +224,9 @@ export default {
         })
         .then(() => {
           if (this.request.type == "wallid_connect") this.success = true;
-
-          // setTimeout(() => {
-          //   this.$notification ? window.close() : this.$router.push("/home");
-          // }, 10 * 100);
+          setTimeout(() => {
+            this.$notification ? window.close() : this.$router.push("/home");
+          }, 10 * 100);
         });
     },
     cancel() {

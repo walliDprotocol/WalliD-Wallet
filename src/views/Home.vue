@@ -36,7 +36,6 @@
 
 <script>
 import * as bip39 from "bip39";
-import JazzIcon from "../components/jazzicon";
 import WalletState from "../components/WalletState";
 import WalletAddress from "../components/WalletAddress";
 import { mapGetters } from "vuex";
@@ -45,7 +44,6 @@ export default {
   components: {
     WalletState,
     WalletAddress,
-    JazzIcon,
   },
   computed: {
     ...mapGetters(["address"]),
