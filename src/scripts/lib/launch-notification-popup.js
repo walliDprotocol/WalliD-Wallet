@@ -10,7 +10,7 @@ export default function() {
           url: extension.runtime.getURL("notification.html"),
           type: "popup",
           width: 416,
-          height: 635,
+          height: 630,
           left,
           top: 68,
         },

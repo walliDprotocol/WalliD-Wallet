@@ -8,7 +8,12 @@
     />
 
     <v-app-bar v-if="!hideAppHeader" height="74" flat app class="plugin-header">
-      <v-img height="50" max-width="50" contain src="../images/logo-header-wallid.png" />
+      <v-img
+        height="50"
+        max-width="50"
+        contain
+        src="../images/logo-header-wallid.png"
+      />
       <v-spacer />
       <div @click.stop="showMenu = !showMenu" style="cursor: pointer;">
         <jazz-icon
@@ -36,6 +41,8 @@
 import MenuPlugin from "../components/MenuPlugin";
 import { mapGetters } from "vuex";
 
+import { UPDATE_CONNECTED } from "../store/actions";
+
 export default {
   components: {
     MenuPlugin,
@@ -47,18 +54,7 @@ export default {
   created() {
     //TO DO: add this to Store and on refreshState
     this.debug("Connections", this.$store.getters.state.connections);
-    this.$store.dispatch("currentSite").then((site) => {
-      this.debug("Current site: ", site);
-      this.debug("Existing connections: ", this.connections);
-      if (this.connections) {
-        let connectedSite = this.connections.find((e) => {
-          return this.getDomain(e.url) == this.getDomain(site.url) ? e : "";
-        });
-        if (connectedSite) {
-          this.$store.commit("updateConnected", connectedSite);
-        }
-      }
-    });
+    this.$store.dispatch("UPDATE_CONNECTED");
   },
   methods: {},
 

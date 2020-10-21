@@ -31,6 +31,8 @@ export default {
   mounted() {
     this.debug("MOUNTED Notification", this.unlocked);
     this.$store.commit("appendLogger", this.debug);
+    this.$store.commit("appendgetDomain", this.getDomain);
+
     let browserLang = navigator.language.substring(0, 2);
     var check = this.langs.filter(function(elm) {
       if (elm.id == browserLang) {

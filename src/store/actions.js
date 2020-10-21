@@ -15,5 +15,8 @@ export const DECRYPT = "DECRYPT";
 export const GET_TOKEN = "GET_TOKEN";
 export const ACCESS_LEVEL = "ACCESS_LEVEL";
 
+export const UPDATE_CONNECTED = "UPDATE_CONNECTED";
+
+
 export const AUTHORIZE_REQUEST = "AUTHORIZE_REQUEST";
 export const CANCEL_REQUEST = "CANCEL_REQUEST";

@@ -55,6 +55,7 @@
           </v-text-field>
           <v-textarea
             v-show="!showSeedPhrase"
+            @input="validSeedPhrase"
             class="seed-phrase-revealed mt-1"
             no-resize
             rows="2"

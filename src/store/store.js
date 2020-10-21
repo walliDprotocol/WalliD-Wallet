@@ -15,6 +15,7 @@ import {
   GET_TOKEN,
   REVEAL_SEED_PHRASE,
   REVEAL_PRIV_KEY,
+  UPDATE_CONNECTED,
   GENERATE_NEW_SEED_PHRASE,
 } from "./actions";
 
@@ -44,9 +45,20 @@ export default new Vuex.Store({
     state: (state) => state,
   },
   actions: {
-    currentSite: ({ commit, state }) => {
+    [UPDATE_CONNECTED]: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
         API.currentTab(resolve);
+      }).then((site) => {
+        state.debug("Current site: ", site);
+        state.debug("Existing connections: ", state.connections);
+        if (state.connections) {
+          let connectedSite = state.connections.find((e) => {
+            return state.getDomain(e.url) == state.getDomain(site.url) ? e : "";
+          });
+          if (connectedSite) {
+            commit("updateConnected", connectedSite);
+          }
+        }
       });
     },
 
@@ -112,7 +124,7 @@ export default new Vuex.Store({
           });
       });
     },
-    
+
     [REVEAL_PRIV_KEY]: ({ commit, dispatch }, password) => {
       console.log("Action REVEAL_PRIV_KEY");
       return new Promise((resolve, reject) => {
@@ -129,13 +141,13 @@ export default new Vuex.Store({
           });
       });
     },
-    [REFRESH_STATE]: ({ commit }) => {
+    [REFRESH_STATE]: ({ commit, dispatch }) => {
       console.log("Action REFRESH_STATE");
       commit("updateAddress", API.getState().address);
       commit("updateUnlocked", API.getState().unlocked);
       commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
-
+      dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
@@ -309,6 +321,9 @@ export default new Vuex.Store({
     },
     appendLogger(state, logger) {
       state.debug = logger;
+    },
+    appendgetDomain(state, getDomain) {
+      state.getDomain = getDomain;
     },
   },
 });
