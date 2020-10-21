@@ -96,8 +96,7 @@ export default {
   mounted() {},
   methods: {
     updateSelectedWords(e) {
-      this.selectedSe
-      edWords = e.items.map((i) => this.sortedSeedWords[i.item]);
+      this.selectedSeedWords = e.items.map((i) => this.sortedSeedWords[i.item]);
     },
     stepBack() {
       this.$emit("stepBack");

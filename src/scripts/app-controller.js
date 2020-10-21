@@ -82,59 +82,8 @@ export default class AppController {
   createNewVault(mnemonic, password) {
     const vault = this.#store.getState().vault;
     return Promise.resolve(vault.createNewAndPersist(mnemonic, password));
-    return Promise.resolve(vault.unlock(password))
-      .then(() =>
-        this.#store.updateState({
-          wallet: WalletController.deserialize(vault.getWallet()),
-          connections: ConnectionsController.deserialize(
-            vault.getConnections()
-          ),
-          identities: IdentitiesController.deserialize(vault.getIdentities()),
-          password,
-        })
-      )
-      .then(() => eventPipeIn("wallid_event_unlock"));
   }
 
-  /**
-   * Locks the app and clears app's runtime state.
-   * App's state is wiped clean and vault is locked.
-   *
-   * @returns {Promise}
-   */
-  lockApp() {
-    const vault = this.#store.getState().vault;
-    return Promise.resolve(vault.lock())
-      .then(() => this.#store.updateState(InitState))
-      .then(() => eventPipeIn("wallid_event_lock"));
-  }
-
-  /**
-   * Tries to unlock vault with @password.
-   * Resolves to true in case password is valid and to false otherwise.
-   *
-   * @param {string} password
-   *
-   * @returns {Promise<boolean>} - verified
-   */
-  verifyPassword(password) {
-    const vault = this.#store.getState().vault;
-    return Promise.resolve(vault.submitPassword(password))
-      .then(() => Promise.resolve(true))
-      .catch(() => Promise.resolve(false));
-  }
-
-  //
-  // CONNECTIONS CONTROLLER INTERFACE
-  //
-
-  currentTab(f) {
-    var query = { active: true, lastFocusedWindow: true };
-    function callback(tabs) {
-      var currentTab = tabs[0]; // there will be only one in this array
-      f(currentTab);
-    }
-  }
   /**
    * Resets the vault and clears plugin's local storage.
    * This action is definitive. All plugin data is permanently lost.
@@ -213,57 +162,6 @@ export default class AppController {
   //
   // CONNECTIONS CONTROLLER INTERFACE
   //
-
-  currentTab(f) {
-    var query = { active: true, lastFocusedWindow: true };
-    function callback(tabs) {
-      var currentTab = tabs[0]; // there will be only one in this array
-      f(currentTab);
-    }
-    chrome.tabs.query(query, callback);
-    return wallet.decryptData(data);
-  }
-
-  //
-  // WALLID RELATED METHODS
-  //
-
-  /**
-   * Returns WalliD authorization token ready for use with WalliD API.
-   * Rejects with HTTP status code from server if request fail.
-   *
-   * @param {string} idt
-   * @param {string} operation
-   */
-  getAuthorizationToken(idt, operation) {
-    const wallet = this.#store.getState().wallet;
-    return Promise.resolve(
-      WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation)
-    ).then(({ ok, status, body }) =>
-      ok
-        ? wallet
-            .signEthereumMessage(body.challenge)
-            .then((signature) =>
-              WalliD.buildAuthorizationToken_v1(body.challenge, signature)
-            )
-        : Promise.reject(status)
-    );
-  }
-
-  /**
-   * Retrieves WalliD user's identity data.
-   * Rejects with HTTP status code from server if identity doesn't exists, or request fail.
-   *
-   * @param {string} auth_token - WalliD authorization token
-   */
-  extractIdentityData(auth_token) {
-    return Promise.resolve(
-      WalliD.extractIdentity(auth_token)
-    ).then(({ ok, status, body }) =>
-      ok && status != 202 ? Promise.resolve(body.data) : Promise.reject(status)
-    );
-  }
-
   /**
    * Approves a pending connection request.
    * Promise rejects if a connection with same @url already exists, or if vault is locked.
@@ -306,6 +204,15 @@ export default class AppController {
         this.#store.getState().password
       )
     );
+  }
+
+  currentTab(f) {
+    var query = { active: true, lastFocusedWindow: true };
+    function callback(tabs) {
+      var currentTab = tabs[0]; // there will be only one in this array
+      f(currentTab);
+    }
+    chrome.tabs.query(query, callback);
   }
 
   //

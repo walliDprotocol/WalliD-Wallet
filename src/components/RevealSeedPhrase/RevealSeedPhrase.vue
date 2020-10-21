@@ -99,7 +99,7 @@ export default {
       this.debug("revealSeedPhrase");
 
       this.$store
-        .dispatch("REVEAL_SEED_PHRASE", this.password)
+        .dispatch(REVEAL_SEED_PHRASE, this.password)
         .then((result) => {
           this.debug("SeedPhrase", result);
           this.passwordError = false;

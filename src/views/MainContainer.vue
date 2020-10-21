@@ -8,7 +8,7 @@
     />
 
     <v-app-bar v-if="!hideAppHeader" height="74" flat app class="plugin-header">
-      <v-img height="50" max-width="50" contain src="../images/teste.png" />
+      <v-img height="50" max-width="50" contain src="../images/logo-header-wallid.png" />
       <v-spacer />
       <div @click.stop="showMenu = !showMenu" style="cursor: pointer;">
         <jazz-icon
@@ -45,6 +45,7 @@ export default {
     ...mapGetters(["address", "unlocked", "connections"]),
   },
   created() {
+    //TO DO: add this to Store and on refreshState
     this.debug("Connections", this.$store.getters.state.connections);
     this.$store.dispatch("currentSite").then((site) => {
       this.debug("Current site: ", site);
