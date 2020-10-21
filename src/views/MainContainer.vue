@@ -33,15 +33,12 @@
 </template>
 
 <script>
-import * as bip39 from "bip39";
-import JazzIcon from "../components/JazzIcon";
 import MenuPlugin from "../components/MenuPlugin";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     MenuPlugin,
-    JazzIcon,
   },
   props: ["hideAppHeader"],
   computed: {

@@ -12,7 +12,7 @@ export default function() {
           width: 416,
           height: 635,
           left,
-          top: 38,
+          top: 68,
         },
         (win) => resolve(win.id)
       );

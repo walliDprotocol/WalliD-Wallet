@@ -93,7 +93,7 @@
           <v-text-field
             v-model="password"
             solo
-            @input="validSeedPhrase"
+            @input="checkForm"
             flat
             :hint="$t('import.password[2]')"
             class="password-input mt-1"
@@ -283,6 +283,9 @@ export default {
   .terms {
     .v-input__slot {
       align-items: start;
+    }
+    .links {
+      display: contents !important;
     }
     div {
       font-size: 14px;

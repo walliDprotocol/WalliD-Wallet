@@ -89,7 +89,6 @@ import IconSites from "../../images/icon-connect-unselected.vue";
 import IconSettings from "../../images/icon-settings-unselected.vue";
 import IconAbout from "../../images/icon-about-unselected.vue";
 import IconLock from "../../images/icon-logout-unselected.vue";
-import JazzIcon from "../../components/JazzIcon";
 
 import { LOCK_WALLET } from "../../store/actions";
 import { DETAILS, SITES, SETTINGS, ABOUT } from "../../router/routes";
@@ -97,7 +96,6 @@ import { DETAILS, SITES, SETTINGS, ABOUT } from "../../router/routes";
 export default {
   props: ["address", "showMenu"],
   components: {
-    JazzIcon,
     IconWallet,
     IconSites,
     IconSettings,
