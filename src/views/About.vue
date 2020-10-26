@@ -23,7 +23,7 @@
         <p class="sub-title-fields">{{ $t("about.design") }}&copy;</p>
       </v-col>
       <v-col cols="12" class="pt-2 pb-8">
-        <p class="FIELD-TEXT">{{ $t("about.version") }}</p>
+        <p class="FIELD-TEXT">{{ $t("about.version") }} 1.0.4</p>
       </v-col>
     </v-row>
     <v-divider class="full-divider"></v-divider>
@@ -43,9 +43,9 @@
         >
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
-        <router-link to="/contacts" class="links larger">
+        <a href="https://www.wallid.io/contact" target="_blank" class="links larger">
           {{ $t("about.links[3]") }}
-        </router-link>
+        </a>
       </v-col>
     </v-row>
   </v-container>

@@ -83,7 +83,9 @@
               </v-tooltip>
             </template>
           </v-textarea>
-          <p class="error--text mt-2" style="height:10px">{{ seedPhraseErrorMessage }}</p>
+          <p class="error--text mt-2" style="height:10px">
+            {{ seedPhraseErrorMessage }}
+          </p>
         </v-col>
         <v-col cols="12" class="text-left pt-1 pb-0">
           <label class="sub-title-fields">
@@ -117,7 +119,7 @@
             :error-messages="passwordMatchError"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" >
+        <v-col cols="12">
           <v-btn
             text
             :disabled="isDisabled"
@@ -205,6 +207,7 @@ export default {
         .catch((err) => {
           if ((err = this.INVALID)) {
             this.errorSeedPhrase = true;
+            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
           }
           console.error(err);
         });

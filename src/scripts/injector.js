@@ -1,5 +1,6 @@
-import { ExternalConnectorFrontend } from './lib/web-connector'
+import { ExternalConnectorFrontend } from "./lib/web-connector";
 
-window.wallid = ExternalConnectorFrontend()
+window.wallid = ExternalConnectorFrontend();
 
-console.warn('WalliD: external app connector injected into webpage context')
+console.warn("WalliD: external app connector injected into webpage context");
+document.dispatchEvent(new CustomEvent("wallid_event_ready"));

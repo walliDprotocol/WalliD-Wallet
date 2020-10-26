@@ -39,9 +39,9 @@ export default {
   },
   about: {
     title: "Sobre",
-    design: "",
-    version: "",
-    links: ["", "", "", ""],
+    design: "Desenvolvido por WalliD",
+    version: "Versão",
+    links: ["Links", "FAQ's", "Termos e condições", "Contactos"],
   },
   privKey: {
     title: "A sua chave privada",
@@ -128,6 +128,7 @@ export default {
       "Mostrar seed phrase",
       "Esconder seed phrase",
       "Seed phrases tem que ter 12 palavras",
+      "Seed phrase incorreta"
     ],
     password: [
       "Nova password",

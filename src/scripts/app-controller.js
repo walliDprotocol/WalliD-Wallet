@@ -81,7 +81,11 @@ export default class AppController {
    */
   createNewVault(mnemonic, password) {
     const vault = this.#store.getState().vault;
-    return Promise.resolve(vault.createNewAndPersist(mnemonic, password));
+    return Promise.resolve(vault.createNewAndPersist(mnemonic, password))
+      .then(() => {
+        eventPipeIn("wallid_wallet_created");
+      })
+      .catch((err) => console.error(err));
   }
 
   /**
@@ -128,7 +132,8 @@ export default class AppController {
           password,
         })
       )
-      .then(() => eventPipeIn("wallid_event_unlock"));
+      .then(() => eventPipeIn("wallid_event_unlock"))
+      .catch((err) => console.error(err));
   }
 
   /**
@@ -176,12 +181,14 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject("Plugin is locked");
     }
-    return Promise.resolve(connections.addConnected(url, icon, name)).then(
-      vault.putConnections(
-        connections.serialize(),
-        this.#store.getState().password
+    return Promise.resolve(connections.addConnected(url, icon, name))
+      .then(
+        vault.putConnections(
+          connections.serialize(),
+          this.#store.getState().password
+        )
       )
-    );
+      .then(() => eventPipeIn("wallid_wallet_connected"));
   }
 
   /**
@@ -205,7 +212,10 @@ export default class AppController {
       )
     );
   }
-
+  /**
+   *
+   * @param {function} f - callback function
+   */
   currentTab(f) {
     var query = { active: true, lastFocusedWindow: true };
     function callback(tabs) {

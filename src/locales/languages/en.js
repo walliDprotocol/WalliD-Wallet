@@ -119,7 +119,7 @@ export default {
   about: {
     title: "About",
     design: "Crafted by WalliD",
-    version: "version 1.0",
+    version: "Version",
     links: ["Links", "FAQ’s", "Terms and conditions", "Contact us"],
   },
   privKey: {
@@ -204,6 +204,7 @@ export default {
       "Show seed phrase",
       "Hide seed phrase",
       "Seed phrases contain 12 words",
+      "Incorrect seed phrase"
     ],
     password: [
       "New password",
@@ -220,7 +221,7 @@ export default {
   },
   create: {
     title: "Welcome to WalliD",
-    text: "The digital wallet to manage all your Identity document",
+    text: "The digital wallet to manage all your Identity documents",
     button: "Create your wallet",
     import: ["Already have a wallet?", "Import now using your seed phrase"],
 

@@ -4,18 +4,25 @@
  * Events can be propagated with a payload.
  */
 
-import extension from 'extensionizer'
+import extension from "extensionizer";
 
+var msgPort;
+
+export function setPort(_msgPort) {
+  msgPort = _msgPort;
+}
 // Used by background to pipe events to the content-script
-export function eventPipeIn(event, data) {
-    extension.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        extension.tabs.sendMessage(tabs[0].id, { event, data })
-    })
+export function eventPipeIn(event) {
+  msgPort.postMessage({ event });
 }
 
 // Used by content-script to relay events emitted by the background
 export function eventPipeOut() {
-    extension.runtime.onMessage.addListener(function(request) {
-        document.dispatchEvent(new CustomEvent(request.event, { detail: request.data }))
-    })
+  msgPort = extension.runtime.connect({ name: "msgPort" });
+
+  // fires when background script sends a message
+  msgPort.onMessage.addListener(function(msg) {
+    console.log(msg);
+    document.dispatchEvent(new CustomEvent(msg.event, { detail: msg.data }));
+  });
 }

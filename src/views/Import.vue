@@ -132,7 +132,7 @@
                 class="links"
                 target="_blank"
                 color="#01a3b0"
-                href="https://www.wallid.io"
+                href="https://www.wallid.io/terms"
                 @click.stop
               >
                 {{ $t("create.stepper[0].terms[1]") }}
@@ -249,6 +249,7 @@ export default {
         .catch((e) => {
           if ((e = this.INVALID)) {
             this.errorSeedPhrase = true;
+            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
           }
           console.error(err);
         });
