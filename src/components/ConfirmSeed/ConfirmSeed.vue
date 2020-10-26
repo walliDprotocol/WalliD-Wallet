@@ -22,21 +22,27 @@
               }"
               class="confirm-seed-phrase__selected-seed-words"
             >
-              <DraggableSeed
-                v-for="(seedIndex, index) in selectedWords"
-                :key="index"
-                :className="
-                  'confirm-seed-phrase__selected-seed-word confirm-seed-phrase__selected-word'
-                "
-                :word="getWord(index)"
-                :index="index"
-              />
+              <grid
+                :draggable="true"
+                :sortable="true"
+                :items="selectedWordsIndex"
+                :height="100"
+                :width="100"
+                @drag="updateSelectedWords"
+              >
+                <template slot="cell" slot-scope="props">
+                  <DraggableSeed
+                    :className="'confirm-seed-phrase__seed-word--sorted'"
+                    :word="getWord(props.item)"
+                  />
+                </template>
+              </grid>
             </v-col>
             <v-col cols="12" class="confirm-seed-phrase__sorted-seed-words">
               <DraggableSeed
                 v-for="(word, index) in sortedSeedWords"
                 :key="word"
-                :className="'confirm-seed-phrase__seed-word--sorted'"
+                :classN="'confirm-seed-phrase__seed-word--sorted'"
                 :word="word"
                 :index="index"
                 :selected="isSelected(index)"
@@ -64,9 +70,12 @@
 <script>
 import ArrowBack from "../../images/icon-arrow-back.vue";
 import DraggableSeed from "./draggable-seed.vue";
+import Grid from "./Grid.vue";
+
 export default {
   components: {
     DraggableSeed,
+    Grid,
     ArrowBack,
   },
   watch: {
@@ -81,17 +90,19 @@ export default {
       return this.selectedWordsIndex.length != this.sortedSeedWords.length;
     },
   },
-  props: ["seedPhrase"],
+  props: {
+    seedPhrase: {},
+  },
   mounted() {},
   methods: {
+    updateSelectedWords(e) {
+      this.selectedSeedWords = e.items.map((i) => this.sortedSeedWords[i.item]);
+    },
     stepBack() {
       this.$emit("stepBack");
     },
     isValid() {
-      const selectedSeedWords = this.selectedWordsIndex.map(
-        (i) => this.sortedSeedWords[i]
-      );
-      return this.seedPhrase === selectedSeedWords.join(" ");
+      return this.seedPhrase === this.selectedSeedWords.join(" ");
     },
     verifySeedPhrase() {
       if (!this.isValid()) {
@@ -99,23 +110,6 @@ export default {
         return;
       }
       this.$emit("step");
-      //   try {
-      // this.context.metricsEvent({
-      //   eventOpts: {
-      //     category: "Onboarding",
-      //     action: "Seed Phrase Setup",
-      //     name: "Verify Complete",
-      //   },
-      // });
-
-      //     setSeedPhraseBackedUp(true).then(async () => {
-      //       initializeThreeBox();
-      //       this.setOnboardingCompleted();
-      //       history.push(INITIALIZE_END_OF_FLOW_ROUTE);
-      //     });
-      //   } catch (error) {
-      //     console.error(error.message);
-      //   }
     },
     toggleSelected(index) {
       if (this.isSelected(index)) {
@@ -132,13 +126,16 @@ export default {
     },
     handleSelectSeedWord(index) {
       this.selectedWordsIndex.push(index);
+      this.selectedSeedWords = this.selectedWordsIndex.map(
+        (i) => this.sortedSeedWords[i]
+      );
     },
     isSelected(index) {
       return this.selectedWordsIndex.includes(index);
     },
     getWord(index) {
-      const seedIndex = this.selectedWordsIndex[index];
-      const word = this.sortedSeedWords[seedIndex];
+      // const seedIndex = this.selectedWordsIndex[index];
+      const word = this.sortedSeedWords[index];
       return word;
     },
   },

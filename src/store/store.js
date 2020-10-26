@@ -14,6 +14,7 @@ import {
   ACCESS_LEVEL,
   GET_TOKEN,
   REVEAL_SEED_PHRASE,
+  REVEAL_PRIV_KEY,
   GENERATE_NEW_SEED_PHRASE,
 } from "./actions";
 
@@ -101,7 +102,24 @@ export default new Vuex.Store({
         API.verifyPassword(password)
           .then((result) => {
             if (result) {
-              resolve(API.getState().mnemonic);
+              resolve(API.getState().mnemonic());
+            } else {
+              reject("Wrong Password");
+            }
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    },
+    
+    [REVEAL_PRIV_KEY]: ({ commit, dispatch }, password) => {
+      console.log("Action REVEAL_PRIV_KEY");
+      return new Promise((resolve, reject) => {
+        API.verifyPassword(password)
+          .then((result) => {
+            if (result) {
+              resolve(API.getState().key());
             } else {
               reject("Wrong Password");
             }
@@ -117,6 +135,8 @@ export default new Vuex.Store({
       commit("updateUnlocked", API.getState().unlocked);
       commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
+
+      // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
     [CONNECT]: ({ commit, state }, { origin, name }) => {
