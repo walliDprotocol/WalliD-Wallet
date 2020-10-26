@@ -380,11 +380,13 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     const connections = this.#store.getState().connections;
+    const identities = this.#store.getState().identities;
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
+      identities: vault.isUnlocked() ? identities.get() : null,
       mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
       key: vault.isUnlocked() ? () => vault.getWallet() : null,
     };
