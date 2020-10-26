@@ -364,6 +364,7 @@ export default class AppController {
             unlocked: vault.isUnlocked(),
             address: vault.isUnlocked() ? wallet.getAddress() : null,
             connections: vault.isUnlocked() ? connections.getAllConnections() : null,
+            identities: vault.isUnlocked() ? this.#store.getState().identities : null,
             mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
             key: vault.isUnlocked() ? () => vault.getWallet() : null,
         };
