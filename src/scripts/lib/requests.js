@@ -16,6 +16,10 @@ const RequestAPIMethods = {
         popup: true,
         level: 1
     },
+    'wallid_import': {
+        popup: true,
+        level: 1
+    },
     'wallet_address': {
         popup: false,
         level: 1,
