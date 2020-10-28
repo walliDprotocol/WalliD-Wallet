@@ -38,7 +38,6 @@ export default class IdentitiesController {
                 return reject(`Identity type ${idt} already exists`)
             }
             this.#identities.push({ idt, data })
-            console.log('AFTER ADD', this.#identities)
 
             return resolve()
         })
