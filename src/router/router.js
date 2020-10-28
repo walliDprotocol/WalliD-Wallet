@@ -13,6 +13,7 @@ import Request from "../views/Request";
 import MainContainer from "../views/MainContainer";
 import FAQs from "../views/FAQs";
 import Terms from "../views/Terms";
+import Card from "../views/Card";
 
 import store from "../store";
 import mixinPlugin from "../scripts/util";
@@ -99,6 +100,13 @@ let router = new Router({
           path: "/terms",
           name: "Terms",
           component: Terms,
+        },
+
+        {
+          path: "/card",
+          name: "Card",
+          component: Card,
+          params: true,
         },
       ],
     },

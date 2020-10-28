@@ -1,6 +1,6 @@
 <template>
   <v-container class="reveal">
-    <v-row v-if="!confirmDisconnect">
+    <v-row>
       <v-col cols="12" class="pt-1 pb-2">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/settings')" class="back-btn">
@@ -114,8 +114,9 @@ export default {
   data() {
     return {
       showPrivKey: false,
-      privKey:
-        "",
+      privKey: "",
+      password: "",
+      passwordError: false,
     };
   },
 };

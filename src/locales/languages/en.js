@@ -182,6 +182,10 @@ export default {
   home: {
     title: "My WalliD",
     address: "Your wallet address",
+    tabs: ["My ID documents", "Activity"],
+  },
+  cards: {
+    validity: ["Expiration date:", "Valid", "Invalid"],
   },
   import: {
     title: "Import your wallet",
@@ -204,7 +208,7 @@ export default {
       "Show seed phrase",
       "Hide seed phrase",
       "Seed phrases contain 12 words",
-      "Incorrect seed phrase"
+      "Incorrect seed phrase",
     ],
     password: [
       "New password",

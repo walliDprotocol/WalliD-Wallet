@@ -1,34 +1,43 @@
 <template>
   <v-container class="home">
-    <v-row class="pt-3 mt-2px">
-      <v-col cols="12" class="pt-5 pb-0">
-        <jazz-icon
-          :address="address"
-          :id="'home'"
-          :size="100"
-          :margin="5"
-        />
+    <v-row class="pt-0 mt-0">
+      <v-col cols="12" class="pt-0 pb-0">
+        <jazz-icon :address="address" :id="'home'" :size="58" :margin="4" />
       </v-col>
-      <v-col cols="12" class="pt-4 pb-6 px-14">
+      <v-col cols="12" class="pt-4 pb-2 px-14">
         <h2 class="T1 mb-2 text-center">
           {{ $t("home.title") }}
         </h2>
         <WalletState :website="connected.url"> </WalletState>
       </v-col>
-      <v-col cols="12" class="pt-4 pb-9 px-14">
+      <v-col cols="12" class="px-14">
         <p class="normal-text mb-3 text-center">
           {{ $t("home.address") }}
         </p>
 
         <WalletAddress :address="address" />
       </v-col>
-      <v-col class="pt-16" cols="12">
-        <v-img
-          class="ma-auto"
-          width="112"
-          contain
-          src="../images/logo-wallid.png"
-        />
+      <v-col class="tabs pa-0 pt-1" cols="12">
+        <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
+          <v-tab href="#tab-1" class="MENU-SELECTED">{{
+            $t("home.tabs[0]")
+          }}</v-tab>
+          <v-tab href="#tab-2" class="MENU-SELECTED">{{
+            $t("home.tabs[1]")
+          }}</v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="tab-1">
+            <ListIDs />
+          </v-tab-item>
+
+          <v-tab-item value="tab-2">
+            <v-card color="basil" flat>
+              <v-card-text> </v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
       </v-col>
     </v-row>
   </v-container>
@@ -38,25 +47,25 @@
 import * as bip39 from "bip39";
 import WalletState from "../components/WalletState";
 import WalletAddress from "../components/WalletAddress";
+import ListIDs from "../components/ListIDs";
+
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     WalletState,
     WalletAddress,
+    ListIDs,
   },
   computed: {
     ...mapGetters(["address"]),
   },
-  mounted() {
-  
-  },
-  methods: {
-
-  },
+  mounted() {},
+  methods: {},
   data() {
     return {
       iconSet: false,
+      tab: 0,
     };
   },
 };
@@ -64,11 +73,28 @@ export default {
 
 <style lang="scss">
 #metamask-logo-home {
-  max-height: 114px;
-  max-width: 114px;
+  max-height: 70px;
+  max-width: 70px;
 
   border-radius: 50%;
   border: solid 2px #b8b9bb;
   margin: auto;
+}
+
+.home {
+  .tabs {
+    min-width: 400px;
+    margin-left: -8px;
+    .v-slide-group__prev,
+    .v-slide-group__next {
+      display: none !important;
+    }
+    .v-tabs-slider {
+      background-color: var(--teal-blue);
+    }
+    .v-tab {
+      border-bottom: solid 2px var(--very-light-grey);
+    }
+  }
 }
 </style>

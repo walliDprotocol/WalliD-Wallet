@@ -104,6 +104,10 @@ export default {
   home: {
     title: "A minha WalliD",
     address: "Endereço da sua carteira",
+    tabs: ["Os meus documentos ID", "Actividade"],
+  },
+  cards: {
+    validity: ["Data de validade:", "Válida", "Inválida"],
   },
   import: {
     title: "Importar carteira",
@@ -128,7 +132,7 @@ export default {
       "Mostrar seed phrase",
       "Esconder seed phrase",
       "Seed phrases tem que ter 12 palavras",
-      "Seed phrase incorreta"
+      "Seed phrase incorreta",
     ],
     password: [
       "Nova password",

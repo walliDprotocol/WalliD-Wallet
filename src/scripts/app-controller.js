@@ -133,7 +133,9 @@ export default class AppController {
         })
       )
       .then(() => eventPipeIn("wallid_event_unlock"))
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   /**

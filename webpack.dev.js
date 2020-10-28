@@ -13,7 +13,7 @@ module.exports = {
     content: "./src/scripts/content-script.js",
     injector: "./src/scripts/injector.js",
   },
-  devtool: "inline-source-map",
+  devtool: "cheap-module-source-map",
   plugins: [
     new ChromeExtensionReloader(),
     new CleanWebpackPlugin({
@@ -49,7 +49,7 @@ module.exports = {
     rules: [
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader"],
+        loader: "file-loader",
       },
       {
         test: /\.svg$/,
