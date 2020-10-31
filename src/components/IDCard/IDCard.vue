@@ -6,19 +6,18 @@
     v-if="!loading"
   >
     <template slot="front">
-      <v-container>
+      <v-container class="px-5">
         <v-tooltip bottom content-class="view-id-popover">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               :ripple="false"
-              height="58"
+              height="38"
               text
               v-bind="attrs"
               v-on="on"
               v-on:click="unlockData()"
-              :disable="!card.locked"
+              v-if="!unlocked"
               class="tooltip-unlock"
-              :style="!card.locked ? 'margin-right:40px' : ''"
             >
               <div class="unlock">
                 <IconShow />
@@ -27,13 +26,13 @@
           </template>
           <div class="view-id-popover">
             <span class="arrow" />
-            <p>{{ $t("view.tooltip") }}</p>
+            <p>{{ $t("cards.tooltip") }}</p>
           </div>
         </v-tooltip>
 
         <v-row class="justify-space-between">
-          <v-col class="field py-1" cols="12" sm="10">
-            <div style="width:250px" :style="idCardStyle(card.idt)">
+          <v-col class="field pb-1 pt-2px" cols="10">
+            <div :style="idCardStyle(card.idt)">
               <label>{{ card.idtName.label[$i18n.locale] }}</label>
               <p>
                 {{ card.idtName.value }}{{ card.idtName.type[$i18n.locale] }}
@@ -43,7 +42,7 @@
           <v-col
             v-for="(field, name, index) in card.front"
             v-bind:key="index"
-            class="field py-0"
+            class="field py-1"
             :cols="calcCols(card.idt, name)"
             :sm="calcCols(card.idt, name)"
           >
@@ -56,12 +55,12 @@
       </v-container>
     </template>
     <template slot="back">
-      <v-container>
+      <v-container class="px-5">
         <v-row class="justify-space-between">
           <v-col
             v-for="(field, name, index) in card.back"
             v-bind:key="index"
-            class="field py-0"
+            class="field py-1"
             :cols="calcCols(card.idt, name)"
             :sm="calcCols(card.idt, name)"
           >
@@ -103,8 +102,9 @@ export default {
     this.loading = false;
   },
   methods: {
-    getCCValues: ({ idt, obj }) => {
-      console.log(obj);
+    getCCValues: ({ idt, obj, unlocked }) => {
+      console.log("getCCValues", obj);
+      console.log(idt);
       let fields = {};
       let side = "front";
       fields[side] = {};
@@ -126,14 +126,14 @@ export default {
       };
       fields.idtName.value = fields.idtName.value.replace("ShuftiPro", "");
 
-      if (idt == WallidConst.CC_PT) {
-        fields.idtName.type = {
-          pt: " - Documento ID Qualificado",
-          en: " - Qualified Document ID",
-        };
-      } else {
-        fields.idtName.type = "";
-      }
+      //   if (idt == WallidConst.CC_PT && unlocked) {
+      //     fields.idtName.type = {
+      //       pt: " - Documento ID Qualificado",
+      //       en: " - Qualified Document ID",
+      //     };
+      //   } else {
+      fields.idtName.type = "";
+      //   }
       let _idt = idt.substring(0, 10);
       let country = idt.substring(10, 12);
 
@@ -252,6 +252,7 @@ export default {
           this.card = this.getCCValues({
             idt: this.cardInfo.idt,
             obj: JSON.parse(res),
+            unlocked: true,
           });
           this.loading = false;
           this.unlocked = true;
@@ -280,7 +281,9 @@ export default {
             ? 3
             : name == "CivilianIdNumber" || name == "Validityenddate"
             ? 6
-            : 4;
+            : name == "NISS"
+            ? 5
+            : undefined;
 
         case "SHUFTI_CC_":
           return name == "last_name"
@@ -314,20 +317,24 @@ export default {
   .tooltip-unlock {
     position: absolute;
     top: 15px;
-    right: 10px;
+    right: 18px;
     display: inline-block;
     border: none;
+    border-radius: 50%;
+    min-width: unset !important;
+    max-width: 38px;
   }
   .field {
-      & > div  {
-          text-align: left;
-      }
+    padding-right: 0 !important;
+    & > div {
+      text-align: left;
+    }
     label {
       font-size: 11px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
-      line-height: 2.45;
+      line-height: 2.25;
       letter-spacing: normal;
       text-align: left;
       color: var(--charcoal-grey);
@@ -338,11 +345,45 @@ export default {
       font-weight: 600;
       font-stretch: normal;
       font-style: normal;
-      line-height: 2.25;
+      line-height: 2.05;
       letter-spacing: normal;
       text-align: left;
       color: var(--charcoal-grey);
     }
+  }
+}
+
+.view-id-popover.v-tooltip__content {
+  border: solid 1px transparent !important;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.2) !important;
+  background-color: var(--very-light-grey);
+  background: var(--very-light-grey);
+
+  padding: 6px 8px;
+  p {
+    font-size: 11px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: var(--charcoal-grey);
+    margin: 0;
+  }
+  .arrow {
+    padding: 6px;
+    position: absolute;
+    margin: 0px;
+    border: solid 1px transparent;
+    background: var(--very-light-grey);
+    transform: rotate(45deg);
+    border-width: 1px;
+    box-shadow: -2px -2px 4px -2px rgba(0, 0, 0, 0.2) !important;
+    top: -8px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 </style>

@@ -7,11 +7,15 @@
         style="background-position: center; background-size: contain;"
       >
         <slot name="front"></slot>
-        <div class="card">
-          <v-btn :ripple="false" text @click="flipped = true">
-            <IconRotate />
-          </v-btn>
-        </div>
+        <v-btn
+          class="rotate-btn"
+          v-if="hasBack"
+          :ripple="false"
+          text
+          @click="flipped = true"
+        >
+          <IconRotate />
+        </v-btn>
       </div>
       <div
         class="back"
@@ -20,11 +24,15 @@
       >
         <slot name="back"></slot>
 
-        <div class="card">
-          <v-btn :ripple="false" text @click="flipped = false">
-            <IconRotate />
-          </v-btn>
-        </div>
+        <v-btn
+          class="rotate-btn"
+          v-if="hasBack"
+          :ripple="false"
+          text
+          @click="flipped = false"
+        >
+          <IconRotate />
+        </v-btn>
       </div>
     </div>
   </div>
@@ -32,8 +40,6 @@
 
 <script>
 import IconRotate from "../../images/icon-rotate";
-import cmd from "../../images/citizen-card.jpg";
-import cc from "../../images/citizen-card.jpg";
 
 export default {
   name: "FlipCard",
@@ -46,7 +52,7 @@ export default {
       if (this.isForeign) {
         return "background: #fff";
       } else if (!this.hasBack) {
-        return "background-image: url(../../images/citizen-card.jpg)";
+        return "background-image: url(../../images/cmd-card.jpg)";
       } else {
         return "background-image: url(../../images/citizen-card.jpg)";
       }
@@ -55,8 +61,6 @@ export default {
   data() {
     return {
       flipped: false,
-      cmd: cmd,
-      cc: cc,
     };
   },
 };
@@ -70,23 +74,6 @@ img.backFlipBtn {
   bottom: 0px;
   color: #ffffff;
   cursor: pointer;
-}
-
-@media screen and (max-width: 1024px) {
-  .card {
-    right: -10px !important;
-  }
-}
-
-.card {
-  position: absolute;
-  right: -30px;
-  bottom: -30px;
-  display: inline-block;
-  border: none;
-  .v-btn {
-    min-width: unset;
-  }
 }
 
 .card .img-top {
@@ -117,19 +104,32 @@ i.backFlipBtn {
   transform: rotateY(-180deg);
 }
 .flip-container {
+  min-height: 120px;
   -webkit-perspective: 1000;
   -moz-perspective: 1000;
   -o-perspective: 1000;
   perspective: 1000;
+
+  .flipper {
+    -moz-transform: perspective(1000px);
+    -moz-transform-style: preserve-3d;
+    position: relative;
+
+    .rotate-btn {
+      position: absolute;
+      right: 0px;
+      bottom: -20px;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      min-width: unset;
+      height: 44px;
+      max-width: 44px;
+    }
+  }
 }
-.flip-container {
-  min-height: 120px;
-}
-.flipper {
-  -moz-transform: perspective(1000px);
-  -moz-transform-style: preserve-3d;
-  position: relative;
-}
+
 .front,
 .back {
   -webkit-backface-visibility: hidden;
@@ -150,6 +150,7 @@ i.backFlipBtn {
   left: 0;
   width: 100%;
 
+  height: 235px;
   border-radius: 24px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
