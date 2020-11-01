@@ -14,6 +14,7 @@ import MainContainer from "../views/MainContainer";
 import FAQs from "../views/FAQs";
 import Terms from "../views/Terms";
 import Card from "../views/Card";
+import Proof from "../views/Proof";
 
 import store from "../store";
 import mixinPlugin from "../scripts/util";
@@ -106,6 +107,12 @@ let router = new Router({
           path: "/card",
           name: "Card",
           component: Card,
+          params: true,
+        },
+        {
+          path: "/proof",
+          name: "Proof",
+          component: Proof,
           params: true,
         },
       ],

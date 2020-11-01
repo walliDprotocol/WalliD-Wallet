@@ -182,10 +182,28 @@ export default {
   home: {
     title: "My WalliD",
     address: "Your wallet address",
-    tabs: ["My ID documents", "Activity"],
+    tabs: ["Credentials", "ID documents"],
+  },
+  credentials: {
+    noCredentials:
+      "Seems like you don’t have any credentials stored in your wallet",
+    menu: ["View details", "Proof of credential"],
+  },
+  proof: {
+    title: "Proof of credential",
+    url: "URL",
+    hint: "URL from Linkedin or Zask",
+    urlError: "Invalid URL",
+    info:
+      "Ao gerar a prova desta credencial clicando no botão abaixo, irá ser utilizada a sua chave privada.",
+    link: "Link to share:",
+    button: "Generate proof of credential",
   },
   cards: {
-    validity: ["Expiration date:", "Valid", "Invalid"],
+    validity: ["Expiration date:", "Valid", "Invalid", "Pending"],
+    noids: "Seems like you don’t have any ID documents stored in your wallet",
+    store: "Store your ID now",
+    tooltip: "Show ID data",
   },
   import: {
     title: "Import your wallet",

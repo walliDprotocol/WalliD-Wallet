@@ -104,10 +104,27 @@ export default {
   home: {
     title: "A minha WalliD",
     address: "Endereço da sua carteira",
-    tabs: ["Os meus documentos ID", "Actividade"],
+    tabs: ["Credenciais", "Documentos ID"],
+  },
+  credentials: {
+    noCredentials:
+      "Seems like you don’t have any credentials stored in your wallet",
+    menu: ["View details", "Proof of credential"],
+  },
+  proof: {
+    title: "Proof of credential",
+    url: "URL",
+    urlError: "Invalid URL",
+    info:
+      "Ao gerar a prova desta credencial clicando no botão abaixo, irá ser utilizada a sua chave privada.",
+    link: "Link to share:",
+    button: "Generate proof of credential",
   },
   cards: {
-    validity: ["Data de validade:", "Válida", "Inválida"],
+    validity: ["Data de validade:", "Válida", "Inválida", "Pendente"],
+    noids: "Seems like you don’t have any ID documents stored in your wallet",
+    store: "Store your ID now",
+    tooltip: "Show ID data",
   },
   import: {
     title: "Importar carteira",

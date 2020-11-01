@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import {
+  IMPORT,
   REFRESH_STATE,
   LOCK_WALLET,
   CANCEL_REQUEST,
@@ -31,12 +32,15 @@ export default new Vuex.Store({
     connections: API.getState().connections,
     connected: false,
     initialized: API.getState().initialized,
-    identities: [
-      { id: 0, idt: "CC_PT", data: "DATA", expDate: "16 09 2019" },
-      { id: 1, idt: "CC_PT", expDate: "16 09 2021" },
-      { id: 2, idt: "SHUFTI_US", expDate: "27 10 2020" },
-      { id: 3, idt: "CMD_PT" },
-    ],
+    identities: API.getState().identities,
+
+    credentials:  [],
+    // [
+    //   { id: 0, name: "CC_PT", data: "DATA", expDate: "16 09 2019" },
+    //   { id: 1, name: "CC_PT", expDate: "16 09 2021" },
+    //   { id: 2, name: "SHUFTI_CC_US", expDate: "27 10 2020" },
+    //   { id: 3, name: "CMD_PT", pending: true },
+    // ],
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
@@ -50,6 +54,7 @@ export default new Vuex.Store({
     unlocked: (state) => state.unlocked,
     state: (state) => state,
     identities: (state) => state.identities,
+    credentials: (state) => state.credentials,
   },
   actions: {
     // []: ({ commit, state }) => {
@@ -207,6 +212,24 @@ export default new Vuex.Store({
           });
       });
     },
+
+    [IMPORT]: ({ commit, state }, { idt, data, ow = true, expDate }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action IMPORT");
+        state.debug("idt: ", idt);
+        state.debug("Data: ", data);
+        state.debug("ow: ", ow);
+
+        API.importIdentity_v2(idt, data, ow, expDate)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
     [DECRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
         console.log("Action DECRYPT");
@@ -265,13 +288,31 @@ export default new Vuex.Store({
             });
             break;
 
+          case "wallid_import":
+            dispatch(IMPORT, {
+              idt: data.idt,
+              data: data.data,
+              expDate: data.expDate,
+            })
+              .then((res) => {
+                console.log("res import:", res);
+                resolve(callback(null, true));
+              })
+              .catch(() => resolve(callback("REJECTED")));
+
+            break;
+
           default:
             break;
         }
-
-        dispatch(REFRESH_STATE);
-        state.debug("Connections: ", state.connections);
-      });
+      })
+        .then(() => {
+          dispatch(REFRESH_STATE);
+          state.debug("Connections: ", state.connections);
+        })
+        .catch((err) => {
+          reject(err);
+        });
     },
     [CANCEL_REQUEST]: (
       { commit, dispatch, state },

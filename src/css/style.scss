@@ -8,6 +8,7 @@
   --charcoal-grey: #373c43;
   --coral: #e95e5e;
   --turquoise-green: #00e284;
+  --pale-blue: #dbedef;
 }
 .wallet-tooltip {
   &.v-tooltip__content {
@@ -57,6 +58,19 @@
 }
 .ml-2px {
   margin-left: 2px !important;
+}
+
+.pb-2px {
+  padding-bottom: 2px !important;
+}
+.pt-2px {
+  padding-top: 2px !important;
+}
+.pr-2px {
+  padding-right: 2px !important;
+}
+.pl-2px {
+  padding-left: 2px !important;
 }
 
 #addr {
@@ -353,6 +367,18 @@
     &:hover {
       color: var(--teal-blue);
     }
+  }
+
+  .SECUNDARY-LINKS {
+    font-family: Montserrat;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--charcoal-grey);
   }
   .FIELD-NOTES {
     font-family: Montserrat;

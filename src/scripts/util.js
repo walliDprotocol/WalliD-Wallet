@@ -93,7 +93,7 @@ const mixinPlugin = {
       return stackTrace;
     },
     getIDTName(idt) {
-      console.log(idt);
+      console.log("getIDTName", idt);
       return (idtsNames[idt] || idtsNames[SHUFTI])[this.$i18n.locale];
     },
     debug(a, ...args) {
