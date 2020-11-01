@@ -29,13 +29,11 @@
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <ListIDs />
+            <ListCrendentials />
           </v-tab-item>
 
           <v-tab-item value="tab-2">
-            <v-card color="basil" flat>
-              <v-card-text> </v-card-text>
-            </v-card>
+            <ListIDs />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -48,7 +46,7 @@ import * as bip39 from "bip39";
 import WalletState from "../components/WalletState";
 import WalletAddress from "../components/WalletAddress";
 import ListIDs from "../components/ListIDs";
-
+import ListCrendentials from "../components/ListCrendentials";
 import { mapGetters } from "vuex";
 
 export default {
@@ -56,6 +54,7 @@ export default {
     WalletState,
     WalletAddress,
     ListIDs,
+    ListCrendentials,
   },
   computed: {
     ...mapGetters(["address"]),

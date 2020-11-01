@@ -127,6 +127,7 @@ import {
   AUTHORIZE_REQUEST,
   ACCESS_LEVEL,
   CONNECT,
+  IMPORT,
 } from "../store/actions";
 import axios from "axios";
 import { mapGetters } from "vuex";
@@ -152,12 +153,12 @@ export default {
 
     this.type = this.request.type;
     this.debug("Request type: ", this.type);
+    this.websiteData = this.getWebsiteInfo(this.request.origin);
+
     switch (this.type) {
       case "wallid_token":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
         break;
       case "wallid_connect":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
         this.$store
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
@@ -169,6 +170,24 @@ export default {
             }
           });
         break;
+      case "wallid_import":
+        var params;
+        params = {
+          url: this.request.origin,
+          icon: this.request.origin + "/favicon.ico",
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, { params }).then(() => {
+                this.debug("Connected");
+              });
+            }
+          });
+        break;
       case "wallid_disconnect":
         console.error("Invalid Request Type");
         break;
@@ -177,7 +196,6 @@ export default {
         break;
       case "wallet_encrypt":
       case "wallet_decrypt":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
         var params;
         params = {
           url: this.request.origin,

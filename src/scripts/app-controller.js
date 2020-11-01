@@ -312,13 +312,13 @@ export default class AppController {
    * @param {string} data - encrypted identity data
    * @param {*} ow - overwrite flag
    */
-  importIdentity_v2(idt, data, ow = false) {
+  importIdentity_v2(idt, data, ow = false, expDate) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject("Plugin is locked");
     }
     const identities = this.#store.getState().identities;
-    return Promise.resolve(identities.addIdentity(idt, data, ow)).then(
+    return Promise.resolve(identities.addIdentity(idt, data, ow, expDate)).then(
       vault.putIdentities(
         identities.serialize(),
         this.#store.getState().password

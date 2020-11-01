@@ -1,5 +1,5 @@
 <template>
-  <v-container class="details-wallet">
+  <v-container class="card-view">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-3">
@@ -63,18 +63,9 @@ export default {
   margin-top: -35px;
 }
 
-.details-wallet {
-  .darker-background.row {
-    margin: 0;
-    border-radius: 3px;
-    background-color: var(--white);
-    .wallet-state {
-      background: #efefef;
+.card-view {
+    .back-btn.v-btn{
+        height: 26px !important;
     }
-    .wallet-address {
-      background-color: #ffffff;
-      padding: 10px;
-    }
-  }
 }
 </style>
