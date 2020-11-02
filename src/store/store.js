@@ -34,7 +34,7 @@ export default new Vuex.Store({
     initialized: API.getState().initialized,
     identities: API.getState().identities,
 
-    credentials:  [],
+    credentials: [],
     // [
     //   { id: 0, name: "CC_PT", data: "DATA", expDate: "16 09 2019" },
     //   { id: 1, name: "CC_PT", expDate: "16 09 2021" },
@@ -311,7 +311,7 @@ export default new Vuex.Store({
           state.debug("Connections: ", state.connections);
         })
         .catch((err) => {
-          reject(err);
+          throw err;
         });
     },
     [CANCEL_REQUEST]: (

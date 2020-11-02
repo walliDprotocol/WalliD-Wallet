@@ -28,9 +28,12 @@ export default {
       ],
     };
   },
+  created() {
+    //Add logger to store
+    this.$store.commit("appendLogger", this.debug);
+  },
   mounted() {
     this.debug("MOUNTED Notification", this.unlocked);
-    this.$store.commit("appendLogger", this.debug);
     this.$store.commit("appendgetDomain", this.getDomain);
 
     let browserLang = navigator.language.substring(0, 2);
@@ -49,7 +52,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 #app.plugin {
   &.notification {
     max-width: 400px;

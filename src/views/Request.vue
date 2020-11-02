@@ -209,7 +209,10 @@ export default {
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug("Connected");
+                this.authorizeRequest(0);
               });
+            } else {
+              this.authorizeRequest(0);
             }
           });
         break;
@@ -230,7 +233,7 @@ export default {
       return { name: name, icon: icon };
     },
 
-    authorizeRequest() {
+    authorizeRequest(time = 10) {
       this.disableButtonRequest = true;
       this.$store
         .dispatch(AUTHORIZE_REQUEST, {
@@ -244,7 +247,7 @@ export default {
           if (this.request.type == "wallid_connect") this.success = true;
           setTimeout(() => {
             this.$notification ? window.close() : this.$router.push("/home");
-          }, 10 * 100);
+          }, time * 100);
         });
     },
     cancel() {
