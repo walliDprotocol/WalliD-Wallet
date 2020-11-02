@@ -98,15 +98,6 @@
     <v-row v-else>
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">{{ $t("credentials.noCredentials") }}</p>
-        <a
-          class="links"
-          target="_blank"
-          color="#01a3b0"
-          href="https://www.dev.wallid.io/import"
-          @click.stop
-        >
-          {{ $t("cards.store") }}
-        </a>
       </v-col>
     </v-row>
   </v-container>

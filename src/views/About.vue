@@ -38,12 +38,20 @@
           {{ $t("about.links[1]") }}
         </router-link></v-col
       ><v-col cols="12" class="pt-1 pb-1">
-        <router-link to="/terms" class="links larger">
-          {{ $t("about.links[2]") }}</router-link
+        <a
+          href="https://www.wallid.io/terms"
+          target="_blank"
+          class="links larger"
+        >
+          {{ $t("about.links[2]") }}</a
         >
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
-        <a href="https://www.wallid.io/contact" target="_blank" class="links larger">
+        <a
+          href="https://www.wallid.io/contact"
+          target="_blank"
+          class="links larger"
+        >
           {{ $t("about.links[3]") }}
         </a>
       </v-col>

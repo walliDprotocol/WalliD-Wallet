@@ -1,7 +1,14 @@
 export const idtsNames = {
-  CC_PT: { pt: "", en: "Citizen’s Card - Portuguese Republic" },
+  CC_PT: {
+    pt: "Cartão de Cidadão - República Portuguesa",
+    en: "Citizen’s Card - Portuguese Republic",
+  },
   CMD_PT: { pt: "Chave Móvel Digital", en: "Chave Móvel Digital" },
-  SHUFTI_PT: { pt: "", en: "Citizen’s Card - Portuguese Republic" },
+  SHUFTI_CC_PT: {
+    pt: "Cartão de Cidadão - Rpública Portuguesa",
+    en: "Citizen’s Card - Portuguese Republic",
+  },
+  SHUFTI_CC_US: { pt: "Carta de Condução", en: "Driving License" },
   SHUFTI: { pt: "Cartão de Identidade", en: "Identity Card" },
 };
 
