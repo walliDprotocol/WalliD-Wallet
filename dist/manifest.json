@@ -5,7 +5,6 @@
   "permissions": [
     "storage",
     "declarativeContent",
-    "activeTab",
     "tabs",
     "background"
   ],
