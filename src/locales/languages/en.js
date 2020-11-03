@@ -177,7 +177,7 @@ export default {
     sites: "Connected sites",
     settings: "Settings",
     about: "About",
-    lock: "Lock",
+    lock: "Sign Out",
   },
   home: {
     title: "My WalliD",
@@ -238,7 +238,7 @@ export default {
   login: {
     title: "Welcome back!",
     password: ["Password", "Incorrect password"],
-    button: "Unlock wallet",
+    button: "Sign Out",
     restore: ["Restore wallet?", "Restore using wallet seed phrase"],
   },
   create: {

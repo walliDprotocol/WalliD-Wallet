@@ -99,7 +99,7 @@ export default {
     sites: "Sites conectados",
     settings: "Configurações",
     about: "Sobre",
-    lock: "Bloquear",
+    lock: "Sair",
   },
   home: {
     title: "A minha WalliD",
@@ -161,7 +161,7 @@ export default {
   login: {
     title: "Bem-vindo de volta!",
     password: ["Password", "Password incorrecta"],
-    button: "Desbloquear carteira",
+    button: "Entrar",
     restore: [
       "Recuperar carteira?",
       "Recuperar através da seed phrase da carteira",
