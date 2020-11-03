@@ -1,11 +1,10 @@
 {
 	"name": "WalliD Wallet",
-	"version": "1.0.0",
+	"version": "1.0.4",
 	"description": "WalliD Wallet Plugin",
 	"permissions": [
 		"storage",
 		"declarativeContent",
-		"activeTab",
 		"tabs",
 		"background"
 	],
