@@ -1,6 +1,6 @@
 <template>
   <v-container class="reveal">
-    <v-row v-if="!confirmDisconnect">
+    <v-row>
       <v-col cols="12" class="pt-1 pb-2">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/settings')" class="back-btn">
@@ -78,6 +78,9 @@
 <script>
 import ArrowBack from "../../images/icon-arrow-back.vue";
 import IconAlert from "../../images/icon-warning-red.vue";
+
+import { REVEAL_PRIV_KEY } from "../../store/actions";
+
 export default {
   components: {
     ArrowBack,
@@ -93,14 +96,27 @@ export default {
     },
     revealPrivKey() {
       this.debug("revealPrivKey");
-      this.showPrivKey = true;
+
+      this.$store
+        .dispatch(REVEAL_PRIV_KEY, this.password)
+        .then((result) => {
+          this.debug("Priv key", result);
+          this.passwordError = false;
+          this.privKey = result;
+          this.showPrivKey = true;
+        })
+        .catch((e) => {
+          console.error(e);
+          this.passwordError = true;
+        });
     },
   },
   data() {
     return {
       showPrivKey: false,
-      privKey:
-        "1237401a64cfb58ef23a3ea1a868a43f78700aa84ba64bca218840c65bf1c13b2",
+      privKey: "",
+      password: "",
+      passwordError: false,
     };
   },
 };

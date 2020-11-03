@@ -119,7 +119,7 @@ export default {
   about: {
     title: "About",
     design: "Crafted by WalliD",
-    version: "version 1.0",
+    version: "Version",
     links: ["Links", "FAQ’s", "Terms and conditions", "Contact us"],
   },
   privKey: {
@@ -177,11 +177,33 @@ export default {
     sites: "Connected sites",
     settings: "Settings",
     about: "About",
-    lock: "Lock",
+    lock: "Sign Out",
   },
   home: {
     title: "My WalliD",
     address: "Your wallet address",
+    tabs: ["Credentials", "ID documents"],
+  },
+  credentials: {
+    noCredentials:
+      "Seems like you don’t have any credentials stored in your wallet",
+    menu: ["View details", "Proof of credential"],
+  },
+  proof: {
+    title: "Proof of credential",
+    url: "URL",
+    hint: "URL from Linkedin or Zask",
+    urlError: "Invalid URL",
+    info:
+      "Ao gerar a prova desta credencial clicando no botão abaixo, irá ser utilizada a sua chave privada.",
+    link: "Link to share:",
+    button: "Generate proof of credential",
+  },
+  cards: {
+    validity: ["Expiration date:", "Valid", "Invalid", "Pending"],
+    noids: "Seems like you don’t have any ID documents stored in your wallet",
+    store: "Store your ID now",
+    tooltip: "Show ID data",
   },
   import: {
     title: "Import your wallet",
@@ -204,6 +226,7 @@ export default {
       "Show seed phrase",
       "Hide seed phrase",
       "Seed phrases contain 12 words",
+      "Incorrect seed phrase",
     ],
     password: [
       "New password",
@@ -215,12 +238,12 @@ export default {
   login: {
     title: "Welcome back!",
     password: ["Password", "Incorrect password"],
-    button: "Unlock wallet",
+    button: "Sign Out",
     restore: ["Restore wallet?", "Restore using wallet seed phrase"],
   },
   create: {
     title: "Welcome to WalliD",
-    text: "The digital wallet to manage all your Identity document",
+    text: "The digital wallet to manage all your Identity documents",
     button: "Create your wallet",
     import: ["Already have a wallet?", "Import now using your seed phrase"],
 

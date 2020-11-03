@@ -127,6 +127,7 @@ import {
   AUTHORIZE_REQUEST,
   ACCESS_LEVEL,
   CONNECT,
+  IMPORT,
 } from "../store/actions";
 import axios from "axios";
 import { mapGetters } from "vuex";
@@ -152,12 +153,12 @@ export default {
 
     this.type = this.request.type;
     this.debug("Request type: ", this.type);
+    this.websiteData = this.getWebsiteInfo(this.request.origin);
+
     switch (this.type) {
       case "wallid_token":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
         break;
       case "wallid_connect":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
         this.$store
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
@@ -169,15 +170,7 @@ export default {
             }
           });
         break;
-      case "wallid_disconnect":
-        console.error("Invalid Request Type");
-        break;
-      case "wallid_address":
-        console.error("Invalid Request Type");
-        break;
-      case "wallet_encrypt":
-      case "wallet_decrypt":
-        this.websiteData = this.getWebsiteInfo(this.request.origin);
+      case "wallid_import":
         var params;
         params = {
           url: this.request.origin,
@@ -192,6 +185,34 @@ export default {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug("Connected");
               });
+            }
+          });
+        break;
+      case "wallid_disconnect":
+        console.error("Invalid Request Type");
+        break;
+      case "wallid_address":
+        console.error("Invalid Request Type");
+        break;
+      case "wallet_encrypt":
+      case "wallet_decrypt":
+        var params;
+        params = {
+          url: this.request.origin,
+          icon: this.request.origin + "/favicon.ico",
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, { params }).then(() => {
+                this.debug("Connected");
+                this.authorizeRequest(0);
+              });
+            } else {
+              this.authorizeRequest(0);
             }
           });
         break;
@@ -212,7 +233,7 @@ export default {
       return { name: name, icon: icon };
     },
 
-    authorizeRequest() {
+    authorizeRequest(time = 10) {
       this.disableButtonRequest = true;
       this.$store
         .dispatch(AUTHORIZE_REQUEST, {
@@ -226,7 +247,7 @@ export default {
           if (this.request.type == "wallid_connect") this.success = true;
           setTimeout(() => {
             this.$notification ? window.close() : this.$router.push("/home");
-          }, 10 * 100);
+          }, time * 100);
         });
     },
     cancel() {

@@ -81,7 +81,11 @@ export default class AppController {
    */
   createNewVault(mnemonic, password) {
     const vault = this.#store.getState().vault;
-    return Promise.resolve(vault.createNewAndPersist(mnemonic, password));
+    return Promise.resolve(vault.createNewAndPersist(mnemonic, password))
+      .then(() => {
+        eventPipeIn("wallid_wallet_created");
+      })
+      .catch((err) => console.error(err));
   }
 
   /**
@@ -128,7 +132,10 @@ export default class AppController {
           password,
         })
       )
-      .then(() => eventPipeIn("wallid_event_unlock"));
+      .then(() => eventPipeIn("wallid_event_unlock"))
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   /**
@@ -162,16 +169,6 @@ export default class AppController {
   //
   // CONNECTIONS CONTROLLER INTERFACE
   //
-
-  currentTab(f) {
-    var query = { active: true, lastFocusedWindow: true };
-    function callback(tabs) {
-      var currentTab = tabs[0]; // there will be only one in this array
-      f(currentTab);
-    }
-    chrome.tabs.query(query, callback);
-  }
-
   /**
    * Approves a pending connection request.
    * Promise rejects if a connection with same @url already exists, or if vault is locked.
@@ -186,12 +183,14 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject("Plugin is locked");
     }
-    return Promise.resolve(connections.addConnected(url, icon, name)).then(
-      vault.putConnections(
-        connections.serialize(),
-        this.#store.getState().password
+    return Promise.resolve(connections.addConnected(url, icon, name))
+      .then(
+        vault.putConnections(
+          connections.serialize(),
+          this.#store.getState().password
+        )
       )
-    );
+      .then(() => eventPipeIn("wallid_wallet_connected"));
   }
 
   /**
@@ -214,6 +213,18 @@ export default class AppController {
         this.#store.getState().password
       )
     );
+  }
+  /**
+   *
+   * @param {function} f - callback function
+   */
+  currentTab(f) {
+    var query = { active: true, lastFocusedWindow: true };
+    function callback(tabs) {
+      var currentTab = tabs[0]; // there will be only one in this array
+      f(currentTab);
+    }
+    chrome.tabs.query(query, callback);
   }
 
   //
@@ -286,13 +297,14 @@ export default class AppController {
    *
    * @param {string} auth_token - WalliD authorization token
    */
-  extractIdentityData(auth_token) {
+  extractIdentityData_v1(auth_token) {
     return Promise.resolve(
       WalliD.extractIdentity(auth_token)
     ).then(({ ok, status, body }) =>
       ok && status != 202 ? Promise.resolve(body.data) : Promise.reject(status)
     );
   }
+
   /**
    * Imports a new identity of type @idt into WalliD Plugin.
    *
@@ -300,13 +312,13 @@ export default class AppController {
    * @param {string} data - encrypted identity data
    * @param {*} ow - overwrite flag
    */
-  importIdentity_v2(idt, data, ow = false) {
+  importIdentity_v2(idt, data, ow = false, expDate) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject("Plugin is locked");
     }
     const identities = this.#store.getState().identities;
-    return Promise.resolve(identities.addIdentity(idt, data, ow)).then(
+    return Promise.resolve(identities.addIdentity(idt, data, ow, expDate)).then(
       vault.putIdentities(
         identities.serialize(),
         this.#store.getState().password
@@ -380,12 +392,15 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     const connections = this.#store.getState().connections;
+    const identities = this.#store.getState().identities;
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
-      mnemonic: vault.isUnlocked() ? vault.getMnemonic() : null,
+      identities: vault.isUnlocked() ? identities.get() : null,
+      mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
+      key: vault.isUnlocked() ? () => vault.getWallet() : null,
     };
   }
 
@@ -410,7 +425,8 @@ export default class AppController {
       encryptData: this.encryptData.bind(this),
       decryptData: this.decryptData.bind(this),
       getAuthorizationToken: this.getAuthorizationToken.bind(this),
-      extractIdentityData: this.extractIdentityData.bind(this),
+      extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
+      importIdentity_v2: this.importIdentity_v2.bind(this),
       getNextRequest: this.getNextRequest.bind(this),
       accessControl: this.accessControl.bind(this),
       currentTab: this.currentTab.bind(this),
@@ -439,6 +455,7 @@ export default class AppController {
       (al) => level == al
     );
   }
+
   requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
@@ -456,7 +473,6 @@ export default class AppController {
           };
           this.updatePendingRequests(_request);
         });
-
         launchNotificationPopup().then((id) => this.updateActivePopups(id));
       } else {
         const vault = this.#store.getState().vault;

@@ -39,9 +39,9 @@ export default {
   },
   about: {
     title: "Sobre",
-    design: "",
-    version: "",
-    links: ["", "", "", ""],
+    design: "Desenvolvido por WalliD",
+    version: "Versão",
+    links: ["Links", "FAQ's", "Termos e condições", "Contactos"],
   },
   privKey: {
     title: "A sua chave privada",
@@ -99,11 +99,32 @@ export default {
     sites: "Sites conectados",
     settings: "Configurações",
     about: "Sobre",
-    lock: "Bloquear",
+    lock: "Sair",
   },
   home: {
     title: "A minha WalliD",
     address: "Endereço da sua carteira",
+    tabs: ["Credenciais", "Documentos ID"],
+  },
+  credentials: {
+    noCredentials:
+      "Seems like you don’t have any credentials stored in your wallet",
+    menu: ["View details", "Proof of credential"],
+  },
+  proof: {
+    title: "Proof of credential",
+    url: "URL",
+    urlError: "Invalid URL",
+    info:
+      "Ao gerar a prova desta credencial clicando no botão abaixo, irá ser utilizada a sua chave privada.",
+    link: "Link to share:",
+    button: "Generate proof of credential",
+  },
+  cards: {
+    validity: ["Data de validade:", "Válida", "Inválida", "Pendente"],
+    noids: "Seems like you don’t have any ID documents stored in your wallet",
+    store: "Store your ID now",
+    tooltip: "Show ID data",
   },
   import: {
     title: "Importar carteira",
@@ -128,6 +149,7 @@ export default {
       "Mostrar seed phrase",
       "Esconder seed phrase",
       "Seed phrases tem que ter 12 palavras",
+      "Seed phrase incorreta",
     ],
     password: [
       "Nova password",
@@ -139,7 +161,7 @@ export default {
   login: {
     title: "Bem-vindo de volta!",
     password: ["Password", "Password incorrecta"],
-    button: "Desbloquear carteira",
+    button: "Entrar",
     restore: [
       "Recuperar carteira?",
       "Recuperar através da seed phrase da carteira",

@@ -1,9 +1,11 @@
 import { toChecksumAddress } from "ethereumjs-util";
 import { mapGetters } from "vuex";
 import JazzIcon from "../components/JazzIcon";
+import { idtsNames } from "./const";
 
 /* eslint-disable */
 const INVALID = "Invalid mnemonic phrase";
+const SHUFTI = "SHUFTI";
 
 const mixinPlugin = {
   name: "mixinPlugin",
@@ -89,6 +91,10 @@ const mixinPlugin = {
         stackTrace = stackTrace.split(".")[1];
       }
       return stackTrace;
+    },
+    getIDTName(idt) {
+      console.log("getIDTName", idt);
+      return (idtsNames[idt] || idtsNames[SHUFTI])[this.$i18n.locale];
     },
     debug(a, ...args) {
       if (this) {

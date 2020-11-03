@@ -45,7 +45,8 @@ export function post(url, options) {
                 ok: response.ok,
                 status: response.status,
                 body: data
-            })))
+            }))
+        )
         .catch(err => Promise.reject(err))
 }
 

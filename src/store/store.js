@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import {
+  IMPORT,
   REFRESH_STATE,
   LOCK_WALLET,
   CANCEL_REQUEST,
@@ -14,6 +15,8 @@ import {
   ACCESS_LEVEL,
   GET_TOKEN,
   REVEAL_SEED_PHRASE,
+  REVEAL_PRIV_KEY,
+  UPDATE_CONNECTED,
   GENERATE_NEW_SEED_PHRASE,
 } from "./actions";
 
@@ -29,6 +32,15 @@ export default new Vuex.Store({
     connections: API.getState().connections,
     connected: false,
     initialized: API.getState().initialized,
+    identities: API.getState().identities,
+
+    credentials: [],
+    // [
+    //   { id: 0, name: "CC_PT", data: "DATA", expDate: "16 09 2019" },
+    //   { id: 1, name: "CC_PT", expDate: "16 09 2021" },
+    //   { id: 2, name: "SHUFTI_CC_US", expDate: "27 10 2020" },
+    //   { id: 3, name: "CMD_PT", pending: true },
+    // ],
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
@@ -41,11 +53,41 @@ export default new Vuex.Store({
     getRequest: (state) => state.request,
     unlocked: (state) => state.unlocked,
     state: (state) => state,
+    identities: (state) => state.identities,
+    credentials: (state) => state.credentials,
   },
   actions: {
-    currentSite: ({ commit, state }) => {
+    // []: ({ commit, state }) => {
+    //   return new Promise((resolve, reject) => {
+    //     API.currentTab(resolve);
+    //   }).then((site) => {
+    //     state.debug("Current site: ", site);
+    //     state.debug("Existing connections: ", state.connections);
+    //     if (state.connections) {
+    //       let connectedSite = state.connections.find((e) => {
+    //         return state.getDomain(e.url) == state.getDomain(site.url) ? e : "";
+    //       });
+    //       if (connectedSite) {
+    //         commit("updateConnected", connectedSite);
+    //       }
+    //     }
+    //   });
+    // },
+
+    [UPDATE_CONNECTED]: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
         API.currentTab(resolve);
+      }).then((site) => {
+        state.debug("Current site: ", site);
+        state.debug("Existing connections: ", state.connections);
+        if (state.connections) {
+          let connectedSite = state.connections.find((e) => {
+            return state.getDomain(e.url) == state.getDomain(site.url) ? e : "";
+          });
+          if (connectedSite) {
+            commit("updateConnected", connectedSite);
+          }
+        }
       });
     },
 
@@ -101,7 +143,7 @@ export default new Vuex.Store({
         API.verifyPassword(password)
           .then((result) => {
             if (result) {
-              resolve(API.getState().mnemonic);
+              resolve(API.getState().mnemonic());
             } else {
               reject("Wrong Password");
             }
@@ -111,12 +153,32 @@ export default new Vuex.Store({
           });
       });
     },
-    [REFRESH_STATE]: ({ commit }) => {
+
+    [REVEAL_PRIV_KEY]: ({ commit, dispatch }, password) => {
+      console.log("Action REVEAL_PRIV_KEY");
+      return new Promise((resolve, reject) => {
+        API.verifyPassword(password)
+          .then((result) => {
+            if (result) {
+              resolve(API.getState().key());
+            } else {
+              reject("Wrong Password");
+            }
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    },
+    [REFRESH_STATE]: ({ commit, dispatch }) => {
       console.log("Action REFRESH_STATE");
       commit("updateAddress", API.getState().address);
       commit("updateUnlocked", API.getState().unlocked);
       commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
+      commit("updateIdentities", API.getState().identities);
+      dispatch(UPDATE_CONNECTED);
+      // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
     [CONNECT]: ({ commit, state }, { origin, name }) => {
@@ -141,6 +203,24 @@ export default new Vuex.Store({
         console.log("Action ENCRYPT");
         state.debug("Data: ", data);
         API.encryptData(data)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [IMPORT]: ({ commit, state }, { idt, data, ow = true, expDate }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action IMPORT");
+        state.debug("idt: ", idt);
+        state.debug("Data: ", data);
+        state.debug("ow: ", ow);
+
+        API.importIdentity_v2(idt, data, ow, expDate)
           .then((res) => {
             resolve(res);
           })
@@ -208,13 +288,31 @@ export default new Vuex.Store({
             });
             break;
 
+          case "wallid_import":
+            dispatch(IMPORT, {
+              idt: data.idt,
+              data: data.data,
+              expDate: data.expDate,
+            })
+              .then((res) => {
+                console.log("res import:", res);
+                resolve(callback(null, true));
+              })
+              .catch(() => resolve(callback("REJECTED")));
+
+            break;
+
           default:
             break;
         }
-
-        dispatch(REFRESH_STATE);
-        state.debug("Connections: ", state.connections);
-      });
+      })
+        .then(() => {
+          dispatch(REFRESH_STATE);
+          state.debug("Connections: ", state.connections);
+        })
+        .catch((err) => {
+          throw err;
+        });
     },
     [CANCEL_REQUEST]: (
       { commit, dispatch, state },
@@ -252,11 +350,17 @@ export default new Vuex.Store({
     [UNLOCK_WALLET]: ({ commit, dispatch }, password) => {
       return new Promise((resolve, reject) => {
         console.log("Action UNLOCK_WALLET");
-        API.unlockApp(password)
-          .then(() => resolve(dispatch(REFRESH_STATE)))
-          .catch((e) => {
-            reject(e);
-          });
+        API.verifyPassword(password).then((res) => {
+          if (res) {
+            API.unlockApp(password)
+              .then(() => resolve(dispatch(REFRESH_STATE)))
+              .catch((e) => {
+                reject(e);
+              });
+          } else {
+            reject("Wrong password");
+          }
+        });
       });
     },
     [LOCK_WALLET]: ({ commit, dispatch }) => {
@@ -265,6 +369,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    updateIdentities(state, value) {
+      state.identities = value;
+    },
     updateOnboarding(state, value) {
       state.completedOnboarding = value;
     },
@@ -289,6 +396,9 @@ export default new Vuex.Store({
     },
     appendLogger(state, logger) {
       state.debug = logger;
+    },
+    appendgetDomain(state, getDomain) {
+      state.getDomain = getDomain;
     },
   },
 });

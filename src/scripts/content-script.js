@@ -2,9 +2,6 @@ import { ExternalConnectorBackend } from './lib/web-connector'
 import { eventPipeOut } from './lib/event-pipe'
 
 function injectScript(file) {
-  // var script = document.createElement("script");
-  // script.src = file;
-  // (document.head || document.documentElement).appendChild(script);
   var scriptTag = document.createElement("script");
   scriptTag.src = file;
   scriptTag.onload = function() {

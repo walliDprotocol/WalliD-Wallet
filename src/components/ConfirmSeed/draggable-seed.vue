@@ -1,15 +1,11 @@
 <template>
   <div
-    :key="index"
     class="confirm-seed-phrase__seed-word"
     :class="[
       className,
       {
         'confirm-seed-phrase__seed-word--selected btn-primary': selected,
-        'confirm-seed-phrase__seed-word--dragging': isDragging,
         'confirm-seed-phrase__seed-word--empty': !word,
-        'confirm-seed-phrase__seed-word--active-drop': !isOver && canDrop,
-        'confirm-seed-phrase__seed-word--drop-hover': isOver && canDrop,
       },
     ]"
     @click="toggleSelected(index)"
@@ -22,31 +18,12 @@
 export default {
   props: ["index", "word", "selected", "className"],
   methods: {
-    drop(props) {
-      return {
-        targetIndex: props.index,
-      };
-    },
-    canDrop(props) {
-      return props.droppable;
-    },
-    hover(props) {
-      props.setHoveringIndex(props.index);
-    },
     toggleSelected() {
       this.$emit("toggleSelected");
     },
   },
   data() {
-    return {
-      //   connectDragSource: PropTypes.func.isRequired,
-      //   connectDropTarget: PropTypes.func.isRequired,
-      isDragging: "",
-      isOver: "",
-      // Own Props
-      onClick: "",
-      setHoveringIndex: "",
-    };
+    return {};
   },
 };
 </script>
@@ -88,7 +65,7 @@ export default {
     text-align: center;
     border-radius: 3px;
     margin: 3px;
-
+    background: white;
     &--sorted {
       cursor: pointer;
     }
@@ -137,7 +114,7 @@ export default {
     height: 143px;
     border-radius: 3px;
     border: solid 1px #b8b9bb;
-    padding: 3px 7px;
+    padding: 4px 10px;
     margin-bottom: 6px;
     //Enable when draggin is implemented
     // .confirm-seed-phrase__selected-seed-word {

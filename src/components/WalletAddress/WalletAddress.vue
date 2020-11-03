@@ -99,7 +99,7 @@ export default {
 .wallet-address {
   border-radius: 3px;
   background-color: var(--white);
-  padding: 13px;
+  padding: 9px;
   padding-bottom: 11px;
   width: fit-content;
   margin: auto;
