@@ -41,14 +41,14 @@ extension.runtime.onMessage.addListener(function(
   return true;
 });
 
-// extension.runtime.onInstalled.addListener(function(object) {
-//   chrome.tabs.create({ url: `https://www.dev.wallid.io/import` }, function(
-//     tab
-//   ) {
-//     console.log("options page opened");
-//     //https://www.dev.wallid.io/import http://localhost:8080/import
-//   });
-// });
+extension.runtime.onInstalled.addListener(function(object) {
+  chrome.tabs.create({ url: `https://www.dev.wallid.io/import` }, function(
+    tab
+  ) {
+    console.log("options page opened");
+    //https://www.dev.wallid.io/import http://localhost:8080/import
+  });
+});
 
 // Locks App when user closes the browser window
 extension.windows.onRemoved.addListener((id) => {
