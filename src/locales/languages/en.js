@@ -238,7 +238,7 @@ export default {
   login: {
     title: "Welcome back!",
     password: ["Password", "Incorrect password"],
-    button: "Sign Out",
+    button: "Sign In",
     restore: ["Restore wallet?", "Restore using wallet seed phrase"],
   },
   create: {

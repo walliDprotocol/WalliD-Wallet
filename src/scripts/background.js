@@ -3,10 +3,12 @@ import AppController from "./app-controller";
 import { setPort } from "./lib/event-pipe";
 
 var msgPort;
+var forwarderURL = "https://www.dev.wallid.io/import";
+
 function connected(prt) {
   msgPort = prt;
   setPort(msgPort);
-  msgPort.postMessage({ txt: "message channel established" });
+  msgPort.postMessage({ type: "plugin:installed" });
   msgPort.onMessage.addListener(gotMessage);
 }
 
@@ -14,9 +16,26 @@ function connected(prt) {
 function gotMessage(msg) {
   // store the message
   console.log(msg);
+
+  if (msg.type == "website:url") {
+    forwarderURL = msg.url;
+    chrome.tabs.create({ url: forwarderURL }, function(tab) {
+      console.log("options page opened");
+      //     //https://www.dev.wallid.io/import http://localhost:8080/import
+    });
+  }
 }
 
 extension.runtime.onConnect.addListener(connected);
+
+// extension.runtime.onConnect.addListener(function() {
+//   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
+//     console.log("tab", tab);
+//     chrome.tabs.executeScript(tab.ib, {
+//       file: chrome.extension.getURL('injector.bundle.js'),
+//     });
+//   });
+// });
 
 // Initialize main application controller
 const App = new AppController();
@@ -39,15 +58,6 @@ extension.runtime.onMessage.addListener(function(
     );
 
   return true;
-});
-
-extension.runtime.onInstalled.addListener(function(object) {
-  chrome.tabs.create({ url: `https://www.dev.wallid.io/import` }, function(
-    tab
-  ) {
-    console.log("options page opened");
-    //https://www.dev.wallid.io/import http://localhost:8080/import
-  });
 });
 
 // Locks App when user closes the browser window

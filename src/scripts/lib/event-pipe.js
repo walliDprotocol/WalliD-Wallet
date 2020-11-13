@@ -22,7 +22,20 @@ export function eventPipeOut() {
 
   // fires when background script sends a message
   msgPort.onMessage.addListener(function(msg) {
-    console.log(msg);
+    console.log("msg from frontend", msg);
+
+    console.log(sessionStorage.getItem("REGISTRATION_IN_PROGRESS"));
+    console.log(sessionStorage.getItem("REGISTRATION_IN_PROGRESS") == "true");
+    if (
+      msg.type == "plugin:installed" &&
+      sessionStorage.getItem("REGISTRATION_IN_PROGRESS") == "true"
+    ) {
+      sessionStorage.setItem("REGISTRATION_IN_PROGRESS", "false");
+      msgPort.postMessage({ url: window.location.origin, type: "website:url" });
+    } else if (msg.type == "plugin:installed") {
+      console.log('send envent installed');
+      document.dispatchEvent(new CustomEvent(msg.type));
+    }
     document.dispatchEvent(new CustomEvent(msg.event, { detail: msg.data }));
   });
 }
