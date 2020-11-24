@@ -38,6 +38,11 @@ const RequestAPIMethods = {
         popup: true,
         level: 1
     },
+    'wallet_sign_erc191': {
+        popup: false,
+        level: 1,
+        executor: ['wallet', 'signERC191Message']
+    }
 }
 
 export function getRequestDetails(method) {

@@ -3,6 +3,7 @@ import * as ethUtil from "ethereumjs-util";
 import * as ethSigUtil from "eth-sig-util";
 import { hdkey } from "ethereumjs-wallet";
 import * as bip39 from "bip39";
+import { getdCANonce, abiEncode } from "../lib/eth-utils";
 
 /**
  *  WalletController
@@ -69,6 +70,18 @@ export default class WalletController {
 			sig: signature,
 		});
 		return Promise.resolve(recovered == this.getAddress());
+	}
+
+	signERC191Message = function(target, data) {
+		return Promise.resolve(getdCANonce(target))
+			.then(nonce => abiEncode(
+				['bytes1', 'bytes1', 'address', 'bytes32', 'uint256'],
+				['0x19', '0x00', target, data, nonce]
+			))
+			.then(encoded => ethUtil.keccak(Buffer.from(encoded.slice(2), 'hex')))
+			.then(hash => ethUtil.stripHexPrefix(Buffer.from(hash)))
+			.then(message => ethUtil.ecsign(Buffer.from(message), this.#wallet.getPrivateKey()))
+			.then(({ v, r, s}) => Promise.resolve([data, v, '0x' + r.toString('hex'), '0x' + s.toString('hex')]))
 	}
 
 	signMessage() {
