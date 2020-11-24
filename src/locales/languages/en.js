@@ -186,17 +186,25 @@ export default {
   },
   credentials: {
     noCredentials:
-      "Seems like you don’t have any credentials stored in your wallet",
-    menu: ["View details", "Proof of credential"],
+      "Seems like you don’t have any credentials stored in your wallet yet.",
+    store: "Start packing them now",
+    menu: ["View details", "Share credential"],
+    status: {
+      active: "Approved",
+      revoke: "Revoked",
+      pending: "Pending",
+    },
   },
   proof: {
-    title: "Proof of credential",
+    title: "Share credential",
+    text:
+      "In order to share your credential in a verifiable way you’ll need to associate it with an account you own on a social media platform. Paste the URL of your profile page on the box below and generate a verfiable link for your credential that can be accessed from there.",
     url: "URL",
     hint: "URL from Linkedin or Zask",
-    urlError: "Invalid URL",
-    info:
-      "Ao gerar a prova desta credencial clicando no botão abaixo, irá ser utilizada a sua chave privada.",
-    link: "Link to share:",
+    urlError: "This is not a valid profile page URL",
+    text1:
+      "Below is the verifiable link for your credential and it was successfully associated to your social network account. Copy and paste it anywhere online and share it with world or only with someone you trust. Whoever accesses the link below will be able to see your credential and your public profile information.",
+    link: "Verifiable credential link:",
     button: "Generate proof of credential",
   },
   cards: {

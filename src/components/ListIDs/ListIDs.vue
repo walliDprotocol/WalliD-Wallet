@@ -16,11 +16,7 @@
               </p>
               <v-container class="py-1">
                 <v-row>
-                  <v-col
-                    cols="3"
-                    class="px-1 py-2"
-                    style="max-width:unset;"
-                  >
+                  <v-col cols="3" class="px-1 py-2" style="max-width:unset;">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"

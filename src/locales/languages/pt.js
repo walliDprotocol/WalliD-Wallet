@@ -110,6 +110,11 @@ export default {
     noCredentials:
       "Seems like you don’t have any credentials stored in your wallet",
     menu: ["View details", "Proof of credential"],
+    status: {
+      active: "Approved",
+      revoke: "Revoked",
+      pending: "Pending",
+    },
   },
   proof: {
     title: "Proof of credential",

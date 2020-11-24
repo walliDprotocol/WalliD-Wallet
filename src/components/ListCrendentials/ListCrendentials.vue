@@ -20,21 +20,21 @@
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
-                      v-if="isValid(card.expDate)"
+                      v-if="card.status == 'active'"
                     >
                       <valid />
                       <p class="FIELD-TEXT">
-                        {{ $t("cards.validity[1]") }}
+                        {{ $t("credentials.status." + card.status) }}
                       </p>
                     </div>
                     <div
-                      v-else-if="card.pending"
+                      v-else-if="card.status == 'pending'"
                       class="validity pending"
                       style="background-color: #feefdd;"
                     >
                       <pending />
                       <p class="FIELD-TEXT">
-                        {{ $t("cards.validity[3]") }}
+                        {{ $t("credentials.status." + card.status) }}
                       </p>
                     </div>
                     <div
@@ -44,17 +44,16 @@
                     >
                       <invalid />
                       <p class="FIELD-TEXT">
-                        {{ $t("cards.validity[2]") }}
+                        {{ $t("credentials.status." + card.status) }}
                       </p>
                     </div>
                   </v-col>
                   <v-col
-                    v-if="!card.pending"
-                    cols="8"
-                    class="pl-3 py-0 pr-0 mt-n3"
+                    v-if="card.status != 'pending'"
+                    cols="7"
+                    class="pl-3 pr-0 mt-n3"
                   >
                     <p class="FIELD-TEXT">
-                      {{ $t("cards.validity[0]") }}
                       {{ card.expDate }}
                     </p>
                   </v-col>
@@ -81,7 +80,10 @@
                       $t("credentials.menu[0]")
                     }}</v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item
+                    v-if="card.status != 'revoke'"
+                    :class="card.status == 'pending' ? 'disabled' : ''"
+                  >
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="proofPage(card)"
@@ -97,7 +99,18 @@
     </v-row>
     <v-row v-else>
       <v-col cols="12" class="px-15 py-9">
-        <p class="SECUNDARY-LINKS mb-5">{{ $t("credentials.noCredentials") }}</p>
+        <p class="SECUNDARY-LINKS mb-5">
+          {{ $t("credentials.noCredentials") }}
+        </p>
+        <a
+          class="links"
+          target="_blank"
+          color="#01a3b0"
+          href="https://www.dev.wallid.io/import"
+          @click.stop
+        >
+          {{ $t("credentials.store") }}
+        </a>
       </v-col>
     </v-row>
   </v-container>
@@ -164,9 +177,16 @@ export default {
   .v-list {
     padding: 0;
   }
+
   .v-list-item {
     min-height: unset;
     padding: 10px 20px;
+    &.disabled {
+      pointer-events: none;
+      .v-list-item__title {
+        color: #b8b9bb !important;
+      }
+    }
     cursor: pointer;
     .SECUNDARY-LINKS:hover {
       color: #009fb1 !important;

@@ -2,7 +2,7 @@
   <v-container class="proof-view">
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow mb-6">
+        <div class="back-arrow mb-4">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
@@ -12,9 +12,14 @@
         </div>
       </v-col>
     </v-row>
-    <v-row v-if="!linkProof" class="mt-10">
+    <v-row v-if="!linkProof" class="">
       <v-form @submit.prevent="generateProof" ref="form">
-        <v-col cols="12" class="pt-0 pb-8  text-left">
+        <v-col cols="12" class="pt-1">
+          <h3 class="sub-title-fields text-left">
+            {{ $t("proof.text") }}
+          </h3>
+        </v-col>
+        <v-col cols="12" class="pt-0  text-left">
           <label class="sub-title-fields ">{{ $t("proof.url") }}</label>
           <v-text-field
             v-model="url"
@@ -30,7 +35,7 @@
             {{ $t("proof.urlError") }}
           </p> -->
         </v-col>
-        <v-col cols="12" class="pt-8 pb-5">
+        <v-col v-if="false" cols="12" class="pt-8 pb-5">
           <div class="info">
             <icon-alert />
             <p class="alerts-font">{{ $t("proof.info") }}</p>
@@ -48,17 +53,45 @@
         </v-col>
       </v-form>
     </v-row>
-    <v-row v-else class="mt-10">
+    <v-row v-else class="">
+      <v-col cols="12" class="pt-1">
+        <h3 class="sub-title-fields text-left">
+          {{ $t("proof.text1") }}
+        </h3>
+      </v-col>
       <v-col cols="12 text-left">
         <label class="sub-title-fields ">{{ $t("proof.link") }}</label>
-        <v-text-field
-          v-model="linkProof"
-          class="password-input mt-1"
-          aria-readonly="true"
-          flat
-          solo
-          type="url"
-        ></v-text-field>
+        <v-tooltip content-class="wallet-tooltip" bottom>
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-on="on"
+              id="walletCopy"
+              v-model="linkProof"
+              class="password-input mt-1"
+              aria-readonly="true"
+              flat
+              @mouseover="copy = true"
+              @mouseleave="delay()"
+              @click="copyToClip"
+              solo
+              type="url"
+            >
+              <template slot="append">
+                <Copy v-if="!copy"></Copy>
+                <CopyHover v-else> </CopyHover>
+              </template>
+            </v-text-field>
+          </template>
+          <div class="arrow-seed-tooltip"></div>
+          <div class="metamask-login">
+            <p v-if="show">
+              {{ copyAfter[$i18n.locale] }}
+            </p>
+            <p v-else>
+              {{ copyBefore[$i18n.locale] }}
+            </p>
+          </div>
+        </v-tooltip>
       </v-col>
     </v-row>
   </v-container>
@@ -67,13 +100,16 @@
 <script>
 import ArrowBack from "../images/icon-arrow-back.vue";
 import IconAlert from "../images/icon-warning-red.vue";
-
+import CopyHover from "../images/icon-copyclipboard-selected";
+import Copy from "../images/icon-copyclipboard-unselected";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     IconAlert,
     ArrowBack,
+    Copy,
+    CopyHover,
   },
   created() {
     console.log("card", this.$route.params.card);
@@ -88,6 +124,22 @@ export default {
     },
   },
   methods: {
+    copyToClip() {
+      const el = document.createElement("textarea");
+      el.value = this.linkProof;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      this.show = true;
+    },
+    delay() {
+      console.log("hover");
+      setTimeout(() => {
+        this.show = false;
+        this.copy = false;
+      }, 300);
+    },
     checkURL() {
       this.urlError = "";
 
@@ -106,7 +158,7 @@ export default {
     },
     generateProof() {
       this.debug("generateProof");
-      this.linkProof = "linkProf.com";
+      this.linkProof = "linkProof.com";
     },
   },
   data() {
@@ -115,6 +167,16 @@ export default {
       card: null,
       urlError: "",
       linkProof: "",
+      copy: false,
+      show: false,
+      copyBefore: {
+        en: "Copy to clipboard",
+        pt: "Copiar",
+      },
+      copyAfter: {
+        en: "Copied!",
+        pt: "Copiado!",
+      },
     };
   },
 };
@@ -122,6 +184,9 @@ export default {
 
 <style lang="scss">
 .proof-view {
+  #walletCopy {
+    cursor: pointer;
+  }
   .password-input .v-input__slot input {
     font-size: 13px !important;
   }

@@ -34,13 +34,18 @@ export default new Vuex.Store({
     initialized: API.getState().initialized,
     identities: API.getState().identities,
 
-    credentials: [],
-    // [
-    //   { id: 0, name: "CC_PT", data: "DATA", expDate: "16 09 2019" },
-    //   { id: 1, name: "CC_PT", expDate: "16 09 2021" },
-    //   { id: 2, name: "SHUFTI_CC_US", expDate: "27 10 2020" },
-    //   { id: 3, name: "CMD_PT", pending: true },
-    // ],
+    credentials: [
+      {
+        id: 0,
+        name: "CC_PT",
+        data: "DATA",
+        expDate: "16 09 2019",
+        status: "pending",
+      },
+      { id: 1, name: "CC_PT", expDate: "16 09 2021", status: "pending" },
+      { id: 2, name: "SHUFTI_CC_US", expDate: "27 10 2020", status: "revoke" },
+      { id: 3, name: "CMD_PT", status: "active" },
+    ],
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,

@@ -1,6 +1,6 @@
 <template>
   <v-container class="home">
-    <v-row class="pt-0 mt-16">
+    <v-row class="pt-0 mt-0">
       <v-col cols="12" class="pt-0 pb-0">
         <jazz-icon :address="address" :id="'home'" :size="58" :margin="4" />
       </v-col>
@@ -17,7 +17,7 @@
 
         <WalletAddress :address="address" />
       </v-col>
-      <v-col v-if="false" class="tabs pa-0 pt-1" cols="12">
+      <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
           <v-tab href="#tab-1" class="MENU-SELECTED">{{
             $t("home.tabs[0]")
