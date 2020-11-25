@@ -49,6 +49,10 @@ const RequestAPIMethods = {
     'wallet_sign': {
         popup: true,
         level: 1
+    },
+    'wallet_ec_sign': {
+        popup: true,
+        level: 1
     }
 }
 
