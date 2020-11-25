@@ -13,6 +13,11 @@ export const ENCRYPT = "ENCRYPT";
 export const DECRYPT = "DECRYPT";
 export const IMPORT = "IMPORT";
 export const GET_TOKEN = "GET_TOKEN";
+export const SIGN_ERC = "SIGN_ERC";
+export const SIGN = "SIGN";
+
+export const IMPORT_CRED = "IMPORT_CRED";
+
 export const ACCESS_LEVEL = "ACCESS_LEVEL";
 
 export const UPDATE_CONNECTED = "UPDATE_CONNECTED";

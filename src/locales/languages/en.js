@@ -113,6 +113,18 @@ export default {
         " is requesting your authorisation to associate your wallet to this identity document:",
       button: "Authorise",
     },
+    wallid_import_cred: {
+      title: "Import request",
+      description:
+        " is requesting your authorisation to store your Certificate in your wallet",
+      button: "Authorise",
+    },
+    wallet_sign: {
+      title: "Sign Request",
+      description:
+        " is requesting your authorisation to sign the Certificate data with you private key",
+      button: "Sign",
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: "Cancel",
   },
@@ -120,7 +132,13 @@ export default {
     title: "About",
     design: "Crafted by WalliD",
     version: "Version",
-    links: ["Links", "FAQ’s", "Terms and conditions", "Contact us"],
+    links: [
+      "Links",
+      "FAQ’s",
+      "Terms and conditions",
+      "Privacy Policy",
+      "Contact us",
+    ],
   },
   privKey: {
     title: "Show Private Key",
@@ -193,6 +211,7 @@ export default {
       active: "Approved",
       revoke: "Revoked",
       pending: "Pending",
+      waiting_wallet: "Waiting wallet",
     },
   },
   proof: {

@@ -12,11 +12,14 @@
             <v-col cols="2" class="pr-2"> <IconCredential /></v-col>
             <v-col cols="9" class="pl-2">
               <p class="sub-title-fields">
-                {{ getIDTName(card.name) }}
+                {{ card.credName }}
+              </p>
+              <p class="sub-title-fields" style="font-weight:500">
+                {{ card.caName }}
               </p>
               <v-container class="px-0">
                 <v-row>
-                  <v-col cols="3" class="px-1 pt-0" style="max-width:unset;">
+                  <v-col cols="4" class="px-1 pt-0" style="max-width:unset;">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
@@ -76,9 +79,11 @@
 
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title class="SECUNDARY-LINKS text-left">{{
-                      $t("credentials.menu[0]")
-                    }}</v-list-item-title>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="viewCred(card)"
+                      >{{ $t("credentials.menu[0]") }}</v-list-item-title
+                    >
                   </v-list-item>
                   <v-list-item
                     v-if="card.status != 'revoke'"
@@ -145,9 +150,19 @@ export default {
     ...mapGetters(["credentials"]),
   },
   methods: {
-    proofPage(card) {
-      console.log(card);
+    viewCred(card) {
+      console.log("List", card);
 
+      let arr = [];
+      for (var a in card.userData.userData) {
+        var val = card.userData.userData[a];
+        arr.push({ attr: a, value: val });
+      }
+      card.userData = arr;
+      console.log("List", card);
+      this.$router.push({ name: "Credential", params: { card } });
+    },
+    proofPage(card) {
       this.$router.push({ name: "Proof", params: { card } });
     },
     isValid(_expDate) {
@@ -212,7 +227,7 @@ export default {
   }
 
   .card {
-    height: 82px;
+    height: 104px;
     background-color: var(--white);
     .sub-title-fields {
       font-size: 14px !important;

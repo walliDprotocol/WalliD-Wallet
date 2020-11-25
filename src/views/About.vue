@@ -36,8 +36,9 @@
       <v-col cols="12" class="pt-1 pb-1">
         <router-link to="/faqs" class="links larger">
           {{ $t("about.links[1]") }}
-        </router-link></v-col
-      ><v-col cols="12" class="pt-1 pb-1">
+        </router-link>
+      </v-col>
+      <v-col cols="12" class="pt-1 pb-1">
         <a
           href="https://www.wallid.io/terms"
           target="_blank"
@@ -48,11 +49,20 @@
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
         <a
+          href="https://www.wallid.io/privacy"
+          target="_blank"
+          class="links larger"
+        >
+          {{ $t("about.links[3]") }}</a
+        >
+      </v-col>
+      <v-col cols="12" class="pt-1 pb-1">
+        <a
           href="https://www.wallid.io/contact"
           target="_blank"
           class="links larger"
         >
-          {{ $t("about.links[3]") }}
+          {{ $t("about.links[4]") }}
         </a>
       </v-col>
     </v-row>
