@@ -84,12 +84,10 @@ export default class WalletController {
 			.then(({ v, r, s}) => Promise.resolve([data, v, '0x' + r.toString('hex'), '0x' + s.toString('hex')]))
 	}
 
-	signMessage() {
-		const message = ethUtil.stripHexPrefix(Buffer.from(data));
-		const privateKey = this.#wallet.getPrivateKey();
-		const msgSig = ethUtil.ecsign(Buffer.from(message, "hex"), privateKey);
-		const rawMsgSig = ethSigUtil.concatSig(msgSig.v, msgSig.r, msgSig.s);
-		return Promise.resolve(rawMsgSig);
+	signECMessage(_message) {
+		return Promise.resolve(ethUtil.stripHexPrefix(Buffer.from(_message, 'hex')))
+			.then(data => ethUtil.ecsign(data, this.#wallet.getPrivateKey()))
+			.then(({ v, r, s }) => ethSigUtil.concatSig(v, r, s))
 	}
 
 	encryptData(data) {

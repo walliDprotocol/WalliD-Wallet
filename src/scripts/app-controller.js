@@ -266,14 +266,14 @@ export default class AppController {
   }
 
   /**
-   * Create an ERC191 signature @target @data using wallet.
-   * Resolve if plugin is locked.
+   * Generates an ERC191 signature using local wallet.
+   * Reject if plugin is locked.
    *
    * @param {*} data - JSON serializable object to be encrypted
    *
    * @returns {Promise<Object>} cipher - Ciphered data
    */
-  createERC191Signature(target, data) {
+  generateERC191Signature(target, data) {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
@@ -282,6 +282,22 @@ export default class AppController {
     return wallet.signERC191Message(target, data);
   }
 
+  /**
+   * Generates an eliptic curve signature using wallet.
+   * Resolve if plugin is locked.
+   *
+   * @param {string} data - 32 byte hexadecimal string without '0x' prefix
+   *
+   * @returns {Promise<Object>} signature - signed data
+   */
+  generateECSignature(data) {
+    const vault = this.#store.getState().vault;
+    const wallet = this.#store.getState().wallet;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    return wallet.signECMessage(data);
+  }
   //
   // WALLID RELATED METHODS
   //
