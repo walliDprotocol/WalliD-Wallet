@@ -129,7 +129,6 @@ import {
   CONNECT,
   IMPORT,
 } from "../store/actions";
-import axios from "axios";
 import { mapGetters } from "vuex";
 
 export default {
@@ -156,6 +155,8 @@ export default {
     this.websiteData = this.getWebsiteInfo(this.request.origin);
 
     switch (this.type) {
+      case "wallet_sign":
+      case "wallet_sign_erc191":
       case "wallid_token":
         break;
       case "wallid_connect":
@@ -245,9 +246,9 @@ export default {
         })
         .then(() => {
           if (this.request.type == "wallid_connect") this.success = true;
-          setTimeout(() => {
-            this.$notification ? window.close() : this.$router.push("/home");
-          }, time * 100);
+          // setTimeout(() => {
+          //   this.$notification ? window.close() : this.$router.push("/home");
+          // }, time * 100);
         });
     },
     cancel() {

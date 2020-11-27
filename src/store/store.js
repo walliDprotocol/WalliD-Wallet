@@ -18,6 +18,9 @@ import {
   REVEAL_PRIV_KEY,
   UPDATE_CONNECTED,
   GENERATE_NEW_SEED_PHRASE,
+  SIGN_ERC,
+  SIGN,
+  IMPORT_CRED,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -33,19 +36,7 @@ export default new Vuex.Store({
     connected: false,
     initialized: API.getState().initialized,
     identities: API.getState().identities,
-
-    credentials: [
-      {
-        id: 0,
-        name: "CC_PT",
-        data: "DATA",
-        expDate: "16 09 2019",
-        status: "pending",
-      },
-      { id: 1, name: "CC_PT", expDate: "16 09 2021", status: "pending" },
-      { id: 2, name: "SHUFTI_CC_US", expDate: "27 10 2020", status: "revoke" },
-      { id: 3, name: "CMD_PT", status: "active" },
-    ],
+    credentials: API.getState().credentials,
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
@@ -182,6 +173,8 @@ export default new Vuex.Store({
       commit("updateConnections", API.getState().connections);
       commit("updateOnboarding", API.getState().initialized);
       commit("updateIdentities", API.getState().identities);
+      commit("updateCredentials", API.getState().credentials);
+
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
     },
@@ -217,7 +210,30 @@ export default new Vuex.Store({
           });
       });
     },
-
+    [IMPORT_CRED]: ({ commit, state }, data) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action IMPORT_CRED");
+        state.debug("Data: ", data);
+        let ow = true;
+        API.importCredential(
+          data.id,
+          data.credName,
+          data.caName,
+          data.userData,
+          data.status,
+          ow,
+          data.expDate
+        )
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
     [IMPORT]: ({ commit, state }, { idt, data, ow = true, expDate }) => {
       return new Promise((resolve, reject) => {
         console.log("Action IMPORT");
@@ -251,6 +267,38 @@ export default new Vuex.Store({
       });
     },
 
+    [SIGN_ERC]: ({ state, commit, dispatch }, { data }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action SIGN_ERC");
+        state.debug("Data: ", data);
+        API.createERC191Signature(state.address, data)
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [SIGN]: ({ state, commit, dispatch }, { data }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action SIGN");
+        state.debug("Data: ", data);
+        API.signPrivateKey(data)
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
     [AUTHORIZE_REQUEST]: (
       { state, commit, dispatch },
       { data, type, callback, origin }
@@ -260,10 +308,23 @@ export default new Vuex.Store({
         state.debug("Params: ", data);
         state.debug("Type: ", type);
         state.debug("Origin: ", origin);
+        state.debug("userData: ", data.userData);
 
         commit("clearPendingRequests");
 
         switch (type) {
+          case "wallet_sign":
+            dispatch(SIGN, { data }).then((res) => {
+              console.log(res);
+              resolve(callback(null, res));
+            });
+            break;
+          case "wallet_sign_erc191":
+            dispatch(SIGN_ERC, { data }).then((res) => {
+              console.log(res);
+              resolve(callback(null, res));
+            });
+            break;
           case "wallid_token":
             dispatch(GET_TOKEN, { idt: data[0], operation: data[1] }).then(
               (res) => {
@@ -297,6 +358,22 @@ export default new Vuex.Store({
             dispatch(IMPORT, {
               idt: data.idt,
               data: data.data,
+              expDate: data.expDate,
+            })
+              .then((res) => {
+                console.log("res import:", res);
+                resolve(callback(null, true));
+              })
+              .catch(() => resolve(callback("REJECTED")));
+
+            break;
+          case "wallid_import_cred":
+            dispatch(IMPORT_CRED, {
+              id: data.id,
+              credName: data.data.credName,
+              caName: data.data.caName,
+              status: data.data.status,
+              userData: data.data,
               expDate: data.expDate,
             })
               .then((res) => {
@@ -374,6 +451,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    updateCredentials(state, value) {
+      state.credentials = value;
+    },
     updateIdentities(state, value) {
       state.identities = value;
     },

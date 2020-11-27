@@ -25,6 +25,10 @@ const RequestAPIMethods = {
         popup: true,
         level: 1
     },
+    'wallid_import_cred': {
+        popup: true,
+        level: 1
+    },
     'wallet_address': {
         popup: false,
         level: 1,
@@ -39,6 +43,10 @@ const RequestAPIMethods = {
         level: 1
     },
     'wallet_erc191_sign': {
+        popup: true,
+        level: 1
+    },
+    'wallet_sign': {
         popup: true,
         level: 1
     },

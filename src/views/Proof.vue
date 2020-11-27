@@ -8,6 +8,7 @@
           </v-btn>
           <h2 class="T1">
             {{ $t("proof.title") }}
+            {{ linkProof }}
           </h2>
         </div>
       </v-col>
@@ -103,6 +104,7 @@ import IconAlert from "../images/icon-warning-red.vue";
 import CopyHover from "../images/icon-copyclipboard-selected";
 import Copy from "../images/icon-copyclipboard-unselected";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   components: {
@@ -158,7 +160,26 @@ export default {
     },
     generateProof() {
       this.debug("generateProof");
-      this.linkProof = "linkProof.com";
+      let url = "https://dca.wallid.io/api/proof/gen";
+      let body = {
+        wa_user: this.address,
+        tid: this.card.userData.tid,
+        url: this.url,
+      };
+      axios(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: body,
+      })
+        .then((response) => {
+          console.log(response);
+          this.linkProof = response.data.data.proof;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   data() {

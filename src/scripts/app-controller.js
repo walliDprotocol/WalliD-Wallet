@@ -10,11 +10,13 @@ import VaultController from "./controllers/vault";
 import WalletController from "./controllers/wallet";
 import ConnectionsController from "./controllers/connections";
 import IdentitiesController from "./controllers/identities";
+import CredentialsController from "./controllers/credentials";
 
 const InitState = {
   wallet: {},
   connections: {},
   identities: {},
+  credentials: {},
   password: "",
   popups: [],
   requests: [],
@@ -129,6 +131,10 @@ export default class AppController {
             vault.getConnections()
           ),
           identities: IdentitiesController.deserialize(vault.getIdentities()),
+          credentials: CredentialsController.deserialize(
+            vault.getCredentials()
+          ),
+
           password,
         })
       )
@@ -230,6 +236,23 @@ export default class AppController {
   //
   // CRYPTOGRAPHIC INTERFACE
   //
+
+  /**
+   * Signs @data using wallet.
+   * Rejects if plugin is locked.
+   *
+   * @param {*} data - JSON serializable object to be encrypted
+   *
+   * @returns {Promise<Object>} cipher - Sign data
+   */
+  signPrivateKey(data) {
+    const vault = this.#store.getState().vault;
+    const wallet = this.#store.getState().wallet;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    return wallet.signEthereumMessage(JSON.stringify(data));
+  }
 
   /**
    * Encrypts @data using wallet.
@@ -359,6 +382,46 @@ export default class AppController {
     );
   }
 
+  /**
+   * Imports a new credential with @id into WalliD Plugin.
+   *
+   * @param {string} id - WalliD credential id
+   * @param {string} data - encrypted credential data
+   * @param {*} ow - overwrite flag
+   */
+  importCredential(
+    id,
+    credName,
+    caName,
+    userData,
+    status,
+    ow = false,
+    expDate
+  ) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    console.log(id);
+    const credentials = this.#store.getState().credentials;
+    return Promise.resolve(
+      credentials.addCredential(
+        id,
+        credName,
+        caName,
+        userData,
+        status,
+        ow,
+        expDate
+      )
+    ).then(
+      vault.putCredentials(
+        credentials.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+
   //
   // PENDING REQUESTS RELATED METHODS
   //
@@ -426,12 +489,15 @@ export default class AppController {
     const wallet = this.#store.getState().wallet;
     const connections = this.#store.getState().connections;
     const identities = this.#store.getState().identities;
+    const credentials = this.#store.getState().credentials;
+
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
       identities: vault.isUnlocked() ? identities.get() : null,
+      credentials: vault.isUnlocked() ? credentials.get() : null,
       mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
       key: vault.isUnlocked() ? () => vault.getWallet() : null,
     };
@@ -455,14 +521,17 @@ export default class AppController {
       lockApp: this.lockApp.bind(this),
       approveConnection: this.approveConnection.bind(this),
       removeConnected: this.removeConnected.bind(this),
+      signPrivateKey: this.signPrivateKey.bind(this),
       encryptData: this.encryptData.bind(this),
       decryptData: this.decryptData.bind(this),
       getAuthorizationToken: this.getAuthorizationToken.bind(this),
       extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
       importIdentity_v2: this.importIdentity_v2.bind(this),
+      importCredential: this.importCredential.bind(this),
       getNextRequest: this.getNextRequest.bind(this),
       accessControl: this.accessControl.bind(this),
       currentTab: this.currentTab.bind(this),
+      createERC191Signature: this.createERC191Signature.bind(this),
     };
   }
 

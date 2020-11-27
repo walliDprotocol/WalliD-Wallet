@@ -41,7 +41,13 @@ export default {
     title: "Sobre",
     design: "Desenvolvido por WalliD",
     version: "Versão",
-    links: ["Links", "FAQ's", "Termos e condições", "Contactos"],
+    links: [
+      "Links",
+      "FAQ's",
+      "Termos e condições",
+      "Politica de Privacidade",
+      "Contactos",
+    ],
   },
   privKey: {
     title: "A sua chave privada",
@@ -114,6 +120,7 @@ export default {
       active: "Approved",
       revoke: "Revoked",
       pending: "Pending",
+      waiting_wallet: "Waiting wallet",
     },
   },
   proof: {
