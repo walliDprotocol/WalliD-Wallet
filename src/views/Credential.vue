@@ -19,10 +19,20 @@
           :template="card.userData"
           :caName="card.caName"
           :certName="card.credName"
-          :urlPhoto="photoURL"
+          :urlPhoto="card.photoURL"
           :width="357"
           :height="228"
         />
+      </v-col>
+      <v-col cols="12">
+        <v-btn
+          text
+          @click="proofPage"
+          :disabled="card.status == 'pending_approval'"
+          class="advance-btn "
+        >
+          {{ $t("credentials.menu[1]") }}
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -43,6 +53,11 @@ export default {
     WalletState,
     ArrowBack,
     CredCard,
+  },
+  methods: {
+    proofPage() {
+      this.$router.push({ name: "Proof", params: { card: this.card } });
+    },
   },
   created() {
     console.log("card", this.$route.params.card);

@@ -104,7 +104,7 @@ import IconAlert from "../images/icon-warning-red.vue";
 import CopyHover from "../images/icon-copyclipboard-selected";
 import Copy from "../images/icon-copyclipboard-unselected";
 import { mapGetters } from "vuex";
-import axios from "axios";
+import { GEN_PROOF } from "../store/actions";
 
 export default {
   components: {
@@ -165,20 +165,23 @@ export default {
         wa_user: this.address,
         tid: this.card.userData.tid,
         url: this.url,
+        verify: this.card.userData.verifySig,
+        user_data: this.card.userData.userData,
       };
-      axios(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: body,
-      })
+      body.verify.tid_sod = "aaa";
+      this.$store
+        .dispatch(GEN_PROOF, body)
         .then((response) => {
+          console.log("Proof");
           console.log(response);
           this.linkProof = response.data.data.proof;
         })
         .catch((err) => {
-          console.log(err);
+          if ((err = this.INVALID)) {
+            this.errorSeedPhrase = true;
+            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
+          }
+          console.error(err);
         });
     },
   },

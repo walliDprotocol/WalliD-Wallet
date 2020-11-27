@@ -119,9 +119,11 @@ export default {
     status: {
       active: "Approved",
       revoke: "Revoked",
-      pending: "Pending",
+      pending_approval: "Pending",
       waiting_wallet: "Waiting wallet",
     },
+    tooltip:
+      " was already notified and needs to confirm you've stored the credential in your wallet. Once they've done that, this feature will automatically enabled for you and will be able to share your credential in a verifiable way",
   },
   proof: {
     title: "Proof of credential",

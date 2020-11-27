@@ -20,10 +20,13 @@ import {
   GENERATE_NEW_SEED_PHRASE,
   SIGN_ERC,
   SIGN,
+  GEN_PROOF,
   IMPORT_CRED,
+  IMPORT_SIGN,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -210,6 +213,49 @@ export default new Vuex.Store({
           });
       });
     },
+
+    [IMPORT_SIGN]: ({ commit, state }, data) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action IMPORT_SIGN");
+        state.debug("Data: ", data);
+        API.importCredentialSign(data.id, data.data.sig, data.data.verifySig)
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [GEN_PROOF]: ({ commit, state }, data) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action GEN_PROOF");
+        state.debug("Data: ", data);
+        API.signPrivateKey(data.url)
+          .then((res) => {
+            console.log(res);
+            let url = "https://dca.wallid.io/api/proof/gen";
+            data.url_sig = res;
+            axios(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: data,
+            }).then((res) => {
+              console.log(res);
+              resolve(res);
+            });
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
     [IMPORT_CRED]: ({ commit, state }, data) => {
       return new Promise((resolve, reject) => {
         console.log("Action IMPORT_CRED");
@@ -219,6 +265,7 @@ export default new Vuex.Store({
           data.id,
           data.credName,
           data.caName,
+          data.photoURL,
           data.userData,
           data.status,
           ow,
@@ -353,7 +400,17 @@ export default new Vuex.Store({
               resolve(callback(null, _res));
             });
             break;
-
+          case "wallid_import_sign":
+            dispatch(IMPORT_SIGN, {
+              id: data.id,
+              data: data.data,
+            })
+              .then((res) => {
+                console.log("res import:", res);
+                resolve(callback(null, true));
+              })
+              .catch(() => resolve(callback("REJECTED")));
+            break;
           case "wallid_import":
             dispatch(IMPORT, {
               idt: data.idt,

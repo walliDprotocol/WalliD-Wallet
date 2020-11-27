@@ -54,14 +54,6 @@
           </router-link>
         </v-col>
 
-        <v-col v-show="type == 'wallid_connect'" cols="12" class="pt-0 pb-5 ">
-          <div class="outer-box pr-6">
-            <WarningIcon />
-            <p class="links text-left">
-              {{ $t("request." + type + ".alert") }}
-            </p>
-          </div>
-        </v-col>
         <!-- Option buttons -->
         <v-col v-show="!success" cols="6" class="pr-2 pb-0" align-self="end">
           <v-btn text class="cancel-btn" @click="cancel">
@@ -158,6 +150,25 @@ export default {
       case "wallet_sign":
       case "wallet_sign_erc191":
       case "wallid_token":
+        var params;
+        params = {
+          url: this.request.origin,
+          icon: this.request.origin + "/favicon.ico",
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, { params }).then(() => {
+                this.debug("Connected");
+                this.authorizeRequest(0);
+              });
+            } else {
+              this.authorizeRequest(0);
+            }
+          });
         break;
       case "wallid_connect":
         this.$store
@@ -171,6 +182,8 @@ export default {
             }
           });
         break;
+      case "wallid_import_sign":
+      case "wallid_import_cred":
       case "wallid_import":
         var params;
         params = {
@@ -185,7 +198,10 @@ export default {
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug("Connected");
+                this.authorizeRequest(0);
               });
+            } else {
+              this.authorizeRequest(0);
             }
           });
         break;
@@ -246,9 +262,9 @@ export default {
         })
         .then(() => {
           if (this.request.type == "wallid_connect") this.success = true;
-          // setTimeout(() => {
-          //   this.$notification ? window.close() : this.$router.push("/home");
-          // }, time * 100);
+          setTimeout(() => {
+            this.$notification ? window.close() : this.$router.push("/home");
+          }, time * 100);
         });
     },
     cancel() {

@@ -19,7 +19,7 @@
               </p>
               <v-container class="px-0">
                 <v-row>
-                  <v-col cols="4" class="px-1 pt-0" style="max-width:unset;">
+                  <v-col cols="4" class="px-0 pt-0" style="max-width:unset;">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
@@ -31,9 +31,9 @@
                       </p>
                     </div>
                     <div
-                      v-else-if="card.status == 'pending'"
+                      v-else-if="card.status == 'pending_approval'"
                       class="validity pending"
-                      style="background-color: #feefdd;"
+                      style="background-color: #dbedef;"
                     >
                       <pending />
                       <p class="FIELD-TEXT">
@@ -85,16 +85,32 @@
                       >{{ $t("credentials.menu[0]") }}</v-list-item-title
                     >
                   </v-list-item>
-                  <v-list-item
-                    v-if="card.status != 'revoke'"
-                    :class="card.status == 'pending' ? 'disabled' : ''"
-                  >
-                    <v-list-item-title
-                      class="SECUNDARY-LINKS text-left"
-                      @click="proofPage(card)"
-                      >{{ $t("credentials.menu[1]") }}</v-list-item-title
-                    >
-                  </v-list-item>
+
+                  <v-tooltip content-class="wallet-tooltip credential" bottom>
+                    <template v-slot:activator="{ on }">
+                      <div v-on="on">
+                        <v-list-item
+                          v-if="card.status != 'revoke'"
+                          :class="
+                            card.status == 'pending_approval' ? 'disabled' : ''
+                          "
+                        >
+                          <v-list-item-title
+                            class="SECUNDARY-LINKS text-left"
+                            @click="proofPage(card)"
+                            >{{ $t("credentials.menu[1]") }}</v-list-item-title
+                          >
+                        </v-list-item>
+                      </div>
+                    </template>
+                    <div class="arrow-seed-tooltip"></div>
+                    <div class="tooltip-credential">
+                      <p>
+                        {{ card.caName }}
+                        {{ $t("credentials.tooltip") }}
+                      </p>
+                    </div>
+                  </v-tooltip>
                 </v-list>
               </v-menu>
             </v-col>
@@ -129,7 +145,7 @@ import IconMenu from "../../images/icon-dot-menu.vue";
 
 import invalid from "../../images/invalid.vue";
 import valid from "../../images/valid.vue";
-import pending from "../../images/pending.vue";
+import pending from "../../images/view-only.vue";
 
 import { ENCRYPT } from "../../store/actions";
 
@@ -151,7 +167,7 @@ export default {
   },
   methods: {
     viewCred(card) {
-      console.log("List", card);
+      console.log("List", this.credentials);
 
       let arr = [];
       for (var a in card.userData.userData) {
@@ -188,6 +204,25 @@ export default {
 </script>
 
 <style lang="scss">
+.wallet-tooltip.v-tooltip__content.credential {
+  width: 390px;
+}
+.tooltip-credential {
+  border-radius: 3px;
+  background-color: #eeeeee;
+  padding: 8px 10px;
+  margin: auto;
+  p {
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.38;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--charcoal-grey);
+  }
+}
 .dot-menu {
   .v-list {
     padding: 0;

@@ -393,6 +393,7 @@ export default class AppController {
     id,
     credName,
     caName,
+    photoURL,
     userData,
     status,
     ow = false,
@@ -409,11 +410,37 @@ export default class AppController {
         id,
         credName,
         caName,
+        photoURL,
         userData,
         status,
         ow,
         expDate
       )
+    ).then(
+      vault.putCredentials(
+        credentials.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+  /**
+   * Imports a new credential with @id into WalliD Plugin.
+   *
+   * @param {string} id - WalliD credential id
+   * @param {string} sig - encrypted sig data
+   * @param {string} verifySig - encrypted verifySig data
+   *
+   * @param {*} ow - overwrite flag
+   */
+  importCredentialSign(id, sig, verifySig) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    console.log(id);
+    const credentials = this.#store.getState().credentials;
+    return Promise.resolve(
+      credentials.addCredentialSign(id, sig, verifySig)
     ).then(
       vault.putCredentials(
         credentials.serialize(),
@@ -531,7 +558,9 @@ export default class AppController {
       getNextRequest: this.getNextRequest.bind(this),
       accessControl: this.accessControl.bind(this),
       currentTab: this.currentTab.bind(this),
-      createERC191Signature: this.createERC191Signature.bind(this),
+      generateERC191Signature: this.generateERC191Signature.bind(this),
+      generateECSignature: this.generateECSignature.bind(this),
+      importCredentialSign: this.importCredentialSign.bind(this),
     };
   }
 
