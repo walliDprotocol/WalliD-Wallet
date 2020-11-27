@@ -38,7 +38,7 @@ const RequestAPIMethods = {
         popup: true,
         level: 1
     },
-    'wallet_sign_erc191': {
+    'wallet_erc191_sign': {
         popup: true,
         level: 1
     },
