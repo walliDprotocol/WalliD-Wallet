@@ -16,7 +16,7 @@
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2">
         <CredCard
-          :template="card.userData"
+          :template="card.userData.userData"
           :caName="card.caName"
           :certName="card.credName"
           :urlPhoto="card.photoURL"
@@ -28,7 +28,7 @@
         <v-btn
           text
           @click="proofPage"
-          :disabled="card.status == 'pending_approval'"
+          :disabled="card.status != 'active'"
           class="advance-btn "
         >
           {{ $t("credentials.menu[1]") }}

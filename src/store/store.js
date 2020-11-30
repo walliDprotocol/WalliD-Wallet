@@ -261,6 +261,15 @@ export default new Vuex.Store({
         console.log("Action IMPORT_CRED");
         state.debug("Data: ", data);
         let ow = true;
+        let arr = [];
+        for (var a in data.userData.userData) {
+          var val = data.userData.userData[a];
+          arr.push({ attr: a, value: val });
+        }
+
+        data.userData.userData = arr;
+        state.debug("Data after: ", data);
+
         API.importCredential(
           data.id,
           data.credName,
@@ -355,7 +364,7 @@ export default new Vuex.Store({
         state.debug("Params: ", data);
         state.debug("Type: ", type);
         state.debug("Origin: ", origin);
-        state.debug("userData: ", data.userData);
+        state.debug("userData: ", data.data);
 
         commit("clearPendingRequests");
 
@@ -429,7 +438,7 @@ export default new Vuex.Store({
               id: data.id,
               credName: data.data.credName,
               caName: data.data.caName,
-              status: data.data.status,
+              status: "pending_approval",
               userData: data.data,
               expDate: data.expDate,
             })

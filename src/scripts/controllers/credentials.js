@@ -34,8 +34,9 @@ export default class CredentialsController {
       const index = this.#credentials.findIndex((cred) => cred.id == id);
       console.log("index", this.#credentials[index]);
       if (index != -1) {
-        console.log("EXISTs ", index);
-        this.#credentials[index].userData.status = 'active';
+        console.log("EXISTs ", this.#credentials[index].id);
+
+        this.#credentials[index].status = "active";
         this.#credentials[index].userData.sig = sig;
         this.#credentials[index].userData.verifySig = verifySig;
       } else {

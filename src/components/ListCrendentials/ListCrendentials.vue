@@ -91,9 +91,7 @@
                       <div v-on="on">
                         <v-list-item
                           v-if="card.status != 'revoke'"
-                          :class="
-                            card.status == 'pending_approval' ? 'disabled' : ''
-                          "
+                          :class="card.status != 'active' ? 'disabled' : ''"
                         >
                           <v-list-item-title
                             class="SECUNDARY-LINKS text-left"
@@ -169,12 +167,6 @@ export default {
     viewCred(card) {
       console.log("List", this.credentials);
 
-      let arr = [];
-      for (var a in card.userData.userData) {
-        var val = card.userData.userData[a];
-        arr.push({ attr: a, value: val });
-      }
-      card.userData = arr;
       console.log("List", card);
       this.$router.push({ name: "Credential", params: { card } });
     },
