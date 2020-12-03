@@ -117,9 +117,9 @@ export default {
       "Seems like you don’t have any credentials stored in your wallet",
     menu: ["View details", "Proof of credential"],
     status: {
-      active: "Approved",
-      revoke: "Revoked",
-      pending_approval: "Pending",
+      active: "Válida",
+      revoke: "Revogada",
+      pending_approval: "Ver apenas",
       waiting_wallet: "Waiting wallet",
     },
     tooltip:
