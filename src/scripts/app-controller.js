@@ -449,6 +449,26 @@ export default class AppController {
     );
   }
 
+  /**
+   * Deletes a new credential with @id in WalliD Plugin.
+   *
+   * @param {string} id - WalliD credential id
+   */
+  deleteCredential(id) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject("Plugin is locked");
+    }
+    console.log(id);
+    const credentials = this.#store.getState().credentials;
+    return Promise.resolve(credentials.deleteCredential(id)).then(
+      vault.putCredentials(
+        credentials.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+
   //
   // PENDING REQUESTS RELATED METHODS
   //
@@ -561,6 +581,7 @@ export default class AppController {
       generateERC191Signature: this.generateERC191Signature.bind(this),
       generateECSignature: this.generateECSignature.bind(this),
       importCredentialSign: this.importCredentialSign.bind(this),
+      deleteCredential: this.deleteCredential.bind(this),
     };
   }
 

@@ -46,6 +46,20 @@ export default class CredentialsController {
       return resolve();
     });
   }
+
+  deleteCredential() {
+    return new Promise((resolve, reject) => {
+      const index = this.#credentials.findIndex((cred) => cred.id == id);
+
+      if (index != -1) {
+        console.log("EXISTs w/ ", index);
+        this.#credentials.splice(index, 1);
+        return resolve();
+      } else {
+        return reject(`Credential id  ${id}  doesn´t exists`);
+      }
+    });
+  }
   addCredential(id, credName, caName, photoURL, userData, status, ow, expDate) {
     return new Promise((resolve, reject) => {
       console.log("log id add", id);
