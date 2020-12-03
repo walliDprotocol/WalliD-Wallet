@@ -23,6 +23,7 @@ import {
   GEN_PROOF,
   IMPORT_CRED,
   IMPORT_SIGN,
+  DELETE_CRED
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -199,6 +200,21 @@ export default new Vuex.Store({
           });
       });
     },
+
+    [DELETE_CRED]: ({ commit, state },id) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action DELETE_CRED");
+        state.debug("Data: ", id);
+        API.deleteCredential(id)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
     [ENCRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
         console.log("Action ENCRYPT");
@@ -327,7 +343,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log("Action SIGN_ERC");
         state.debug("Data: ", data);
-        API.createERC191Signature(state.address, data)
+        API.generateERC191Signature(state.address, data)
           .then((res) => {
             console.log(res);
             resolve(res);

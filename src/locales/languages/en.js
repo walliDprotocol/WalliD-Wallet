@@ -125,6 +125,18 @@ export default {
         " is requesting your authorisation to sign the Certificate data with you private key",
       button: "Sign",
     },
+    wallet_ec_sign: {
+      title: "Sign Request",
+      description:
+        " is requesting your authorisation to sign the Certificate data with you private key",
+      button: "Sign",
+    },
+    wallet_sign_erc191: {
+      title: "Sign Request",
+      description:
+        " is requesting your authorisation to sign the Certificate data with you private key",
+      button: "Sign",
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: "Cancel",
   },
@@ -206,7 +218,7 @@ export default {
     noCredentials:
       "Seems like you don’t have any credentials stored in your wallet yet.",
     store: "Start packing them now",
-    menu: ["View details", "Share credential"],
+    menu: ["View credential", "Share credential", "Delete Credential"],
     status: {
       active: "Valid",
       revoke: "Revoked",

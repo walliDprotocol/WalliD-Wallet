@@ -109,6 +109,14 @@
                       </p>
                     </div>
                   </v-tooltip>
+
+                  <v-list-item>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="deleteCred(card)"
+                      >{{ $t("credentials.menu[2]") }}</v-list-item-title
+                    >
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </v-col>
@@ -145,7 +153,7 @@ import invalid from "../../images/invalid.vue";
 import valid from "../../images/valid.vue";
 import pending from "../../images/view-only.vue";
 
-import { ENCRYPT } from "../../store/actions";
+import { DELETE_CRED, ENCRYPT } from "../../store/actions";
 
 import { mapGetters } from "vuex";
 
@@ -168,6 +176,14 @@ export default {
       console.log("List", this.credentials);
       console.log("List", card);
       this.$router.push({ name: "Credential", params: { card } });
+    },
+    deleteCred() {
+      this.$store
+        .dispatch(DELETE_CRED, card.id)
+        .then((res) => console.log(res))
+        .catch((e) => {
+          console.error(res);
+        });
     },
     proofPage(card) {
       this.$router.push({ name: "Proof", params: { card } });
