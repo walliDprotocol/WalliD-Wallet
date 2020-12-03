@@ -208,7 +208,7 @@ export default {
     store: "Start packing them now",
     menu: ["View details", "Share credential"],
     status: {
-      active: "Approved",
+      active: "Valid",
       revoke: "Revoked",
       pending_approval: "View only",
       waiting_wallet: "Waiting wallet",

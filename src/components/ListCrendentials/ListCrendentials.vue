@@ -166,7 +166,6 @@ export default {
   methods: {
     viewCred(card) {
       console.log("List", this.credentials);
-
       console.log("List", card);
       this.$router.push({ name: "Credential", params: { card } });
     },
