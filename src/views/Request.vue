@@ -149,6 +149,8 @@ export default {
     switch (this.type) {
       case "wallet_sign":
       case "wallet_sign_erc191":
+      case "wallet_ec_sign":
+        break;
       case "wallid_token":
         var params;
         params = {
