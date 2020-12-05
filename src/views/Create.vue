@@ -239,6 +239,8 @@ import ConfirmSeed from "../components/ConfirmSeed";
 import Sucessfully from "../images/icon-sucessfully.vue";
 import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from "../store/actions";
 
+const { API } = chrome.extension.getBackgroundPage();
+
 export default {
   name: "Create",
   components: {
@@ -311,6 +313,8 @@ export default {
     },
 
     goToLogin() {
+
+      API.eventProxy('wallid_wallet_done')
       this.$router.push("/login");
     },
   },
