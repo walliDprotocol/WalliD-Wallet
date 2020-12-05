@@ -32,6 +32,8 @@ export function eventPipeOut() {
       localStorage.getItem("REGISTRATION_IN_PROGRESS") == "true"
     ) {
       localStorage.setItem("REGISTRATION_IN_PROGRESS", "false");
+      localStorage.setItem("PLUGIN_INSTALLED", "true");
+
       msgPort.postMessage({
         url: window.location.origin,
         type: "website:url",

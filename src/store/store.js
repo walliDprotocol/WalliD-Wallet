@@ -19,11 +19,12 @@ import {
   UPDATE_CONNECTED,
   GENERATE_NEW_SEED_PHRASE,
   SIGN_ERC,
+  SIGN_EC,
   SIGN,
   GEN_PROOF,
   IMPORT_CRED,
   IMPORT_SIGN,
-  DELETE_CRED
+  DELETE_CRED,
 } from "./actions";
 
 const { API } = chrome.extension.getBackgroundPage();
@@ -201,7 +202,7 @@ export default new Vuex.Store({
       });
     },
 
-    [DELETE_CRED]: ({ commit, state },id) => {
+    [DELETE_CRED]: ({ commit, state }, id) => {
       return new Promise((resolve, reject) => {
         console.log("Action DELETE_CRED");
         state.debug("Data: ", id);
@@ -338,12 +339,26 @@ export default new Vuex.Store({
           });
       });
     },
-
+    [SIGN_EC]: ({ state, commit, dispatch }, { data }) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action SIGN_EC");
+        state.debug("Data: ", data);
+        API.generateECSignature(data)
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
     [SIGN_ERC]: ({ state, commit, dispatch }, { data }) => {
       return new Promise((resolve, reject) => {
         console.log("Action SIGN_ERC");
         state.debug("Data: ", data);
-        API.generateERC191Signature(state.address, data)
+        API.generateERC191Signature(data.target, data.data)
           .then((res) => {
             console.log(res);
             resolve(res);
@@ -387,6 +402,12 @@ export default new Vuex.Store({
         switch (type) {
           case "wallet_sign":
             dispatch(SIGN, { data }).then((res) => {
+              console.log(res);
+              resolve(callback(null, res));
+            });
+            break;
+          case "wallet_ec_sign":
+            dispatch(SIGN_EC, { data }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });

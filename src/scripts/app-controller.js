@@ -527,6 +527,10 @@ export default class AppController {
     return this.#store.getState().popups;
   }
 
+  eventProxy(msg) {
+    eventPipeIn(msg);
+  }
+
   //=============================================================================
   // EXPOSED TO THE UI SUBSYSTEM
   //=============================================================================
@@ -582,6 +586,7 @@ export default class AppController {
       generateECSignature: this.generateECSignature.bind(this),
       importCredentialSign: this.importCredentialSign.bind(this),
       deleteCredential: this.deleteCredential.bind(this),
+      eventProxy: this.eventProxy.bind(this),
     };
   }
 
