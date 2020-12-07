@@ -19,20 +19,37 @@
           :template="card.userData.userData"
           :caName="card.caName"
           :certName="card.credName"
-          :urlPhoto="card.photoURL"
+          :urlPhoto="card.userData.photoURL"
           :width="357"
           :height="228"
         />
       </v-col>
       <v-col cols="12">
-        <v-btn
-          text
-          @click="proofPage"
-          :disabled="card.status != 'active'"
-          class="advance-btn "
+        <v-tooltip
+          :disabled="card.status == 'active'"
+          content-class="wallet-tooltip credential"
+          bottom
         >
-          {{ $t("credentials.menu[1]") }}
-        </v-btn>
+          <template v-slot:activator="{ on }">
+            <div v-on="on">
+              <v-btn
+                text
+                @click="proofPage"
+                :disabled="card.status != 'active'"
+                class="advance-btn "
+              >
+                {{ $t("credentials.menu[1]") }}
+              </v-btn>
+            </div>
+          </template>
+          <div class="arrow-seed-tooltip"></div>
+          <div class="tooltip-credential">
+            <p>
+              {{ card.caName }}
+              {{ $t("credentials.tooltip") }}
+            </p>
+          </div>
+        </v-tooltip>
       </v-col>
     </v-row>
   </v-container>
