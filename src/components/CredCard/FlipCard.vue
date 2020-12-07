@@ -52,14 +52,13 @@ export default {
       if (this.isForeign) {
         return "background: #fff";
       } else {
-        return { backgroundImage: "url(" + this.image + ")" };
+        return "background-image: url(../../images/fundo-credencial.png)";
       }
     },
   },
   data() {
     return {
       flipped: false,
-      image: "background-image: url(../../images/fundo-credential.jpg)",
     };
   },
 };

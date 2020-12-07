@@ -2,6 +2,7 @@
   <FlipCard
     class="id-card mb-4"
     :style="style"
+    :class="{ large_card: large }"
     :hasBack="back.lenght > 0"
     v-if="!loading"
   >
@@ -18,7 +19,7 @@
             />
           </v-col>
           <v-col class="field title pb-1 pt-2px text-center" cols="12">
-            <div :style="idCardStyle(card)">
+            <div>
               <label>{{ certName }}</label>
               <p>
                 {{ caName }}
@@ -29,12 +30,12 @@
             v-for="(field, index) in front"
             v-bind:key="index"
             class="field py-1"
-            :cols="calcCols(field)"
-            :sm="calcCols(field)"
+            :cols="calcCols(front.length)"
+            :sm="calcCols(front.length)"
           >
-            <div :style="idCardStyle(field)">
+            <div :style="idCardStyle(front.length)">
               <label>{{ field.attribute }}</label>
-              <p>{{ field.value }}</p>
+              <p>{{ getValue(index) }}</p>
             </div>
           </v-col>
         </v-row>
@@ -47,12 +48,12 @@
             v-for="(field, index) in back"
             v-bind:key="index"
             class="field py-1"
-            :cols="calcCols(field)"
-            :sm="calcCols(field)"
+            :cols="calcCols(back.length)"
+            :sm="calcCols(back.length)"
           >
-            <div :style="idCardStyle(field)">
-              <label>{{ field.label[$i18n.locale] }}</label>
-              <p>{{ field.value }}</p>
+            <div :style="idCardStyle(back.length)">
+              <label>{{ field.attribute }}</label>
+              <p>{{ getValue(index) }}</p>
             </div>
           </v-col>
         </v-row>
@@ -63,6 +64,9 @@
 
 <script>
 import FlipCard from "./FlipCard";
+
+const MAX_FIELDS = 6;
+const MAX_FIELDS_BACK = 6;
 
 export default {
   name: "IDCard",
@@ -90,14 +94,16 @@ export default {
       default: 368,
     },
     height: {
-      default: 239,
+      default: 235,
+    },
+    large: {
+      default: false,
     },
   },
   mounted() {
     this.loading = false;
     console.log(this.template);
     this.createCard(this.template);
-
     // [{ attribute: "File", input: "file", index: 2, cellCount: 1 }];
   },
 
@@ -113,64 +119,72 @@ export default {
   },
   methods: {
     getValue(index) {
+      console.log(this.template[index].value);
+
       let entry = this.templateValues[index];
       console.log(entry);
-      return entry ? entry.value : "-";
+      return entry && entry.value
+        ? entry.value
+        : this.template[index].value
+        ? this.template[index].value
+        : "-";
     },
     createCard(value) {
       console.log(value);
       this.totalCols = 2 * Math.floor(value.length / 2) + 2;
-      this.front = value.map((item) => {
-        console.log(item);
-        return {
-          attribute: item.attr,
-          input: item.type,
-          value: item.value || "-",
-          index: item.index,
+      let i = 0;
+      let count = 0;
+      for (i, count = 0; count < MAX_FIELDS && i < value.length; i++, count++) {
+        console.log(value[i].value);
+
+        let e = {
+          attribute: value[i].attr,
+          input: value[i].type,
+          value: value[i].value || "-",
         };
-      });
-    },
-    calcCols() {
-      switch (true) {
-        case 2 < this.totalCols < 4:
-          return 6;
+        console.log(e);
 
-        case 6 < this.totalCols < 8:
-          return 4;
-
-        case "CC_PT":
-          return name == "Surname"
-            ? 7
-            : name == "PARENTS"
-            ? 12
-            : name == "Sex" ||
-              name == "Height" ||
-              name == "Country" ||
-              name == "Birthdate" ||
-              name == "Givenname"
-            ? 3
-            : name == "CivilianIdNumber" || name == "Validityenddate"
-            ? 6
-            : name == "NISS"
-            ? 5
-            : undefined;
-
-        case "SHUFTI_CC_":
-          return name == "last_name"
-            ? 7
-            : name == "parents_name"
-            ? 12
-            : name == "expiry_date"
-            ? 4
-            : 4;
-        default:
-          break;
+        this.front.push(e);
+      }
+      for (
+        i, count = 0;
+        count < MAX_FIELDS_BACK && i < value.length;
+        i++, count++
+      ) {
+        let e = {
+          attribute: value[i].attr,
+          input: value[i].type,
+          value: value[i].value || "-",
+        };
+        this.back.push(e);
       }
     },
-    idCardStyle(idt) {
-      switch (idt) {
-        case "CMD_PT":
-          return "padding: 12px";
+    calcCols(side) {
+      switch (true) {
+        case side <= 2:
+          return 6;
+        case (side = 3):
+          return 4;
+        case side <= 4:
+          return 6;
+        case side <= 6:
+          return 4;
+        default:
+          return 4;
+      }
+    },
+    idCardStyle(side) {
+      switch (true) {
+        case side <= 2:
+          return "padding-left:32px; margin-top: 30px;";
+        case (side = 3):
+          return " margin-top: 30px;";
+        case side <= 4:
+          return "padding-left:32px";
+        case side <= 6:
+          return 4;
+        default:
+          return 4;
       }
     },
   },
@@ -199,6 +213,22 @@ export default {
     border-radius: 50%;
     min-width: unset !important;
     max-width: 38px;
+  }
+  &.large_card {
+    .field {
+      padding-right: 0 !important;
+      &.title {
+        * {
+          font-size: 18px;
+        }
+      }
+      label {
+        font-size: 15px;
+      }
+      p {
+        font-size: 18px;
+      }
+    }
   }
   .field {
     padding-right: 0 !important;

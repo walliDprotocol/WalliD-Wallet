@@ -264,9 +264,16 @@ export default {
         })
         .then(() => {
           if (this.request.type == "wallid_connect") this.success = true;
-          setTimeout(() => {
-            this.$notification ? window.close() : this.$router.push("/home");
-          }, time * 100);
+          if (
+            this.request.type != "wallid_import_cred" &&
+            this.request.type != "wallid_import_sign"
+          )
+            setTimeout(() => {
+              this.$notification ? window.close() : this.$router.push("/home");
+            }, time * 100);
+          else {
+            this.$router.push("/home");
+          }
         });
     },
     cancel() {

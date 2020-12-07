@@ -166,9 +166,9 @@ export default {
         tid: this.card.userData.tid,
         url: this.url,
         verify: this.card.userData.verifySig,
+        credential_sig: this.card.userData.sig,
         user_data: this.card.userData.userData,
       };
-      body.verify.tid_sod = "aaa";
       this.$store
         .dispatch(GEN_PROOF, body)
         .then((response) => {

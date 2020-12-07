@@ -19,7 +19,7 @@
               </p>
               <v-container class="px-0">
                 <v-row>
-                  <v-col cols="4" class="px-0 pt-0" style="max-width:unset;">
+                  <v-col cols="5" class="px-0 pt-0" style="max-width:unset;">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
@@ -86,29 +86,16 @@
                     >
                   </v-list-item>
 
-                  <v-tooltip content-class="wallet-tooltip credential" bottom>
-                    <template v-slot:activator="{ on }">
-                      <div v-on="on">
-                        <v-list-item
-                          v-if="card.status != 'revoke'"
-                          :class="card.status != 'active' ? 'disabled' : ''"
-                        >
-                          <v-list-item-title
-                            class="SECUNDARY-LINKS text-left"
-                            @click="proofPage(card)"
-                            >{{ $t("credentials.menu[1]") }}</v-list-item-title
-                          >
-                        </v-list-item>
-                      </div>
-                    </template>
-                    <div class="arrow-seed-tooltip"></div>
-                    <div class="tooltip-credential">
-                      <p>
-                        {{ card.caName }}
-                        {{ $t("credentials.tooltip") }}
-                      </p>
-                    </div>
-                  </v-tooltip>
+                  <v-list-item
+                    v-if="card.status != 'revoke'"
+                    :class="card.status != 'active' ? 'disabled' : ''"
+                  >
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="proofPage(card)"
+                      >{{ $t("credentials.menu[1]") }}</v-list-item-title
+                    >
+                  </v-list-item>
 
                   <v-list-item>
                     <v-list-item-title
