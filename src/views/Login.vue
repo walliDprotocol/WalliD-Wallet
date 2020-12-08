@@ -30,6 +30,7 @@
             type="password"
             :error="passwordError"
             hide-details
+            @input="passwordError = false"
           ></v-text-field>
           <p v-show="passwordError" class="error--text">
             {{ $t("login.password[1]") }}

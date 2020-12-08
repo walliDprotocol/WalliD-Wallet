@@ -16,7 +16,7 @@
     <v-divider class="full-divider"></v-divider>
     <v-row>
       <v-col class="force-scrol sub-title-fields text-left" cols="12">
-        {{ $t("terms.text") }}
+        <p v-html="$t('terms.text')"></p>
       </v-col>
     </v-row>
   </v-container>
