@@ -13,7 +13,11 @@ export function setPort(_msgPort) {
 }
 // Used by background to pipe events to the content-script
 export function eventPipeIn(event) {
-  msgPort.postMessage({ event });
+  try {
+    msgPort.postMessage({ event });
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Used by content-script to relay events emitted by the background

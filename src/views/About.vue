@@ -39,12 +39,8 @@
         </router-link>
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
-        <a
-          href="https://www.wallid.io/terms"
-          target="_blank"
-          class="links larger"
-        >
-          {{ $t("about.links[2]") }}</a
+        <router-link class="links mt-2" to="terms">
+          {{ $t("about.links[2]") }}</router-link
         >
       </v-col>
       <v-col cols="12" class="pt-1 pb-1">
