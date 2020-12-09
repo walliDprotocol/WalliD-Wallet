@@ -176,11 +176,11 @@ export default {
     idCardStyle(side) {
       switch (true) {
         case side <= 2:
-          return "padding-left:32px; margin-top: 30px;";
+          return "padding-left:12px; margin-top: 30px;";
         case (side = 3):
           return " margin-top: 30px;";
         case side <= 4:
-          return "padding-left:32px";
+          return "padding-left:12px";
         case side <= 6:
           return 4;
         default:
@@ -250,7 +250,7 @@ export default {
     & > div {
       text-align: left;
       p {
-        max-height: 50px;
+        max-height: 60px;
         overflow: auto;
       }
     }
