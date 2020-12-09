@@ -341,7 +341,7 @@ export default {
       display: block;
     }
     p {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       font-stretch: normal;
       font-style: normal;
