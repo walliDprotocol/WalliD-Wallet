@@ -1,8 +1,13 @@
+'use strict'
+
 const Web3 = require('web3')
 const { ABI } = require('../resources/abi.json');
-const InfuraHTTPSProvider = "https://rinkeby.infura.io/v3/96f71504c4da4ad5b87e567aa3a79c9b"
 
-const web3 = new Web3(new Web3.providers.HttpProvider(InfuraHTTPSProvider));
+const web3 = new Web3(Web3.givenProvider);
+
+export function setProvider(_provider) {
+    return web3.setProvider(_provider)
+}
 
 export function abiEncode(types, data) {
     return web3.eth.abi.encodeParameters(types, data)

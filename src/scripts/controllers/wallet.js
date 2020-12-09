@@ -3,7 +3,7 @@ import * as ethUtil from "ethereumjs-util";
 import * as ethSigUtil from "eth-sig-util";
 import { hdkey } from "ethereumjs-wallet";
 import * as bip39 from "bip39";
-import { getdCANonce, abiEncode } from "../lib/eth-utils";
+import * as eth from "../lib/eth-utils";
 
 /**
  *  WalletController
@@ -73,8 +73,8 @@ export default class WalletController {
 	}
 
 	signERC191Message = function(target, data) {
-		return Promise.resolve(getdCANonce(target))
-			.then(nonce => abiEncode(
+		return Promise.resolve(eth.getdCANonce(target))
+			.then(nonce => eth.abiEncode(
 				['bytes1', 'bytes1', 'address', 'bytes32', 'uint256'],
 				['0x19', '0x00', target, data, nonce]
 			))

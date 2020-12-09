@@ -33,6 +33,11 @@ const RequestAPIMethods = {
     popup: true,
     level: 1,
   },
+  wallid_set_provider: {
+    popup: false,
+    level: 1,
+    executor: ['configurations', 'setProvider']
+  },
   wallet_address: {
     popup: false,
     level: 1,
@@ -48,7 +53,7 @@ const RequestAPIMethods = {
   },
   wallet_sign_erc191: {
     popup: true,
-    level: 1,
+    level: 1
   },
   wallet_sign: {
     popup: true,

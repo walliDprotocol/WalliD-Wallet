@@ -11,12 +11,15 @@ import WalletController from "./controllers/wallet";
 import ConnectionsController from "./controllers/connections";
 import IdentitiesController from "./controllers/identities";
 import CredentialsController from "./controllers/credentials";
+import ConfigurationsController from "./controllers/configuration";
+import { setProvider } from "./lib/eth-utils";
 
 const InitState = {
   wallet: {},
   connections: {},
   identities: {},
   credentials: {},
+  configurations: {},
   password: "",
   popups: [],
   requests: [],
@@ -134,10 +137,11 @@ export default class AppController {
           credentials: CredentialsController.deserialize(
             vault.getCredentials()
           ),
-
+          configurations: new ConfigurationsController(),
           password,
         })
       )
+      .then(() => setProvider(this.#store.getState().configurations.getProvider()))
       .then(() => eventPipeIn("wallid_event_unlock"))
       .catch((err) => {
         console.error(err);
