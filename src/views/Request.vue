@@ -151,6 +151,7 @@ export default {
       case "wallet_sign_erc191":
       case "wallet_ec_sign":
         break;
+      case "wallet_open":
       case "wallid_token":
         var params;
         params = {
@@ -266,7 +267,8 @@ export default {
           if (this.request.type == "wallid_connect") this.success = true;
           if (
             this.request.type != "wallid_import_cred" &&
-            this.request.type != "wallid_import_sign"
+            this.request.type != "wallid_import_sign" &&
+            this.request.type != "wallet_open"
           )
             setTimeout(() => {
               this.$notification ? window.close() : this.$router.push("/home");

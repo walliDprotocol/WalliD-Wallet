@@ -91,7 +91,7 @@ export default {
       title: "Pedido de Ligação",
       description: " Está a pedir autorização para se ligar à carteira.",
       alert: "Ligue-se apneas a sites em que confia",
-      button: "Conectado",
+      button: "Conectar",
       success: "Conectado com sucesso",
       successText: " conectado com sucesso à carteira!",
     },

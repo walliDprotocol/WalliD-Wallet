@@ -19,20 +19,39 @@ function gotMessage(msg) {
 
   if (msg.type == "website:url") {
     forwarderURL = msg.url;
-    chrome.tabs.create({ url: forwarderURL }, function(tab) {
-      console.log("options page opened");
-      //     //https://www.dev.wallid.io/import http://localhost:8080/import
+    // chrome.tabs.create({ url: forwarderURL }, function(tab) {
+    //   console.log("options page opened");
+    //   //     //https://www.dev.wallid.io/import http://localhost:8080/import
+    // });
+
+    chrome.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
+      console.log("tab", tab);
+      chrome.tabs.get(tab[0].id, function(tab) {
+        chrome.tabs.highlight(
+          {
+            windowId: tab.windowId,
+            tabs: tab.index,
+          },
+          function() {}
+        );
+      });
     });
   }
 }
 
 extension.runtime.onConnect.addListener(connected);
 
-// extension.runtime.onConnect.addListener(function() {
-//   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
+// extension.runtime.onInstalled.addListener(function() {
+//   chrome.tabs.query({ url: "https://*.wallid.io/*" }, (tab) => {
 //     console.log("tab", tab);
-//     chrome.tabs.executeScript(tab.ib, {
-//       file: chrome.extension.getURL('injector.bundle.js'),
+//     chrome.tabs.get(tab[0].id, function(tab) {
+//       chrome.tabs.highlight(
+//         {
+//           windowId: tab.windowId,
+//           tabs: tab.index,
+//         },
+//         function() {}
+//       );
 //     });
 //   });
 // });

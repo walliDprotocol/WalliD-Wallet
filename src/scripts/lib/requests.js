@@ -36,7 +36,7 @@ const RequestAPIMethods = {
   wallid_set_provider: {
     popup: false,
     level: 1,
-    executor: ['configurations', 'setProvider']
+    executor: ["configurations", "setProvider"],
   },
   wallet_address: {
     popup: false,
@@ -53,13 +53,17 @@ const RequestAPIMethods = {
   },
   wallet_sign_erc191: {
     popup: true,
-    level: 1
+    level: 1,
   },
   wallet_sign: {
     popup: true,
     level: 1,
   },
   wallet_ec_sign: {
+    popup: true,
+    level: 1,
+  },
+  wallet_open: {
     popup: true,
     level: 1,
   },

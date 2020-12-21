@@ -174,7 +174,7 @@ export default {
         .then((response) => {
           console.log("Proof");
           console.log(response);
-          this.linkProof = response.data.data.proof;
+          this.linkProof = this.card.credName;
         })
         .catch((err) => {
           if ((err = this.INVALID)) {

@@ -488,6 +488,8 @@ export default new Vuex.Store({
             break;
 
           default:
+            resolve(callback(null, true));
+
             break;
         }
       })

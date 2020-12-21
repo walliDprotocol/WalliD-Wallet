@@ -28,14 +28,14 @@ export function eventPipeOut() {
   msgPort.onMessage.addListener(function(msg) {
     console.log("msg from frontend", msg);
 
-    console.log(localStorage.getItem("REGISTRATION_IN_PROGRESS"));
-    console.log(localStorage.getItem("REGISTRATION_IN_PROGRESS") == "true");
+    console.log(localStorage.getItem("PLUGIN_INSTALLED"));
+    console.log(localStorage.getItem("PLUGIN_INSTALLED") == "false");
 
     if (
       msg.type == "plugin:installed" &&
-      localStorage.getItem("REGISTRATION_IN_PROGRESS") == "true"
+      localStorage.getItem("PLUGIN_INSTALLED") == "false"
     ) {
-      localStorage.setItem("REGISTRATION_IN_PROGRESS", "false");
+      // localStorage.setItem("REGISTRATION_IN_PROGRESS", "false");
       localStorage.setItem("PLUGIN_INSTALLED", "true");
 
       msgPort.postMessage({
@@ -43,7 +43,7 @@ export function eventPipeOut() {
         type: "website:url",
       });
     } else if (msg.type == "plugin:installed") {
-      console.log("send envent installed");
+      console.log("send event installed");
       document.dispatchEvent(new CustomEvent(msg.type));
     }
     document.dispatchEvent(new CustomEvent(msg.event, { detail: msg.data }));
