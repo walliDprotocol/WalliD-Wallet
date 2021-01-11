@@ -187,13 +187,13 @@ export default class AppController {
    *
    * @returns {Promise} - result
    */
-  approveConnection(url, icon, name) {
+  approveConnection(url, icon, name, level = 1) {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
     if (!vault.isUnlocked()) {
       return Promise.reject("ERR_PLUGIN_LOCKED");
     }
-    return Promise.resolve(connections.addConnected(url, icon, name))
+    return Promise.resolve(connections.addConnected(url, icon, name, level))
       .then(
         vault.putConnections(
           connections.serialize(),
@@ -343,7 +343,8 @@ export default class AppController {
 			wallet.signECMessage(body.challenge)
 				.then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature))
 			: Promise.reject({ status, error: 'ERR_AUTH_TOKEN', message: body? body.message : null })
-		);
+		)
+		.catch(error => Promise.reject(error))
   }
 
   /**
@@ -654,6 +655,6 @@ export default class AppController {
 
     return Promise.resolve(getRequestDetails(method)).then(
       requestHandler.bind(this)
-    );
+    )
   }
 }

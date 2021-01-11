@@ -11,7 +11,7 @@ const RequestAPIMethods = {
   wallid_token: {
     main_controller: true,
     level: 1,
-    executor: ["getAuthorizationToken"] //CHANGE
+    executor: ["getAuthorizationToken"]
   },
   wallid_identities: {
     popup: false,

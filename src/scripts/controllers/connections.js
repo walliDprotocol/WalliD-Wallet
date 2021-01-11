@@ -21,7 +21,7 @@ export default class ConnectionsController {
         return new ConnectionsController(conns)
     }
 
-    addConnected(url, icon, name, level = 2) {
+    addConnected(url, icon, name, level) {
         return new Promise((resolve, reject) => {
             if(level < 1 && level > 2) return reject('ERR_INV_ACCESS_LEVEL')
             if(this.#connections.findIndex(c => c.url == url) != -1) {

@@ -8,7 +8,7 @@ export function getAuthenticationChallenge(wallet) {
     //const url = `https://api.wallid.io/api/${API_VERSION}/auth`
     const url = `http://localhost:3001/api/auth`
     const data = { wallet }
-    return post(url, { data })
+    return post(url, { data }).catch(e => Promise.reject('ERR_WALLID_API'))
 }
   
 export function buildAuthorizationToken_v1(token, signature) {
