@@ -21,12 +21,13 @@ export default class ConnectionsController {
         return new ConnectionsController(conns)
     }
 
-    addConnected(url, icon, name) {
+    addConnected(url, icon, name, level = 2) {
         return new Promise((resolve, reject) => {
+            if(level < 1 && level > 2) return reject('ERR_INV_ACCESS_LEVEL')
             if(this.#connections.findIndex(c => c.url == url) != -1) {
-                return reject(`Connection for url ${url} already exists`)
+                return reject(`ERR_CONN_ALREADY_EXISTS`)
             }
-            this.#connections.push({ url, icon, name, level: 1 })
+            this.#connections.push({ url, icon, name, level })
             return resolve()
         })
         
@@ -51,30 +52,3 @@ export default class ConnectionsController {
             .then(index => index == -1? Promise.resolve(0) : Promise.resolve(this.#connections[index].level))
     }
 }
-
-
-/*
-approvePending(url) {
-        let index = this.#pending.findIndex(c => c.url == url)
-
-        if(index == -1) {
-            return Promise.reject(`No pending connection for ${url}`)
-        }
-
-        this.#connections.push(this.#pending[index])
-        this.#pending.splice(index, 1)
-
-        return Promise.resolve()
-    }
-
-    rejectPending(url) {
-        let index = this.#pending.findIndex(c => c.url == url)
-
-        if(index == -1) {
-            return Promise.reject(`No pending connection for ${url}`)
-        }
-
-        this.#pending.splice(index, 1)
-
-        return Promise.resolve()
-    } */
