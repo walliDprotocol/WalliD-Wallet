@@ -6,9 +6,9 @@
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
-          <h2 class="T1">
+          <h2 class="T1 text-left">
             {{ $t("proof.title") }}
-            {{ linkProof }}
+            {{ credentialName }}
           </h2>
         </div>
       </v-col>
@@ -160,7 +160,6 @@ export default {
     },
     generateProof() {
       this.debug("generateProof");
-      let url = "https://dca.wallid.io/api/proof/gen";
       let body = {
         wa_user: this.address,
         tid: this.card.userData.tid,
@@ -174,7 +173,8 @@ export default {
         .then((response) => {
           console.log("Proof");
           console.log(response);
-          this.linkProof = this.card.credName;
+          this.credentialName = this.card.credName;
+          this.linkProof = response.data.data.proof;
         })
         .catch((err) => {
           if ((err = this.INVALID)) {
@@ -190,6 +190,7 @@ export default {
       url: null,
       card: null,
       urlError: "",
+      credentialName: "",
       linkProof: "",
       copy: false,
       show: false,
