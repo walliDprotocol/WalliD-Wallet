@@ -9,8 +9,9 @@ const RequestAPIMethods = {
     executor: ["connections", "removeConnected"],
   },
   wallid_token: {
-    popup: true,
+    main_controller: true,
     level: 1,
+    executor: ["getAuthorizationToken"]
   },
   wallid_identities: {
     popup: false,
@@ -18,55 +19,54 @@ const RequestAPIMethods = {
     executor: ["identities", "getIDTsList"],
   },
   wallid_extract: {
-    popup: true,
+    popup: false,
     level: 1,
+    executor: ["wallet", "signERC191Message"] //CHANGE
   },
   wallid_import: {
-    popup: true,
+    popup: false,
     level: 1,
+    executor: ["wallet", "signERC191Message"] //CHANGE
   },
-  wallid_import_cred: {
-    popup: true,
+  wallid_import_cred: { 
+    main_controller: true,
     level: 1,
+    executor: ["importCredential"]
   },
   wallid_import_sign: {
-    popup: true,
+    main_controller: true,
     level: 1,
+    executor: ["importCredentialSign"]
   },
   wallid_set_provider: {
-    popup: false,
     level: 1,
-    executor: ["configurations", "setProvider"],
+    executor: ['configurations', 'setProvider'] 
   },
   wallet_address: {
-    popup: false,
     level: 1,
     executor: ["wallet", "getAddress"],
   },
   wallet_encrypt: {
-    popup: true,
-    level: 1,
+    level: 2,
+    executor: ["wallet", "encryptData"]
   },
   wallet_decrypt: {
-    popup: true,
-    level: 1,
+    level: 2,
+    executor: ["wallet", "decryptData"]
   },
   wallet_sign_erc191: {
-    popup: true,
-    level: 1,
+    level: 2,
+    executor: ["wallet", "signERC191Message"]
+  },
+  wallet_sign_ec: {
+    level: 2,
+    executor: ["wallet", "signECMessage"]
   },
   wallet_sign: {
-    popup: true,
-    level: 1,
-  },
-  wallet_ec_sign: {
-    popup: true,
-    level: 1,
-  },
-  wallet_open: {
-    popup: true,
-    level: 1,
-  },
+    level: 2,
+    executor: ["wallet", "signEthereumMessage"]
+
+  }
 };
 
 export function getRequestDetails(method) {

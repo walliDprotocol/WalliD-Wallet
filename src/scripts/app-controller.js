@@ -187,13 +187,13 @@ export default class AppController {
    *
    * @returns {Promise} - result
    */
-  approveConnection(url, icon, name) {
+  approveConnection(url, icon, name, level = 1) {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
-    return Promise.resolve(connections.addConnected(url, icon, name))
+    return Promise.resolve(connections.addConnected(url, icon, name, level))
       .then(
         vault.putConnections(
           connections.serialize(),
@@ -215,7 +215,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return Promise.resolve(connections.removeConnected(url)).then(
       vault.putConnections(
@@ -253,7 +253,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return wallet.signEthereumMessage(JSON.stringify(data));
   }
@@ -270,7 +270,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return wallet.encryptData(JSON.stringify(data));
   }
@@ -287,7 +287,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return wallet.decryptData(data);
   }
@@ -304,7 +304,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return wallet.signERC191Message(target, data);
   }
@@ -321,7 +321,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     return wallet.signECMessage(data);
   }
@@ -336,19 +336,15 @@ export default class AppController {
    * @param {string} idt
    * @param {string} operation
    */
-  getAuthorizationToken(idt, operation) {
-    const wallet = this.#store.getState().wallet;
-    return Promise.resolve(
-      WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation)
-    ).then(({ ok, status, body }) =>
-      ok
-        ? wallet
-            .signEthereumMessage(body.challenge)
-            .then((signature) =>
-              WalliD.buildAuthorizationToken_v1(body.challenge, signature)
-            )
-        : Promise.reject(status)
-    );
+  getAuthorizationToken() {
+	const wallet = this.#store.getState().wallet;
+	return Promise.resolve(WalliD.getAuthenticationChallenge(wallet.getAddress()))
+		.then(({ ok, status, body }) => ok? 
+			wallet.signECMessage(body.challenge)
+				.then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature))
+			: Promise.reject({ status, error: 'ERR_AUTH_TOKEN', message: body? body.message : null })
+		)
+		.catch(error => Promise.reject(error))
   }
 
   /**
@@ -375,7 +371,7 @@ export default class AppController {
   importIdentity_v2(idt, data, ow = false, expDate) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     const identities = this.#store.getState().identities;
     return Promise.resolve(identities.addIdentity(idt, data, ow, expDate)).then(
@@ -405,9 +401,8 @@ export default class AppController {
   ) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
-    console.log(id);
     const credentials = this.#store.getState().credentials;
     return Promise.resolve(
       credentials.addCredential(
@@ -439,7 +434,7 @@ export default class AppController {
   importCredentialSign(id, sig, verifySig) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     console.log(id);
     const credentials = this.#store.getState().credentials;
@@ -461,7 +456,7 @@ export default class AppController {
   deleteCredential(id) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("Plugin is locked");
+      return Promise.reject("ERR_PLUGIN_LOCKED");
     }
     console.log(id);
     const credentials = this.#store.getState().credentials;
@@ -613,14 +608,14 @@ export default class AppController {
     }
     const connections = this.#store.getState().connections;
     return Promise.resolve(connections.getConnectionAccessLevel(origin)).then(
-      (al) => level == al
+      (al) => al >= level
     );
   }
 
   requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
-      if (details.popup) {
+      if(details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {
             origin,
@@ -635,22 +630,24 @@ export default class AppController {
           this.updatePendingRequests(_request);
         });
         launchNotificationPopup().then((id) => this.updateActivePopups(id));
-      } else {
+      }
+      else if(details.main_controller) {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
-          promise = Promise.reject("Plugin is locked");
+          promise = Promise.reject("ERR_PLUGIN_LOCKED");
         } else {
           promise = Promise.resolve(this.accessControl(origin, details.level))
-            .then((acc) =>
-              acc
-                ? Promise.resolve(this.#store.getState())
-                : Promise.reject(
-                    `Caller does not have permission to execute ${method}`
-                  )
-            )
-            .then((state) =>
-              state[details.executor[0]][details.executor[1]](...params)
-            );
+            .then((acc) => acc? this[details.executor[0]](...params): Promise.reject("ERR_NO_PERMISSION"))
+        }
+      }
+      else {
+        const vault = this.#store.getState().vault;
+        if (!vault.isUnlocked()) {
+          promise = Promise.reject("ERR_PLUGIN_LOCKED");
+        } else {
+          promise = Promise.resolve(this.accessControl(origin, details.level))
+            .then((acc) => acc? Promise.resolve(this.#store.getState()) : Promise.reject("ERR_NO_PERMISSION"))
+            .then((state) => state[details.executor[0]][details.executor[1]](...params));
         }
       }
       return promise;
@@ -658,6 +655,6 @@ export default class AppController {
 
     return Promise.resolve(getRequestDetails(method)).then(
       requestHandler.bind(this)
-    );
+    )
   }
 }

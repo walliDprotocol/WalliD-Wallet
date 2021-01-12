@@ -71,7 +71,7 @@ export default class CredentialsController {
         this.#credentials.splice(index, 1);
       } else if (index != -1) {
         console.log("ALREADY EXISTs", index);
-        return reject(`Credential id  ${id} already exists`);
+        return reject(`ERR_CRED_ALREADY_EXISTS`);
       }
       this.#credentials.push({
         id,
