@@ -3,18 +3,22 @@
     class="id-card mb-4"
     :style="style"
     :class="{ large_card: large }"
-    :hasBack="back.lenght > 0"
+    :hasBack="
+      backTemplate && backTemplate.headers && backTemplate.headers.length > 0
+    "
+    @flipped="(e) => (flipped = e)"
+    :flipped="flipped"
     v-if="!loading"
   >
     <template slot="front">
-      <v-container class="px-5">
+      <v-container class="px-6">
         <v-row class="justify-space-between">
           <v-col class="field title pb-1 pt-2px text-center" cols="12">
             <v-img
               v-if="urlPhoto"
               class="mx-auto"
-              max-height="35"
-              max-width="80"
+              contain
+              :max-height="large ? '80' : '35'"
               :src="urlPhoto"
             />
           </v-col>
@@ -35,26 +39,46 @@
           >
             <div :style="idCardStyle(front.length)">
               <label>{{ field.attribute }}</label>
-              <p>{{ getValue(index) }}</p>
+              <p>{{ getValue(index, field) }}</p>
             </div>
           </v-col>
         </v-row>
       </v-container>
     </template>
     <template slot="back">
-      <v-container class="px-5">
-        <v-row class="justify-space-between">
-          <v-col
-            v-for="(field, index) in back"
-            v-bind:key="index"
-            class="field py-1"
-            :cols="calcCols(back.length)"
-            :sm="calcCols(back.length)"
-          >
-            <div :style="idCardStyle(back.length)">
-              <label>{{ field.attribute }}</label>
-              <p>{{ getValue(index) }}</p>
-            </div>
+      <v-container class="px-6">
+        <v-row class="justify-space-between" style="height: 90vh">
+          <v-col class="field py-1" style="overflow: auto" cols="12">
+            <v-data-table
+              id="card-table"
+              fixed-header
+              :height="height - 20"
+              :headers="headersTable"
+              :items-per-page="5"
+              :items="tableItems"
+              disable-sort
+              :page="page"
+              hide-default-footer
+              mobile-breakpoint=100
+            >
+              <template
+                v-slot:footer="{
+                  props: {
+                    pagination: {
+                      pageCount,
+                      itemsLength,
+                    },
+                  },
+                }"
+              >
+                <Pagination
+                  @updatePage="(i) => (page = i)"
+                  :pageCount="pageCount"
+                  :page="page"
+                  :itemsLength="itemsLength"
+                />
+              </template>
+            </v-data-table>
           </v-col>
         </v-row>
       </v-container>
@@ -64,6 +88,7 @@
 
 <script>
 import FlipCard from "./FlipCard";
+import Pagination from "./Pagination";
 
 const MAX_FIELDS = 6;
 const MAX_FIELDS_BACK = 6;
@@ -72,10 +97,19 @@ export default {
   name: "IDCard",
   components: {
     FlipCard,
+    Pagination,
   },
   props: {
-    template: {
+    frontTemplate: {
       required: true,
+    },
+    backTemplate: {
+      required: false,
+      default: () => {},
+    },
+    tableValues: {
+      required: false,
+      default: () => [],
     },
     templateValues: {
       required: false,
@@ -102,14 +136,36 @@ export default {
   },
   mounted() {
     this.loading = false;
-    console.log(this.template);
-    this.createCard(this.template);
+    console.log("frontTemplate", this.frontTemplate);
+    console.log("backTemplate", this.backTemplate);
+    console.log("tableValues", this.tableValues);
+
+    this.createCard(this.frontTemplate);
     // [{ attribute: "File", input: "file", index: 2, cellCount: 1 }];
+    // if (this.backTemplate) {
+    //   this.createTable(this.backTemplate);
+    // }
+    this.headersTable = this.backTemplate ? this.backTemplate.headers : [];
+    this.tableItems =
+      this.tableValues.length == 0
+        ? this.backTemplate.values
+        : [...this.tableValues];
+
+    if (this.tableItems.length == 0 && this.headersTable) {
+      this.fillBlank();
+    }
+    console.log("headersTable", this.headersTable);
   },
 
   watch: {
-    template(value = []) {
+    frontTemplate(value = []) {
       this.createCard(value);
+    },
+    tableValues(value) {
+      if (value && value.length > 0) {
+        this.tableItems = value;
+        this.flipped = true;
+      }
     },
   },
   computed: {
@@ -118,24 +174,57 @@ export default {
     },
   },
   methods: {
-    getValue(index) {
-      console.log(this.template[index].value);
+    getValue(index, field) {
+      console.log(field);
+      console.log(index);
+      console.log(this.tableValues);
 
-      let entry = this.templateValues[index];
-      console.log(entry);
-      return entry && entry.value
-        ? entry.value
-        : this.template[index].value
-        ? this.template[index].value
-        : "-";
+      if (this.templateValues.length > 0) {
+        return this.templateValues[index].value || "-";
+      }
+
+      return field.value;
     },
+    fillBlank() {
+      let el = {};
+      this.headersTable.forEach((e) => {
+        el[e.value] = "-";
+      });
+      this.tableItems.push(el);
+    },
+    // createTable(template) {
+    //   console.log(template);
+    //   let el = {};
+    //   this.headersTable = template.map((e) => {
+    //     console.log(e);
+    //     el[e.typeHeader] = "-";
+    //     return {
+    //       text: e.typeHeader || e.text,
+    //       align: "start",
+    //       value: e.typeHeader || e.value,
+    //     };
+    //   });
+
+    //   el["tech"] = "-";
+
+    //   this.techTable.push(el);
+
+    //   this.headersTable.unshift({
+    //     text: template[0].module,
+    //     align: "start",
+    //     value: "tech",
+    //   });
+    //   console.log(this.headersTable);
+    //   console.log(this.techTable);
+    //   this.back = template;
+    // },
     createCard(value) {
       console.log(value);
       this.totalCols = 2 * Math.floor(value.length / 2) + 2;
       let i = 0;
       let count = 0;
       for (i, count = 0; count < MAX_FIELDS && i < value.length; i++, count++) {
-        console.log(value[i].value);
+        console.log(value[i]);
 
         let e = {
           attribute: value[i].attr,
@@ -160,27 +249,28 @@ export default {
       }
     },
     calcCols(side) {
+      console.log(side);
       switch (true) {
         case side <= 2:
           return 6;
-        case (side = 3):
+        case side == 3:
           return 4;
         case side <= 4:
           return 6;
         case side <= 6:
-          return 4;
+          return 3;
         default:
-          return 4;
+          return 3;
       }
     },
     idCardStyle(side) {
       switch (true) {
         case side <= 2:
-          return "padding-left:12px; margin-top: 30px;";
+          return "padding-left:16px; margin-top: 30px;";
         case (side = 3):
           return " margin-top: 30px;";
         case side <= 4:
-          return "padding-left:12px";
+          return "padding-left:16px";
         case side <= 6:
           return 4;
         default:
@@ -193,6 +283,10 @@ export default {
       card: undefined,
       front: [],
       back: [],
+      page: 1,
+      flipped: false,
+      tableItems: [],
+      headersTable: [],
       loading: true,
       unlocked: false,
     };
@@ -201,9 +295,31 @@ export default {
 </script>
 
 <style lang="scss">
-.id-card {
+div.id-card {
   width: 100%;
   margin: 0 auto;
+  #card-table.v-data-table {
+    background: transparent;
+    > .v-data-table__wrapper > table > thead > tr:last-child > th {
+      padding-left: 0;
+      border: none;
+      background: transparent;
+    }
+    > div.v-data-table__wrapper > table > tbody > tr:hover {
+      background: none;
+    }
+
+    > .v-data-table__wrapper > table > tbody > tr > td,
+    > .v-data-table__wrapper > table > thead > tr > td,
+    > .v-data-table__wrapper > table > tfoot > tr > td {
+      padding: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--charcoal-grey);
+      border: none;
+      height: unset;
+    }
+  }
   .tooltip-unlock {
     position: absolute;
     top: 15px;
@@ -223,10 +339,10 @@ export default {
         }
       }
       label {
-        font-size: 15px;
+        font-size: 13px;
       }
       p {
-        font-size: 18px;
+        font-size: 15px;
       }
     }
   }

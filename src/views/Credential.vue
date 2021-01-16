@@ -16,7 +16,8 @@
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2">
         <CredCard
-          :template="card.userData.userData"
+          :frontTemplate="card.userData.front"
+          :backTemplate="card.userData.table"
           :caName="card.caName"
           :certName="card.credName"
           :urlPhoto="card.userData.photoURL"

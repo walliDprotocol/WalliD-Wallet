@@ -12,7 +12,7 @@
           v-if="hasBack"
           :ripple="false"
           text
-          @click="flipped = true"
+          @click="$emit('flipped', true)"
         >
           <IconRotate />
         </v-btn>
@@ -29,7 +29,7 @@
           v-if="hasBack"
           :ripple="false"
           text
-          @click="flipped = false"
+          @click="$emit('flipped', false)"
         >
           <IconRotate />
         </v-btn>
@@ -43,7 +43,7 @@ import IconRotate from "../../images/icon-rotate";
 
 export default {
   name: "FlipCard",
-  props: ["hasBack", "isForeign"],
+  props: ["hasBack", "isForeign", "flipped"],
   components: {
     IconRotate,
   },
@@ -58,7 +58,6 @@ export default {
   },
   data() {
     return {
-      flipped: false,
     };
   },
 };
@@ -119,11 +118,11 @@ i.backFlipBtn {
       bottom: -20px;
       border: none;
       border-radius: 50%;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
       background-color: #ffffff;
       min-width: unset;
       height: 44px;
-      max-width: 44px;
+      width: 44px;
     }
   }
 }

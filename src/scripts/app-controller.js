@@ -141,7 +141,9 @@ export default class AppController {
           password,
         })
       )
-      .then(() => setProvider(this.#store.getState().configurations.getProvider()))
+      .then(() =>
+        setProvider(this.#store.getState().configurations.getProvider())
+      )
       .then(() => eventPipeIn("wallid_event_unlock"))
       .catch((err) => {
         console.error(err);
@@ -190,6 +192,8 @@ export default class AppController {
   approveConnection(url, icon, name, level = 1) {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
+    const wallet = this.#store.getState().wallet;
+
     if (!vault.isUnlocked()) {
       return Promise.reject("ERR_PLUGIN_LOCKED");
     }
@@ -200,7 +204,8 @@ export default class AppController {
           this.#store.getState().password
         )
       )
-      .then(() => eventPipeIn("wallid_wallet_connected"));
+      .then(() => eventPipeIn("wallid_wallet_connected"))
+      .then(() => wallet.getAddress());
   }
 
   /**
@@ -337,14 +342,24 @@ export default class AppController {
    * @param {string} operation
    */
   getAuthorizationToken() {
-	const wallet = this.#store.getState().wallet;
-	return Promise.resolve(WalliD.getAuthenticationChallenge(wallet.getAddress()))
-		.then(({ ok, status, body }) => ok? 
-			wallet.signECMessage(body.challenge)
-				.then(signature => WalliD.buildAuthorizationToken_v1(body.challenge, signature))
-			: Promise.reject({ status, error: 'ERR_AUTH_TOKEN', message: body? body.message : null })
-		)
-		.catch(error => Promise.reject(error))
+    const wallet = this.#store.getState().wallet;
+    return Promise.resolve(
+      WalliD.getAuthenticationChallenge(wallet.getAddress())
+    )
+      .then(({ ok, status, body }) =>
+        ok
+          ? wallet
+              .signECMessage(body.challenge)
+              .then((signature) =>
+                WalliD.buildAuthorizationToken_v1(body.challenge, signature)
+              )
+          : Promise.reject({
+              status,
+              error: "ERR_AUTH_TOKEN",
+              message: body ? body.message : null,
+            })
+      )
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -615,7 +630,7 @@ export default class AppController {
   requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
-      if(details.popup) {
+      if (details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {
             origin,
@@ -630,24 +645,37 @@ export default class AppController {
           this.updatePendingRequests(_request);
         });
         launchNotificationPopup().then((id) => this.updateActivePopups(id));
-      }
-      else if(details.main_controller) {
+      } else if (details.main_controller && details.create) {
+        console.log(params);
+        promise = this[details.executor[0]](...params);
+        console.log(promise);
+      } else if (details.main_controller) {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
           promise = Promise.reject("ERR_PLUGIN_LOCKED");
         } else {
-          promise = Promise.resolve(this.accessControl(origin, details.level))
-            .then((acc) => acc? this[details.executor[0]](...params): Promise.reject("ERR_NO_PERMISSION"))
+          promise = Promise.resolve(
+            this.accessControl(origin, details.level)
+          ).then((acc) =>
+            acc
+              ? this[details.executor[0]](...params)
+              : Promise.reject("ERR_NO_PERMISSION")
+          );
         }
-      }
-      else {
+      } else {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
           promise = Promise.reject("ERR_PLUGIN_LOCKED");
         } else {
           promise = Promise.resolve(this.accessControl(origin, details.level))
-            .then((acc) => acc? Promise.resolve(this.#store.getState()) : Promise.reject("ERR_NO_PERMISSION"))
-            .then((state) => state[details.executor[0]][details.executor[1]](...params));
+            .then((acc) =>
+              acc
+                ? Promise.resolve(this.#store.getState())
+                : Promise.reject("ERR_NO_PERMISSION")
+            )
+            .then((state) =>
+              state[details.executor[0]][details.executor[1]](...params)
+            );
         }
       }
       return promise;
@@ -655,6 +683,6 @@ export default class AppController {
 
     return Promise.resolve(getRequestDetails(method)).then(
       requestHandler.bind(this)
-    )
+    );
   }
 }

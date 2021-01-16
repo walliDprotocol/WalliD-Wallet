@@ -184,14 +184,14 @@ export default new Vuex.Store({
       // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
-    [CONNECT]: ({ commit, state }, { origin, name }) => {
+    [CONNECT]: ({ commit, state }, { origin, name, level = 2 }) => {
       return new Promise((resolve, reject) => {
         console.log("Action CONNECT");
         state.debug("URL: ", origin);
         state.debug("Connections: ", state.connections);
         // state.debug("Notification: ", state.notification);
         let icon = origin + "/favicon.ico";
-        API.approveConnection(origin, icon, name)
+        API.approveConnection(origin, icon, name, level)
           .then((res) => {
             resolve(res);
           })
@@ -254,7 +254,7 @@ export default new Vuex.Store({
         API.signPrivateKey(data.url)
           .then((res) => {
             console.log(res);
-            let url = "https://dca.wallid.io/api/proof/gen";
+            let url = "https://dca.wallid.io/api/v1/proof/gen";
             data.url_sig = res;
             axios(url, {
               method: "POST",
