@@ -267,7 +267,7 @@ export default {
       switch (true) {
         case side <= 2:
           return "padding-left:16px; margin-top: 30px;";
-        case (side = 3):
+        case side == 3:
           return " margin-top: 30px;";
         case side <= 4:
           return "padding-left:16px";

@@ -88,7 +88,7 @@
 
                   <v-list-item
                     v-if="card.status != 'revoke'"
-                    :class="card.status != 'active' ? 'disabled' : ''"
+                    :class="card.status != 'active' ? '' : ''"
                   >
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
