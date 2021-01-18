@@ -88,8 +88,10 @@ export default {
   request: {
     wallid_connect: {
       title: "Connection Request",
-      description: " is asking for permission to connect to wallet:",
+      description: " is asking your permission to connect to your MyWalliD",
       alert: "Only connect with sites you fully trust.",
+      permissions:
+        "This website is requesting wallet permissions to:<br><br>- Access wallet address",
       button: "Connect",
       success: "Successfully connected",
       successText: " sucessfully conected with your wallet!",

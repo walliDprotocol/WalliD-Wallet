@@ -59,7 +59,7 @@
               disable-sort
               :page="page"
               hide-default-footer
-              mobile-breakpoint=100
+              mobile-breakpoint="100"
             >
               <template
                 v-slot:footer="{
@@ -347,7 +347,7 @@ div.id-card {
     }
   }
   .field {
-    padding-right: 0 !important;
+    padding: 0 !important;
     &.title {
       * {
         text-align: center;
