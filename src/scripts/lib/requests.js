@@ -66,6 +66,10 @@ const RequestAPIMethods = {
     level: 2,
     executor: ["wallet", "signEthereumMessage"],
   },
+  wallid_open: {
+    popup: true,
+    level: 1,
+  },
   generateSeedPhrase: {
     main_controller: true,
     create: true,

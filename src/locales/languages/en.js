@@ -88,10 +88,8 @@ export default {
   request: {
     wallid_connect: {
       title: "Connection Request",
-      description: " is asking your permission to connect to your MyWalliD",
+      description: " is asking for permission to connect to wallet:",
       alert: "Only connect with sites you fully trust.",
-      permissions:
-        "This website is requesting wallet permissions to:<br><br>- Access wallet address",
       button: "Connect",
       success: "Successfully connected",
       successText: " sucessfully conected with your wallet!",
@@ -120,12 +118,12 @@ export default {
         " is requesting authorisation to store this credential in your MyWalliD wallet",
       button: "Store",
     },
-    //    wallet_sign: {
-    //      title: "Sign Request",
-    //      description:
-    //        " is requesting your authorisation to sign the Certificate data with you private key",
-    //      button: "Sign",
-    //    },
+    wallet_sign: {
+      title: "Sign Request",
+      description:
+        " is requesting your authorisation to sign the Certificate data with you private key",
+      button: "Sign",
+    },
     wallet_ec_sign: {
       title: "Confirmation Request ",
       description:

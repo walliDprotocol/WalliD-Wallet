@@ -300,6 +300,9 @@ div.id-card {
   margin: 0 auto;
   #card-table.v-data-table {
     background: transparent;
+       * {
+      box-shadow: none !important;
+    }
     > .v-data-table__wrapper > table > thead > tr:last-child > th {
       padding-left: 0;
       border: none;

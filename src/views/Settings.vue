@@ -96,6 +96,7 @@ export default {
       langs: [
         { id: "pt", name: "Português" },
         { id: "en", name: "English" },
+        { id: "es", name: "Español" },
       ],
     };
   },
