@@ -88,14 +88,17 @@ export default {
       },
     ],
   },
+
   request: {
     wallid_connect: {
-      title: "Pedido de Ligação",
-      description: " Está a pedir autorização para se ligar à carteira.",
-      alert: "Ligue-se apneas a sites em que confia",
+      title: "Solicitud de conexión",
+      description:
+        "está solicitando autorización para conectarse a la billetera.",
+      permissions:
+        "Este sitio web solicita permisos a la billetera para:<br><br> -Acceder a la dirección de la billetera",
       button: "Conectado",
-      success: "Conectado com sucesso",
-      successText: " conectado com sucesso à carteira!",
+      successText: "Conectado con éxito",
+      successText: "¡conectado correctamente a la billetera!",
     },
     wallet_encrypt: {
       title: "Pedido de Autorização",

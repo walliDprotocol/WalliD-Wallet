@@ -91,9 +91,11 @@ export default {
   request: {
     wallid_connect: {
       title: "Pedido de Ligação",
-      description: " Está a pedir autorização para se ligar à carteira.",
-      alert: "Ligue-se apneas a sites em que confia",
-      button: "Conectado",
+      description: "está a pedir autorização para se ligar à carteira.",
+      alert: "Ligue-se apenas a sites em que confia",
+      permissions:
+        "Este site está a requisitar permissões do MyWallid para:<br><br>- Aceder ao endereço da carteira",
+      button: "Conectar",
       success: "Conectado com sucesso",
       successText: " conectado com sucesso à carteira!",
     },

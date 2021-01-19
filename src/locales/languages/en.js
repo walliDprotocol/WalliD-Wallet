@@ -90,6 +90,8 @@ export default {
       title: "Connection Request",
       description: " is asking for permission to connect to wallet:",
       alert: "Only connect with sites you fully trust.",
+      permissions:
+        "This website is requesting wallet permissions to:<br><br>- Access wallet address",
       button: "Connect",
       success: "Successfully connected",
       successText: " sucessfully conected with your wallet!",
