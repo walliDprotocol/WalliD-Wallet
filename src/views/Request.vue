@@ -47,11 +47,7 @@
           />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
         </v-col>
-        <v-col
-          cols="10"
-          v-if="type == 'wallid_connect'"
-          class="px-16 "
-        >
+        <v-col cols="10" v-if="type == 'wallid_connect'" class="px-16 ">
           <p
             class="FIELD-TEXT text-center"
             v-html="$t('request.' + type + '.permissions')"
@@ -143,7 +139,7 @@ export default {
     WebSiteLogo,
   },
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(["address", "credentials"]),
   },
   watch: {},
   mounted() {
@@ -164,6 +160,26 @@ export default {
       case "wallet_ec_sign":
         break;
       case "wallid_open":
+        var params;
+        params = {
+          url: this.request.origin,
+          icon: this.request.origin + "/favicon.ico",
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug("hasAccess", hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, { params }).then(() => {
+                this.debug("Connected");
+                this.authorizeRequest(0);
+              });
+            } else {
+              this.findCredential(this.request.data);
+            }
+          });
+        break;
       case "wallid_token":
         var params;
         params = {
@@ -259,6 +275,24 @@ export default {
     },
   },
   methods: {
+    findCredential(id) {
+      console.log("findCredential", id);
+      let cred = this.credentials.find((cred) => {
+        console.log("Credential", cred);
+        if (cred.id == id) {
+          return cred;
+        }
+      });
+        console.log("Credential", cred);
+
+      if (cred) {
+        this.$store.commit("clearPendingRequests");
+
+        this.$router.push({ name: "Credential", params: { card: cred } });
+      } else {
+        this.authorizeRequest(0);
+      }
+    },
     getWebsiteInfo(origin) {
       let name = origin.split("//")[1].split("/")[0];
       let icon = origin + "/favicon.ico";
