@@ -82,8 +82,11 @@ export default {
     this.card = this.$route.params.card;
   },
   mounted() {
-
-    this.userData = this.card.userData.userData
+    if (this.card.userData.userData) {
+      this.userData = this.card.userData.userData;
+    } else {
+      this.userData = this.card.userData;
+    }
   },
   computed: {
     ...mapGetters(["address"]),
@@ -91,7 +94,7 @@ export default {
   data() {
     return {
       card: undefined,
-      userData:null
+      userData: null,
     };
   },
 };
