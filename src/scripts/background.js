@@ -24,7 +24,7 @@ function gotMessage(msg) {
     //   //     //https://www.dev.wallid.io/import http://localhost:8080/import
     // });
 
-    chrome.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
+    chrome.tabs.query({ url: forwarderURL + "/*" }, (tab) => {
       console.log("tab", tab);
       chrome.tabs.get(tab[0].id, function(tab) {
         chrome.tabs.highlight(

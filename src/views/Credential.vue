@@ -16,8 +16,8 @@
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2">
         <CredCard
-          :frontTemplate="card.userData.front"
-          :backTemplate="card.userData.table"
+          :frontTemplate="userData.front"
+          :backTemplate="userData.table"
           :caName="card.caName"
           :certName="card.credName"
           :urlPhoto="card.userData.photoURL"
@@ -81,13 +81,17 @@ export default {
     console.log("card", this.$route.params.card);
     this.card = this.$route.params.card;
   },
-  mounted() {},
+  mounted() {
+
+    this.userData = this.card.userData.userData
+  },
   computed: {
     ...mapGetters(["address"]),
   },
   data() {
     return {
       card: undefined,
+      userData:null
     };
   },
 };

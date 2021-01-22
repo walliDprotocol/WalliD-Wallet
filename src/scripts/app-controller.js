@@ -646,9 +646,7 @@ export default class AppController {
         });
         launchNotificationPopup().then((id) => this.updateActivePopups(id));
       } else if (details.main_controller && details.create) {
-        console.log(params);
         promise = this[details.executor[0]](...params);
-        console.log(promise);
       } else if (details.main_controller) {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
