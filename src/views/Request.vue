@@ -187,11 +187,11 @@ export default {
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
             this.debug("hasAccess", hasAccess);
-            // if (hasAccess) {
-            //   Promise.resolve(
-            //     this.request.callback(null, "EXECUTED")
-            //   ).then(() => window.close());
-            // }
+            if (hasAccess) {
+              Promise.resolve(
+                this.request.callback(null, "EXECUTED")
+              ).then(() => window.close());
+            }
           });
         break;
       case "wallid_disconnect":

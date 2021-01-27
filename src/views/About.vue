@@ -23,7 +23,7 @@
         <p class="sub-title-fields">{{ $t("about.design") }}&copy;</p>
       </v-col>
       <v-col cols="12" class="pt-2 pb-8">
-        <p class="FIELD-TEXT">{{ $t("about.version") }} 1.0.13</p>
+        <p class="FIELD-TEXT">{{ $t("about.version") }} 1.0.19</p>
       </v-col>
     </v-row>
     <v-divider class="full-divider"></v-divider>

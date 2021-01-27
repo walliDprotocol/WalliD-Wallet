@@ -17,7 +17,7 @@
             <v-img
               class="mx-auto"
               contain
-              :max-height="50"
+              :max-height="40"
               :max-width="150"
               :src="urlPhoto"
             />
@@ -390,7 +390,7 @@ div.id-card {
       font-weight: 600;
       font-stretch: normal;
       font-style: normal;
-      line-height: 2.05;
+      line-height: 1.65;
       letter-spacing: normal;
       text-align: left;
       color: var(--charcoal-grey);
