@@ -128,6 +128,7 @@ import {
   ACCESS_LEVEL,
   CONNECT,
   IMPORT,
+  UPDATE_CONNECTED,
 } from "../store/actions";
 import { mapGetters } from "vuex";
 
@@ -139,7 +140,7 @@ export default {
     WebSiteLogo,
   },
   computed: {
-    ...mapGetters(["address", "credentials"]),
+    ...mapGetters(["address", "credentials", "connections"]),
   },
   watch: {},
   mounted() {
@@ -173,31 +174,11 @@ export default {
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug("Connected");
-                this.authorizeRequest(0);
+                this.findCredential(this.request.data);
               });
             } else {
               this.findCredential(this.request.data);
-            }
-          });
-        break;
-      case "wallid_token":
-        var params;
-        params = {
-          url: this.request.origin,
-          icon: this.request.origin + "/favicon.ico",
-          name: this.getDomain(this.request.origin),
-        };
-        this.$store
-          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
-          .then((hasAccess) => {
-            this.debug("hasAccess", hasAccess, params);
-            if (!hasAccess) {
-              this.$store.dispatch(CONNECT, { params }).then(() => {
-                this.debug("Connected");
-                this.authorizeRequest(0);
-              });
-            } else {
-              this.authorizeRequest(0);
+              this.updateConnected(this.request.origin);
             }
           });
         break;
@@ -206,34 +187,11 @@ export default {
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
             this.debug("hasAccess", hasAccess);
-            if (hasAccess) {
-              Promise.resolve(
-                this.request.callback(null, "EXECUTED")
-              ).then(() => window.close());
-            }
-          });
-        break;
-      case "wallid_import_sign":
-      case "wallid_import_cred":
-      case "wallid_import":
-        var params;
-        params = {
-          url: this.request.origin,
-          icon: this.request.origin + "/favicon.ico",
-          name: this.getDomain(this.request.origin),
-        };
-        this.$store
-          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
-          .then((hasAccess) => {
-            this.debug("hasAccess", hasAccess, params);
-            if (!hasAccess) {
-              this.$store.dispatch(CONNECT, { params }).then(() => {
-                this.debug("Connected");
-                this.authorizeRequest(0);
-              });
-            } else {
-              this.authorizeRequest(0);
-            }
+            // if (hasAccess) {
+            //   Promise.resolve(
+            //     this.request.callback(null, "EXECUTED")
+            //   ).then(() => window.close());
+            // }
           });
         break;
       case "wallid_disconnect":
@@ -242,6 +200,10 @@ export default {
       case "wallid_address":
         console.error("Invalid Request Type");
         break;
+      case "wallid_import_sign":
+      case "wallid_import_cred":
+      case "wallid_token":
+      case "wallid_import":
       case "wallet_encrypt":
       case "wallet_decrypt":
         var params;
@@ -275,6 +237,17 @@ export default {
     },
   },
   methods: {
+    updateConnected(site) {
+      if (this.connections) {
+        let connectedSite = this.connections.find((e) => {
+          return this.getDomain(e.url) == this.getDomain(site) ? e : "";
+        });
+        this.debug("connectedSite site: ", connectedSite);
+        if (connectedSite) {
+          this.$store.commit("updateConnected", connectedSite);
+        }
+      }
+    },
     findCredential(id) {
       console.log("findCredential", id);
       let cred = this.credentials.find((cred) => {
@@ -283,7 +256,7 @@ export default {
           return cred;
         }
       });
-        console.log("Credential", cred);
+      console.log("Credential", cred);
 
       if (cred) {
         this.$store.commit("clearPendingRequests");

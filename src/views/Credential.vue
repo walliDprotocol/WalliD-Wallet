@@ -14,13 +14,13 @@
       </v-col>
     </v-row>
     <v-row class="">
-      <v-col cols="12" class="pt-0 pb-2">
+      <v-col v-if="userData" cols="12" class="pt-0 pb-2">
         <CredCard
           :frontTemplate="userData.front"
           :backTemplate="userData.table"
           :caName="card.caName"
           :certName="card.credName"
-          :urlPhoto="card.userData.photoURL"
+          :urlPhoto="card.photoURL"
           :width="357"
           :height="228"
         />

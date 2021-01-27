@@ -7,10 +7,10 @@
         cols="12"
         class="py-0 px-2 mt-1 mb-2 card"
       >
-        <v-container class="">
+        <v-container class="pb-0">
           <v-row>
-            <v-col cols="2" class="pr-2"> <IconCredential /></v-col>
-            <v-col cols="9" class="pl-2">
+            <v-col cols="2" class="pr-2 pb-0"> <IconCredential /></v-col>
+            <v-col cols="9" class="pl-2 pb-0">
               <p class="sub-title-fields">
                 {{ card.credName }}
               </p>
@@ -19,7 +19,7 @@
               </p>
               <v-container class="px-0">
                 <v-row>
-                  <v-col cols="5" class="px-0 pt-0" style="max-width:unset;">
+                  <v-col cols="5" class="pr-0 py-0" style="max-width:unset;">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
@@ -54,7 +54,7 @@
                   <v-col
                     v-if="card.status != 'pending'"
                     cols="7"
-                    class="pl-3 pr-0 mt-n3"
+                    class="pb-0 pr-0 mt-n3"
                   >
                     <p class="FIELD-TEXT">
                       {{ card.expDate }}
@@ -63,7 +63,7 @@
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="1" class="pl-1">
+            <v-col cols="1" class="pl-1 pb-0">
               <v-menu bottom left class="dot-menu" content-class="dot-menu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -256,7 +256,6 @@ export default {
   }
 
   .card {
-    height: 104px;
     background-color: var(--white);
     .sub-title-fields {
       font-size: 14px !important;

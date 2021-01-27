@@ -12,13 +12,13 @@
   >
     <template slot="front">
       <v-container class="px-6">
-        <v-row class="justify-space-between">
+        <v-row class="justify-start">
           <v-col class="field title pb-1 pt-2px text-center" cols="12">
             <v-img
-              v-if="urlPhoto"
               class="mx-auto"
               contain
-              :max-height="large ? '80' : '35'"
+              :max-height="50"
+              :max-width="150"
               :src="urlPhoto"
             />
           </v-col>
@@ -258,7 +258,7 @@ export default {
         case side <= 4:
           return 6;
         case side <= 6:
-          return 3;
+          return 4;
         default:
           return 3;
       }
@@ -300,7 +300,7 @@ div.id-card {
   margin: 0 auto;
   #card-table.v-data-table {
     background: transparent;
-       * {
+    * {
       box-shadow: none !important;
     }
     > .v-data-table__wrapper > table > thead > tr:last-child > th {
@@ -350,7 +350,7 @@ div.id-card {
     }
   }
   .field {
-    padding: 0 !important;
+    padding: 2px !important;
     &.title {
       * {
         text-align: center;
@@ -374,11 +374,11 @@ div.id-card {
       }
     }
     label {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
-      line-height: 2.25;
+      line-height: 1.75;
       letter-spacing: normal;
       text-align: left;
       color: var(--charcoal-grey);

@@ -24,6 +24,8 @@
 </template>
 
 <script>
+//isConnected is a computed property is defined in scripts/util.js
+
 export default {
   props: ["website"],
 };

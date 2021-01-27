@@ -85,6 +85,7 @@ export default new Vuex.Store({
           let connectedSite = state.connections.find((e) => {
             return state.getDomain(e.url) == state.getDomain(site.url) ? e : "";
           });
+          state.debug("connectedSite site: ", connectedSite);
           if (connectedSite) {
             commit("updateConnected", connectedSite);
           }
