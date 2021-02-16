@@ -3,9 +3,15 @@
     <div class="flipper">
       <div
         class="front"
-        :style="checkBackground()"
+        :style="backgroundStyle && !hasColor && checkBackground()"
         style="background-position: center; background-size: contain;"
       >
+        <BackgroundCard
+          v-if="hasColor"
+          :style="backgroundStyleSvg"
+          class="background-card"
+        >
+        </BackgroundCard>
         <slot name="front"></slot>
         <v-btn
           class="rotate-btn"
@@ -19,7 +25,6 @@
       </div>
       <div
         class="back"
-        :style="checkBackground()"
         style="background-position: center; background-size: contain;"
       >
         <slot name="back"></slot>
@@ -39,31 +44,44 @@
 </template>
 
 <script>
-import IconRotate from "../../images/icon-rotate";
+import IconRotate from "./assets/icon-rotate";
+import BackgroundCard from "./assets/fundo-test";
 
 export default {
   name: "FlipCard",
-  props: ["hasBack", "isForeign", "flipped"],
+  props: ["hasBack", "isForeign", "flipped", "height", "width", "hasColor"],
   components: {
     IconRotate,
+    BackgroundCard,
+  },
+  created() {
+    console.log("hasColor", this.hasColor);
+  },
+  computed: {
+    backgroundStyleSvg() {
+      return `height: ${this.height}px; width: ${this.width}px;margin-top:-10px `;
+    },
+    backgroundStyle() {
+      return `height: ${this.height}px; width: ${this.width -
+        2}px; margin-top:-4px`;
+    },
   },
   methods: {
     checkBackground() {
-      if (this.isForeign) {
-        return "background: #fff";
-      } else {
-        return "background-image: url(../../images/fundo-credencial.png)";
-      }
+      return "background-image: url(../../images/fundo-credencial.png)";
     },
   },
   data() {
-    return {
-    };
+    return {};
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.background-card {
+  z-index: -1;
+  position: absolute;
+}
 img.frontFlipBtn,
 img.backFlipBtn {
   position: absolute;
@@ -123,6 +141,9 @@ i.backFlipBtn {
       min-width: unset;
       height: 44px;
       width: 44px;
+      svg {
+        margin-top: 5px;
+      }
     }
   }
 }

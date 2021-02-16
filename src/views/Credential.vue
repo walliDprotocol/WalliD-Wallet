@@ -14,15 +14,21 @@
       </v-col>
     </v-row>
     <v-row class="">
-      <v-col v-if="userData" cols="12" class="pt-0 pb-2">
+      <v-col
+        v-if="userData"
+        cols="12"
+        class="pt-0 pb-2"
+        style="text-align: initial"
+      >
         <CredCard
           :frontTemplate="userData.front"
           :backTemplate="userData.table"
           :caName="card.caName"
           :certName="card.credName"
-          :urlPhoto="card.photoURL"
+          :urlPhoto="photoCred"
+          :frontend_props="frontend_props"
           :width="357"
-          :height="228"
+          :height="frontend_props && frontend_props.color ? 252 : 228"
         />
       </v-col>
       <v-col cols="12">
@@ -52,6 +58,18 @@
           </div>
         </v-tooltip>
       </v-col>
+
+      <v-col cols="12">
+        <a
+          :href="card.userData.pdf_url"
+          target="_blank"
+          style="text-decoration:none"
+        >
+          <v-btn text class="advance-btn">
+            {{ $t("credentials.menu[2]") }}
+          </v-btn>
+        </a>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -64,6 +82,7 @@ import ArrowBack from "../images/icon-arrow-back.vue";
 import CredCard from "../components/CredCard";
 
 import { mapGetters } from "vuex";
+const FILESTACK = "https://www.filestackapi.com/api/file/";
 
 export default {
   components: {
@@ -74,18 +93,35 @@ export default {
   },
   methods: {
     proofPage() {
-      this.$router.push({ name: "Proof", params: { card: this.card } });
+      this.$router.push({
+        name: "Proof",
+        params: { card: this.$route.params.card },
+      });
     },
   },
   created() {
     console.log("card", this.$route.params.card);
-    this.card = this.$route.params.card;
+    this.card = JSON.parse(JSON.stringify(this.$route.params.card));
+    this.frontend_props = this.card.userData.frontend_props;
+
+    this.photoCred = FILESTACK + this.card.userData.img_url;
   },
   mounted() {
     if (this.card.userData.userData) {
       this.userData = this.card.userData.userData;
     } else {
-      this.userData = this.card.userData;
+      let userData = { front: [], table: {} };
+      if (this.card.userData.user_data.tables) {
+        userData.table = JSON.parse(
+          JSON.stringify(this.card.userData.user_data.tables)
+        );
+        delete this.card.userData.user_data.tables;
+      }
+      for (var a in this.card.userData.user_data) {
+        var val = this.card.userData.user_data[a];
+        userData.front.push({ attr: a, value: val });
+      }
+      this.userData = userData; // this.card.userData.user_data;
     }
   },
   computed: {
@@ -95,6 +131,8 @@ export default {
     return {
       card: undefined,
       userData: null,
+      frontend_props: null,
+      photoCred: null,
     };
   },
 };

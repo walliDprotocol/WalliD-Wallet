@@ -98,10 +98,12 @@
                   </v-list-item>
 
                   <v-list-item>
-                    <v-list-item-title
-                      class="SECUNDARY-LINKS text-left"
-                      @click="deleteCred(card)"
-                      >{{ $t("credentials.menu[2]") }}</v-list-item-title
+                    <v-list-item-title class="SECUNDARY-LINKS text-left"
+                      >
+                      <a :href="card.userData.pdf_url" target="_blank">{{
+                        $t("credentials.menu[2]")
+                      }}</a>
+                      </v-list-item-title
                     >
                   </v-list-item>
                 </v-list>
@@ -164,7 +166,7 @@ export default {
       console.log("List", card);
       this.$router.push({ name: "Credential", params: { card } });
     },
-    deleteCred() {
+    deleteCred(card) {
       this.$store
         .dispatch(DELETE_CRED, card.id)
         .then((res) => console.log(res))
@@ -198,6 +200,22 @@ export default {
 </script>
 
 <style lang="scss">
+.SECUNDARY-LINKS {
+  a {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--charcoal-grey) !important;
+    text-decoration: none;
+    &:hover {
+      color: #009fb1 !important;
+    }
+  }
+}
 .wallet-tooltip.v-tooltip__content.credential {
   width: 390px;
 }

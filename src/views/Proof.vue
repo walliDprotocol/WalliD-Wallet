@@ -45,6 +45,7 @@
         <v-col cols="12">
           <v-btn
             text
+            :isLoading="isLoading"
             @click="generateProof"
             :disabled="isDisabled"
             class="advance-btn "
@@ -122,7 +123,7 @@ export default {
     ...mapGetters(["address"]),
 
     isDisabled() {
-      return !this.url || !!this.urlError;
+      return !this.url || !!this.urlError || this.isLoading;
     },
   },
   methods: {
@@ -158,16 +159,31 @@ export default {
         this.urlError = this.$t("proof.urlError");
       }
     },
+    reconstructData(data) {
+      let obj = {};
+
+      data.front.forEach((item) => {
+        console.log(item);
+        obj[item.attr] = item.value;
+      });
+      obj["tables"] = data.table;
+      console.log(obj);
+      return obj;
+    },
+
     generateProof() {
-      this.debug("generateProof");
+      this.debug("generateProof", this.card.userData);
       let body = {
         wa_user: this.address,
         tid: this.card.userData.tid,
         url: this.url,
         verify: this.card.userData.verifySig,
         credential_sig: this.card.userData.sig,
-        user_data: this.card.userData.userData,
+        user_data: this.card.userData.userData
+          ? this.reconstructData(this.card.userData.userData)
+          : this.card.userData.user_data,
       };
+      this.isLoading = true;
       this.$store
         .dispatch(GEN_PROOF, body)
         .then((response) => {
@@ -175,18 +191,18 @@ export default {
           console.log(response);
           this.credentialName = this.card.credName;
           this.linkProof = response.data.data.proof;
+          this.isLoading = false;
         })
         .catch((err) => {
-          if ((err = this.INVALID)) {
-            this.errorSeedPhrase = true;
-            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
-          }
+          this.isLoading = false;
+
           console.error(err);
         });
     },
   },
   data() {
     return {
+      isLoading: false,
       url: null,
       card: null,
       urlError: "",

@@ -219,7 +219,7 @@ export default {
     noCredentials:
       "Seems like you don’t have any credentials stored in your wallet yet.",
     store: "Start packing them now",
-    menu: ["View credential", "Share credential", "Delete Credential"],
+    menu: ["View credential", "Share credential", "Download Credential"],
     status: {
       active: "Valid",
       revoke: "Revoked",
