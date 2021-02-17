@@ -106,10 +106,26 @@
               hide-default-footer
               mobile-breakpoint="100"
             >
-              <template v-slot:[`item.actions`]="{ item }">
-                <v-icon v-if="editable" small @click="deleteItem(item)">
-                  mdi-delete
-                </v-icon>
+              <template v-slot:body="{ items }">
+                <tbody>
+                  <tr v-for="item in items" :key="item">
+                    <td v-for="item in item" :key="item">
+                      {{ reduceText(item)[0] }}
+                      <v-tooltip
+                        v-if="reduceText(item).length > 1"
+                        bottom
+                        class="tooltip-desc"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <span v-bind="attrs" v-on="on">
+                            <more-info> </more-info>
+                          </span>
+                        </template>
+                        <span>{{ item }}</span>
+                      </v-tooltip>
+                    </td>
+                  </tr>
+                </tbody>
               </template>
               <template
                 v-slot:footer="{
@@ -140,6 +156,7 @@
 <script>
 import FlipCard from "./FlipCard";
 import Pagination from "./Pagination";
+import MoreInfo from "./assets/more-info";
 
 const MAX_FIELDS = 6;
 const MAX_FIELDS_BACK = 6;
@@ -150,6 +167,7 @@ export default {
   components: {
     FlipCard,
     Pagination,
+    MoreInfo,
   },
   props: {
     frontTemplate: {
@@ -260,6 +278,15 @@ export default {
     },
   },
   methods: {
+    reduceText(text, length = 44, clamp = "...") {
+      let splitAt = (index) => (x) => [x.slice(0, index), x.slice(index)];
+      if (text.length > length) {
+        return [splitAt(length)(text)[0] + clamp, text];
+      } else {
+        return [text];
+      }
+    },
+
     deleteItem(item) {
       let editedIndex = this.tableValues.indexOf(item);
       this.$emit("removeItem", editedIndex);
@@ -533,6 +560,15 @@ export default {
 </script>
 
 <style lang="scss">
+.tooltip-desc {
+  max-width: 220px;
+  background-color: #f6f6f6;
+  span {
+    color: #373c43;
+    font-size: 10px;
+    word-break: break-all;
+  }
+}
 div.id-card {
   width: 100%;
   margin: 0 auto;

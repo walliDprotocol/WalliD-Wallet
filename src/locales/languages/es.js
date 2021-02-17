@@ -222,7 +222,7 @@ export default {
   credentials: {
     noCredentials: "¿Aún no tienes credenciales en tu billetera?",
     store: "Empieza a coleccionarlos",
-    menu: ["Ver credencial", "Compartir credencial", "Eliminar credencial"],
+    menu: ["Ver credencial", "Compartir credencial", "Descargar credencial"],
     status: {
       active: "Válido",
       revoke: "Revocada",
