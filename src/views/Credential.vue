@@ -103,8 +103,14 @@ export default {
     console.log("card", this.$route.params.card);
     this.card = JSON.parse(JSON.stringify(this.$route.params.card));
     this.frontend_props = this.card.userData.frontend_props;
-
-    this.photoCred = FILESTACK + this.card.userData.img_url;
+    if (
+      this.card.userData.img_url &&
+      !this.card.userData.img_url.startsWith("https")
+    ) {
+      this.photoCred = FILESTACK + this.card.userData.img_url;
+    } else {
+      this.photoCred = this.card.userData.img_url;
+    }
   },
   mounted() {
     if (this.card.userData.userData) {

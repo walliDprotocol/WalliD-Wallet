@@ -108,13 +108,13 @@
             >
               <template v-slot:body="{ items }">
                 <tbody>
-                  <tr v-for="item in items" :key="item">
-                    <td v-for="item in item" :key="item">
+                  <tr v-for="(row, indexR) in items" :key="indexR">
+                    <td v-for="(item, indexL) in row" :key="indexL">
                       {{ reduceText(item)[0] }}
                       <v-tooltip
                         v-if="reduceText(item).length > 1"
                         bottom
-                        class="tooltip-desc"
+                        content-class="tooltip-desc"
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <span v-bind="attrs" v-on="on">
@@ -218,7 +218,9 @@ export default {
     this.logos =
       this.frontend_props && this.frontend_props.logos
         ? this.frontend_props.logos.map((e) => {
-            return { url: FILESTACK + e.url };
+            if (e.file || e.url.startsWith("https")) {
+              return { url: e.url };
+            } else return { url: FILESTACK + e.url };
           })
         : [];
     this.sigs =
@@ -243,11 +245,11 @@ export default {
         ? [...this.backTemplate.headers]
         : [];
     this.tableItems =
-      this.tableValues.length == 0
+      this.tableValues.length == 0 && this.backTemplate
         ? this.backTemplate.values
         : [...this.tableValues];
 
-    if (this.tableItems.length == 0 && this.headersTable) {
+    if (this.tableItems && this.tableItems.length == 0 && this.headersTable) {
       this.fillBlank();
     }
 
@@ -451,19 +453,6 @@ export default {
       //   this.front.push(e);
       // }
       console.log("front ", this.front);
-
-      for (
-        i, count = 0;
-        count < MAX_FIELDS_BACK && i < value.length;
-        i++, count++
-      ) {
-        let e = {
-          attribute: value[i].attr,
-          input: value[i].type,
-          value: value[i].value || "-",
-        };
-        this.back.push(e);
-      }
     },
     calcCols(side, type) {
       switch (true) {
@@ -560,9 +549,9 @@ export default {
 </script>
 
 <style lang="scss">
-.tooltip-desc {
+.tooltip-desc.v-tooltip__content {
   max-width: 220px;
-  background-color: #f6f6f6;
+  background: #f6f6f6;
   span {
     color: #373c43;
     font-size: 10px;

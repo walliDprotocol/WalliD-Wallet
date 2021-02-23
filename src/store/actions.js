@@ -18,6 +18,7 @@ export const SIGN_ERC = "SIGN_ERC";
 export const SIGN_EC = "SIGN_EC";
 export const SIGN = "SIGN";
 export const GEN_PROOF = "GEN_PROOF";
+export const SHARE = "SHARE";
 
 export const DELETE_CRED = "DELETE_CRED";
 

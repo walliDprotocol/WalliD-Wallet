@@ -105,7 +105,7 @@ import IconAlert from "../images/icon-warning-red.vue";
 import CopyHover from "../images/icon-copyclipboard-selected";
 import Copy from "../images/icon-copyclipboard-unselected";
 import { mapGetters } from "vuex";
-import { GEN_PROOF } from "../store/actions";
+import { SHARE } from "../store/actions";
 
 export default {
   components: {
@@ -174,18 +174,12 @@ export default {
     generateProof() {
       this.debug("generateProof", this.card.userData);
       let body = {
-        wa_user: this.address,
-        tid: this.card.userData.tid,
+        user_id: this.card.userData._id,
         url: this.url,
-        verify: this.card.userData.verifySig,
-        credential_sig: this.card.userData.sig,
-        user_data: this.card.userData.userData
-          ? this.reconstructData(this.card.userData.userData)
-          : this.card.userData.user_data,
       };
       this.isLoading = true;
       this.$store
-        .dispatch(GEN_PROOF, body)
+        .dispatch(SHARE, body)
         .then((response) => {
           console.log("Proof");
           console.log(response);

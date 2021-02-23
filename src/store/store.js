@@ -22,6 +22,7 @@ import {
   SIGN_EC,
   SIGN,
   GEN_PROOF,
+  SHARE,
   IMPORT_CRED,
   IMPORT_SIGN,
   DELETE_CRED,
@@ -240,6 +241,33 @@ export default new Vuex.Store({
           .then((res) => {
             console.log(res);
             resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [SHARE]: ({ commit, state }, data) => {
+      return new Promise((resolve, reject) => {
+        console.log("Action SHARE");
+        state.debug("Data: ", data);
+        API.signPrivateKey(data.url)
+          .then((res) => {
+            console.log(res);
+            let url = "https://dca.wallid.io/api/v1/proof/share";
+            data.url_sig = res;
+            axios(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: data,
+            }).then((res) => {
+              console.log(res);
+              resolve(res);
+            });
           })
           .catch((e) => {
             console.error(e);
