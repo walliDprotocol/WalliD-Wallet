@@ -461,29 +461,23 @@ export default {
         // case type == "signature" && this.frontTemplate.length >= 5:
         //   return 4;
         case type == "logos" && this.frontTemplate.length <= 2:
-          return 2;
-        case type == "signature" && this.frontTemplate.length <= 2:
-          return 5;
-        case type == "attribute" &&
-          this.frontTemplate.length <= 2 &&
-          this.logos.length > 1:
-          return 5;
         case (type == "logos" || type == "blank") &&
           this.frontTemplate.length == 4:
+        case type == "logos" || type == "blank":
           return 2;
+
+        case type == "signature" && this.frontTemplate.length <= 2:
+        case type == "attribute" && this.frontTemplate.length <= 2:
         case this.frontTemplate.length == 4 && this.logos.length > 1:
-          return 5;
-        case type == "attribute" &&
-          this.frontTemplate.length <= 6 &&
-          this.logos.length > 1:
-          return 4;
-        case type == "signature" && this.frontTemplate.length <= 6:
-          return 4;
         case (type == "signature" || type == "attribute") &&
           this.logos.length > 1:
           return 5;
-        case type == "logos" || type == "blank":
-          return 2;
+
+        case type == "attribute" &&
+          this.frontTemplate.length <= 6 &&
+          this.logos.length > 1:
+        case type == "signature" && this.frontTemplate.length <= 6:
+          return 4;
         case side <= 2:
           return 6;
         case side == 3:
@@ -514,6 +508,10 @@ export default {
           this.frontTemplate.length <= 3 &&
           this.large:
           return "padding: 18px 6px";
+        case type == "attribute" &&
+          this.logos.length == 0 &&
+          this.sigs.length == 0:
+          return "padding: 10px 24px";
         case type == "signature" || type == "attribute":
           return "padding-left:6px; padding-right:6px;";
         case side <= 2:

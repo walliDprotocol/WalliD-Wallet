@@ -97,14 +97,14 @@
                     >
                   </v-list-item>
 
-                  <v-list-item>
-                    <v-list-item-title class="SECUNDARY-LINKS text-left"
-                      >
+                  <v-list-item
+                    :class="!card.userData.pdf_url ? 'disabled' : ''"
+                  >
+                    <v-list-item-title class="SECUNDARY-LINKS text-left">
                       <a :href="card.userData.pdf_url" target="_blank">{{
                         $t("credentials.menu[2]")
                       }}</a>
-                      </v-list-item-title
-                    >
+                    </v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -245,7 +245,8 @@ export default {
     padding: 10px 20px;
     &.disabled {
       pointer-events: none;
-      .v-list-item__title {
+      .v-list-item__title,
+      a {
         color: #b8b9bb !important;
       }
     }

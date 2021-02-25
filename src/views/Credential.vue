@@ -61,11 +61,13 @@
 
       <v-col cols="12">
         <a
+          class="download-button"
+          :class="{ disabled: !card.userData.pdf_url }"
           :href="card.userData.pdf_url"
           target="_blank"
           style="text-decoration:none"
         >
-          <v-btn text class="advance-btn">
+          <v-btn :disabled="!card.userData.pdf_url" text class="advance-btn">
             {{ $t("credentials.menu[2]") }}
           </v-btn>
         </a>
@@ -145,6 +147,11 @@ export default {
 </script>
 
 <style lang="scss">
+.download-button {
+  &.disabled {
+    cursor: default;
+  }
+}
 #metamask-logo-details {
   max-height: 83px;
   max-width: 83px;

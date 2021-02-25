@@ -8,8 +8,9 @@
       >
         <BackgroundCard
           v-if="hasColor"
+          :fstColor="hasColor"
           :style="backgroundStyleSvg"
-          class="background-card"
+          :sndColor="hexToRgbA(hasColor)"
         >
         </BackgroundCard>
         <slot name="front"></slot>
@@ -27,6 +28,14 @@
         class="back"
         style="background-position: center; background-size: contain;"
       >
+        <BackgroundCard
+          v-if="hasColor.toLowerCase() == '#eeeeee'"
+          :fstColor="hasColor"
+          :sndColor="hexToRgbA(hasColor)"
+          :style="backgroundStyleSvg"
+          class="background-card"
+        >
+        </BackgroundCard>
         <slot name="back"></slot>
 
         <v-btn
@@ -59,7 +68,7 @@ export default {
   },
   computed: {
     backgroundStyleSvg() {
-      return `height: ${this.height}px; width: ${this.width}px;margin-top:-10px `;
+      return `height: ${this.height}px; width: ${this.width}px;margin-top:-10px; position: absolute; `;
     },
     backgroundStyle() {
       return `height: ${this.height}px; width: ${this.width -
@@ -67,6 +76,23 @@ export default {
     },
   },
   methods: {
+    hexToRgbA(hex) {
+      var c;
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split("");
+        if (c.length == 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c = "0x" + c.join("");
+        return (
+          "rgba(" +
+          [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+          ",0.4)"
+        );
+      } else {
+        return "rgba(201, 201, 201, 0.4)";
+      }
+    },
     checkBackground() {
       return "background-image: url(../../images/fundo-credencial.png)";
     },
