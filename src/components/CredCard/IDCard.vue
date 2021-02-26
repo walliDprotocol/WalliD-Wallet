@@ -38,6 +38,14 @@
               </p>
             </div>
           </v-col>
+        </v-row>
+        <v-row
+          class="justify-start"
+          :class="{
+            'pl-8': frontTemplate.length == 4 && large,
+            'pl-1': frontTemplate.length > 4,
+          }"
+        >
           <v-col
             v-for="(field, index) in front"
             v-bind:key="index"
@@ -500,6 +508,22 @@ export default {
     },
     idCardStyle(side, type) {
       switch (true) {
+        case type == "attribute" &&
+          this.logos.length == 0 &&
+          this.sigs.length == 0 &&
+          this.frontTemplate.length > 4:
+          return "padding: 14px 4px; padding-bottom:0";
+        case type == "attribute" &&
+          this.logos.length == 0 &&
+          this.sigs.length == 0 &&
+          this.frontTemplate.length == 4 &&
+          this.large:
+          return "padding: 22px 0 0 22px";
+        case type == "attribute" &&
+          this.logos.length == 0 &&
+          this.sigs.length == 0 &&
+          this.frontTemplate.length == 4:
+          return "padding: 14px 0 0 22px";
         case type == "logos" && this.frontTemplate.length < 3 && this.large:
           return "padding: 18px 6px;";
         case type != "logos" && this.frontTemplate.length < 3 && this.large:
