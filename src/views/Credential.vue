@@ -27,8 +27,6 @@
           :certName="card.credName"
           :urlPhoto="photoCred"
           :frontend_props="frontend_props"
-          :width="357"
-          :height="frontend_props && frontend_props.color ? 252 : 228"
         />
       </v-col>
       <v-col cols="12">

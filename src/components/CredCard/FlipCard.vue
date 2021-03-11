@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     backgroundStyleSvg() {
-      return `height: ${this.height}px; width: ${this.width}px;margin-top:-10px; position: absolute; `;
+      return `height: ${this.height}px; width: ${this.width}px; position: absolute; `;
     },
     backgroundStyle() {
       return `height: ${this.height}px; width: ${this.width -

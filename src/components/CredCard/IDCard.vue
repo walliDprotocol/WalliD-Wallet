@@ -205,10 +205,10 @@ export default {
       default: () => {},
     },
     width: {
-      default: 368,
+      default: 357,
     },
     height: {
-      default: 235,
+      default: 233,
     },
     large: {
       default: false,
@@ -235,7 +235,8 @@ export default {
       this.frontend_props && this.frontend_props.sigs
         ? this.frontend_props.sigs.slice()
         : [];
-    this.hasColor = this.frontend_props && this.frontend_props.color;
+    this.hasColor =
+      (this.frontend_props && this.frontend_props.color) || "#eeeeee";
 
     console.log("sigs", this.sigs);
     console.log("logos", this.logos);
@@ -512,7 +513,7 @@ export default {
           this.logos.length == 0 &&
           this.sigs.length == 0 &&
           this.frontTemplate.length > 4:
-          return "padding: 14px 4px; padding-bottom:0";
+          return "padding: 14px 0px 0px;";
         case type == "attribute" &&
           this.logos.length == 0 &&
           this.sigs.length == 0 &&
