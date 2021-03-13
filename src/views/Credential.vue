@@ -14,13 +14,16 @@
       </v-col>
     </v-row>
     <v-row class="">
-      <v-col
-        v-if="userData"
-        cols="12"
-        class="pt-0 pb-2"
-        style="text-align: initial"
-      >
+      <v-col cols="12" class="pt-0 pb-2" style="text-align: initial">
+        <v-img
+          class="credential-img"
+          v-if="
+            card.userData.credential_img && frontend_props.customTemplateName
+          "
+          :src="card.userData.credential_img"
+        />
         <CredCard
+          v-else-if="userData"
           :frontTemplate="userData.front"
           :backTemplate="userData.table"
           :caName="card.caName"
@@ -145,6 +148,9 @@ export default {
 </script>
 
 <style lang="scss">
+.credential-img {
+  border-radius: 14px;
+}
 .download-button {
   &.disabled {
     cursor: default;
