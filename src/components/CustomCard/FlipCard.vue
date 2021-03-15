@@ -3,20 +3,24 @@
     <div class="flipper">
       <div
         class="front"
-        :style="backgroundStyle && !hasColor && checkBackground()"
+        :class="{ 'page-to-print': print }"
         style="background-position: center; background-size: contain;"
+        :style="backgroundStyle"
       >
         <BackgroundCard
-          v-if="hasColor"
+          id="svg-background"
+          v-if="hasColor && !background"
           :fstColor="hasColor"
-          :style="backgroundStyleSvg"
           :sndColor="hexToRgbA(hasColor)"
+          :style="backgroundStyleSvg"
+          class="background-card"
         >
         </BackgroundCard>
+
         <slot name="front"></slot>
         <v-btn
           class="rotate-btn"
-          v-if="hasBack"
+          v-if="hasBack && !print"
           :ripple="false"
           text
           @click="$emit('flipped', true)"
@@ -25,22 +29,15 @@
         </v-btn>
       </div>
       <div
+        v-if="hasBack"
         class="back"
+        :class="{ 'page-to-print': print }"
         style="background-position: center; background-size: contain;"
       >
-        <BackgroundCard
-          v-if="hasColor.toLowerCase() == '#eeeeee'"
-          :fstColor="hasColor"
-          :sndColor="hexToRgbA(hasColor)"
-          :style="backgroundStyleSvg"
-          class="background-card"
-        >
-        </BackgroundCard>
         <slot name="back"></slot>
-
         <v-btn
           class="rotate-btn"
-          v-if="hasBack"
+          v-if="hasBack && !print"
           :ripple="false"
           text
           @click="$emit('flipped', false)"
@@ -54,25 +51,35 @@
 
 <script>
 import IconRotate from "./assets/icon-rotate";
-import BackgroundCard from "./assets/fundo-test";
+import BackgroundCard from "./assets/background";
 
 export default {
   name: "FlipCard",
-  props: ["hasBack", "isForeign", "flipped", "height", "width", "hasColor"],
+  props: [
+    "hasBack",
+    "isForeign",
+    "flipped",
+    "height",
+    "width",
+    "background",
+    "hasColor",
+    "print",
+    "proof_url",
+  ],
   components: {
     IconRotate,
     BackgroundCard,
   },
   created() {
+    console.log("background", this.background);
     console.log("hasColor", this.hasColor);
   },
   computed: {
     backgroundStyleSvg() {
-      return `height: ${this.height}px; width: ${this.width}px; position: absolute; `;
+      return `height: ${this.height}px; width: ${this.width}px;`;
     },
     backgroundStyle() {
-      return `height: ${this.height}px; width: ${this.width -
-        2}px; margin-top:-4px`;
+      return `height: ${this.height}px; width: ${this.width}px; background-image: url(${this.background})`;
     },
   },
   methods: {
@@ -85,25 +92,41 @@ export default {
         }
         c = "0x" + c.join("");
         return (
-          "rgba(" +
-          [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
-          ",0.4)"
+          "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",1)"
         );
       } else {
         return "rgba(201, 201, 201, 0.4)";
       }
     },
-    checkBackground() {
-      return "background-image: url(../../images/fundo-credencial.png)";
-    },
   },
   data() {
-    return {};
+    return {
+      size: 120,
+      foreground: "#000000",
+    };
   },
 };
 </script>
 
+<style lang="scss">
+.print-a4 {
+  &.flip-container {
+    .back {
+      transform: rotateY(0deg);
+    }
+    .front,
+    .back {
+      border-radius: 0;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
+#svg-background {
+  border-radius: 14px;
+}
+
 .background-card {
   z-index: -1;
   position: absolute;
@@ -195,9 +218,10 @@ i.backFlipBtn {
   top: 0;
   left: 0;
   width: 100%;
-  border-radius: 14px;
+  border-radius: 18px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
+
 .back {
   transform: rotateY(-180deg);
   position: absolute;
@@ -206,6 +230,7 @@ i.backFlipBtn {
     align-content: flex-start !important;
   }
 }
+
 .flip-container.flipped .back {
   transform: rotateY(0deg);
 }
@@ -214,5 +239,15 @@ i.backFlipBtn {
 }
 .front {
   z-index: 2;
+  .qr-code {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    width: auto;
+    max-width: 137px;
+    height: auto;
+    max-height: 137px;
+  }
 }
 </style>

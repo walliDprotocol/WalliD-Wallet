@@ -13,13 +13,17 @@
         :key="index"
         @click="$emit('updatePage', index)"
         :color="index == page ? '#009fb1' : '#b8b9bb'"
+        :style="large ? '' : 'height: 18px;width: 18px;'"
         class="page-btn"
         rounded
-        x-small
+        :x-small="!large"
+        :small="large"
         text
         fab
       >
-        <v-icon max-height="8">mdi-checkbox-blank-circle</v-icon>
+        <v-icon :style="large ? 'font-size: 16px' : 'font-size: 8px'"
+          >mdi-checkbox-blank-circle</v-icon
+        >
       </v-btn>
     </div>
     <v-btn
@@ -55,15 +59,11 @@ export default {
     page: {
       required: true,
     },
+    large: {},
   },
 };
 </script>
 <style lang="scss" scoped>
 .page-btn.v-btn {
-  height: 18px;
-  width: 18px;
-  .v-icon {
-    font-size: 8px;
-  }
 }
 </style>

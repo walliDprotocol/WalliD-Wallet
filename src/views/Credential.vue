@@ -15,15 +15,8 @@
     </v-row>
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2" style="text-align: initial">
-        <v-img
-          class="credential-img"
-          v-if="
-            card.userData.credential_img && frontend_props.customTemplateName
-          "
-          :src="card.userData.credential_img"
-        />
-        <CredCard
-          v-else-if="userData"
+        <CustomCard
+          v-if="userData"
           :frontTemplate="userData.front"
           :backTemplate="userData.table"
           :caName="card.caName"
@@ -82,7 +75,7 @@ import WalletAddress from "../components/WalletAddress";
 import WalletState from "../components/WalletState";
 import ArrowBack from "../images/icon-arrow-back.vue";
 
-import CredCard from "../components/CredCard";
+import CustomCard from "../components/CustomCard";
 
 import { mapGetters } from "vuex";
 const FILESTACK = "https://www.filestackapi.com/api/file/";
@@ -92,7 +85,7 @@ export default {
     WalletAddress,
     WalletState,
     ArrowBack,
-    CredCard,
+    CustomCard,
   },
   methods: {
     proofPage() {
