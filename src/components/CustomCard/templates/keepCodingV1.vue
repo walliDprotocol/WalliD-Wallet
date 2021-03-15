@@ -215,7 +215,7 @@ export default {
           border-right: black 1px solid !important;
         }
         th {
-          font-size: 8px;
+          font-size: 6px;
           padding: 1px 4px;
         }
         td {
@@ -273,6 +273,7 @@ export default {
       letter-spacing: -0.2px;
       color: #303031;
       text-align: center;
+      text-transform: capitalize;
     }
   }
   .desc p {

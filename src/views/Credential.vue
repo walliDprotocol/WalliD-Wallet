@@ -7,7 +7,7 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
-            {{ card.caName }} <br />
+            {{ card.caName }}
             {{ card.credName }}
           </h2>
         </div>
@@ -20,7 +20,7 @@
           :frontTemplate="userData.front"
           :backTemplate="userData.table"
           :caName="card.caName"
-          :certName="card.credName"
+          :credentialName="card.credName"
           :urlPhoto="photoCred"
           :frontend_props="frontend_props"
         />

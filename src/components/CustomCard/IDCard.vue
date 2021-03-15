@@ -34,6 +34,7 @@
               disable-sort
               :page="page"
               hide-default-footer
+              mobile-breakpoint="100"
             >
               <template v-slot:body="{ items }">
                 <tbody>
