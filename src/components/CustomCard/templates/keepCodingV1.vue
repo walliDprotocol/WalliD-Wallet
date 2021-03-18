@@ -16,11 +16,7 @@
       </v-col>
     </v-row>
     <v-row
-      class="justify-start"
-      :class="{
-        'pl-8': frontTemplate.length == 4 && large,
-        'pl-1': frontTemplate.length > 4,
-      }"
+      class="justify-start px-1"
     >
       <v-col
         class="field px-0 py-0"

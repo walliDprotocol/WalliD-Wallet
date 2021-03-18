@@ -16,8 +16,8 @@
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2" style="text-align: initial">
         <CustomCard
-          v-if="userData"
-          :frontTemplate="userData.front"
+        v-if="!loading"
+          :frontTemplate="templateValues"
           :backTemplate="userData.table"
           :caName="card.caName"
           :credentialName="card.credName"
@@ -107,6 +107,7 @@ export default {
     } else {
       this.photoCred = this.card.userData.img_url;
     }
+
   },
   mounted() {
     if (this.card.userData.userData) {
@@ -119,11 +120,16 @@ export default {
         );
         delete this.card.userData.user_data.tables;
       }
-      for (var a in this.card.userData.user_data) {
-        var val = this.card.userData.user_data[a];
-        userData.front.push({ attr: a, value: val });
-      }
-      this.userData = userData; // this.card.userData.user_data;
+      // for (var a in this.card.userData.user_data) {
+      //   var val = this.card.userData.user_data[a];
+      //   userData.front.push({ attr: a, value: val });
+      // }
+ for (let index = 0; index < this.card.userData.template_itens.length; index++) {
+   const el = this.card.userData.template_itens[index];
+      this.templateValues[el.order]=  { attr: el.attr, value: this.card.userData.user_data[el.attr] }; // "a 5", "b 7", "c 9"
+    }
+   this.userData = userData; // this.card.userData.user_data;
+      this.loading = false
     }
   },
   computed: {
@@ -135,6 +141,8 @@ export default {
       userData: null,
       frontend_props: null,
       photoCred: null,
+      templateValues:[],
+      loading:true
     };
   },
 };
