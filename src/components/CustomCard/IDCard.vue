@@ -156,15 +156,17 @@ export default {
     },
     proof_url: {},
   },
+  created() {
+    this.templateName =
+      (this.frontend_props && this.frontend_props.customTemplateName) ||
+      this.templateName;
+  },
   mounted() {
     this.loading = false;
     console.log("frontTemplate", this.frontTemplate);
     console.log("backTemplate", this.backTemplate);
     console.log("frontend_props", this.frontend_props);
 
-    this.templateName =
-      (this.frontend_props && this.frontend_props.customTemplateName) ||
-      this.templateName;
     console.log("templateName", this.templateName);
 
     this.hasColor =
@@ -255,7 +257,7 @@ export default {
         return res && res.value ? res.value : "[" + field.attr + "]";
       }
 
-      return field.value;
+      return field && field.value;
     },
     deleteItem(item) {
       let editedIndex = this.tableValues.indexOf(item);

@@ -42,7 +42,7 @@
       >
         <div class="name" :id="'outer' + extraLarge">
           <label :id="'output' + extraLarge" :style="{ fontSize: fontSize }">
-            {{ getValue(frontTemplate[0]) }}
+            {{ getValue(attributes[0]) }}
           </label>
         </div>
       </v-col>
@@ -54,7 +54,7 @@
       >
         <div class="desc">
           <p>
-            {{ $t("success") }}
+            {{ getValue(attributes[1]) }}
           </p>
         </div>
       </v-col>
@@ -76,9 +76,9 @@
         <div class="desc">
           <p>
             {{ $t("desc[0]") }}
-            {{ getValue(frontTemplate[1]) }}
+            {{ getValue(attributes[2]) }}
             {{ $t("desc[1]") }}
-            {{ getValue(frontTemplate[2]) }}
+            {{ getValue(attributes[3]) }}
           </p>
           <p>
             {{ $t("desc[2]") }}
@@ -138,6 +138,13 @@ export default {
       }
       return url;
     },
+    checkAttributes() {
+      let arr = [...this.frontTemplate];
+      if (arr.length < 4) {
+        arr.splice(1, 0, { value: this.$t("success") });
+      }
+      return arr;
+    },
   },
   methods: {
     dynamicFont() {
@@ -175,12 +182,16 @@ export default {
     },
   },
   data() {
-    return { fontSize: 20 };
+    return { fontSize: 20, attributes: null };
+  },
+  created() {
+    this.attributes = this.checkAttributes;
   },
   mounted() {
     if (this.extraLarge) this.fontSize = "80px";
     this.$nextTick(() => this.dynamicFont());
     console.log("props", this.$props.frontTemplate);
+    this.attributes = this.checkAttributes;
   },
 };
 </script>
