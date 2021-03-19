@@ -126,10 +126,17 @@ export default {
           index++
         ) {
           const el = this.card.userData.template_itens[index];
-          this.templateValues[el.order] = {
-            attr: el.attr,
-            value: this.card.userData.user_data[el.attr],
-          }; // "a 5", "b 7", "c 9"
+          if (this.card.userData.user_data[el.attr] && el.order > -1) {
+            this.templateValues[el.order] = {
+              attr: el.attr,
+              value: this.card.userData.user_data[el.attr],
+            };
+          } else if (this.card.userData.user_data[el.attr]) {
+            this.templateValues.push({
+              attr: el.attr,
+              value: this.card.userData.user_data[el.attr],
+            });
+          }
         }
       else
         for (var a in this.card.userData.user_data) {
