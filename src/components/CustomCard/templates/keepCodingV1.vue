@@ -205,7 +205,7 @@ export default {
       tbody {
         height: 100%;
         tr {
-          height: calc(100 / var(--nItens));
+          // height: calc(100 / var(--nItens));
         }
       }
       .v-data-table__wrapper {

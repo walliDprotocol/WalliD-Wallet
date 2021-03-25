@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue';
+import Vuex from 'vuex';
 import {
   IMPORT,
   REFRESH_STATE,
@@ -26,10 +26,10 @@ import {
   IMPORT_CRED,
   IMPORT_SIGN,
   DELETE_CRED,
-} from "./actions";
+} from './actions';
 
 const { API } = chrome.extension.getBackgroundPage();
-import axios from "axios";
+import axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -80,15 +80,15 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         API.currentTab(resolve);
       }).then((site) => {
-        state.debug("Current site: ", site);
-        state.debug("Existing connections: ", state.connections);
+        state.debug('Current site: ', site);
+        state.debug('Existing connections: ', state.connections);
         if (state.connections) {
           let connectedSite = state.connections.find((e) => {
-            return state.getDomain(e.url) == state.getDomain(site.url) ? e : "";
+            return state.getDomain(e.url) == state.getDomain(site.url) ? e : '';
           });
-          state.debug("connectedSite site: ", connectedSite);
+          state.debug('connectedSite site: ', connectedSite);
           if (connectedSite) {
-            commit("updateConnected", connectedSite);
+            commit('updateConnected', connectedSite);
           }
         }
       });
@@ -104,8 +104,8 @@ export default new Vuex.Store({
 
     [GET_TOKEN]: ({ commit, state }, { idt, operation }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action GET_TOKEN");
-        state.debug("Data: ", idt, operation);
+        console.log('Action GET_TOKEN');
+        state.debug('Data: ', idt, operation);
         API.getAuthorizationToken(idt, operation)
           .then((res) => {
             console.log(res);
@@ -119,7 +119,7 @@ export default new Vuex.Store({
     },
 
     [CREATE_NEW_WALLET]: ({ commit, dispatch }, { seed, password }) => {
-      console.log("Action CREATE_NEW_WALLET");
+      console.log('Action CREATE_NEW_WALLET');
       return new Promise((resolve, reject) => {
         API.createNewVault(seed, password)
           .then((res) => {
@@ -133,7 +133,7 @@ export default new Vuex.Store({
     },
 
     [GENERATE_NEW_SEED_PHRASE]: ({ commit, dispatch }, password) => {
-      console.log("Action GENERATE_NEW_SEED_PHRASE");
+      console.log('Action GENERATE_NEW_SEED_PHRASE');
       return new Promise((resolve, reject) => {
         let seed = API.generateSeedPhrase();
         resolve(seed);
@@ -141,14 +141,14 @@ export default new Vuex.Store({
     },
 
     [REVEAL_SEED_PHRASE]: ({ commit, dispatch }, password) => {
-      console.log("Action REVEAL_SEED_PHRASE");
+      console.log('Action REVEAL_SEED_PHRASE');
       return new Promise((resolve, reject) => {
         API.verifyPassword(password)
           .then((result) => {
             if (result) {
               resolve(API.getState().mnemonic());
             } else {
-              reject("Wrong Password");
+              reject('Wrong Password');
             }
           })
           .catch((e) => {
@@ -158,14 +158,14 @@ export default new Vuex.Store({
     },
 
     [REVEAL_PRIV_KEY]: ({ commit, dispatch }, password) => {
-      console.log("Action REVEAL_PRIV_KEY");
+      console.log('Action REVEAL_PRIV_KEY');
       return new Promise((resolve, reject) => {
         API.verifyPassword(password)
           .then((result) => {
             if (result) {
               resolve(API.getState().key());
             } else {
-              reject("Wrong Password");
+              reject('Wrong Password');
             }
           })
           .catch((e) => {
@@ -174,13 +174,13 @@ export default new Vuex.Store({
       });
     },
     [REFRESH_STATE]: ({ commit, dispatch }) => {
-      console.log("Action REFRESH_STATE");
-      commit("updateAddress", API.getState().address);
-      commit("updateUnlocked", API.getState().unlocked);
-      commit("updateConnections", API.getState().connections);
-      commit("updateOnboarding", API.getState().initialized);
-      commit("updateIdentities", API.getState().identities);
-      commit("updateCredentials", API.getState().credentials);
+      console.log('Action REFRESH_STATE');
+      commit('updateAddress', API.getState().address);
+      commit('updateUnlocked', API.getState().unlocked);
+      commit('updateConnections', API.getState().connections);
+      commit('updateOnboarding', API.getState().initialized);
+      commit('updateIdentities', API.getState().identities);
+      commit('updateCredentials', API.getState().credentials);
 
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
@@ -188,11 +188,11 @@ export default new Vuex.Store({
 
     [CONNECT]: ({ commit, state }, { origin, name, level = 2 }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action CONNECT");
-        state.debug("URL: ", origin);
-        state.debug("Connections: ", state.connections);
+        console.log('Action CONNECT');
+        state.debug('URL: ', origin);
+        state.debug('Connections: ', state.connections);
         // state.debug("Notification: ", state.notification);
-        let icon = origin + "/favicon.ico";
+        let icon = origin + '/favicon.ico';
         API.approveConnection(origin, icon, name, level)
           .then((res) => {
             resolve(res);
@@ -206,8 +206,8 @@ export default new Vuex.Store({
 
     [DELETE_CRED]: ({ commit, state }, id) => {
       return new Promise((resolve, reject) => {
-        console.log("Action DELETE_CRED");
-        state.debug("Data: ", id);
+        console.log('Action DELETE_CRED');
+        state.debug('Data: ', id);
         API.deleteCredential(id)
           .then((res) => {
             resolve(res);
@@ -220,8 +220,8 @@ export default new Vuex.Store({
     },
     [ENCRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action ENCRYPT");
-        state.debug("Data: ", data);
+        console.log('Action ENCRYPT');
+        state.debug('Data: ', data);
         API.encryptData(data)
           .then((res) => {
             resolve(res);
@@ -235,8 +235,8 @@ export default new Vuex.Store({
 
     [IMPORT_SIGN]: ({ commit, state }, data) => {
       return new Promise((resolve, reject) => {
-        console.log("Action IMPORT_SIGN");
-        state.debug("Data: ", data);
+        console.log('Action IMPORT_SIGN');
+        state.debug('Data: ', data);
         API.importCredentialSign(data.id, data.data.sig, data.data.verifySig)
           .then((res) => {
             console.log(res);
@@ -251,17 +251,17 @@ export default new Vuex.Store({
 
     [SHARE]: ({ commit, state }, data) => {
       return new Promise((resolve, reject) => {
-        console.log("Action SHARE");
-        state.debug("Data: ", data);
+        console.log('Action SHARE');
+        state.debug('Data: ', data);
         API.signPrivateKey(data.url)
           .then((res) => {
             console.log(res);
-            let url = "https://dca.wallid.io/api/v1/proof/share";
+            let url = 'https://dca.wallid.io/api/v1/proof/share';
             data.url_sig = res;
             axios(url, {
-              method: "POST",
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               data: data,
             }).then((res) => {
@@ -278,17 +278,17 @@ export default new Vuex.Store({
 
     [GEN_PROOF]: ({ commit, state }, data) => {
       return new Promise((resolve, reject) => {
-        console.log("Action GEN_PROOF");
-        state.debug("Data: ", data);
+        console.log('Action GEN_PROOF');
+        state.debug('Data: ', data);
         API.signPrivateKey(data.url)
           .then((res) => {
             console.log(res);
-            let url = "https://dca.wallid.io/api/v1/proof/gen";
+            let url = 'https://dca.wallid.io/api/v1/proof/gen';
             data.url_sig = res;
             axios(url, {
-              method: "POST",
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               data: data,
             }).then((res) => {
@@ -304,8 +304,8 @@ export default new Vuex.Store({
     },
     [IMPORT_CRED]: ({ commit, state }, data) => {
       return new Promise((resolve, reject) => {
-        console.log("Action IMPORT_CRED");
-        state.debug("Data: ", data);
+        console.log('Action IMPORT_CRED');
+        state.debug('Data: ', data);
         let ow = true;
         let arr = [];
         for (var a in data.userData.userData) {
@@ -314,7 +314,7 @@ export default new Vuex.Store({
         }
 
         data.userData.userData = arr;
-        state.debug("Data after: ", data);
+        state.debug('Data after: ', data);
 
         API.importCredential(
           data.id,
@@ -338,10 +338,10 @@ export default new Vuex.Store({
     },
     [IMPORT]: ({ commit, state }, { idt, data, ow = true, expDate }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action IMPORT");
-        state.debug("idt: ", idt);
-        state.debug("Data: ", data);
-        state.debug("ow: ", ow);
+        console.log('Action IMPORT');
+        state.debug('idt: ', idt);
+        state.debug('Data: ', data);
+        state.debug('ow: ', ow);
 
         API.importIdentity_v2(idt, data, ow, expDate)
           .then((res) => {
@@ -355,8 +355,8 @@ export default new Vuex.Store({
     },
     [DECRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action DECRYPT");
-        state.debug("Data: ", data);
+        console.log('Action DECRYPT');
+        state.debug('Data: ', data);
         API.decryptData(data)
           .then((res) => {
             console.log(res);
@@ -370,8 +370,8 @@ export default new Vuex.Store({
     },
     [SIGN_EC]: ({ state, commit, dispatch }, { data }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action SIGN_EC");
-        state.debug("Data: ", data);
+        console.log('Action SIGN_EC');
+        state.debug('Data: ', data);
         API.generateECSignature(data)
           .then((res) => {
             console.log(res);
@@ -385,8 +385,8 @@ export default new Vuex.Store({
     },
     [SIGN_ERC]: ({ state, commit, dispatch }, { data }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action SIGN_ERC");
-        state.debug("Data: ", data);
+        console.log('Action SIGN_ERC');
+        state.debug('Data: ', data);
         API.generateERC191Signature(data.target, data.data)
           .then((res) => {
             console.log(res);
@@ -401,8 +401,8 @@ export default new Vuex.Store({
 
     [SIGN]: ({ state, commit, dispatch }, { data }) => {
       return new Promise((resolve, reject) => {
-        console.log("Action SIGN");
-        state.debug("Data: ", data);
+        console.log('Action SIGN');
+        state.debug('Data: ', data);
         API.signPrivateKey(data)
           .then((res) => {
             console.log(res);
@@ -420,34 +420,34 @@ export default new Vuex.Store({
       { data, type, callback, origin }
     ) => {
       return new Promise((resolve, reject) => {
-        console.log("Action AUTHORIZE_REQUEST");
-        state.debug("Params: ", data);
-        state.debug("Type: ", type);
-        state.debug("Origin: ", origin);
-        state.debug("userData: ", data.data);
+        console.log('Action AUTHORIZE_REQUEST');
+        state.debug('Params: ', data);
+        state.debug('Type: ', type);
+        state.debug('Origin: ', origin);
+        state.debug('userData: ', data.data);
 
-        commit("clearPendingRequests");
+        commit('clearPendingRequests');
 
         switch (type) {
-          case "wallet_sign":
+          case 'wallet_sign':
             dispatch(SIGN, { data }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });
             break;
-          case "wallet_ec_sign":
+          case 'wallet_ec_sign':
             dispatch(SIGN_EC, { data }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });
             break;
-          case "wallet_sign_erc191":
+          case 'wallet_sign_erc191':
             dispatch(SIGN_ERC, { data }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });
             break;
-          case "wallid_token":
+          case 'wallid_token':
             dispatch(GET_TOKEN, { idt: data[0], operation: data[1] }).then(
               (res) => {
                 console.log(res);
@@ -455,64 +455,64 @@ export default new Vuex.Store({
               }
             );
             break;
-          case "wallid_connect":
+          case 'wallid_connect':
             dispatch(CONNECT, { origin }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });
             break;
 
-          case "wallet_encrypt":
+          case 'wallet_encrypt':
             dispatch(ENCRYPT, { data }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });
             break;
 
-          case "wallet_decrypt":
+          case 'wallet_decrypt':
             dispatch(DECRYPT, { data }).then((res) => {
               let _res = JSON.parse(res);
               resolve(callback(null, _res));
             });
             break;
-          case "wallid_import_sign":
+          case 'wallid_import_sign':
             dispatch(IMPORT_SIGN, {
               id: data.id,
               data: data.data,
             })
               .then((res) => {
-                console.log("res import:", res);
+                console.log('res import:', res);
                 resolve(callback(null, true));
               })
-              .catch(() => resolve(callback("REJECTED")));
+              .catch(() => resolve(callback('REJECTED')));
             break;
-          case "wallid_import":
+          case 'wallid_import':
             dispatch(IMPORT, {
               idt: data.idt,
               data: data.data,
               expDate: data.expDate,
             })
               .then((res) => {
-                console.log("res import:", res);
+                console.log('res import:', res);
                 resolve(callback(null, true));
               })
-              .catch(() => resolve(callback("REJECTED")));
+              .catch(() => resolve(callback('REJECTED')));
 
             break;
-          case "wallid_import_cred":
+          case 'wallid_import_cred':
             dispatch(IMPORT_CRED, {
               id: data.id,
               credName: data.data.credName,
               caName: data.data.caName,
-              status: "pending_approval",
+              status: 'pending_approval',
               userData: data.data,
               expDate: data.expDate,
             })
               .then((res) => {
-                console.log("res import:", res);
+                console.log('res import:', res);
                 resolve(callback(null, true));
               })
-              .catch(() => resolve(callback("REJECTED")));
+              .catch(() => resolve(callback('REJECTED')));
 
             break;
 
@@ -524,7 +524,7 @@ export default new Vuex.Store({
       })
         .then(() => {
           dispatch(REFRESH_STATE);
-          state.debug("Connections: ", state.connections);
+          state.debug('Connections: ', state.connections);
         })
         .catch((err) => {
           throw err;
@@ -535,37 +535,37 @@ export default new Vuex.Store({
       { request, notification, callback }
     ) => {
       return new Promise((resolve, reject) => {
-        console.log("Action CANCEL_REQUEST", callback);
-        resolve(callback("REJECTED"));
+        console.log('Action CANCEL_REQUEST', callback);
+        resolve(callback('REJECTED'));
 
-        commit("updatePendingRequests");
+        commit('updatePendingRequests');
         dispatch(REFRESH_STATE);
       });
     },
 
     [DISCONNECT]: ({ commit, state }, url) => {
       return new Promise((resolve, reject) => {
-        console.log("Action DISCONNECT");
-        state.debug("URL: ", url);
-        state.debug("Connections: ", state.connections);
+        console.log('Action DISCONNECT');
+        state.debug('URL: ', url);
+        state.debug('Connections: ', state.connections);
 
         API.removeConnected(url)
           .then(() => {
-            commit("updateConnections", API.getState().connections);
+            commit('updateConnections', API.getState().connections);
             if (url == state.connected.url) {
-              commit("updateConnected", false);
+              commit('updateConnected', false);
             }
             resolve();
           })
           .catch((e) => {
-            console.error("Error Disconnecting site: ", e);
+            console.error('Error Disconnecting site: ', e);
             resolve(state.connections.shift());
           });
       });
     },
     [UNLOCK_WALLET]: ({ commit, dispatch }, password) => {
       return new Promise((resolve, reject) => {
-        console.log("Action UNLOCK_WALLET");
+        console.log('Action UNLOCK_WALLET');
         API.verifyPassword(password).then((res) => {
           if (res) {
             API.unlockApp(password)
@@ -574,13 +574,13 @@ export default new Vuex.Store({
                 reject(e);
               });
           } else {
-            reject("Wrong password");
+            reject('Wrong password');
           }
         });
       });
     },
     [LOCK_WALLET]: ({ commit, dispatch }) => {
-      console.log("Action LOCK_WALLET");
+      console.log('Action LOCK_WALLET');
       API.lockApp().then(() => dispatch(REFRESH_STATE));
     },
   },
@@ -595,7 +595,7 @@ export default new Vuex.Store({
       state.completedOnboarding = value;
     },
     updateConnected(state, value) {
-      console.log("store", value);
+      console.log('store', value);
       state.connected = value;
     },
     updateConnections(state, value) {

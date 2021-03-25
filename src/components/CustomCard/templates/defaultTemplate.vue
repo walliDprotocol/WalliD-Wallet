@@ -157,16 +157,16 @@ export default {
       let count = 0;
       for (i, count = 0; count < MAX_FIELDS && i < value.length; i++, count++) {
         console.log(value[i]);
-
-        let e = {
-          attribute: value[i].attr,
-          type: "attribute",
-          input: value[i].type,
-          value: value[i].value || "-",
-        };
-        console.log(e);
-
-        this.front.push(e);
+        if (value[i]) {
+          let e = {
+            attribute: value[i].attr,
+            type: "attribute",
+            input: value[i].type,
+            value: value[i].value || "-",
+          };
+          console.log(e);
+          this.front.push(e);
+        }
       }
 
       for (i = 0, count = 0; i < this.sigs.length; i++, count++) {
