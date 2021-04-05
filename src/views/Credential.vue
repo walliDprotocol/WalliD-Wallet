@@ -79,7 +79,7 @@ import CustomCard from "../components/CustomCard";
 
 import { mapGetters } from "vuex";
 const FILESTACK = "https://www.filestackapi.com/api/file/";
-const PDF_URL = "http://localhost:8081/ViewCredential/";
+const PDF_URL = "https://demo.mycredentials.wallid.io/ViewCredential/";
 
 export default {
   components: {
@@ -155,7 +155,7 @@ export default {
       if (
         this.connected &&
         (this.connected.url.startsWith("http://localhost:") ||
-          this.connected.url.startsWith("https://demo.dca.wallid.io"))
+          this.connected.url.startsWith("https://demo.mycredentials.wallid.io"))
       )
         return PDF_URL + this.card.id;
       return this.card.userData.pdf_url;
