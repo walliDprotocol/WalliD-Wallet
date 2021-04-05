@@ -6,65 +6,70 @@ const RequestAPIMethods = {
   wallid_disconnect: {
     popup: false,
     level: 1,
-    executor: ["connections", "removeConnected"],
+    executor: ['connections', 'removeConnected'],
   },
   wallid_token: {
     main_controller: true,
     level: 1,
-    executor: ["getAuthorizationToken"],
+    executor: ['getAuthorizationToken'],
   },
   wallid_identities: {
     popup: false,
     level: 1,
-    executor: ["identities", "getIDTsList"],
+    executor: ['identities', 'getIDTsList'],
   },
   wallid_extract: {
     popup: false,
     level: 1,
-    executor: ["wallet", "signERC191Message"], //CHANGE
+    executor: ['wallet', 'signERC191Message'], //CHANGE
   },
   wallid_import: {
     popup: false,
     level: 1,
-    executor: ["wallet", "signERC191Message"], //CHANGE
+    executor: ['wallet', 'signERC191Message'], //CHANGE
   },
   wallid_import_cred: {
     main_controller: true,
     level: 1,
-    executor: ["importCredential"],
+    executor: ['importCredential'],
+  },
+  wallid_export_cred: {
+    main_controller: true,
+    level: 1,
+    executor: ['exportCredential'],
   },
   wallid_import_sign: {
     main_controller: true,
     level: 1,
-    executor: ["importCredentialSign"],
+    executor: ['importCredentialSign'],
   },
   wallid_set_provider: {
     level: 1,
-    executor: ["configurations", "setProvider"],
+    executor: ['configurations', 'setProvider'],
   },
   wallet_address: {
     level: 1,
-    executor: ["wallet", "getAddress"],
+    executor: ['wallet', 'getAddress'],
   },
   wallet_encrypt: {
     level: 2,
-    executor: ["wallet", "encryptData"],
+    executor: ['wallet', 'encryptData'],
   },
   wallet_decrypt: {
     level: 2,
-    executor: ["wallet", "decryptData"],
+    executor: ['wallet', 'decryptData'],
   },
   wallet_sign_erc191: {
     level: 2,
-    executor: ["wallet", "signERC191Message"],
+    executor: ['wallet', 'signERC191Message'],
   },
   wallet_sign_ec: {
     level: 2,
-    executor: ["wallet", "signECMessage"],
+    executor: ['wallet', 'signECMessage'],
   },
   wallet_sign: {
     level: 2,
-    executor: ["wallet", "signEthereumMessage"],
+    executor: ['wallet', 'signEthereumMessage'],
   },
   wallid_open: {
     popup: true,
@@ -74,31 +79,31 @@ const RequestAPIMethods = {
     main_controller: true,
     create: true,
     level: 0,
-    executor: ["generateSeedPhrase"],
+    executor: ['generateSeedPhrase'],
   },
   createNewVault: {
     main_controller: true,
     create: true,
     level: 0,
-    executor: ["createNewVault"],
+    executor: ['createNewVault'],
   },
   unlockApp: {
     main_controller: true,
     create: true,
     level: 0,
-    executor: ["unlockApp"],
+    executor: ['unlockApp'],
   },
   wallid_onboarding: {
     main_controller: true,
     create: true,
     level: 0,
-    executor: ["getState"],
+    executor: ['getState'],
   },
 };
 
 export function getRequestDetails(method) {
   if (RequestAPIMethods[method] == undefined) {
-    return Promise.reject("Invalid method call");
+    return Promise.reject('Invalid method call');
   }
 
   return Promise.resolve(RequestAPIMethods[method]);

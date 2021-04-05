@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
-import StateStore from "./lib/store";
-import * as seed from "./lib/seed-phrase";
-import { getRequestDetails } from "./lib/requests";
-import * as WalliD from "./lib/wallid";
-import launchNotificationPopup from "./lib/launch-notification-popup";
-import { eventPipeIn } from "./lib/event-pipe";
-import VaultController from "./controllers/vault";
-import WalletController from "./controllers/wallet";
-import ConnectionsController from "./controllers/connections";
-import IdentitiesController from "./controllers/identities";
-import CredentialsController from "./controllers/credentials";
-import ConfigurationsController from "./controllers/configuration";
-import { setProvider } from "./lib/eth-utils";
+import StateStore from './lib/store';
+import * as seed from './lib/seed-phrase';
+import { getRequestDetails } from './lib/requests';
+import * as WalliD from './lib/wallid';
+import launchNotificationPopup from './lib/launch-notification-popup';
+import { eventPipeIn } from './lib/event-pipe';
+import VaultController from './controllers/vault';
+import WalletController from './controllers/wallet';
+import ConnectionsController from './controllers/connections';
+import IdentitiesController from './controllers/identities';
+import CredentialsController from './controllers/credentials';
+import ConfigurationsController from './controllers/configuration';
+import { setProvider } from './lib/eth-utils';
 
 const InitState = {
   wallet: {},
@@ -20,7 +20,7 @@ const InitState = {
   identities: {},
   credentials: {},
   configurations: {},
-  password: "",
+  password: '',
   popups: [],
   requests: [],
 };
@@ -29,7 +29,7 @@ export default class AppController {
   #store;
 
   constructor() {
-    console.log("NEW APP CONTroLER");
+    console.log('NEW APP CONTroLER');
     this.#store = new StateStore(InitState);
     const vault = new VaultController();
     vault.loadFromLocalStorage();
@@ -64,7 +64,7 @@ export default class AppController {
    */
   validateSeedPhrase(test) {
     if (!this.isUnlocked()) {
-      Promise.reject("Vault is locked");
+      Promise.reject('Vault is locked');
     }
     let mnemonic = this.#store.getState().mnemonic;
     return Promise.resolve(seed.validate(test) && mnemonic == test);
@@ -88,7 +88,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     return Promise.resolve(vault.createNewAndPersist(mnemonic, password))
       .then(() => {
-        eventPipeIn("wallid_wallet_created");
+        eventPipeIn('wallid_wallet_created');
       })
       .catch((err) => console.error(err));
   }
@@ -103,7 +103,7 @@ export default class AppController {
   resetVault() {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      Promise.reject("Vault is locked");
+      Promise.reject('Vault is locked');
     }
     return Promise.resolve(
       vault.submitPassword(this.#store.getState().password)
@@ -124,7 +124,7 @@ export default class AppController {
   unlockApp(password) {
     const vault = this.#store.getState().vault;
     if (vault.isEmpty()) {
-      return Promise.reject("Vault is empty!");
+      return Promise.reject('Vault is empty!');
     }
     return Promise.resolve(vault.unlock(password))
       .then(() =>
@@ -144,10 +144,10 @@ export default class AppController {
       .then(() =>
         setProvider(this.#store.getState().configurations.getProvider())
       )
-      .then(() => eventPipeIn("wallid_event_unlock"))
+      .then(() => eventPipeIn('wallid_event_unlock'))
       .catch((err) => {
         console.error(err);
-        return Promise.reject("Wrong password");
+        return Promise.reject('Wrong password');
       });
   }
 
@@ -161,7 +161,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     return Promise.resolve(vault.lock())
       .then(() => this.#store.updateState(InitState))
-      .then(() => eventPipeIn("wallid_event_lock"));
+      .then(() => eventPipeIn('wallid_event_lock'));
   }
 
   /**
@@ -196,7 +196,7 @@ export default class AppController {
     const wallet = this.#store.getState().wallet;
 
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return Promise.resolve(connections.addConnected(url, icon, name, level))
       .then(
@@ -205,7 +205,7 @@ export default class AppController {
           this.#store.getState().password
         )
       )
-      .then(() => eventPipeIn("wallid_wallet_connected"))
+      .then(() => eventPipeIn('wallid_wallet_connected'))
       .then(() => wallet.getAddress());
   }
 
@@ -221,7 +221,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return Promise.resolve(connections.removeConnected(url)).then(
       vault.putConnections(
@@ -259,7 +259,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return wallet.signEthereumMessage(JSON.stringify(data));
   }
@@ -276,7 +276,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return wallet.encryptData(JSON.stringify(data));
   }
@@ -293,7 +293,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return wallet.decryptData(data);
   }
@@ -310,7 +310,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return wallet.signERC191Message(target, data);
   }
@@ -327,7 +327,7 @@ export default class AppController {
     const vault = this.#store.getState().vault;
     const wallet = this.#store.getState().wallet;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return wallet.signECMessage(data);
   }
@@ -356,7 +356,7 @@ export default class AppController {
               )
           : Promise.reject({
               status,
-              error: "ERR_AUTH_TOKEN",
+              error: 'ERR_AUTH_TOKEN',
               message: body ? body.message : null,
             })
       )
@@ -387,7 +387,7 @@ export default class AppController {
   importIdentity_v2(idt, data, ow = false, expDate) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     const identities = this.#store.getState().identities;
     return Promise.resolve(identities.addIdentity(idt, data, ow, expDate)).then(
@@ -417,7 +417,7 @@ export default class AppController {
   ) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     const credentials = this.#store.getState().credentials;
     return Promise.resolve(
@@ -439,6 +439,21 @@ export default class AppController {
     );
   }
   /**
+   * Exports a credential with @id from WalliD Plugin.
+   *
+   * @param {string} id - WalliD credential id
+   */
+  exportCredential(id) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const credentials = this.#store.getState().credentials;
+    return Promise.resolve(
+      credentials.getCredential(id).catch((err) => Promise.reject(err))
+    );
+  }
+  /**
    * Imports a new credential with @id into WalliD Plugin.
    *
    * @param {string} id - WalliD credential id
@@ -450,7 +465,7 @@ export default class AppController {
   importCredentialSign(id, sig, verifySig) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     console.log(id);
     const credentials = this.#store.getState().credentials;
@@ -472,7 +487,7 @@ export default class AppController {
   deleteCredential(id) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return Promise.reject("ERR_PLUGIN_LOCKED");
+      return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     console.log(id);
     const credentials = this.#store.getState().credentials;
@@ -594,6 +609,7 @@ export default class AppController {
       extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
       importIdentity_v2: this.importIdentity_v2.bind(this),
       importCredential: this.importCredential.bind(this),
+      exportCredential: this.exportCredential.bind(this),
       getNextRequest: this.getNextRequest.bind(this),
       accessControl: this.accessControl.bind(this),
       currentTab: this.currentTab.bind(this),
@@ -651,26 +667,26 @@ export default class AppController {
       } else if (details.main_controller) {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
-          promise = Promise.reject("ERR_PLUGIN_LOCKED");
+          promise = Promise.reject('ERR_PLUGIN_LOCKED');
         } else {
           promise = Promise.resolve(
             this.accessControl(origin, details.level)
           ).then((acc) =>
             acc
               ? this[details.executor[0]](...params)
-              : Promise.reject("ERR_NO_PERMISSION")
+              : Promise.reject('ERR_NO_PERMISSION')
           );
         }
       } else {
         const vault = this.#store.getState().vault;
         if (!vault.isUnlocked()) {
-          promise = Promise.reject("ERR_PLUGIN_LOCKED");
+          promise = Promise.reject('ERR_PLUGIN_LOCKED');
         } else {
           promise = Promise.resolve(this.accessControl(origin, details.level))
             .then((acc) =>
               acc
                 ? Promise.resolve(this.#store.getState())
-                : Promise.reject("ERR_NO_PERMISSION")
+                : Promise.reject('ERR_NO_PERMISSION')
             )
             .then((state) =>
               state[details.executor[0]][details.executor[1]](...params)

@@ -56,12 +56,12 @@
       <v-col cols="12">
         <a
           class="download-button"
-          :class="{ disabled: !card.userData.pdf_url }"
-          :href="card.userData.pdf_url"
+          :class="{ disabled: !downloadURL }"
+          :href="downloadURL"
           target="_blank"
           style="text-decoration:none"
         >
-          <v-btn :disabled="!card.userData.pdf_url" text class="advance-btn">
+          <v-btn :disabled="!downloadURL" text class="advance-btn">
             {{ $t("credentials.menu[2]") }}
           </v-btn>
         </a>
@@ -79,6 +79,7 @@ import CustomCard from "../components/CustomCard";
 
 import { mapGetters } from "vuex";
 const FILESTACK = "https://www.filestackapi.com/api/file/";
+const PDF_URL = "http://localhost:8081/ViewCredential/";
 
 export default {
   components: {
@@ -149,6 +150,16 @@ export default {
   },
   computed: {
     ...mapGetters(["address"]),
+
+    downloadURL() {
+      if (
+        this.connected &&
+        (this.connected.url.startsWith("http://localhost:") ||
+          this.connected.url.startsWith("https://demo.dca.wallid.io"))
+      )
+        return PDF_URL + this.card.id;
+      return this.card.userData.pdf_url;
+    },
   },
   data() {
     return {

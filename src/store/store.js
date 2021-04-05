@@ -82,7 +82,7 @@ export default new Vuex.Store({
       }).then((site) => {
         state.debug('Current site: ', site);
         state.debug('Existing connections: ', state.connections);
-        if (state.connections) {
+        if (state.connections && site) {
           let connectedSite = state.connections.find((e) => {
             return state.getDomain(e.url) == state.getDomain(site.url) ? e : '';
           });

@@ -4,7 +4,7 @@
  * Events can be propagated with a payload.
  */
 
-import extension from "extensionizer";
+import extension from 'extensionizer';
 
 var msgPort;
 
@@ -22,28 +22,27 @@ export function eventPipeIn(event) {
 
 // Used by content-script to relay events emitted by the background
 export function eventPipeOut() {
-  msgPort = extension.runtime.connect({ name: "msgPort" });
+  msgPort = extension.runtime.connect({ name: 'msgPort' });
 
   // fires when background script sends a message
   msgPort.onMessage.addListener(function(msg) {
-    console.log("msg from frontend", msg);
+    console.log('msg from frontend', msg);
 
-    console.log(localStorage.getItem("PLUGIN_INSTALLED"));
-    console.log(localStorage.getItem("PLUGIN_INSTALLED") == "false");
+    // console.log(localStorage.getItem('PLUGIN_INSTALLED'));
+    // console.log(localStorage.getItem('PLUGIN_INSTALLED') == 'false');
 
     if (
-      msg.type == "plugin:installed" &&
-      localStorage.getItem("PLUGIN_INSTALLED") == "false"
+      msg.type == 'plugin:installed' &&
+      localStorage.getItem('PLUGIN_INSTALLED') == 'false'
     ) {
       // localStorage.setItem("REGISTRATION_IN_PROGRESS", "false");
-      localStorage.setItem("PLUGIN_INSTALLED", "true");
-
+      localStorage.setItem('PLUGIN_INSTALLED', 'true');
       msgPort.postMessage({
         url: window.location.origin,
-        type: "website:url",
+        type: 'website:url',
       });
-    } else if (msg.type == "plugin:installed") {
-      console.log("send event installed");
+    } else if (msg.type == 'plugin:installed') {
+      // console.log('send event installed');
       document.dispatchEvent(new CustomEvent(msg.type));
     }
     document.dispatchEvent(new CustomEvent(msg.event, { detail: msg.data }));
