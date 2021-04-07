@@ -46,6 +46,7 @@ export default new Vuex.Store({
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
+    currentCred: null,
   },
   getters: {
     address: (state) => state.address,
@@ -57,6 +58,7 @@ export default new Vuex.Store({
     state: (state) => state,
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
+    currentCred: (state) => state.currentCred,
   },
   actions: {
     // []: ({ commit, state }) => {
@@ -585,6 +587,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    setCurrentCred(state, value) {
+      state.currentCred = value;
+    },
     updateCredentials(state, value) {
       state.credentials = value;
     },

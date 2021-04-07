@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-4">
-          <v-btn text @click="$router.push('/home')" class="back-btn">
+          <v-btn text @click="$router.go('-1')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
@@ -115,12 +115,12 @@ export default {
     CopyHover,
   },
   created() {
-    console.log("card", this.$route.params.card);
-    this.card = this.$route.params.card;
+    console.log("card", currentCred);
+    this.card = currentCred;
   },
   mounted() {},
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(["address", "currentCred"]),
 
     isDisabled() {
       return !this.url || !!this.urlError || this.isLoading;
@@ -148,10 +148,10 @@ export default {
 
       var pattern = new RegExp(
         "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+          "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+          "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+          "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+          "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
           "(\\#[-a-z\\d_]*)?$",
         "i"
       ); // fragment locator

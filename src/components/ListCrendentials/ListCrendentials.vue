@@ -164,7 +164,8 @@ export default {
     viewCred(card) {
       console.log("List", this.credentials);
       console.log("List", card);
-      this.$router.push({ name: "Credential", params: { card } });
+      this.$store.commit("setCurrentCred", card);
+      this.$router.push({ name: "Credential" });
     },
     deleteCred(card) {
       this.$store

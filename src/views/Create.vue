@@ -296,7 +296,6 @@ export default {
       if (this.passwordError || this.passwordMatchError) {
         return;
       }
-
     },
 
     setPassword() {
@@ -313,8 +312,7 @@ export default {
     },
 
     goToLogin() {
-
-      API.eventProxy('wallid_wallet_done')
+      API.eventProxy("wallid_wallet_done");
       this.$router.push("/login");
     },
   },
@@ -346,8 +344,8 @@ export default {
   .v-stepper__content {
     padding: 0;
   }
-  .links {
-    display: contents !important;
+  label.v-label > div > a.links {
+    display: inline !important;
   }
   .terms {
     .v-input__slot {

@@ -79,6 +79,12 @@ import CustomCard from "../components/CustomCard";
 
 import { mapGetters } from "vuex";
 const FILESTACK = "https://www.filestackapi.com/api/file/";
+
+const WALLID_DOMAINS = [
+  "https://demo.mycredentials.wallid.io",
+  "http://localhost",
+];
+
 const PDF_URL = "https://demo.mycredentials.wallid.io/ViewCredential/";
 
 export default {
@@ -92,7 +98,7 @@ export default {
     proofPage() {
       this.$router.push({
         name: "Proof",
-        params: { card: this.$route.params.card },
+        params: { card: this.currentCred },
       });
     },
   },
@@ -149,15 +155,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(["address", "currentCred"]),
 
     downloadURL() {
       if (
         this.connected &&
-        (this.connected.url.startsWith("http://localhost:") ||
-          this.connected.url.startsWith("https://demo.mycredentials.wallid.io"))
-      )
+        new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
+      ) {
+        // At least one match
         return PDF_URL + this.card.id;
+      }
       return this.card.userData.pdf_url;
     },
   },
