@@ -103,8 +103,8 @@ export default {
     },
   },
   created() {
-    console.log("card", this.$route.params.card);
-    this.card = JSON.parse(JSON.stringify(this.$route.params.card));
+    console.log("card", this.currentCred);
+    this.card = JSON.parse(JSON.stringify(this.currentCred));
     this.frontend_props = this.card.userData.frontend_props;
     if (
       this.card.userData.img_url &&
