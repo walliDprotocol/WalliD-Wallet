@@ -98,10 +98,10 @@
                   </v-list-item>
 
                   <v-list-item
-                    :class="!card.userData.pdf_url ? 'disabled' : ''"
+                    :class="!downloadURL(card) ? 'disabled' : ''"
                   >
                     <v-list-item-title class="SECUNDARY-LINKS text-left">
-                      <a :href="card.userData.pdf_url" target="_blank">{{
+                      <a :href="downloadURL(card)" target="_blank">{{
                         $t("credentials.menu[2]")
                       }}</a>
                     </v-list-item-title>
@@ -146,6 +146,13 @@ import { DELETE_CRED, ENCRYPT } from "../../store/actions";
 
 import { mapGetters } from "vuex";
 
+const WALLID_DOMAINS = [
+  "https://demo.mycredentials.wallid.io",
+  "http://localhost",
+];
+
+const PDF_URL = "https://demo.mycredentials.wallid.io/ViewCredential/";
+
 export default {
   name: "ListCredential",
   components: {
@@ -161,6 +168,16 @@ export default {
     ...mapGetters(["credentials"]),
   },
   methods: {
+    downloadURL(card) {
+      if (
+        this.connected &&
+        new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
+      ) {
+        // At least one match
+        return PDF_URL + card.id;
+      }
+      return card.userData.pdf_url;
+    },
     viewCred(card) {
       console.log("List", this.credentials);
       console.log("List", card);
