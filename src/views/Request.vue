@@ -251,7 +251,6 @@ export default {
     findCredential(id) {
       console.log("findCredential", id);
       let cred = this.credentials.find((cred) => {
-        console.log("Credential", cred);
         if (cred.id == id) {
           return cred;
         }
@@ -260,8 +259,8 @@ export default {
 
       if (cred) {
         this.$store.commit("clearPendingRequests");
-
-        this.$router.push({ name: "Credential", params: { card: cred } });
+        this.$store.commit("setCurrentCred", cred);
+        this.$router.push({ name: "Credential" });
       } else {
         this.authorizeRequest(0);
       }
