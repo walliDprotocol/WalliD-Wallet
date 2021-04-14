@@ -115,8 +115,8 @@ export default {
     CopyHover,
   },
   created() {
-    console.log("card", currentCred);
-    this.card = currentCred;
+    console.log("card", this.currentCred);
+    this.card = this.currentCred;
   },
   mounted() {},
   computed: {
