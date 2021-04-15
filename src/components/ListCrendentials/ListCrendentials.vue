@@ -27,7 +27,7 @@
                     >
                       <valid />
                       <p class="FIELD-TEXT">
-                        {{ $t("credentials.status." + card.status) }}
+                        {{ $t('credentials.status.' + card.status) }}
                       </p>
                     </div>
                     <div
@@ -37,7 +37,7 @@
                     >
                       <pending />
                       <p class="FIELD-TEXT">
-                        {{ $t("credentials.status." + card.status) }}
+                        {{ $t('credentials.status.' + card.status) }}
                       </p>
                     </div>
                     <div
@@ -47,7 +47,7 @@
                     >
                       <invalid />
                       <p class="FIELD-TEXT">
-                        {{ $t("credentials.status." + card.status) }}
+                        {{ $t('credentials.status.' + card.status) }}
                       </p>
                     </div>
                   </v-col>
@@ -82,7 +82,7 @@
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="viewCred(card)"
-                      >{{ $t("credentials.menu[0]") }}</v-list-item-title
+                      >{{ $t('credentials.menu[0]') }}</v-list-item-title
                     >
                   </v-list-item>
 
@@ -93,16 +93,14 @@
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="proofPage(card)"
-                      >{{ $t("credentials.menu[1]") }}</v-list-item-title
+                      >{{ $t('credentials.menu[1]') }}</v-list-item-title
                     >
                   </v-list-item>
 
-                  <v-list-item
-                    :class="!downloadURL(card) ? 'disabled' : ''"
-                  >
+                  <v-list-item :class="!downloadURL(card) ? 'disabled' : ''">
                     <v-list-item-title class="SECUNDARY-LINKS text-left">
                       <a :href="downloadURL(card)" target="_blank">{{
-                        $t("credentials.menu[2]")
+                        $t('credentials.menu[2]')
                       }}</a>
                     </v-list-item-title>
                   </v-list-item>
@@ -116,7 +114,7 @@
     <v-row v-else>
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">
-          {{ $t("credentials.noCredentials") }}
+          {{ $t('credentials.noCredentials') }}
         </p>
         <a
           class="links"
@@ -125,7 +123,7 @@
           href="https://www.dev.wallid.io/import"
           @click.stop
         >
-          {{ $t("credentials.store") }}
+          {{ $t('credentials.store') }}
         </a>
       </v-col>
     </v-row>
@@ -133,28 +131,28 @@
 </template>
 
 <script>
-import ArrowFront from "../../images/icon-arrow-front.vue";
-import IconAlert from "../../images/icon-warning-red.vue";
-import IconCredential from "../../images/icon-credential.vue";
-import IconMenu from "../../images/icon-dot-menu.vue";
+import ArrowFront from '../../images/icon-arrow-front.vue';
+import IconAlert from '../../images/icon-warning-red.vue';
+import IconCredential from '../../images/icon-credential.vue';
+import IconMenu from '../../images/icon-dot-menu.vue';
 
-import invalid from "../../images/invalid.vue";
-import valid from "../../images/valid.vue";
-import pending from "../../images/view-only.vue";
+import invalid from '../../images/invalid.vue';
+import valid from '../../images/valid.vue';
+import pending from '../../images/view-only.vue';
 
-import { DELETE_CRED, ENCRYPT } from "../../store/actions";
+import { DELETE_CRED, ENCRYPT } from '../../store/actions';
 
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 const WALLID_DOMAINS = [
-  "https://demo.mycredentials.wallid.io",
-  "http://localhost",
+  'https://demo.mycredentials.wallid.io',
+  'http://localhost',
 ];
 
-const PDF_URL = "https://demo.mycredentials.wallid.io/ViewCredential/";
+const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 
 export default {
-  name: "ListCredential",
+  name: 'ListCredential',
   components: {
     ArrowFront,
     IconAlert,
@@ -165,24 +163,24 @@ export default {
     pending,
   },
   computed: {
-    ...mapGetters(["credentials"]),
+    ...mapGetters(['credentials']),
   },
   methods: {
     downloadURL(card) {
-      if (
-        this.connected &&
-        new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
-      ) {
-        // At least one match
-        return PDF_URL + card.id;
-      }
-      return card.userData.pdf_url;
+      // if (
+      //   this.connected &&
+      //   new RegExp(WALLID_DOMAINS.join('|')).test(this.connected.url)
+      //   //  && !card.userData.pdf_url // Required for old users < 14/4/2021 ?
+      // ) {
+      return PDF_URL + card.id;
+      // }
+      // return card.userData.pdf_url;
     },
     viewCred(card) {
-      console.log("List", this.credentials);
-      console.log("List", card);
-      this.$store.commit("setCurrentCred", card);
-      this.$router.push({ name: "Credential" });
+      console.log('List', this.credentials);
+      console.log('List', card);
+      this.$store.commit('setCurrentCred', card);
+      this.$router.push({ name: 'Credential' });
     },
     deleteCred(card) {
       this.$store
@@ -193,11 +191,11 @@ export default {
         });
     },
     proofPage(card) {
-      this.$router.push({ name: "Proof", params: { card } });
+      this.$router.push({ name: 'Proof', params: { card } });
     },
     isValid(_expDate) {
       if (_expDate) {
-        var parts = _expDate.split(" ");
+        var parts = _expDate.split(' ');
         var expDate = new Date(parts[2], parts[1] - 1, parts[0]);
         let currDate = new Date();
         var millisecondsPerDay = 1000 * 60 * 60 * 24;
