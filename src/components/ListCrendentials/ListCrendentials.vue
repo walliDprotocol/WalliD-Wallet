@@ -191,7 +191,8 @@ export default {
         });
     },
     proofPage(card) {
-      this.$router.push({ name: 'Proof', params: { card } });
+      this.$store.commit('setCurrentCred', card);
+      this.$router.push({ name: 'Proof' });
     },
     isValid(_expDate) {
       if (_expDate) {
