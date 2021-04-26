@@ -342,15 +342,15 @@ export default class AppController {
    * @param {string} idt
    * @param {string} operation
    */
-  getAuthorizationToken() {
+  getAuthorizationToken(idt, operation) {
     const wallet = this.#store.getState().wallet;
     return Promise.resolve(
-      WalliD.getAuthenticationChallenge(wallet.getAddress())
+      WalliD.getAuthenticationChallenge(wallet.getAddress(), idt, operation)
     )
       .then(({ ok, status, body }) =>
         ok
           ? wallet
-              .signECMessage(body.challenge)
+              .signEthereumMessage(body.challenge)
               .then((signature) =>
                 WalliD.buildAuthorizationToken_v1(body.challenge, signature)
               )
@@ -390,7 +390,9 @@ export default class AppController {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     const identities = this.#store.getState().identities;
-    return Promise.resolve(identities.addIdentity(idt, data, ow, expDate)).then(
+    return Promise.resolve(
+      identities.addIdentity(idt, data, ow, expDate)
+    ).then(() =>
       vault.putIdentities(
         identities.serialize(),
         this.#store.getState().password

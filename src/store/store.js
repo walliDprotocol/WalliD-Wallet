@@ -192,6 +192,8 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('Action CONNECT');
         state.debug('URL: ', origin);
+        state.debug('level: ', level);
+
         state.debug('Connections: ', state.connections);
         // state.debug("Notification: ", state.notification);
         let icon = origin + '/favicon.ico';
@@ -458,7 +460,7 @@ export default new Vuex.Store({
             );
             break;
           case 'wallid_connect':
-            dispatch(CONNECT, { origin }).then((res) => {
+            dispatch(CONNECT, { origin, level: data.level }).then((res) => {
               console.log(res);
               resolve(callback(null, res));
             });

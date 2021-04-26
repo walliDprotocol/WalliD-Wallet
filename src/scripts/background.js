@@ -1,14 +1,14 @@
-import extension from "extensionizer";
-import AppController from "./app-controller";
-import { setPort } from "./lib/event-pipe";
+import extension from 'extensionizer';
+import AppController from './app-controller';
+import { setPort } from './lib/event-pipe';
 
 var msgPort;
-var forwarderURL = "https://www.dev.wallid.io/import";
+var forwarderURL = 'https://www.wallid.io/';
 
 function connected(prt) {
   msgPort = prt;
   setPort(msgPort);
-  msgPort.postMessage({ type: "plugin:installed" });
+  msgPort.postMessage({ type: 'plugin:installed' });
   msgPort.onMessage.addListener(gotMessage);
 }
 
@@ -17,15 +17,15 @@ function gotMessage(msg) {
   // store the message
   console.log(msg);
 
-  if (msg.type == "website:url") {
+  if (msg.type == 'website:url') {
     forwarderURL = msg.url;
     // chrome.tabs.create({ url: forwarderURL }, function(tab) {
     //   console.log("options page opened");
     //   //     //https://www.dev.wallid.io/import http://localhost:8080/import
     // });
 
-    chrome.tabs.query({ url: forwarderURL + "/*" }, (tab) => {
-      console.log("tab", tab);
+    chrome.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
+      console.log('tab', tab);
       chrome.tabs.get(tab[0].id, function(tab) {
         chrome.tabs.highlight(
           {
@@ -41,19 +41,13 @@ function gotMessage(msg) {
 
 extension.runtime.onConnect.addListener(connected);
 
-// extension.runtime.onInstalled.addListener(function() {
-//   chrome.tabs.query({ url: "https://*.wallid.io/*" }, (tab) => {
-//     console.log("tab", tab);
-//     chrome.tabs.get(tab[0].id, function(tab) {
-//       chrome.tabs.highlight(
-//         {
-//           windowId: tab.windowId,
-//           tabs: tab.index,
-//         },
-//         function() {}
-//       );
-//     });
+// extension.runtime.onInstalled.addListener(function(object) {
+// if (object.reason === 'install') {
+//   chrome.tabs.create({ url: 'installed.html' }, function(tab) {
+//     console.log('New tab launched with installed.html for user SignUp');
 //   });
+// }
+// }
 // });
 
 // Initialize main application controller

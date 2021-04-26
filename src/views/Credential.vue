@@ -16,7 +16,7 @@
     <v-row class="">
       <v-col cols="12" class="pt-0 pb-2" style="text-align: initial">
         <CustomCard
-        v-if="!loading"
+          v-if="!loading"
           :frontTemplate="templateValues"
           :backTemplate="userData.table"
           :caName="card.caName"
@@ -39,7 +39,7 @@
                 :disabled="card.status != 'active'"
                 class="advance-btn "
               >
-                {{ $t("credentials.menu[1]") }}
+                {{ $t('credentials.menu[1]') }}
               </v-btn>
             </div>
           </template>
@@ -47,7 +47,7 @@
           <div class="tooltip-credential">
             <p>
               {{ card.caName }}
-              {{ $t("credentials.tooltip") }}
+              {{ $t('credentials.tooltip') }}
             </p>
           </div>
         </v-tooltip>
@@ -62,7 +62,7 @@
           style="text-decoration:none"
         >
           <v-btn :disabled="!downloadURL" text class="advance-btn">
-            {{ $t("credentials.menu[2]") }}
+            {{ $t('credentials.menu[2]') }}
           </v-btn>
         </a>
       </v-col>
@@ -71,21 +71,21 @@
 </template>
 
 <script>
-import WalletAddress from "../components/WalletAddress";
-import WalletState from "../components/WalletState";
-import ArrowBack from "../images/icon-arrow-back.vue";
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import CustomCard from "../components/CustomCard";
+import CustomCard from '../components/CustomCard';
 
-import { mapGetters } from "vuex";
-const FILESTACK = "https://www.filestackapi.com/api/file/";
+import { mapGetters } from 'vuex';
+const FILESTACK = 'https://www.filestackapi.com/api/file/';
 
 const WALLID_DOMAINS = [
-  "https://demo.mycredentials.wallid.io",
-  "http://localhost",
+  'https://demo.mycredentials.wallid.io',
+  'http://localhost',
 ];
 
-const PDF_URL = "https://demo.mycredentials.wallid.io/ViewCredential/";
+const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 
 export default {
   components: {
@@ -97,18 +97,18 @@ export default {
   methods: {
     proofPage() {
       this.$router.push({
-        name: "Proof",
+        name: 'Proof',
         params: { card: this.currentCred },
       });
     },
   },
   created() {
-    console.log("card", this.currentCred);
+    console.log('card', this.currentCred);
     this.card = JSON.parse(JSON.stringify(this.currentCred));
     this.frontend_props = this.card.userData.frontend_props;
     if (
       this.card.userData.img_url &&
-      !this.card.userData.img_url.startsWith("https")
+      !this.card.userData.img_url.startsWith('https')
     ) {
       this.photoCred = FILESTACK + this.card.userData.img_url;
     } else {
@@ -155,17 +155,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["address", "currentCred"]),
+    ...mapGetters(['address', 'currentCred']),
 
     downloadURL() {
-      if (
-        this.connected &&
-        new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
-      ) {
-        // At least one match
-        return PDF_URL + this.card.id;
-      }
-      return this.card.userData.pdf_url;
+      // if (
+      //   this.connected &&
+      //   new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
+      // ) {
+      // At least one match
+      return PDF_URL + this.card.id;
+      // }
+      // return this.card.userData.pdf_url;
     },
   },
   data() {

@@ -8,9 +8,9 @@
         src="../images/logo-header-wallid.png"
       />
       <h1 v-if="!success" class="T2 ml-5">
-        {{ $t("request." + type + ".title") }}
+        {{ $t('request.' + type + '.title') }}
       </h1>
-      <h1 v-else class="T2 ml-5">{{ $t("request." + type + ".success") }}</h1>
+      <h1 v-else class="T2 ml-5">{{ $t('request.' + type + '.success') }}</h1>
 
       <div class="arrow-down-header"></div>
       <!-- -->
@@ -25,7 +25,7 @@
         <v-col cols="12" class="my-3 py-7 ">
           <h2 class="sub-title-fields">
             <b> {{ websiteData.name }}</b>
-            {{ $t("request." + type + ".description") }}
+            {{ $t('request.' + type + '.description') }}
           </h2>
         </v-col>
 
@@ -45,7 +45,7 @@
             :size="62"
             :margin="3"
           />
-          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
+          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
         </v-col>
         <v-col cols="10" v-if="type == 'wallid_connect'" class="px-16 ">
           <p
@@ -58,14 +58,14 @@
 
         <v-col cols="10" class="px-16 pb-8">
           <router-link class="links" to="/">
-            {{ $t("request.bScenes") }}
+            {{ $t('request.bScenes') }}
           </router-link>
         </v-col>
 
         <!-- Option buttons -->
         <v-col v-show="!success" cols="6" class="pr-2 pb-0" align-self="end">
           <v-btn text class="cancel-btn" @click="cancel">
-            {{ $t("request.cancel") }}
+            {{ $t('request.cancel') }}
           </v-btn>
         </v-col>
         <v-col v-show="!success" cols="6" class="pl-2 pb-0" align-self="end">
@@ -75,7 +75,7 @@
             :disabled="disableButtonRequest"
             @click="authorizeRequest"
           >
-            {{ $t("request." + type + ".button") }}
+            {{ $t('request.' + type + '.button') }}
           </v-btn>
         </v-col>
       </v-row>
@@ -85,7 +85,7 @@
           <div class="back-arrow">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
-              {{ $t("request." + type + ".successText") }}
+              {{ $t('request.' + type + '.successText') }}
             </h2>
           </div>
         </v-col>
@@ -108,7 +108,7 @@
             :size="62"
             :margin="3"
           />
-          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, "...") }}</p>
+          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
         </v-col>
       </v-row>
       <!-- Option buttons -->
@@ -117,10 +117,10 @@
 </template>
 
 <script>
-import WarningIcon from "../images/icon-warning-blue";
-import BrokenLine from "../images/broken-line";
-import CheckSuccessIcon from "../images/icon-sucessfully";
-import WebSiteLogo from "../components/WebSiteLogo";
+import WarningIcon from '../images/icon-warning-blue';
+import BrokenLine from '../images/broken-line';
+import CheckSuccessIcon from '../images/icon-sucessfully';
+import WebSiteLogo from '../components/WebSiteLogo';
 
 import {
   CANCEL_REQUEST,
@@ -129,8 +129,8 @@ import {
   CONNECT,
   IMPORT,
   UPDATE_CONNECTED,
-} from "../store/actions";
-import { mapGetters } from "vuex";
+} from '../store/actions';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -140,40 +140,40 @@ export default {
     WebSiteLogo,
   },
   computed: {
-    ...mapGetters(["address", "credentials", "connections"]),
+    ...mapGetters(['address', 'credentials', 'connections']),
   },
   watch: {},
   mounted() {
-    this.debug("Request: ", this.request);
+    this.debug('Request: ', this.request);
     this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
-    this.debug("Address: ", this.address);
-    this.debug("Request: ", this.request);
+    this.debug('Address: ', this.address);
+    this.debug('Request: ', this.request);
 
     this.type = this.request.type;
-    this.debug("Request type: ", this.type);
+    this.debug('Request type: ', this.type);
     this.websiteData = this.getWebsiteInfo(this.request.origin);
 
     switch (this.type) {
-      case "wallet_sign":
-      case "wallet_sign_erc191":
-      case "wallet_ec_sign":
+      case 'wallet_sign':
+      case 'wallet_sign_erc191':
+      case 'wallet_ec_sign':
         break;
-      case "wallid_open":
+      case 'wallid_open':
         var params;
         params = {
           url: this.request.origin,
-          icon: this.request.origin + "/favicon.ico",
+          icon: this.request.origin + '/favicon.ico',
           name: this.getDomain(this.request.origin),
         };
         this.$store
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
-            this.debug("hasAccess", hasAccess, params);
+            this.debug('hasAccess', hasAccess, params);
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
-                this.debug("Connected");
+                this.debug('Connected');
                 this.findCredential(this.request.data);
               });
             } else {
@@ -182,43 +182,44 @@ export default {
             }
           });
         break;
-      case "wallid_connect":
+      case 'wallid_connect':
+        let level = this.request.data.level || 1;
         this.$store
-          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level })
           .then((hasAccess) => {
-            this.debug("hasAccess", hasAccess);
+            this.debug('hasAccess', hasAccess);
             if (hasAccess) {
               Promise.resolve(
-                this.request.callback(null, "EXECUTED")
+                this.request.callback(null, 'EXECUTED')
               ).then(() => window.close());
             }
           });
         break;
-      case "wallid_disconnect":
-        console.error("Invalid Request Type");
+      case 'wallid_disconnect':
+        console.error('Invalid Request Type');
         break;
-      case "wallid_address":
-        console.error("Invalid Request Type");
+      case 'wallid_address':
+        console.error('Invalid Request Type');
         break;
-      case "wallid_import_sign":
-      case "wallid_import_cred":
-      case "wallid_token":
-      case "wallid_import":
-      case "wallet_encrypt":
-      case "wallet_decrypt":
+      case 'wallid_import_sign':
+      case 'wallid_import_cred':
+      case 'wallid_token':
+      case 'wallid_import':
+      case 'wallet_encrypt':
+      case 'wallet_decrypt':
         var params;
         params = {
           url: this.request.origin,
-          icon: this.request.origin + "/favicon.ico",
+          icon: this.request.origin + '/favicon.ico',
           name: this.getDomain(this.request.origin),
         };
         this.$store
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
-            this.debug("hasAccess", hasAccess, params);
+            this.debug('hasAccess', hasAccess, params);
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
-                this.debug("Connected");
+                this.debug('Connected');
                 this.authorizeRequest(0);
               });
             } else {
@@ -227,7 +228,7 @@ export default {
           });
         break;
       default:
-        console.log("Invalid Request Type");
+        console.log('Invalid Request Type');
         break;
     }
   },
@@ -240,34 +241,34 @@ export default {
     updateConnected(site) {
       if (this.connections) {
         let connectedSite = this.connections.find((e) => {
-          return this.getDomain(e.url) == this.getDomain(site) ? e : "";
+          return this.getDomain(e.url) == this.getDomain(site) ? e : '';
         });
-        this.debug("connectedSite site: ", connectedSite);
+        this.debug('connectedSite site: ', connectedSite);
         if (connectedSite) {
-          this.$store.commit("updateConnected", connectedSite);
+          this.$store.commit('updateConnected', connectedSite);
         }
       }
     },
     findCredential(id) {
-      console.log("findCredential", id);
+      console.log('findCredential', id);
       let cred = this.credentials.find((cred) => {
         if (cred.id == id) {
           return cred;
         }
       });
-      console.log("Credential", cred);
+      console.log('Credential', cred);
 
       if (cred) {
-        this.$store.commit("clearPendingRequests");
-        this.$store.commit("setCurrentCred", cred);
-        this.$router.push({ name: "Credential" });
+        this.$store.commit('clearPendingRequests');
+        this.$store.commit('setCurrentCred', cred);
+        this.$router.push({ name: 'Credential' });
       } else {
         this.authorizeRequest(0);
       }
     },
     getWebsiteInfo(origin) {
-      let name = origin.split("//")[1].split("/")[0];
-      let icon = origin + "/favicon.ico";
+      let name = origin.split('//')[1].split('/')[0];
+      let icon = origin + '/favicon.ico';
       return { name: name, icon: icon };
     },
 
@@ -282,17 +283,17 @@ export default {
           name: this.websiteData.name,
         })
         .then(() => {
-          if (this.request.type == "wallid_connect") this.success = true;
+          if (this.request.type == 'wallid_connect') this.success = true;
           if (
-            this.request.type != "wallid_import_cred" &&
-            this.request.type != "wallid_import_sign" &&
-            this.request.type != "wallid_open"
+            this.request.type != 'wallid_import_cred' &&
+            this.request.type != 'wallid_import_sign' &&
+            this.request.type != 'wallid_open'
           )
             setTimeout(() => {
-              this.$notification ? window.close() : this.$router.push("/home");
+              this.$notification ? window.close() : this.$router.push('/home');
             }, time * 100);
           else {
-            this.$router.push("/home");
+            this.$router.push('/home');
           }
         });
     },
@@ -306,7 +307,7 @@ export default {
         })
         .then(() => {
           setTimeout(() => {
-            this.$notification ? window.close() : this.$router.push("/home");
+            this.$notification ? window.close() : this.$router.push('/home');
           }, 5 * 100);
         });
     },
@@ -314,17 +315,17 @@ export default {
   data() {
     return {
       disableButtonRequest: false,
-      walletAddress: "",
-      type: "",
+      walletAddress: '',
+      type: '',
       success: false,
-      websiteData: { name: "", icon: "" },
+      websiteData: { name: '', icon: '' },
     };
   },
 };
 </script>
 
 <style lang="scss">
-[id^="metamask-logo-request"]:not([class*="icon"]) {
+[id^='metamask-logo-request']:not([class*='icon']) {
   max-height: 72px;
   max-width: 72px;
 
@@ -338,7 +339,7 @@ export default {
   }
 }
 
-[id^="metamask-logo-request"] + p {
+[id^='metamask-logo-request'] + p {
   max-width: 76px;
   word-break: break-all;
 }

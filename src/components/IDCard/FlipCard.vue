@@ -39,22 +39,23 @@
 </template>
 
 <script>
-import IconRotate from "../../images/icon-rotate";
+import IconRotate from '../../images/icon-rotate';
 
 export default {
-  name: "FlipCard",
-  props: ["hasBack", "isForeign"],
+  name: 'FlipCard',
+  props: ['hasBack', 'isForeign'],
   components: {
     IconRotate,
   },
+  created() {},
   methods: {
     checkBackground() {
       if (this.isForeign) {
-        return "background: #fff";
+        return 'background: #fff';
       } else if (!this.hasBack) {
-        return "background-image: url(../../images/cmd-card.jpg)";
+        return 'background-image: url(../../images/cmd-card.jpg)';
       } else {
-        return "background-image: url(../../images/citizen-card.jpg)";
+        return 'background-image: url(../../images/citizen-card.jpg)';
       }
     },
   },

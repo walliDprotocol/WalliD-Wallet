@@ -6,13 +6,13 @@
       </v-col>
       <v-col cols="12" class="pt-4 pb-2 px-14">
         <h2 class="T1 mb-2 text-center">
-          {{ $t("home.title") }}
+          {{ $t('home.title') }}
         </h2>
         <WalletState :website="connected.url"> </WalletState>
       </v-col>
       <v-col cols="12" class="px-14">
         <p class="normal-text mb-3 text-center">
-          {{ $t("home.address") }}
+          {{ $t('home.address') }}
         </p>
 
         <WalletAddress :address="address" />
@@ -20,10 +20,10 @@
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
           <v-tab href="#tab-1" class="MENU-SELECTED">{{
-            $t("home.tabs[0]")
+            $t('home.tabs[0]')
           }}</v-tab>
           <v-tab href="#tab-2" class="MENU-SELECTED">{{
-            $t("home.tabs[1]")
+            $t('home.tabs[1]')
           }}</v-tab>
         </v-tabs>
 
@@ -42,12 +42,11 @@
 </template>
 
 <script>
-import * as bip39 from "bip39";
-import WalletState from "../components/WalletState";
-import WalletAddress from "../components/WalletAddress";
-import ListIDs from "../components/ListIDs";
-import ListCrendentials from "../components/ListCrendentials";
-import { mapGetters } from "vuex";
+import WalletState from '../components/WalletState';
+import WalletAddress from '../components/WalletAddress';
+import ListIDs from '../components/ListIDs';
+import ListCrendentials from '../components/ListCrendentials';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -57,9 +56,13 @@ export default {
     ListCrendentials,
   },
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(['address', 'identities', 'credentials']),
   },
-  mounted() {},
+  mounted() {
+    if (this.credentials.length == 0) {
+      this.tab = 'tab-2';
+    }
+  },
   methods: {},
   data() {
     return {

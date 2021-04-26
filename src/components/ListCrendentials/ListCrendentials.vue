@@ -120,7 +120,7 @@
           class="links"
           target="_blank"
           color="#01a3b0"
-          href="https://www.dev.wallid.io/import"
+          href="https://www.mycredentials.wallid.io/"
           @click.stop
         >
           {{ $t('credentials.store') }}

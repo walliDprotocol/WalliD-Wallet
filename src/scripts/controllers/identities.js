@@ -19,7 +19,7 @@ export default class IdentitiesController {
   static deserialize(_ids) {
     if (
       !_ids ||
-      (!Array.isArray(_ids) && typeof _ids != "string") ||
+      (!Array.isArray(_ids) && typeof _ids != 'string') ||
       _ids.length == 0
     ) {
       return new IdentitiesController();
@@ -32,10 +32,10 @@ export default class IdentitiesController {
     return new Promise((resolve, reject) => {
       const index = this.#identities.findIndex((id) => id.idt == idt);
       if (index != -1 && ow) {
-        console.log("ALREADY EXISTs w/ OW", index);
+        console.log('ALREADY EXISTs w/ OW', index);
         this.#identities.splice(index, 1);
       } else if (index != -1) {
-        console.log("ALREADY EXISTs", index);
+        console.log('ALREADY EXISTs', index);
 
         return reject(`Identity type ${idt} already exists`);
       }

@@ -1,9 +1,12 @@
 <template>
   <FlipCard
     class="id-card mb-4"
-    :hasBack="card.back"
-    :isForeign="cardInfo.idt.startsWith('SHUFTI')"
     v-if="!loading"
+    :hasBack="card.back"
+    :isForeign="
+      !cardInfo.idt.startsWith('SHUFTI_CC_PT') &&
+        !cardInfo.idt.startsWith('CC_PT')
+    "
   >
     <template slot="front">
       <v-container class="px-5">
@@ -26,7 +29,7 @@
           </template>
           <div class="view-id-popover">
             <span class="arrow" />
-            <p>{{ $t("cards.tooltip") }}</p>
+            <p>{{ $t('cards.tooltip') }}</p>
           </div>
         </v-tooltip>
 
@@ -76,16 +79,16 @@
 </template>
 
 <script>
-import FlipCard from "./FlipCard";
-import IconShow from "../../images/icon-show";
+import FlipCard from './FlipCard';
+import IconShow from '../../images/icon-show';
 
-import { DECRYPT } from "../../store/actions";
-import * as WallidConst from "../../scripts/const";
+import { DECRYPT } from '../../store/actions';
+import * as WallidConst from '../../scripts/const';
 
-const HIDDEN = "*****";
+const HIDDEN = '*****';
 
 export default {
-  name: "IDCard",
+  name: 'IDCard',
   components: {
     FlipCard,
     IconShow,
@@ -101,12 +104,15 @@ export default {
     });
     this.loading = false;
   },
+  mounted() {
+    this.unlockData();
+  },
   methods: {
     getCCValues: ({ idt, obj, unlocked }) => {
-      console.log("getCCValues", obj);
+      console.log('getCCValues', obj);
       console.log(idt);
       let fields = {};
-      let side = "front";
+      let side = 'front';
       fields[side] = {};
       fields.idt = idt;
       if (obj == undefined) {
@@ -121,10 +127,10 @@ export default {
       //   value: obj.dataID.data.idtName || HIDDEN,
       // };
       fields.idtName = {
-        label: { pt: "Tipo de documento ID", en: "ID document type" },
+        label: { pt: 'Tipo de documento ID', en: 'ID document type' },
         value: obj.dataID.data.idtName || HIDDEN,
       };
-      fields.idtName.value = fields.idtName.value.replace("ShuftiPro", "");
+      fields.idtName.value = fields.idtName.value.replace('ShuftiPro', '');
 
       //   if (idt == WallidConst.CC_PT && unlocked) {
       //     fields.idtName.type = {
@@ -132,7 +138,7 @@ export default {
       //       en: " - Qualified Document ID",
       //     };
       //   } else {
-      fields.idtName.type = "";
+      fields.idtName.type = '';
       //   }
       let _idt = idt.substring(0, 10);
       let country = idt.substring(10, 12);
@@ -140,19 +146,19 @@ export default {
       switch (_idt) {
         case WallidConst.CC_PT:
           Object.keys(WallidConst.CC_PT_LABELS).forEach((label) => {
-            if (label == "PARENTS") {
-              side = "back";
+            if (label == 'PARENTS') {
+              side = 'back';
               fields[side] = {};
               let id = obj.dataID.data.identityID.identityAttributes || HIDDEN;
               fields[side][label] = {
                 label: WallidConst.CC_PT_LABELS[label],
                 value:
                   (id.GivenNameFather || HIDDEN) +
-                  " " +
+                  ' ' +
                   (id.SurnameFather || HIDDEN) +
-                  " * " +
+                  ' * ' +
                   (id.GivenNameMother || HIDDEN) +
-                  " " +
+                  ' ' +
                   (id.SurnameMother || HIDDEN),
               };
             } else {
@@ -166,25 +172,25 @@ export default {
           });
           fields.more = {
             entity: {
-              label: WallidConst.CARD_CONST["Entity"],
+              label: WallidConst.CARD_CONST['Entity'],
               value:
                 obj.dataID.data.identityID.identityAttributes.IssuingEntity,
             },
             attributes: {
-              label: WallidConst.CARD_CONST["Attributes"],
-              value: { en: "Identity", pt: "Identidade" },
+              label: WallidConst.CARD_CONST['Attributes'],
+              value: { en: 'Identity', pt: 'Identidade' },
             },
             certificate: {
-              label: WallidConst.CARD_CONST["Certificate"],
-              value: "x509",
+              label: WallidConst.CARD_CONST['Certificate'],
+              value: 'x509',
             },
           };
           break;
 
         case WallidConst.SHUFTI_CC:
           Object.keys(WallidConst.SHUFTI_ID_LABELS).forEach((label) => {
-            if (label == "parents_name") {
-              side = "back";
+            if (label == 'parents_name') {
+              side = 'back';
               fields[side] = {};
             }
 
@@ -208,12 +214,12 @@ export default {
             //     value: obj.dataID.data.identityID.identityAttributes.IssuingEntity
             // },
             attributes: {
-              label: WallidConst.CARD_CONST["Attributes"],
-              value: { en: "Identity", pt: "Identidade" },
+              label: WallidConst.CARD_CONST['Attributes'],
+              value: { en: 'Identity', pt: 'Identidade' },
             },
             certificate: {
-              label: WallidConst.CARD_CONST["Certificate"],
-              value: "x509",
+              label: WallidConst.CARD_CONST['Certificate'],
+              value: 'x509',
             },
           };
 
@@ -234,7 +240,7 @@ export default {
           break;
       }
 
-      if (country == "FR") {
+      if (country == 'FR') {
         delete fields.back;
       }
 
@@ -266,39 +272,39 @@ export default {
       let _idt = idt.substring(0, 10);
 
       switch (_idt) {
-        case "CMD_PT":
-          return name == "Name" ? 12 : 6;
-        case "CC_PT":
-          return name == "Surname"
+        case 'CMD_PT':
+          return name == 'Name' ? 12 : 6;
+        case 'CC_PT':
+          return name == 'Surname'
             ? 7
-            : name == "PARENTS"
+            : name == 'PARENTS'
             ? 12
-            : name == "Sex" ||
-              name == "Height" ||
-              name == "Country" ||
-              name == "Birthdate" ||
-              name == "Givenname"
+            : name == 'Sex' ||
+              name == 'Height' ||
+              name == 'Country' ||
+              name == 'Birthdate' ||
+              name == 'Givenname'
             ? 3
-            : name == "CivilianIdNumber" || name == "Validityenddate"
+            : name == 'CivilianIdNumber' || name == 'Validityenddate'
             ? 6
-            : name == "NISS"
+            : name == 'NISS'
             ? 5
             : undefined;
 
-        case "SHUFTI_CC_":
-          return name == "last_name"
+        case 'SHUFTI_CC_':
+          return name == 'last_name'
             ? 7
-            : name == "parents_name"
+            : name == 'parents_name'
             ? 12
-            : name == "expiry_date"
+            : name == 'expiry_date'
             ? 4
             : 4;
       }
     },
     idCardStyle(idt, name) {
       switch (idt) {
-        case "CMD_PT":
-          return "padding: 12px";
+        case 'CMD_PT':
+          return 'padding: 12px';
       }
     },
   },
