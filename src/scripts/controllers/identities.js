@@ -45,6 +45,21 @@ export default class IdentitiesController {
     });
   }
 
+  extractIdentity(idt) {
+    return new Promise((resolve, reject) => {
+      console.log(this.#identities);
+      console.log(idt);
+      const index = this.#identities.findIndex((id) => id.idt == idt);
+      if (index == -1) {
+        console.log('DOES NOT EXIST', index);
+        return reject(`Identity type ${idt} DOES NOT exist`);
+      } else {
+        console.log('EXISTs', index);
+        resolve(this.#identities[index]);
+      }
+    });
+  }
+
   deleteIdentity(idt) {
     return Promise.resolve(
       this.#identities.findIndex((id) => id.idt == idt)

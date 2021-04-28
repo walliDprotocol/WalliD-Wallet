@@ -20,10 +20,8 @@ const RequestAPIMethods = {
   },
   wallid_extract: {
     popup: false,
-    main_controller: true,
-
-    level: 1,
-    executor: ['extractIdentityData_v1'], //CHANGE
+    level: 2,
+    executor: ['identities', 'extractIdentity'], //CHANGE
   },
   wallid_import: {
     popup: false,

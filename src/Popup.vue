@@ -7,31 +7,31 @@
 </template>
 
 <script>
-import * as bip39 from "bip39";
-import MainContainer from "./views/MainContainer";
-import { mapGetters } from "vuex";
+import * as bip39 from 'bip39';
+import MainContainer from './views/MainContainer';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     MainContainer,
   },
-  props: ["hideAppHeader"],
+  props: ['hideAppHeader'],
   computed: {
-    ...mapGetters(["address", "unlocked"]),
+    ...mapGetters(['address', 'unlocked']),
   },
   watch: {},
 
   data() {
     return {
       langs: [
-        { id: "pt", name: "Português" },
-        { id: "en", name: "English" },
-        { id: "es", name: "Español" },
+        { id: 'pt', name: 'Português' },
+        { id: 'en', name: 'English' },
+        { id: 'es', name: 'Español' },
       ],
     };
   },
   mounted() {
-    this.$store.commit("appendLogger", this.debug);
-    this.$store.commit("appendgetDomain", this.getDomain);
+    this.$store.commit('appendLogger', this.debug);
+    this.$store.commit('appendgetDomain', this.getDomain);
 
     let browserLang = navigator.language.substring(0, 2);
     var check = this.langs.filter(function(elm) {
@@ -41,7 +41,7 @@ export default {
       // return self.$i18n.locale;
     });
 
-    this.$i18n.locale = check.length > 0 ? check[0].id : "en";
+    this.$i18n.locale = check.length > 0 ? check[0].id : 'en';
   },
 
   methods: {},

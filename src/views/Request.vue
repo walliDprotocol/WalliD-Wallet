@@ -47,7 +47,7 @@
           />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
         </v-col>
-        <v-col cols="10" v-if="type == 'wallid_connect'" class="px-16 ">
+        <v-col cols="10" v-if="type == 'wallid_connect'" class="px-4">
           <p
             class="FIELD-TEXT text-center"
             v-html="$t('request.' + type + '.permissions')"
@@ -56,7 +56,7 @@
           </p>
         </v-col>
 
-        <v-col cols="10" class="px-16 pb-8">
+        <v-col cols="10" class="px-6 pb-8">
           <router-link class="links" to="/">
             {{ $t('request.bScenes') }}
           </router-link>
