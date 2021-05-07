@@ -40,14 +40,13 @@ function gotMessage(msg) {
 }
 
 extension.runtime.onConnect.addListener(connected);
-
+// This cannot happens because of mycredentials
 // extension.runtime.onInstalled.addListener(function(object) {
-// if (object.reason === 'install') {
-//   chrome.tabs.create({ url: 'installed.html' }, function(tab) {
-//     console.log('New tab launched with installed.html for user SignUp');
-//   });
-// }
-// }
+//   if (object.reason === 'install') {
+//     chrome.tabs.create({ url: 'https://www.wallid.io/Setup' }, function(tab) {
+//       console.log('New tab launched with installed.html for user SignUp');
+//     });
+//   }
 // });
 
 // Initialize main application controller

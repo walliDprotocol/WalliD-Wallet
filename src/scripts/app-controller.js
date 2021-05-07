@@ -384,14 +384,15 @@ export default class AppController {
    * @param {string} data - encrypted identity data
    * @param {*} ow - overwrite flag
    */
-  importIdentity_v2(idt, data, ow = false, expDate) {
+  importIdentity_v2(idt, data, ow = false, expDate, idtName) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
+    console.log('idtName', idtName);
     const identities = this.#store.getState().identities;
     return Promise.resolve(
-      identities.addIdentity(idt, data, ow, expDate)
+      identities.addIdentity(idt, data, ow, expDate, idtName)
     ).then(() =>
       vault.putIdentities(
         identities.serialize(),

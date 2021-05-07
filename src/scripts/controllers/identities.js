@@ -28,7 +28,7 @@ export default class IdentitiesController {
     return new IdentitiesController(identities);
   }
 
-  addIdentity(idt, data, ow, expDate) {
+  addIdentity(idt, data, ow, expDate, idtName) {
     return new Promise((resolve, reject) => {
       const index = this.#identities.findIndex((id) => id.idt == idt);
       if (index != -1 && ow) {
@@ -39,7 +39,7 @@ export default class IdentitiesController {
 
         return reject(`Identity type ${idt} already exists`);
       }
-      this.#identities.push({ idt, data, expDate });
+      this.#identities.push({ idt, data, expDate, idtName });
 
       return resolve();
     });
@@ -73,6 +73,11 @@ export default class IdentitiesController {
   }
 
   getIDTsList() {
-    return this.#identities.map((id) => id.idt);
+    return this.#identities.map((id) => {
+      return {
+        idt: id.idt,
+        idtName: id.idtName,
+      };
+    });
   }
 }
