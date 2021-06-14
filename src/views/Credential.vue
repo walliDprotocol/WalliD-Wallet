@@ -14,7 +14,15 @@
       </v-col>
     </v-row>
     <v-row class="">
-      <v-col cols="12" class="pt-0 pb-2" style="text-align: initial">
+      <v-col
+        v-if="customTemplateName == 'templateEditor'"
+        cols="12"
+        class="pt-0 pb-2"
+        style="text-align: initial"
+      >
+        <ShowCredentialImages :imgArray="imgArray" :width="376" :height="265" />
+      </v-col>
+      <v-col v-else cols="12" class="pt-0 pb-2" style="text-align: initial">
         <CustomCard
           v-if="!loading"
           :frontTemplate="templateValues"
@@ -77,6 +85,8 @@ import ArrowBack from '../images/icon-arrow-back.vue';
 
 import CustomCard from '../components/CustomCard';
 
+import ShowCredentialImages from '../components/ShowCredentialImages';
+
 import { mapGetters } from 'vuex';
 const FILESTACK = 'https://www.filestackapi.com/api/file/';
 
@@ -93,6 +103,7 @@ export default {
     WalletState,
     ArrowBack,
     CustomCard,
+    ShowCredentialImages,
   },
   methods: {
     proofPage() {
@@ -106,6 +117,14 @@ export default {
     console.log('card', this.currentCred);
     this.card = JSON.parse(JSON.stringify(this.currentCred));
     this.frontend_props = this.card.userData.frontend_props;
+
+    this.customTemplateName =
+      this.card.userData.frontend_props &&
+      this.card.userData.frontend_props.customTemplateName;
+
+    console.log(this.customTemplateName);
+
+    this.imgArray = [...this.card.userData.imgArray];
     if (
       this.card.userData.img_url &&
       !this.card.userData.img_url.startsWith('https')
@@ -176,6 +195,8 @@ export default {
       photoCred: null,
       templateValues: [],
       loading: true,
+      customTemplateName: null,
+      imgArray: [],
     };
   },
 };
