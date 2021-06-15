@@ -20,7 +20,7 @@
         class="pt-0 pb-2"
         style="text-align: initial"
       >
-        <ShowCredentialImages :imgArray="imgArray" :width="376" :height="265" />
+        <ShowCredentialImages :imgArray="imgArray" :width="360" :height="265" />
       </v-col>
       <v-col v-else cols="12" class="pt-0 pb-2" style="text-align: initial">
         <CustomCard
