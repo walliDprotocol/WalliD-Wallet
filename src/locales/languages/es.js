@@ -217,7 +217,7 @@ export default {
   home: {
     title: 'MyWalliD',
     address: 'Dirección de billetera',
-    tabs: ['Credenciales', 'Documentos de identidad'],
+    tabs: ['Documentos de identidad', 'Online IDs ', 'Credenciales'],
   },
   credentials: {
     noCredentials: '¿Aún no tienes credenciales en tu billetera?',

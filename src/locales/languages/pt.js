@@ -216,7 +216,7 @@ export default {
   home: {
     title: 'MyWalliD',
     address: 'Endereço da carteira',
-    tabs: ['Credenciais', 'Documentos ID'],
+    tabs: ['Documentos ID', 'Online IDs ', 'Credenciais'],
   },
   credentials: {
     noCredentials: 'Ainda não tem nenhuma credencial guardada na sua carteira',
