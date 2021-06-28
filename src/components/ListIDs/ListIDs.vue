@@ -1,5 +1,5 @@
 <template>
-  <v-container class="id-cards pt-1">
+  <v-container class="id-cards list-storage pt-1">
     <v-row v-if="identities.length > 0">
       <v-col
         v-for="card in identities"

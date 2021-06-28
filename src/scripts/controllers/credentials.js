@@ -48,7 +48,7 @@ export default class CredentialsController {
     });
   }
 
-  deleteCredential() {
+  deleteCredential(id) {
     return new Promise((resolve, reject) => {
       const index = this.#credentials.findIndex((cred) => cred.id == id);
 
@@ -97,14 +97,6 @@ export default class CredentialsController {
         return reject(`ERR_CRED_INEXISTENT`);
       }
       return resolve(this.#credentials[index]);
-    });
-  }
-
-  deleteCredential(idt) {
-    return Promise.resolve(
-      this.#credentials.findIndex((id) => id.idt == idt)
-    ).then((index) => {
-      if (index != -1) this.#credentials.splice(index, 1);
     });
   }
 

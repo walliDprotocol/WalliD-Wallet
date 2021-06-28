@@ -1,6 +1,6 @@
 <template>
   <v-container class="home">
-    <v-row class="pt-0 mt-0">
+    <v-row class="pt-0">
       <v-col cols="12" class="pt-0 pb-0">
         <jazz-icon :address="address" :id="'home'" :size="58" :margin="4" />
       </v-col>
@@ -25,15 +25,20 @@
           <v-tab href="#tab-2" class="MENU-SELECTED">{{
             $t('home.tabs[1]')
           }}</v-tab>
+          <v-tab href="#tab-3" class="MENU-SELECTED">{{
+            $t('home.tabs[2]')
+          }}</v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-1">
-            <ListCrendentials />
-          </v-tab-item>
-
-          <v-tab-item value="tab-2">
             <ListIDs />
+          </v-tab-item>
+          <v-tab-item value="tab-2">
+            <ListOnlineIDs />
+          </v-tab-item>
+          <v-tab-item value="tab-3">
+            <ListCrendentials />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -46,6 +51,8 @@ import WalletState from '../components/WalletState';
 import WalletAddress from '../components/WalletAddress';
 import ListIDs from '../components/ListIDs';
 import ListCrendentials from '../components/ListCrendentials';
+import ListOnlineIDs from '../components/ListOnlineIDs';
+
 import { mapGetters } from 'vuex';
 
 export default {
@@ -54,15 +61,12 @@ export default {
     WalletAddress,
     ListIDs,
     ListCrendentials,
+    ListOnlineIDs,
   },
   computed: {
     ...mapGetters(['address', 'identities', 'credentials']),
   },
-  mounted() {
-    if (this.credentials.length == 0) {
-      this.tab = 'tab-2';
-    }
-  },
+  mounted() {},
   methods: {},
   data() {
     return {

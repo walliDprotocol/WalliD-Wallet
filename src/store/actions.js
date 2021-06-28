@@ -33,3 +33,7 @@ export const UPDATE_CONNECTED = 'UPDATE_CONNECTED';
 
 export const AUTHORIZE_REQUEST = 'AUTHORIZE_REQUEST';
 export const CANCEL_REQUEST = 'CANCEL_REQUEST';
+
+// Social Profiles Actions
+
+export const SHARE_PROFILE = 'SHARE_PROFILE';

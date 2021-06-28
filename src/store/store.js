@@ -23,6 +23,7 @@ import {
   SIGN,
   GEN_PROOF,
   SHARE,
+  SHARE_PROFILE,
   IMPORT_CRED,
   IMPORT_SIGN,
   DELETE_CRED,
@@ -43,6 +44,19 @@ export default new Vuex.Store({
     initialized: API.getState().initialized,
     identities: API.getState().identities,
     credentials: API.getState().credentials,
+    profiles: [
+      {
+        name: 'LinkedIn',
+        username: '@beatrizrpereira215',
+        post: 'Olá, este é o meu post na rede social',
+      },
+      {
+        name: 'Twitter',
+        username: '@beatrizrpereira215',
+        post: 'Olá, este é o meu post na rede social',
+      },
+    ], // API.getState().profiles,
+    currentProfile: null,
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
@@ -59,6 +73,9 @@ export default new Vuex.Store({
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
     currentCred: (state) => state.currentCred,
+
+    profiles: (state) => state.profiles,
+    currentProfile: (state) => state.currentProfile,
   },
   actions: {
     // []: ({ commit, state }) => {
@@ -261,6 +278,33 @@ export default new Vuex.Store({
           .then((res) => {
             console.log(res);
             let url = 'https://dca.wallid.io/api/v1/proof/share';
+            data.url_sig = res;
+            axios(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            }).then((res) => {
+              console.log(res);
+              resolve(res);
+            });
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [SHARE_PROFILE]: ({ commit, state }, data) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action SHARE_PROFILE');
+        state.debug('Data: ', data);
+        API.signPrivateKey(data.url)
+          .then((res) => {
+            console.log(res);
+            let url = 'https://demo.dca.wallid.io/api/v1/proof/share';
             data.url_sig = res;
             axios(url, {
               method: 'POST',
@@ -589,6 +633,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    currentProfile(state, value) {
+      state.currentProfile = value;
+    },
     setCurrentCred(state, value) {
       state.currentCred = value;
     },

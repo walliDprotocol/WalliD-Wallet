@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import * as bip39 from 'bip39';
 import MainContainer from './views/MainContainer';
 import { mapGetters } from 'vuex';
 export default {
