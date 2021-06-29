@@ -502,6 +502,41 @@ export default class AppController {
     );
   }
 
+  /**
+   * Imports a new identity of type @idt into WalliD Plugin.
+   *
+   * @param {string} id - Social Profile name
+   * @param {string} profileData - social identity data
+   * @param {*} ow - overwrite flag
+   */
+  importSocialProfile(id, profileData, ow = false) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    console.log('id', id);
+    const profiles = this.#store.getState().profiles;
+    return Promise.resolve(profiles.addProfile(id, profileData, ow)).then(() =>
+      vault.putProfiles(profiles.serialize(), this.#store.getState().password)
+    );
+  }
+
+  /**
+   * Exports a  Social profile with @id from WalliD Plugin.
+   *
+   * @param {string} id - Social profile id
+   */
+  exportSocialProfilel(id) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const profiles = this.#store.getState().profiles;
+    return Promise.resolve(
+      profiles.getCredential(id).catch((err) => Promise.reject(err))
+    );
+  }
+
   //
   // PENDING REQUESTS RELATED METHODS
   //
@@ -621,6 +656,8 @@ export default class AppController {
       importCredentialSign: this.importCredentialSign.bind(this),
       deleteCredential: this.deleteCredential.bind(this),
       eventProxy: this.eventProxy.bind(this),
+
+      importSocialProfile: this.importSocialProfile.bind(this),
     };
   }
 

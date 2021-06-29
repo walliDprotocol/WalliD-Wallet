@@ -42,27 +42,22 @@ export default class ProfilesController {
     });
   }
 
-  addProfile(id, credName, caName, photoURL, userData, status, ow, expDate) {
+  addProfile(id, profileData, ow) {
     return new Promise((resolve, reject) => {
       console.log('log id add', id);
       console.log('profiles', this.#profiles);
-      const index = this.#profiles.findIndex((cred) => cred.id == id);
+      const index = this.#profiles.findIndex((profile) => profile.id == id);
       console.log('index', index);
       if (index != -1 && ow) {
         console.log('ALREADY EXISTs w/ OW', index);
         this.#profiles.splice(index, 1);
       } else if (index != -1) {
         console.log('ALREADY EXISTs', index);
-        return reject(`ERR_CRED_ALREADY_EXISTS`);
+        return reject(`ERR_PROFILE_ALREADY_EXISTS`);
       }
       this.#profiles.push({
         id,
-        credName,
-        caName,
-        photoURL,
-        userData,
-        status,
-        expDate,
+        profileData,
       });
 
       return resolve();
@@ -72,10 +67,10 @@ export default class ProfilesController {
   getProfile(id) {
     return new Promise((resolve, reject) => {
       console.log('log id get', id);
-      const index = this.#profiles.findIndex((cred) => cred.id == id);
+      const index = this.#profiles.findIndex((profile) => profile.id == id);
       if (index == -1) {
         console.log('ALREADY EXISTs', index);
-        return reject(`ERR_CRED_INEXISTENT`);
+        return reject(`ERR_PROFILE_INEXISTENT`);
       }
       return resolve(this.#profiles[index]);
     });

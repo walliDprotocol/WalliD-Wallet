@@ -215,9 +215,20 @@ export default {
     address: 'Your wallet address',
     tabs: ['Citizen IDs', 'Online IDs ', 'Credentials'],
   },
-  onlineIds: {
-    menu: ['Identity info', 'Identity info '],
+  // NEW TExT
+  profiles: {
+    menu: ['Identity info', 'Share proof of identity'],
+    addNew: 'Add another social network',
+    proof: {
+      text:
+        "Select the account IDs you'd like to embed in the proof of identity:",
+      address: 'WALLET ADDRESS ',
+      buttonGenProof: 'Generate proof of identity',
+    },
+    identity: {},
   },
+  // END NEW TExT
+
   credentials: {
     noCredentials:
       'Seems like you don’t have any credentials stored in your wallet yet.',

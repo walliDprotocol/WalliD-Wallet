@@ -1,7 +1,7 @@
-import * as bip39 from "bip39";
-import passworder from "browser-passworder";
-import WalletController from "./wallet";
-import StateStore from "../lib/store";
+import * as bip39 from 'bip39';
+import passworder from 'browser-passworder';
+import WalletController from './wallet';
+import StateStore from '../lib/store';
 
 const InitState = {
   vault: {},
@@ -26,20 +26,20 @@ export default class Vault {
 
   // Tries to load instance with encrypted vault data from local storage, if available
   loadFromLocalStorage() {
-    console.log("loadFromLocalStorage");
-    return Promise.resolve(this.#store.getLocal("vault")).then((vault) =>
+    console.log('loadFromLocalStorage');
+    return Promise.resolve(this.#store.getLocal('vault')).then((vault) =>
       vault ? this.#store.updateState({ vault, empty: false }) : undefined
     );
   }
 
   // Creates and a persists a new vault to local storage. Overwrites any pre-existing data
   createNewAndPersist(mnemonic, password) {
-    if (typeof password != "string") {
+    if (typeof password != 'string') {
       return Promise.reject("Vault password must be of type 'string'");
     }
 
     if (!bip39.validateMnemonic(mnemonic)) {
-      return Promise.reject("Invalid mnemonic phrase");
+      return Promise.reject('Invalid mnemonic phrase');
     }
 
     return (
@@ -56,7 +56,7 @@ export default class Vault {
         //DEBUG LINE
         .then(() =>
           console.log(
-            "New vault created and persisted to local storage",
+            'New vault created and persisted to local storage',
             this.#store.getState().vault
           )
         )
@@ -66,7 +66,7 @@ export default class Vault {
   // Fully resets the vault. Clears local storage and reverts instance to initial state
   fullReset() {
     return Promise.resolve(this.#store.putState(InitState)).then(() =>
-      this.#store.removeLocal("vault")
+      this.#store.removeLocal('vault')
     );
   }
 
@@ -91,7 +91,7 @@ export default class Vault {
       return Promise.resolve();
     }
 
-    if (typeof password != "string") {
+    if (typeof password != 'string') {
       return Promise.reject("Vault password must be of type 'string'");
     }
 
@@ -102,7 +102,7 @@ export default class Vault {
 
   submitPassword(password) {
     if (this.isEmpty()) {
-      return Promise.reject("Vault is empty!");
+      return Promise.reject('Vault is empty!');
     }
 
     return Promise.resolve(this.#store.getState().vault).then((vault) =>
@@ -134,22 +134,33 @@ export default class Vault {
     return this._getData(4);
   }
 
+  // Returns serialized ProfilesController
+  getProfiles() {
+    return this._getData(5);
+  }
+
   // Updates vault with @conns
   putConnections(conns, password) {
-    console.log("putConnections");
+    console.log('putConnections');
     return Promise.resolve(this._putData(2, conns, password));
   }
 
   // Updates vault with @conns
   putIdentities(ids, password) {
-    console.log("putIdentities");
+    console.log('putIdentities');
     return Promise.resolve(this._putData(3, ids, password));
   }
 
   // Updates vault with @credentials
   putCredentials(credentials, password) {
-    console.log("putCredentials");
+    console.log('putCredentials');
     return Promise.resolve(this._putData(4, credentials, password));
+  }
+
+  // Updates vault with @profiles
+  putProfiles(profiles, password) {
+    console.log('putProfiles');
+    return Promise.resolve(this._putData(5, profiles, password));
   }
 
   isUnlocked() {

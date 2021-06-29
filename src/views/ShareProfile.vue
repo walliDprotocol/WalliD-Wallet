@@ -335,12 +335,12 @@ export default {
       .wrapper {
         border-top: solid 1px #eeeeee;
         .sub-title-fields {
-          font-size: 12px;
-          font-weight: 600;
+          font-size: 12px !important;
+          font-weight: 600 !important;
         }
         .sub-title-fields--bold {
-          font-size: 11px;
-          font-weight: normal;
+          font-size: 11px !important;
+          font-weight: normal !important;
         }
         .MAIN-LINKS {
           font-size: 12px !important;
