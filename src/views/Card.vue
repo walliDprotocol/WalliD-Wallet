@@ -1,5 +1,5 @@
 <template>
-  <v-container class="card-view">
+  <v-container class="card-view pa-5">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-3">
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import WalletAddress from "../components/WalletAddress";
-import WalletState from "../components/WalletState";
-import ArrowBack from "../images/icon-arrow-back.vue";
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import IDCard from "../components/IDCard";
+import IDCard from '../components/IDCard';
 
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -37,12 +37,12 @@ export default {
     IDCard,
   },
   created() {
-    console.log("card", this.$route.params.card);
+    console.log('card', this.$route.params.card);
     this.card = this.$route.params.card;
   },
   mounted() {},
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(['address']),
   },
   data() {
     return {
@@ -64,8 +64,8 @@ export default {
 }
 
 .card-view {
-    .back-btn.v-btn{
-        height: 26px !important;
-    }
+  .back-btn.v-btn {
+    height: 26px !important;
+  }
 }
 </style>

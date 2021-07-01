@@ -42,7 +42,7 @@ export default class ProfilesController {
     });
   }
 
-  addProfile(id, profileData, ow) {
+  addProfile(id, profileData, username, socialName, ow) {
     return new Promise((resolve, reject) => {
       console.log('log id add', id);
       console.log('profiles', this.#profiles);
@@ -58,6 +58,8 @@ export default class ProfilesController {
       this.#profiles.push({
         id,
         profileData,
+        username,
+        socialName,
       });
 
       return resolve();

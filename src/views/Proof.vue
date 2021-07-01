@@ -1,5 +1,5 @@
 <template>
-  <v-container class="proof-view">
+  <v-container class="proof-view pa-5">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-4">
@@ -7,7 +7,7 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
-            {{ $t("proof.title") }}
+            {{ $t('proof.title') }}
             {{ credentialName }}
           </h2>
         </div>
@@ -17,11 +17,11 @@
       <v-form @submit.prevent="generateProof" ref="form">
         <v-col cols="12" class="pt-1">
           <h3 class="sub-title-fields text-left">
-            {{ $t("proof.text") }}
+            {{ $t('proof.text') }}
           </h3>
         </v-col>
         <v-col cols="12" class="pt-0  text-left">
-          <label class="sub-title-fields ">{{ $t("proof.url") }}</label>
+          <label class="sub-title-fields ">{{ $t('proof.url') }}</label>
           <v-text-field
             v-model="url"
             class="password-input mt-1"
@@ -39,7 +39,7 @@
         <v-col v-if="false" cols="12" class="pt-8 pb-5">
           <div class="info">
             <icon-alert />
-            <p class="alerts-font">{{ $t("proof.info") }}</p>
+            <p class="alerts-font">{{ $t('proof.info') }}</p>
           </div>
         </v-col>
         <v-col cols="12">
@@ -50,7 +50,7 @@
             :disabled="isDisabled"
             class="advance-btn "
           >
-            {{ $t("proof.button") }}
+            {{ $t('proof.button') }}
           </v-btn>
         </v-col>
       </v-form>
@@ -58,11 +58,11 @@
     <v-row v-else class="">
       <v-col cols="12" class="pt-1">
         <h3 class="sub-title-fields text-left">
-          {{ $t("proof.text1") }}
+          {{ $t('proof.text1') }}
         </h3>
       </v-col>
       <v-col cols="12 text-left">
-        <label class="sub-title-fields ">{{ $t("proof.link") }}</label>
+        <label class="sub-title-fields ">{{ $t('proof.link') }}</label>
         <v-tooltip content-class="wallet-tooltip" bottom>
           <template v-slot:activator="{ on }">
             <v-text-field
@@ -100,12 +100,12 @@
 </template>
 
 <script>
-import ArrowBack from "../images/icon-arrow-back.vue";
-import IconAlert from "../images/icon-warning-red.vue";
-import CopyHover from "../images/icon-copyclipboard-selected";
-import Copy from "../images/icon-copyclipboard-unselected";
-import { mapGetters } from "vuex";
-import { SHARE } from "../store/actions";
+import ArrowBack from '../images/icon-arrow-back.vue';
+import IconAlert from '../images/icon-warning-red.vue';
+import CopyHover from '../images/icon-copyclipboard-selected';
+import Copy from '../images/icon-copyclipboard-unselected';
+import { mapGetters } from 'vuex';
+import { SHARE } from '../store/actions';
 
 export default {
   components: {
@@ -115,12 +115,12 @@ export default {
     CopyHover,
   },
   created() {
-    console.log("card", this.currentCred);
+    console.log('card', this.currentCred);
     this.card = this.currentCred;
   },
   mounted() {},
   computed: {
-    ...mapGetters(["address", "currentCred"]),
+    ...mapGetters(['address', 'currentCred']),
 
     isDisabled() {
       return !this.url || !!this.urlError || this.isLoading;
@@ -128,35 +128,35 @@ export default {
   },
   methods: {
     copyToClip() {
-      const el = document.createElement("textarea");
+      const el = document.createElement('textarea');
       el.value = this.linkProof;
       document.body.appendChild(el);
       el.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       document.body.removeChild(el);
       this.show = true;
     },
     delay() {
-      console.log("hover");
+      console.log('hover');
       setTimeout(() => {
         this.show = false;
         this.copy = false;
       }, 300);
     },
     checkURL() {
-      this.urlError = "";
+      this.urlError = '';
 
       var pattern = new RegExp(
-        "^(https?:\\/\\/)?" + // protocol
-          "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-          "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-          "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-          "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-          "(\\#[-a-z\\d_]*)?$",
-        "i"
+        '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+          '(\\#[-a-z\\d_]*)?$',
+        'i'
       ); // fragment locator
       if (!pattern.test(this.url)) {
-        this.urlError = this.$t("proof.urlError");
+        this.urlError = this.$t('proof.urlError');
       }
     },
     reconstructData(data) {
@@ -166,13 +166,13 @@ export default {
         console.log(item);
         obj[item.attr] = item.value;
       });
-      obj["tables"] = data.table;
+      obj['tables'] = data.table;
       console.log(obj);
       return obj;
     },
 
     generateProof() {
-      this.debug("generateProof", this.card.userData);
+      this.debug('generateProof', this.card.userData);
       let body = {
         user_id: this.card.userData._id,
         url: this.url,
@@ -181,7 +181,7 @@ export default {
       this.$store
         .dispatch(SHARE, body)
         .then((response) => {
-          console.log("Proof");
+          console.log('Proof');
           console.log(response);
           this.credentialName = this.card.credName;
           this.linkProof = response.data.data.proof;
@@ -199,18 +199,18 @@ export default {
       isLoading: false,
       url: null,
       card: null,
-      urlError: "",
-      credentialName: "",
-      linkProof: "",
+      urlError: '',
+      credentialName: '',
+      linkProof: '',
       copy: false,
       show: false,
       copyBefore: {
-        en: "Copy to clipboard",
-        pt: "Copiar",
+        en: 'Copy to clipboard',
+        pt: 'Copiar',
       },
       copyAfter: {
-        en: "Copied!",
-        pt: "Copiado!",
+        en: 'Copied!',
+        pt: 'Copiado!',
       },
     };
   },

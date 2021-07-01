@@ -107,7 +107,7 @@
     // overflow-y: auto;
   }
   .list-storage {
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     height: 200px;
     background-color: var(--white);
@@ -189,7 +189,7 @@
     height: 100%;
   }
   .container {
-    padding: 8px;
+    // padding: 8px;
     p {
       margin: 0;
     }
@@ -257,6 +257,12 @@
         color: #ffffff;
         font-weight: normal;
       }
+    }
+    &.float {
+      position: absolute;
+      bottom: 12px;
+      max-width: 360px;
+      left: 8px;
     }
   }
 

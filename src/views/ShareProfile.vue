@@ -1,5 +1,5 @@
 <template>
-  <v-container class="profile-proof-view">
+  <v-container class="profile-proof-view pa-5">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow ">
@@ -46,7 +46,7 @@
               <v-container class="py-0 wrapper">
                 <v-row>
                   <v-col cols="2" class="py-2 pl-0">
-                    <SocialProfileImg :size="30" :name="profile.name" />
+                    <StoredProfileImg :size="30" :name="profile.name" />
                   </v-col>
                   <v-col cols="8" class="pr-0 pl-1 py-2">
                     <v-container class="">
@@ -81,7 +81,7 @@
               <v-container class="py-0 wrapper">
                 <v-row>
                   <v-col cols="2" class="py-2 pl-0">
-                    <SocialProfileImg :size="30" :name="'AddProfile'" />
+                    <StoredProfileImg :size="30" :name="'AddProfile'" />
                   </v-col>
                   <v-col cols="8" class="pr-0 pl-1 py-2">
                     <v-container class="py-0">
@@ -115,7 +115,7 @@
     <v-row v-else class="">
       <v-col cols="12" class="pt-1">
         <h3 class="sub-title-fields text-left">
-          {{ $t('proof.text1') }}
+          {{ $t('profiles.proof.text2') }}
         </h3>
       </v-col>
       <v-col cols="12 text-left">
@@ -164,7 +164,7 @@ import Copy from '../images/icon-copyclipboard-unselected';
 
 import WalletAddress from '../components/WalletAddress';
 
-import SocialProfileImg from '../components/SocialProfileImg';
+import StoredProfileImg from '../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
 import { SHARE_PROFILE } from '../store/actions';
@@ -176,7 +176,7 @@ export default {
     ArrowBack,
     Copy,
     CopyHover,
-    SocialProfileImg,
+    StoredProfileImg,
   },
   created() {
     console.log('currentProfile', this.currentProfile);
@@ -243,12 +243,11 @@ export default {
     generateProof() {
       this.debug('generateProof', this.selectedProfiles);
       let body = {
-        user_id: this.card.userData._id,
-        url: this.url,
+        profile: this.currentProfile,
       };
       this.isLoading = true;
       this.$store
-        .dispatch(SHARE_PROFILE, body)
+        .dispatch('socialIds/' + SHARE_PROFILE, body)
         .then((response) => {
           console.log('Proof');
           console.log(response);

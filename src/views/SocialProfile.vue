@@ -1,5 +1,5 @@
 <template>
-  <v-container class="profile-view">
+  <v-container class="profile-view pa-5">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-4">
@@ -18,9 +18,9 @@
           <v-container class="pa-0 ">
             <v-row>
               <v-col cols="2" class="py-2">
-                <SocialProfileImg :size="30" :name="currentProfile.name" />
+                <StoredProfileImg :size="30" :name="currentProfile.name" />
               </v-col>
-              <v-col cols="8" class="py-2">
+              <v-col cols="8" class="py-2 pl-1">
                 <v-container class="">
                   <v-row>
                     <v-col cols="12" class="py-0">
@@ -45,26 +45,28 @@
           </v-container>
         </v-card>
       </v-col>
-      <v-col cols="12">
-        <v-btn text @click="goToSharePage" class="advance-btn inverted-colors">
-          {{ $t('profiles.menu[1]') }}
-        </v-btn>
-      </v-col>
     </v-row>
+    <v-btn
+      text
+      @click="goToSharePage"
+      class="advance-btn inverted-colors float"
+    >
+      {{ $t('profiles.menu[1]') }}
+    </v-btn>
   </v-container>
 </template>
 
 <script>
 import ArrowBack from '../images/icon-arrow-back.vue';
 
-import SocialProfileImg from '../components/SocialProfileImg';
+import StoredProfileImg from '../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
     ArrowBack,
-    SocialProfileImg,
+    StoredProfileImg,
   },
   created() {
     console.log('card', this.currentProfile);
@@ -91,8 +93,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .profile-view {
+  height: 100%;
   div.info-profile {
     border-radius: 14px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
@@ -118,6 +121,10 @@ export default {
       letter-spacing: normal;
       color: #3c4148;
     }
+  }
+  .advance-btn.float {
+    position: fixed !important;
+    left: 20px !important;
   }
 }
 </style>

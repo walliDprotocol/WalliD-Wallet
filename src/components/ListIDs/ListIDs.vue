@@ -1,17 +1,23 @@
 <template>
-  <v-container class="id-cards list-storage pt-1">
+  <v-container
+    class="id-cards list-storage pt-1"
+    style="overflow-y: auto;
+    height: 208px;"
+  >
     <v-row v-if="identities.length > 0">
       <v-col
         v-for="card in identities"
         :key="card.id"
         cols="12"
-        class="py-0 px-2 mt-1 mb-2 card"
+        class="py-0 px-1 mt-1 mb-2 card"
       >
-        <v-container class="py-0">
+        <v-container class="py-0 px-3">
           <v-row>
-            <v-col cols="1" class="pr-1 pt-6"> <idcardImg /></v-col>
-            <v-col cols="10" class="pl-5 pr-0 pb-1">
-              <p class="sub-title-fields">
+            <v-col cols="2" class="pr-1">
+              <StoredProfileImg :size="38" :name="card.idt" />
+            </v-col>
+            <v-col cols="9" class="pl-5 pr-0 pb-1">
+              <p class="sub-title-fields sub-title-fields--bold">
                 {{ getIDTName(card.idt) }}
               </p>
               <v-container class="py-1">
@@ -39,7 +45,7 @@
                     </div>
                   </v-col>
                   <v-col cols="8" class="py-2 pr-0">
-                    <p class="FIELD-TEXT">
+                    <p class="FIELD-TEXT" style="font-size:12px">
                       {{ $t('cards.validity[0]') }}
                       {{ card.expDate }}
                     </p>
@@ -52,8 +58,42 @@
               </v-btn> </v-col></v-row
         ></v-container>
       </v-col>
+      <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
+        <v-container class="py-0 px-3">
+          <v-row>
+            <v-col cols="2" class="">
+              <StoredProfileImg :size="38" :name="'AddProfile'" />
+            </v-col>
+            <v-col cols="8" class="pl-6 pr-0">
+              <v-container class="py-0">
+                <v-row>
+                  <v-col cols="12" class="py-0">
+                    <a
+                      class="MAIN-LINKS links"
+                      target="_blank"
+                      color="#01a3b0"
+                      href="https://www.wallid.io/"
+                      @click.stop
+                    >
+                      {{ $t('cards.addNew') }}
+                    </a>
+                  </v-col>
+                  <v-col cols="12" class="py-0">
+                    <p class="sub-title-fields"></p>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row
+      v-else
+      style="background: white;
+    height: 196px;
+    overflow-y: hidden;"
+    >
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">{{ $t('cards.noids') }}</p>
         <a
@@ -77,7 +117,7 @@ import idcardImg from '../../images/icon-id-document.vue';
 import invalid from '../../images/invalid.vue';
 import valid from '../../images/valid.vue';
 
-import { ENCRYPT } from '../../store/actions';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
 
@@ -88,6 +128,7 @@ export default {
     idcardImg,
     valid,
     invalid,
+    StoredProfileImg,
   },
   computed: {
     ...mapGetters(['identities']),

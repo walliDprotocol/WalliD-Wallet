@@ -505,18 +505,20 @@ export default class AppController {
   /**
    * Imports a new identity of type @idt into WalliD Plugin.
    *
-   * @param {string} id - Social Profile name
+   * @param {string} id - Social Profile name + username tag
    * @param {string} profileData - social identity data
    * @param {*} ow - overwrite flag
    */
-  importSocialProfile(id, profileData, ow = false) {
+  importSocialProfile(id, profileData, username, socialName, ow = false) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     console.log('id', id);
     const profiles = this.#store.getState().profiles;
-    return Promise.resolve(profiles.addProfile(id, profileData, ow)).then(() =>
+    return Promise.resolve(
+      profiles.addProfile(id, profileData, username, socialName, ow)
+    ).then(() =>
       vault.putProfiles(profiles.serialize(), this.#store.getState().password)
     );
   }

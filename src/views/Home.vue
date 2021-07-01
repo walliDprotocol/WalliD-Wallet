@@ -90,7 +90,6 @@ export default {
 .home {
   .tabs {
     min-width: 400px;
-    margin-left: -8px;
     .v-slide-group__prev,
     .v-slide-group__next {
       display: none !important;

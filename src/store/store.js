@@ -29,6 +29,8 @@ import {
   DELETE_CRED,
 } from './actions';
 
+import * as modules from './modules';
+
 const { API } = chrome.extension.getBackgroundPage();
 import axios from 'axios';
 
@@ -36,6 +38,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   //initial state
+  modules,
   state: {
     address: API.getState().address,
     completedOnboarding: API.getState().initialized,
@@ -278,33 +281,6 @@ export default new Vuex.Store({
           .then((res) => {
             console.log(res);
             let url = 'https://dca.wallid.io/api/v1/proof/share';
-            data.url_sig = res;
-            axios(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              data: data,
-            }).then((res) => {
-              console.log(res);
-              resolve(res);
-            });
-          })
-          .catch((e) => {
-            console.error(e);
-            reject(e);
-          });
-      });
-    },
-
-    [SHARE_PROFILE]: ({ commit, state }, data) => {
-      return new Promise((resolve, reject) => {
-        console.log('Action SHARE_PROFILE');
-        state.debug('Data: ', data);
-        API.signPrivateKey(data.url)
-          .then((res) => {
-            console.log(res);
-            let url = 'https://demo.dca.wallid.io/api/v1/proof/share';
             data.url_sig = res;
             axios(url, {
               method: 'POST',

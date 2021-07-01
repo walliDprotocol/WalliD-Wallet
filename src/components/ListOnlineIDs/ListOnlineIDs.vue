@@ -1,16 +1,20 @@
 <template>
-  <v-container class="social-profiles-list list-storage pt-1">
-    <v-row>
+  <v-container
+    class="social-profiles-list list-storage pt-1"
+    style="overflow-y: auto;
+    height: 208px;"
+  >
+    <v-row v-if="profiles.length > 0">
       <v-col
         v-for="profile in profiles"
         :key="profile.id"
         cols="12"
-        class="py-0 px-2 mt-1 mb-2 card"
+        class="py-0 px-1 mt-1 mb-2 card"
       >
-        <v-container class="py-0">
+        <v-container class="py-0 px-3">
           <v-row>
             <v-col cols="2" class="">
-              <SocialProfileImg :size="38" :name="profile.name" />
+              <StoredProfileImg :size="38" :name="profile.name" />
             </v-col>
             <v-col cols="8" class="pl-6 pr-0 pb-1">
               <v-container class="py-0">
@@ -28,7 +32,7 @@
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="2" class="pl-0 pr-1">
+            <v-col cols="2" class="pl-0 pr-0">
               <v-menu bottom left class="dot-menu" content-class="dot-menu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -65,11 +69,11 @@
           </v-row>
         </v-container>
       </v-col>
-      <v-col cols="12" class="py-0 px-2 mt-1 mb-2 card">
-        <v-container class="py-0">
+      <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
+        <v-container class="py-0 px-3">
           <v-row>
             <v-col cols="2" class="">
-              <SocialProfileImg :size="38" :name="'AddProfile'" />
+              <StoredProfileImg :size="38" :name="'AddProfile'" />
             </v-col>
             <v-col cols="8" class="pl-6 pr-0">
               <v-container class="py-0">
@@ -89,6 +93,25 @@
         </v-container>
       </v-col>
     </v-row>
+    <v-row
+      v-else
+      style="background: white;
+    height: 196px;
+    overflow-y: hidden;"
+    >
+      <v-col cols="12" class="px-15 py-9">
+        <p class="SECUNDARY-LINKS mb-5">{{ $t('profiles.noids') }}</p>
+        <a
+          class="links"
+          target="_blank"
+          color="#01a3b0"
+          href="https://www.wallid.io/"
+          @click.stop
+        >
+          {{ $t('profiles.store') }}
+        </a>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -98,7 +121,7 @@ import IconDotMenu from '../../images/icon-dot-menu.vue';
 import IconAlert from '../../images/icon-warning-red.vue';
 import idcardImg from '../../images/icon-id-document.vue';
 
-import SocialProfileImg from '../../components/SocialProfileImg';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
 
@@ -107,7 +130,7 @@ export default {
     IconDotMenu,
     IconAlert,
     idcardImg,
-    SocialProfileImg,
+    StoredProfileImg,
   },
   computed: {
     ...mapGetters(['profiles']),
@@ -135,6 +158,21 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.social-profiles-list {
+  .dot-menu-button {
+    padding: 1px;
+    &:hover .v-btn__content {
+      svg > g {
+        fill: #009fb1 !important;
+      }
+    }
+    &::before {
+      content: none;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .social-profiles-list {
   overflow-y: auto;
@@ -172,6 +210,17 @@ export default {
       display: flex;
       svg {
         margin: 6px;
+      }
+    }
+    .dot-menu-button {
+      padding: 1px;
+      &:hover .v-btn__content {
+        svg > g {
+          fill: #009fb1 !important;
+        }
+      }
+      &::before {
+        content: none;
       }
     }
   }

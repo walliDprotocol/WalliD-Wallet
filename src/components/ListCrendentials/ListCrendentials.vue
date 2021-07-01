@@ -1,24 +1,32 @@
 <template>
-  <v-container class="credentials list-storage pt-1">
+  <v-container
+    class="credentials list-storage pt-1"
+    style="overflow-y: auto;
+    height: 208px;"
+  >
     <v-row v-if="credentials.length > 0">
       <v-col
         v-for="card in credentials"
         :key="card.id"
         cols="12"
-        class="py-0 px-2 mt-1 mb-2 card"
+        class="py-0 px-1 mt-1 mb-2 card"
       >
-        <v-container class="pb-0">
+        <v-container class="py-0">
           <v-row>
-            <v-col cols="2" class="pr-2 pb-0"> <IconCredential /></v-col>
-            <v-col cols="9" class="pl-2 pb-0">
-              <p class="sub-title-fields">
-                {{ card.credName }}
-              </p>
-              <p class="sub-title-fields" style="font-weight:500">
-                {{ card.caName }}
-              </p>
-              <v-container class="px-0">
+            <v-col cols="2" class="pr-2 pb-0">
+              <StoredProfileImg :size="38" :src="card.photoURL"
+            /></v-col>
+            <v-col cols="8" class="pl-5 pb-0 pt-1">
+              <v-container class="">
                 <v-row>
+                  <v-col cols="12" class="pt-0 pb-2">
+                    <p class="sub-title-fields sub-title-fields--bold">
+                      {{ card.credName }}
+                    </p>
+                    <p class="sub-title-fields" style="font-weight:500">
+                      {{ card.caName }}
+                    </p>
+                  </v-col>
                   <v-col cols="5" class="pr-0 py-0" style="max-width:unset;">
                     <div
                       class="validity"
@@ -63,17 +71,17 @@
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="1" class="pl-1 pb-0">
+            <v-col cols="2" class="pl-1 pr-0 pb-0">
               <v-menu bottom left class="dot-menu" content-class="dot-menu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     :ripple="false"
-                    width="16"
-                    class="dot-menu-button"
+                    width="36"
+                    class="dot-menu-button mt-3"
                     icon
                     v-bind="attrs"
                     v-on="on"
-                    ><IconMenu />
+                    ><IconDotMenu />
                   </v-btn>
                 </template>
 
@@ -111,12 +119,17 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row
+      v-else
+      style="background: white;
+    height: 196px;
+    overflow-y: hidden;"
+    >
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">
           {{ $t('credentials.noCredentials') }}
         </p>
-        <a
+        <!-- <a
           class="links"
           target="_blank"
           color="#01a3b0"
@@ -124,7 +137,7 @@
           @click.stop
         >
           {{ $t('credentials.store') }}
-        </a>
+        </a> -->
       </v-col>
     </v-row>
   </v-container>
@@ -134,13 +147,14 @@
 import ArrowFront from '../../images/icon-arrow-front.vue';
 import IconAlert from '../../images/icon-warning-red.vue';
 import IconCredential from '../../images/icon-credential.vue';
-import IconMenu from '../../images/icon-dot-menu.vue';
+import IconDotMenu from '../../images/icon-dot-menu.vue';
 
 import invalid from '../../images/invalid.vue';
 import valid from '../../images/valid.vue';
 import pending from '../../images/view-only.vue';
 
 import { DELETE_CRED, ENCRYPT } from '../../store/actions';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
 
@@ -157,10 +171,11 @@ export default {
     ArrowFront,
     IconAlert,
     IconCredential,
-    IconMenu,
+    IconDotMenu,
     valid,
     invalid,
     pending,
+    StoredProfileImg,
   },
   computed: {
     ...mapGetters(['credentials']),
