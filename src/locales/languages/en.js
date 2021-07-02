@@ -222,10 +222,16 @@ export default {
     proof: {
       text:
         "Select the account IDs you'd like to embed in the proof of identity:",
+      text2:
+        'The link below contains the verifiable data that proves the ownership of this wallet address and Online IDs. Anyone who accesses it will be able to check the chain of trust behind it and verify it on chain.',
       address: 'WALLET ADDRESS ',
       buttonGenProof: 'Generate proof of identity',
     },
     identity: {},
+
+    noids:
+      'Seems like you don’t have any online IDs stored in your wallet yet.',
+    store: 'Store your Online ID now',
   },
   // END NEW TExT
 
@@ -233,7 +239,7 @@ export default {
     noCredentials:
       'Seems like you don’t have any credentials stored in your wallet yet.',
     store: 'Start packing them now',
-    menu: ['View credential', 'Share credential', 'Download Credential'],
+    menu: ['Credential info', 'Share credential', 'Download Credential'],
     status: {
       active: 'Valid',
       revoke: 'Revoked',
@@ -260,6 +266,7 @@ export default {
     noids: 'Seems like you don’t have any ID documents stored in your wallet',
     store: 'Store your ID now',
     tooltip: 'Show ID data',
+    addNew: 'Add another citizen ID',
   },
   import: {
     title: 'Import your wallet',
