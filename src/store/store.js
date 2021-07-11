@@ -47,18 +47,7 @@ export default new Vuex.Store({
     initialized: API.getState().initialized,
     identities: API.getState().identities,
     credentials: API.getState().credentials,
-    profiles: [
-      {
-        name: 'LinkedIn',
-        username: '@beatrizrpereira215',
-        post: 'Olá, este é o meu post na rede social',
-      },
-      {
-        name: 'Twitter',
-        username: '@beatrizrpereira215',
-        post: 'Olá, este é o meu post na rede social',
-      },
-    ], // API.getState().profiles,
+    profiles: API.getState().profiles,
     currentProfile: null,
     request: API.getNextRequest(),
     debug: null,
@@ -203,6 +192,7 @@ export default new Vuex.Store({
       commit('updateOnboarding', API.getState().initialized);
       commit('updateIdentities', API.getState().identities);
       commit('updateCredentials', API.getState().credentials);
+      commit('updateProfiles', API.getState().profiles);
 
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
@@ -614,6 +604,9 @@ export default new Vuex.Store({
     },
     setCurrentCred(state, value) {
       state.currentCred = value;
+    },
+    updateProfiles(state, value) {
+      state.profiles = value;
     },
     updateCredentials(state, value) {
       state.credentials = value;
