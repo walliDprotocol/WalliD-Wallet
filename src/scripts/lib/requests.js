@@ -44,6 +44,12 @@ const RequestAPIMethods = {
     level: 1,
     executor: ['importCredentialSign'],
   },
+
+  wallid_import_social_profile: {
+    main_controller: true,
+    level: 1,
+    executor: ['importSocialProfile'],
+  },
   wallid_set_provider: {
     level: 1,
     executor: ['configurations', 'setProvider'],

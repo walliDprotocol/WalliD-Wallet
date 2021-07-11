@@ -11,6 +11,8 @@ import WalletController from './controllers/wallet';
 import ConnectionsController from './controllers/connections';
 import IdentitiesController from './controllers/identities';
 import CredentialsController from './controllers/credentials';
+import ProfilesController from './controllers/profiles';
+
 import ConfigurationsController from './controllers/configuration';
 import { setProvider } from './lib/eth-utils';
 
@@ -19,6 +21,7 @@ const InitState = {
   connections: {},
   identities: {},
   credentials: {},
+  profiles: {},
   configurations: {},
   password: '',
   popups: [],
@@ -137,6 +140,7 @@ export default class AppController {
           credentials: CredentialsController.deserialize(
             vault.getCredentials()
           ),
+          profiles: ProfilesController.deserialize(vault.getProfiles()),
           configurations: new ConfigurationsController(),
           password,
         })
@@ -452,6 +456,8 @@ export default class AppController {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     const credentials = this.#store.getState().credentials;
+    console.log(credentials);
+
     return Promise.resolve(
       credentials.getCredential(id).catch((err) => Promise.reject(err))
     );
@@ -516,11 +522,16 @@ export default class AppController {
     }
     console.log('id', id);
     const profiles = this.#store.getState().profiles;
+    console.log(profiles);
     return Promise.resolve(
       profiles.addProfile(id, profileData, username, socialName, ow)
-    ).then(() =>
-      vault.putProfiles(profiles.serialize(), this.#store.getState().password)
-    );
+    )
+      .then(() =>
+        vault.putProfiles(profiles.serialize(), this.#store.getState().password)
+      )
+      .catch((err) => {
+        Promise.reject(err);
+      });
   }
 
   /**
@@ -611,6 +622,7 @@ export default class AppController {
     const connections = this.#store.getState().connections;
     const identities = this.#store.getState().identities;
     const credentials = this.#store.getState().credentials;
+    const profiles = this.#store.getState().profiles;
 
     return {
       initialized: !vault.isEmpty(),
@@ -619,6 +631,7 @@ export default class AppController {
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
       identities: vault.isUnlocked() ? identities.get() : null,
       credentials: vault.isUnlocked() ? credentials.get() : null,
+      profiles: vault.isUnlocked() ? profiles.get() : null,
       mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
       key: vault.isUnlocked() ? () => vault.getWallet() : null,
     };

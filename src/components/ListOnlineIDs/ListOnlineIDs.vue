@@ -14,14 +14,14 @@
         <v-container class="py-0 px-3">
           <v-row>
             <v-col cols="2" class="">
-              <StoredProfileImg :size="38" :name="profile.name" />
+              <StoredProfileImg :size="38" :name="profile.socialName" />
             </v-col>
             <v-col cols="8" class="pl-6 pr-0 pb-1">
               <v-container class="py-0">
                 <v-row>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields sub-title-fields--bold">
-                      {{ profile.name }}
+                      {{ profile.socialName }}
                     </p>
                   </v-col>
                   <v-col cols="12" class="py-0">
@@ -78,7 +78,7 @@
             <v-col cols="8" class="pl-6 pr-0">
               <v-container class="py-0">
                 <v-row>
-                  <v-col cols="12" class="py-0">
+                  <v-col cols="12" class="py-0 pr-0">
                     <a class="MAIN-LINKS">
                       {{ $t('profiles.addNew') }}
                     </a>

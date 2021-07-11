@@ -30,7 +30,7 @@ export default class ProfilesController {
 
   deleteProfiles(id) {
     return new Promise((resolve, reject) => {
-      const index = this.#profiles.findIndex((cred) => cred.id == id);
+      const index = this.#profiles.findIndex((profile) => profile.id == id);
 
       if (index != -1) {
         console.log('EXISTs w/ ', index);
@@ -82,7 +82,7 @@ export default class ProfilesController {
     return this.#profiles;
   }
 
-  getIDTsList() {
+  getList() {
     return this.#profiles.map((id) => id.id);
   }
 }

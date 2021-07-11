@@ -1,4 +1,5 @@
 import { SHARE_PROFILE } from '../actions';
+import axios from 'axios';
 
 const { API } = chrome.extension.getBackgroundPage();
 
@@ -12,30 +13,21 @@ const mutations = {
   },
 };
 const actions = {
-  [SHARE_PROFILE]: ({ rootState, commit, state }, data) => {
+  [SHARE_PROFILE]: ({ rootState, commit, state }, body) => {
     return new Promise((resolve, reject) => {
-      rootState.debug('Action SHARE_PROFILE');
-      rootState.debug('Data: ', data);
-      API.signPrivateKey(data.url)
-        .then((res) => {
-          rootState.debug(res);
-          let url = 'https://demo.dca.wallid.io/api/v1/proof/share';
-          data.url_sig = res;
-          axios(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            data: data,
-          }).then((res) => {
-            rootState.debug(res);
-            resolve(res);
-          });
-        })
-        .catch((e) => {
-          console.error(e);
-          reject(e);
-        });
+      rootState.debug('Action SHARE_PROFILES');
+      rootState.debug('Body: ', body);
+      let url = 'https://demo.dca.wallid.io/api/v1/social-profile/share';
+      axios(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: body,
+      }).then((res) => {
+        rootState.debug(res);
+        resolve(res);
+      });
     });
   },
 };

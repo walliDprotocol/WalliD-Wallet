@@ -18,7 +18,10 @@
           <v-container class="pa-0 ">
             <v-row>
               <v-col cols="2" class="py-2">
-                <StoredProfileImg :size="30" :name="currentProfile.name" />
+                <StoredProfileImg
+                  :size="30"
+                  :name="currentProfile.socialName"
+                />
               </v-col>
               <v-col cols="8" class="py-2 pl-1">
                 <v-container class="">
@@ -27,7 +30,7 @@
                       <p
                         class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
                       >
-                        {{ currentProfile.name }}
+                        {{ currentProfile.socialName }}
                       </p>
                     </v-col>
                     <v-col cols="12" class="py-0">
@@ -39,7 +42,9 @@
                 </v-container>
               </v-col>
               <v-col cols="12" class=" px-6 py-2 post">
-                <div class="text-left">{{ currentProfile.post }}</div>
+                <div class="text-left">
+                  {{ currentProfile.profileData.post }}
+                </div>
               </v-col>
             </v-row>
           </v-container>

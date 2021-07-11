@@ -7,13 +7,13 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
-            {{ $t("sites.title") }}
+            {{ $t('sites.title') }}
           </h2>
         </div>
       </v-col>
       <v-col v-show="connections.length != 0" cols="12" class="pt-0">
         <h3 class="sub-title-fields mb-7 text-left">
-          {{ $t("sites.subtitle") }}
+          {{ $t('sites.subtitle') }}
         </h3>
       </v-col>
       <v-col v-show="connections.length != 0" cols="12" class="pt-2 pb-1">
@@ -45,7 +45,7 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <div class="metamask-login">
-                  <p>{{ $t("sites.tooltip") }}</p>
+                  <p>{{ $t('sites.tooltip') }}</p>
                 </div>
               </v-tooltip>
             </v-list-item-action>
@@ -54,7 +54,7 @@
       </v-col>
       <v-col v-show="connections.length == 0" cols="12" class="pt-2 pb-1 px-10">
         <p class="sub-title-fields text-center mt-12 ">
-          {{ $t("sites.noSites") }}
+          {{ $t('sites.noSites') }}
         </p>
       </v-col>
     </v-row>
@@ -66,9 +66,9 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
-            {{ $t("sites.disconnect[0]") }}
+            {{ $t('sites.disconnect[0]') }}
             {{ site.url }}
-            {{ $t("sites.disconnect[1]") }}
+            {{ $t('sites.disconnect[1]') }}
           </h2>
         </div>
       </v-col>
@@ -80,12 +80,12 @@
       </v-col>
       <v-col cols="6" class="pr-2">
         <v-btn text class="cancel-btn" @click="cancel">
-          {{ $t("sites.button[0]") }}
+          {{ $t('sites.button[0]') }}
         </v-btn>
       </v-col>
       <v-col cols="6" class="pl-2">
         <v-btn text class="advance-btn" @click="setPendingDisconnect">
-          {{ $t("sites.button[1]") }}
+          {{ $t('sites.button[1]') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -93,10 +93,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import ArrowBack from "../images/icon-arrow-back.vue";
-import IconTrash from "../images/icon-trash-unselected.vue";
-import { DISCONNECT } from "../store/actions";
+import { mapGetters } from 'vuex';
+import ArrowBack from '../images/icon-arrow-back.vue';
+import IconTrash from '../images/icon-trash-unselected.vue';
+import { DISCONNECT } from '../store/actions';
 
 export default {
   components: {
@@ -104,7 +104,7 @@ export default {
     IconTrash,
   },
   computed: {
-    ...mapGetters(["connections"]),
+    ...mapGetters(['connections']),
   },
   methods: {
     cancel() {
@@ -125,7 +125,7 @@ export default {
   data() {
     return {
       confirmDisconnect: false,
-      site: "",
+      site: '',
     };
   },
 };

@@ -45,17 +45,21 @@
             >
               <v-container class="py-0 wrapper">
                 <v-row>
-                  <v-col cols="2" class="py-2 pl-0">
-                    <StoredProfileImg :size="30" :name="profile.name" />
+                  <v-col cols="2" class="py-1 pl-0">
+                    <StoredProfileImg
+                      class="mt-1"
+                      :size="30"
+                      :name="profile.socialName"
+                    />
                   </v-col>
-                  <v-col cols="8" class="pr-0 pl-1 py-2">
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
                           <p
                             class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
                           >
-                            {{ profile.name }}
+                            {{ profile.socialName }}
                           </p>
                         </v-col>
                         <v-col cols="12" class="py-0">
@@ -66,9 +70,9 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="pr-0 py-2">
+                  <v-col cols="2" class="py-1 pr-0 ">
                     <v-checkbox
-                      v-model="selectedProfiles[profile.name]"
+                      v-model="selectedProfiles[profile.id]"
                       @change="checkSelectedProfiles()"
                       :hide-details="true"
                       color="#009fb1"
@@ -78,15 +82,15 @@
               </v-container>
             </v-col>
             <v-col cols="12" class="py-0 list-profiles">
-              <v-container class="py-0 wrapper">
+              <v-container class="py-0 pt-1 wrapper">
                 <v-row>
-                  <v-col cols="2" class="py-2 pl-0">
+                  <v-col cols="2" class="py-1 pl-0 ">
                     <StoredProfileImg :size="30" :name="'AddProfile'" />
                   </v-col>
-                  <v-col cols="8" class="pr-0 pl-1 py-2">
-                    <v-container class="py-0">
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                    <v-container class="py-1">
                       <v-row>
-                        <v-col cols="12" class="">
+                        <v-col cols="12" class="pr-0">
                           <a class="MAIN-LINKS">
                             {{ $t('profiles.addNew') }}
                           </a>
@@ -169,6 +173,8 @@ import StoredProfileImg from '../components/StoredProfileImg';
 import { mapGetters } from 'vuex';
 import { SHARE_PROFILE } from '../store/actions';
 
+const VERIFY_URL = 'http://localhost:3000/Verify/Social/';
+
 export default {
   components: {
     WalletAddress,
@@ -181,7 +187,7 @@ export default {
   created() {
     console.log('currentProfile', this.currentProfile);
 
-    this.selectedProfiles[this.currentProfile.name] = true;
+    this.selectedProfiles[this.currentProfile.id] = true;
     this.isDisabled = false;
   },
   mounted() {},
@@ -212,47 +218,25 @@ export default {
         this.copy = false;
       }, 300);
     },
-    checkURL() {
-      this.urlError = '';
-
-      var pattern = new RegExp(
-        '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-          '(\\#[-a-z\\d_]*)?$',
-        'i'
-      ); // fragment locator
-      if (!pattern.test(this.url)) {
-        this.urlError = this.$t('proof.urlError');
-      }
-    },
-    reconstructData(data) {
-      let obj = {};
-
-      data.front.forEach((item) => {
-        console.log(item);
-        obj[item.attr] = item.value;
-      });
-      obj['tables'] = data.table;
-      console.log(obj);
-      return obj;
-    },
 
     generateProof() {
       this.debug('generateProof', this.selectedProfiles);
-      let body = {
-        profile: this.currentProfile,
-      };
       this.isLoading = true;
+
+      let social_data = this.profiles.filter(
+        ({ id }) => this.selectedProfiles[id]
+      );
+      let body = {
+        wa: this.address,
+        social_data: social_data,
+      };
+
       this.$store
         .dispatch('socialIds/' + SHARE_PROFILE, body)
         .then((response) => {
           console.log('Proof');
           console.log(response);
-          this.credentialName = this.card.credName;
-          this.linkProof = response.data.data.proof;
+          this.linkProof = VERIFY_URL + response.data.data.share_id;
           this.isLoading = false;
         })
         .catch((err) => {
@@ -270,7 +254,6 @@ export default {
       url: null,
       card: null,
       urlError: '',
-      credentialName: '',
       linkProof: '',
       copy: false,
       show: false,

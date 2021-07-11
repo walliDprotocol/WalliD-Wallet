@@ -17,13 +17,16 @@
 </template>
 
 <script>
-import IconTwitter from '../../images/SocialNetworks/icon-twitter.vue';
-import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin.vue';
+import IconTwitter from '../../images/SocialNetworks/icon-twitter';
+import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin';
+import IconReddit from '../../images/SocialNetworks/icon-reddit';
+import IconGitHub from '../../images/SocialNetworks/icon-github';
+import IconDiscord from '../../images/SocialNetworks/icon-discord';
 
-import IconAddProfile from '../../images/SocialNetworks/icon-add-profile.vue';
+import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
 
-import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt.vue';
-import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt.vue';
+import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt';
+import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt';
 
 export default {
   name: 'StoredProfileImg',
@@ -42,6 +45,9 @@ export default {
   components: {
     IconTwitter,
     IconLinkedIn,
+    IconReddit,
+    IconGitHub,
+    IconDiscord,
     IconAddProfile,
     IconCC_PT,
     IconSHUFTI_CC_PT,

@@ -67,7 +67,7 @@
             <v-col cols="8" class="pl-6 pr-0">
               <v-container class="py-0">
                 <v-row>
-                  <v-col cols="12" class="py-0">
+                  <v-col cols="12" class="py-0 pr-0">
                     <a
                       class="MAIN-LINKS links"
                       target="_blank"
