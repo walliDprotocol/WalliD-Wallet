@@ -75,5 +75,5 @@ extension.runtime.onMessage.addListener(function(
 // Locks App when user closes the browser window
 extension.windows.onRemoved.addListener((id) => {
   const popups = App.getActivePopups();
-  popups.includes(id) ? App.updateActivePopups(id, true) : App.lockApp();
+  popups.includes(id) ? App.updateActivePopups(id, true) : null; //App.lockApp();
 });
