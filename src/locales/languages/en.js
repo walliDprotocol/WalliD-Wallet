@@ -227,7 +227,9 @@ export default {
       address: 'WALLET ADDRESS ',
       buttonGenProof: 'Generate proof of identity',
     },
-    identity: {},
+    identity: {
+      viewProof: 'View cryptographic proof',
+    },
 
     noids:
       'Seems like you don’t have any online IDs stored in your wallet yet.',

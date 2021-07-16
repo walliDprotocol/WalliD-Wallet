@@ -270,7 +270,7 @@ export default new Vuex.Store({
         API.signPrivateKey(data.url)
           .then((res) => {
             console.log(res);
-            let url = 'https://dca.wallid.io/api/v1/proof/share';
+            let url = 'https://demo.dca.wallid.io/api/v1/proof/share';
             data.url_sig = res;
             axios(url, {
               method: 'POST',

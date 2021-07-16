@@ -132,6 +132,24 @@
     background-color: var(--black) !important;
   }
 
+  .address-balloon {
+    padding: 7px 7px 7px 8px;
+    border-radius: 15px;
+    background-color: #dbedef;
+    max-width: 32%;
+    margin: 0 auto;
+    p {
+      margin-bottom: 0;
+
+      font-size: 13px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #009fb1;
+    }
+  }
   .password-input {
     .v-input .v-messages__wrapper {
       font-size: 13px;
@@ -418,6 +436,7 @@
     display: block;
     text-align: left;
     color: var(--light-teal);
+    text-decoration: none;
   }
 
   .light-grey-text {

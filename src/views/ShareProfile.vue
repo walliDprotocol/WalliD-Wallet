@@ -173,7 +173,7 @@ import StoredProfileImg from '../components/StoredProfileImg';
 import { mapGetters } from 'vuex';
 import { SHARE_PROFILE } from '../store/actions';
 
-const VERIFY_URL = 'http://localhost:3000/Verify/Social/';
+const VERIFY_URL = 'https://demo.verify.wallid.io/Verify/Social/';
 
 export default {
   components: {
@@ -291,25 +291,6 @@ export default {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     overflow: auto;
     max-height: 320px;
-
-    .address-balloon {
-      padding: 7px 7px 7px 8px;
-      border-radius: 15px;
-      background-color: #dbedef;
-      max-width: 32%;
-      margin: 0 auto;
-      p {
-        margin-bottom: 0;
-
-        font-size: 13px;
-        font-weight: 600;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
-        color: #009fb1;
-      }
-    }
 
     .list-profiles {
       padding-left: 34px;

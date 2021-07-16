@@ -67,14 +67,10 @@ export default class WalletController {
   }
 
   verifyEthereumSignedMessage(message, signature) {
-    console.log(message, signature);
     const recovered = ethSigUtil.recoverPersonalSignature({
       data: message,
       sig: signature,
     });
-    console.log(recovered);
-    console.log(this.getAddress());
-
     return Promise.resolve(recovered == this.getAddress());
   }
 
