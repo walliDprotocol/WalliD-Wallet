@@ -129,6 +129,16 @@
         <p class="SECUNDARY-LINKS mb-5">
           {{ $t('credentials.noCredentials') }}
         </p>
+
+        <a
+          class="links"
+          target="_blank"
+          color="#01a3b0"
+          href="https://www.dca.wallid.io/Invite"
+          @click.stop
+        >
+          {{ $t('credentials.noCredentials') }}
+        </a>
         <!-- <a
           class="links"
           target="_blank"
@@ -268,6 +278,7 @@ export default {
   }
 }
 .dot-menu {
+  margin-top: 32px;
   .v-list {
     padding: 0;
   }

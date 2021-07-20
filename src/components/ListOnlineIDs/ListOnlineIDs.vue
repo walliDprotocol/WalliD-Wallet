@@ -109,7 +109,7 @@
           class="links"
           target="_blank"
           color="#01a3b0"
-          href="https://www.wallid.io/"
+          href="https://www.wallid.io/Setup/ChooseIdentity?online=true"
           @click.stop
         >
           {{ $t('profiles.store') }}

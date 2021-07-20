@@ -81,7 +81,7 @@
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="12" class="py-0 list-profiles">
+            <v-col v-if="false" cols="12" class="py-0 list-profiles">
               <v-container class="py-0 pt-1 wrapper">
                 <v-row>
                   <v-col cols="2" class="py-1 pl-0 ">
@@ -91,7 +91,11 @@
                     <v-container class="py-1">
                       <v-row>
                         <v-col cols="12" class="pr-0">
-                          <a class="MAIN-LINKS">
+                          <a
+                            class="MAIN-LINKS"
+                            href="https://www.wallid.io/Setup/ChooseIdentity?online=true"
+                            target="_blank"
+                          >
                             {{ $t('profiles.addNew') }}
                           </a>
                         </v-col>
@@ -124,37 +128,13 @@
       </v-col>
       <v-col cols="12 text-left">
         <label class="sub-title-fields ">{{ $t('proof.link') }}</label>
-        <v-tooltip content-class="wallet-tooltip" bottom>
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-on="on"
-              id="walletCopy"
-              v-model="linkProof"
-              class="password-input mt-1"
-              aria-readonly="true"
-              flat
-              @mouseover="copy = true"
-              @mouseleave="delay()"
-              @click="copyToClip"
-              solo
-              type="url"
-            >
-              <template slot="append">
-                <Copy v-if="!copy"></Copy>
-                <CopyHover v-else> </CopyHover>
-              </template>
-            </v-text-field>
-          </template>
-          <div class="arrow-seed-tooltip"></div>
-          <div class="metamask-login">
-            <p v-if="show">
-              {{ copyAfter[$i18n.locale] }}
-            </p>
-            <p v-else>
-              {{ copyBefore[$i18n.locale] }}
-            </p>
+        <CopyPaste :input="linkProof">
+          <div @click="copyToClip" class="password-wrapper" style="">
+            <div class="password-input">
+              {{ linkProof }}
+            </div>
           </div>
-        </v-tooltip>
+        </CopyPaste>
       </v-col>
     </v-row>
   </v-container>
@@ -165,6 +145,8 @@ import ArrowBack from '../images/icon-arrow-back.vue';
 import IconAlert from '../images/icon-warning-red.vue';
 import CopyHover from '../images/icon-copyclipboard-selected';
 import Copy from '../images/icon-copyclipboard-unselected';
+
+import CopyPaste from '../components/CopyPaste';
 
 import WalletAddress from '../components/WalletAddress';
 
@@ -183,6 +165,7 @@ export default {
     Copy,
     CopyHover,
     StoredProfileImg,
+    CopyPaste,
   },
   created() {
     console.log('currentProfile', this.currentProfile);
@@ -203,13 +186,35 @@ export default {
       console.log(this.isDisabled);
     },
     copyToClip() {
-      const el = document.createElement('textarea');
-      el.value = this.linkProof;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      this.show = true;
+      try {
+        this.copyToClipboard(this.linkProof);
+        this.show = true;
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    copyToClipboard(text) {
+      if (window.clipboardData && window.clipboardData.setData) {
+        // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+        return window.clipboardData.setData('Text', text);
+      } else if (
+        document.queryCommandSupported &&
+        document.queryCommandSupported('copy')
+      ) {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = text;
+        textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in Microsoft Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+          console.warn('Copy to clipboard failed.', ex);
+          return false;
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
     },
     delay() {
       console.log('hover');
@@ -284,8 +289,23 @@ export default {
   #walletCopy {
     cursor: pointer;
   }
-  .password-input .v-input__slot input {
-    font-size: 13px !important;
+  .password-wrapper {
+    padding: 10px 14px 10px 15px;
+    border-radius: 3px;
+    border: solid 1px #b8b9bb;
+    position: relative;
+    padding-right: 30px;
+
+    .password-input {
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.71;
+      letter-spacing: normal;
+      color: var(--charcoal-grey);
+      overflow-x: hidden;
+    }
   }
   .v-card.form-card {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);

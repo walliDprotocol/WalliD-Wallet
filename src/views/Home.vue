@@ -19,11 +19,11 @@
       </v-col>
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
-          <v-tab href="#tab-1" class="MENU-SELECTED">{{
-            $t('home.tabs[0]')
-          }}</v-tab>
           <v-tab href="#tab-2" class="MENU-SELECTED">{{
             $t('home.tabs[1]')
+          }}</v-tab>
+          <v-tab href="#tab-1" class="MENU-SELECTED">{{
+            $t('home.tabs[0]')
           }}</v-tab>
           <v-tab href="#tab-3" class="MENU-SELECTED">{{
             $t('home.tabs[2]')
@@ -31,11 +31,11 @@
         </v-tabs>
 
         <v-tabs-items v-model="tab">
-          <v-tab-item value="tab-1">
-            <ListIDs />
-          </v-tab-item>
           <v-tab-item value="tab-2">
             <ListOnlineIDs />
+          </v-tab-item>
+          <v-tab-item value="tab-1">
+            <ListIDs />
           </v-tab-item>
           <v-tab-item value="tab-3">
             <ListCrendentials />
