@@ -63,6 +63,13 @@
                       >{{ $t('profiles.menu[1]') }}</v-list-item-title
                     >
                   </v-list-item>
+                  <v-list-item>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="deleteProfile(profile)"
+                      >{{ $t('profiles.menu[2]') }}</v-list-item-title
+                    >
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </v-col>
@@ -141,6 +148,11 @@ export default {
   },
 
   methods: {
+    deleteProfile(profile) {
+      this.$store.commit('showDeleteConfirmation', true);
+
+      this.$store.commit('currentProfile', profile);
+    },
     viewProfileInfo(profile) {
       console.log('viewProfileInfo', profile);
 

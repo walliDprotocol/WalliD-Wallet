@@ -218,9 +218,26 @@ export default {
     address: 'Endereço da carteira',
     tabs: ['Documentos ID', 'Online IDs ', 'Credenciais'],
   },
+  profiles: {
+    menu: ['Identity info', 'Partilhar prova de identidade'],
+    addNew: 'Adicione outra rede social',
+    proof: {
+      text:
+        'Selecione as redes sociais que pretende incluir na prova de identidade que será gerada:',
+      text2:
+        'O link abaixo contém os dados verificáveis que provam a propriedade deste endereço de carteira e dos ID online guardados. Qualquer pessoa que aceder a este link, poderá verificar a cadeia de confiança estabelecida.',
+      address: 'Endereço da carteira',
+      buttonGenProof: 'Gerar prova de identidade',
+    },
+    identity: {
+      viewProof: 'View cryptographic proof',
+    },
+    noids: 'Ainda não tem nenhuma ID online guardada na sua carteira.',
+    store: 'Guarde os seus ID online agora',
+  },
   credentials: {
     noCredentials: 'Ainda não tem nenhuma credencial guardada na sua carteira',
-    store: 'Comece a coleccioná-las',
+    store: 'Comece a emitir credenciais agora',
     menu: ['Ver credencial', 'Partilhar credencial', 'Download Credencial'],
     status: {
       active: 'Válida',
@@ -247,6 +264,7 @@ export default {
     noids: 'Ainda não tem documentos de identidade nesta carteira',
     store: 'Guarde os seus documentos ID agora',
     tooltip: 'Show ID data',
+    addNew: 'Adicionar outro documento ID',
   },
   import: {
     title: 'Importe a sua carteira',

@@ -112,7 +112,7 @@
               :isLoading="isLoading"
               @click="generateProof"
               :disabled="isDisabled"
-              class="advance-btn inverted-colors "
+              class="advance-btn inverted-colors float"
             >
               {{ $t('profiles.proof.buttonGenProof') }}
             </v-btn>
@@ -166,6 +166,9 @@ export default {
     CopyHover,
     StoredProfileImg,
     CopyPaste,
+  },
+  beforeDestroy() {
+    this.$store.commit('currentProfile', null);
   },
   created() {
     console.log('currentProfile', this.currentProfile);
@@ -352,6 +355,10 @@ export default {
       text-align: left;
       color: var(--teal-blue) !important;
     }
+  }
+  .advance-btn.float {
+    position: fixed !important;
+    left: 20px !important;
   }
 }
 </style>

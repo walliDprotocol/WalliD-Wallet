@@ -28,7 +28,7 @@ export default class ProfilesController {
     return new ProfilesController(profiles);
   }
 
-  deleteProfiles(id) {
+  deleteProfile(id) {
     return new Promise((resolve, reject) => {
       const index = this.#profiles.findIndex((profile) => profile.id == id);
 

@@ -113,6 +113,9 @@ export default {
       });
     },
   },
+  beforeDestroy() {
+    this.$store.commit('setCurrentCred', null);
+  },
   created() {
     console.log('card', this.currentCred);
     this.card = JSON.parse(JSON.stringify(this.currentCred));

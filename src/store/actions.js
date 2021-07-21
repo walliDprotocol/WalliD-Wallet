@@ -24,6 +24,8 @@ export const SHARE = 'SHARE';
 
 export const DELETE_CRED = 'DELETE_CRED';
 
+export const DELETE_PROFILE = 'DELETE_PROFILE';
+
 export const IMPORT_CRED = 'IMPORT_CRED';
 export const IMPORT_SIGN = 'IMPORT_SIGN';
 

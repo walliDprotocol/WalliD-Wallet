@@ -27,6 +27,7 @@ import {
   IMPORT_CRED,
   IMPORT_SIGN,
   DELETE_CRED,
+  DELETE_PROFILE,
 } from './actions';
 
 import * as modules from './modules';
@@ -53,8 +54,10 @@ export default new Vuex.Store({
     debug: null,
     unlocked: API.getState().unlocked,
     currentCred: null,
+    showDeleteConfirmation: false,
   },
   getters: {
+    showDeleteConfirmation: (state) => state.showDeleteConfirmation,
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
@@ -65,7 +68,6 @@ export default new Vuex.Store({
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
     currentCred: (state) => state.currentCred,
-
     profiles: (state) => state.profiles,
     currentProfile: (state) => state.currentProfile,
   },
@@ -223,6 +225,21 @@ export default new Vuex.Store({
         console.log('Action DELETE_CRED');
         state.debug('Data: ', id);
         API.deleteCredential(id)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
+    [DELETE_PROFILE]: ({ commit, state }, id) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action DELETE_PROFILE');
+        state.debug('Data: ', id);
+        API.deleteProfile(id)
           .then((res) => {
             resolve(res);
           })
@@ -599,6 +616,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    showDeleteConfirmation(state, value) {
+      state.showDeleteConfirmation = value;
+    },
     currentProfile(state, value) {
       state.currentProfile = value;
     },

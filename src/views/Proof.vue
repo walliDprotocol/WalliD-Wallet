@@ -118,6 +118,9 @@ export default {
     console.log('card', this.currentCred);
     this.card = this.currentCred;
   },
+  beforeDestroy() {
+    this.$store.commit('setCurrentCred', null);
+  },
   mounted() {},
   computed: {
     ...mapGetters(['address', 'currentCred']),

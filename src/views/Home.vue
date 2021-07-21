@@ -42,6 +42,10 @@
           </v-tab-item>
         </v-tabs-items>
       </v-col>
+      <DeleteConfirmationModal
+        v-if="showDeleteConfirmation"
+        @close="close()"
+      ></DeleteConfirmationModal>
     </v-row>
   </v-container>
 </template>
@@ -53,6 +57,8 @@ import ListIDs from '../components/ListIDs';
 import ListCrendentials from '../components/ListCrendentials';
 import ListOnlineIDs from '../components/ListOnlineIDs';
 
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
+
 import { mapGetters } from 'vuex';
 
 export default {
@@ -62,12 +68,22 @@ export default {
     ListIDs,
     ListCrendentials,
     ListOnlineIDs,
+    DeleteConfirmationModal,
   },
   computed: {
-    ...mapGetters(['address', 'identities', 'credentials']),
+    ...mapGetters([
+      'address',
+      'identities',
+      'credentials',
+      'showDeleteConfirmation',
+    ]),
   },
   mounted() {},
-  methods: {},
+  methods: {
+    close() {
+      this.$store.commit('showDeleteConfirmation', false);
+    },
+  },
   data() {
     return {
       iconSet: false,

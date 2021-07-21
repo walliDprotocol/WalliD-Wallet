@@ -112,6 +112,13 @@
                       }}</a>
                     </v-list-item-title>
                   </v-list-item>
+                  <v-list-item>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="deleteCred(card)"
+                      >{{ $t('credentials.menu[3]') }}</v-list-item-title
+                    >
+                  </v-list-item>
                 </v-list>
               </v-menu>
             </v-col>
@@ -137,7 +144,7 @@
           href="https://www.dca.wallid.io/Invite"
           @click.stop
         >
-          {{ $t('credentials.noCredentials') }}
+          {{ $t('credentials.store') }}
         </a>
         <!-- <a
           class="links"
@@ -208,12 +215,9 @@ export default {
       this.$router.push({ name: 'Credential' });
     },
     deleteCred(card) {
-      this.$store
-        .dispatch(DELETE_CRED, card.id)
-        .then((res) => console.log(res))
-        .catch((e) => {
-          console.error(res);
-        });
+      this.$store.commit('showDeleteConfirmation', true);
+
+      this.$store.commit('setCurrentCred', card);
     },
     proofPage(card) {
       this.$store.commit('setCurrentCred', card);
@@ -240,7 +244,11 @@ export default {
   },
 };
 </script>
-
+<style lang="scss" scoped>
+.dot-menu {
+  margin-top: 4px;
+}
+</style>
 <style lang="scss">
 .SECUNDARY-LINKS {
   a {

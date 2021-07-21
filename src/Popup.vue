@@ -40,7 +40,7 @@ export default {
       // return self.$i18n.locale;
     });
 
-    this.$i18n.locale = check.length > 0 ? check[0].id : 'en';
+    this.$i18n.locale = 'en'; //check.length > 0 ? check[0].id : 'en';
   },
 
   methods: {},
