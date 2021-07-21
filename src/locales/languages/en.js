@@ -233,7 +233,7 @@ export default {
     addNew: 'Add another social network',
     proof: {
       text:
-        "Select the account IDs you'd like to embed in the proof of identity:",
+        "Select the online IDs you'd like to add to this proof of identity:",
       text2:
         'The link below contains the verifiable data that proves the ownership of this wallet address and Online IDs. Anyone who accesses it will be able to check the chain of trust behind it and verify it on blockchain.',
       address: 'WALLET ADDRESS ',

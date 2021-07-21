@@ -26,7 +26,10 @@
                   </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields">
-                      {{ profile.username }}
+                      {{
+                        profile.profileData.screen_name ||
+                          profile.profileData.username
+                      }}
                     </p>
                   </v-col>
                 </v-row>
