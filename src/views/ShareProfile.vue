@@ -155,7 +155,7 @@ import StoredProfileImg from '../components/StoredProfileImg';
 import { mapGetters } from 'vuex';
 import { SHARE_PROFILE } from '../store/actions';
 
-const VERIFY_URL = 'https://demo.verify.wallid.io/Verify/Social/';
+const VERIFY_URL = 'https://verify.wallid.io/Verify/Social/';
 
 export default {
   components: {

@@ -265,8 +265,8 @@ export default {
   },
   cards: {
     validity: ['Expiration date:', 'Valid', 'Invalid', 'Pending'],
-    noids: 'Seems like you don’t have any ID documents stored in your wallet',
-    store: 'Store your ID now',
+    noids: 'Seems like you don’t have any citizen IDs stored in your wallet',
+    store: 'Store your citizen ID now',
     tooltip: 'Show ID data',
     addNew: 'Add another citizen ID',
   },

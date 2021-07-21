@@ -413,7 +413,7 @@
   }
   .MENU-SELECTED {
     font-family: Montserrat;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     font-stretch: normal;
     font-style: normal;
@@ -421,6 +421,7 @@
     letter-spacing: normal;
     text-transform: none;
     color: var(--charcoal-grey);
+    padding: 0 10px;
     &:hover {
       color: var(--teal-blue);
     }

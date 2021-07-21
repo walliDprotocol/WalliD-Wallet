@@ -17,7 +17,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       rootState.debug('Action SHARE_PROFILES');
       rootState.debug('Body: ', body);
-      let url = 'https://demo.dca.wallid.io/api/v1/social-profile/share';
+      let url = 'https://dca.wallid.io/api/v1/social-profile/share';
       axios(url, {
         method: 'POST',
         headers: {

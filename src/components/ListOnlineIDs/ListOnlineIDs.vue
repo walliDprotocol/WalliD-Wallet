@@ -81,7 +81,7 @@
                   <v-col cols="12" class="py-0 pr-0">
                     <a
                       class="MAIN-LINKS"
-                      href="https://www.dev.wallid.io/Setup/ChooseIdentity?online=true"
+                      href="https://www.wallid.io/Setup/ChooseIdentity?online=true"
                       target="_blank"
                     >
                       {{ $t('profiles.addNew') }}
