@@ -1,14 +1,19 @@
 <template>
   <div
     v-bind:class="flipped ? 'flip-container flipped' : 'flip-container'"
-    :style="cardStyles"
+    v-bind:style="{
+      maxWidth: width + 'px',
+    }"
   >
     <div class="flipper">
-      <div
-        class="front"
-        style="background-position: center; background-size: contain;"
-      >
-        <v-img class="background-img" :src="imgArray[0]" :width="width" />
+      <div class="front" :style="cardStyles">
+        <v-img
+          class="background-img"
+          :src="imgArray[0]"
+          contain
+          :max-width="width + 'px'"
+          :max-height="height + 'px'"
+        />
 
         <v-btn
           id="flip-btn"
@@ -21,11 +26,7 @@
           <IconRotate />
         </v-btn>
       </div>
-      <div
-        v-if="hasBack"
-        class="back"
-        style="background-position: center; background-size: contain;"
-      >
+      <div v-if="hasBack" class="back" :style="cardStyles">
         <v-img class="background-img" :src="imgArray[1]" :width="width" />
 
         <v-btn
@@ -64,6 +65,12 @@ export default {
       type: Number,
       required: true,
     },
+    proofURL: {
+      type: String,
+    },
+    currentLayout: {
+      type: String,
+    },
   },
   computed: {
     hasBack() {
@@ -78,8 +85,13 @@ export default {
     return {
       flipped: false,
       cardStyles: {
-        height: this.width / Math.sqrt(2) + 'px',
-        width: this.width + 'px',
+        height: Math.floor(this.width / Math.sqrt(2)) + 'px',
+        width:
+          this.currentLayout == 'Badge'
+            ? this.height + 'px'
+            : this.width + 'px',
+        borderRadius: this.currentLayout == 'Badge' ? '50%' : '',
+        margin: '0 auto',
       },
     };
   },

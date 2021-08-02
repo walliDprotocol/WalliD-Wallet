@@ -63,37 +63,14 @@
       </v-col>
       <v-col cols="12 text-left">
         <label class="sub-title-fields ">{{ $t('proof.link') }}</label>
-        <v-tooltip content-class="wallet-tooltip" bottom>
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-on="on"
-              id="walletCopy"
-              v-model="linkProof"
-              class="password-input mt-1"
-              aria-readonly="true"
-              flat
-              @mouseover="copy = true"
-              @mouseleave="delay()"
-              @click="copyToClip"
-              solo
-              type="url"
-            >
-              <template slot="append">
-                <Copy v-if="!copy"></Copy>
-                <CopyHover v-else> </CopyHover>
-              </template>
-            </v-text-field>
-          </template>
-          <div class="arrow-seed-tooltip"></div>
-          <div class="metamask-login">
-            <p v-if="show">
-              {{ copyAfter[$i18n.locale] }}
-            </p>
-            <p v-else>
-              {{ copyBefore[$i18n.locale] }}
-            </p>
+
+        <CopyPaste :input="linkProof">
+          <div @click="copyToClip" class="password-wrapper" style="">
+            <div class="password-input">
+              {{ linkProof }}
+            </div>
           </div>
-        </v-tooltip>
+        </CopyPaste>
       </v-col>
     </v-row>
   </v-container>
@@ -107,12 +84,15 @@ import Copy from '../images/icon-copyclipboard-unselected';
 import { mapGetters } from 'vuex';
 import { SHARE } from '../store/actions';
 
+import CopyPaste from '../components/CopyPaste';
+
 export default {
   components: {
     IconAlert,
     ArrowBack,
     Copy,
     CopyHover,
+    CopyPaste,
   },
   created() {
     console.log('card', this.currentCred);
@@ -222,6 +202,24 @@ export default {
 
 <style lang="scss">
 .proof-view {
+  .password-wrapper {
+    padding: 10px 14px 10px 15px;
+    border-radius: 3px;
+    border: solid 1px #b8b9bb;
+    position: relative;
+    padding-right: 30px;
+
+    .password-input {
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.71;
+      letter-spacing: normal;
+      color: var(--charcoal-grey);
+      overflow-x: hidden;
+    }
+  }
   #walletCopy {
     cursor: pointer;
   }
