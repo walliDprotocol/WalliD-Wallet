@@ -119,7 +119,7 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$store.commit('setCurrentCred', null);
+    // this.$store.commit('setCurrentCred', null);
   },
   created() {
     console.log('card', this.currentCred);

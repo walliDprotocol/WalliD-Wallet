@@ -144,7 +144,7 @@ export default {
   letter-spacing: normal;
   color: var(--charcoal-grey);
   position: absolute;
-  right: 2px;
+  right: 1px;
   top: 2px;
   p {
     margin: 4px !important;

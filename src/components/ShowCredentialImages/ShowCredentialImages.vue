@@ -85,7 +85,7 @@ export default {
     return {
       flipped: false,
       cardStyles: {
-        height: Math.floor(this.width / Math.sqrt(2)) + 'px',
+        maxheight: Math.floor(this.width / Math.sqrt(2)) + 'px',
         width:
           this.currentLayout == 'Badge'
             ? this.height + 'px'

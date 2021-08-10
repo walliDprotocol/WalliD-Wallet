@@ -86,6 +86,8 @@ import { SHARE } from '../store/actions';
 
 import CopyPaste from '../components/CopyPaste';
 
+const VERIFY_URL = 'https://verify.wallid.io/Verify?proof=';
+
 export default {
   components: {
     IconAlert,
@@ -99,9 +101,14 @@ export default {
     this.card = this.currentCred;
   },
   beforeDestroy() {
-    this.$store.commit('setCurrentCred', null);
+    // this.$store.commit('setCurrentCred', null);
   },
-  mounted() {},
+  mounted() {
+    this.linkProof =
+      this.currentCred &&
+      this.currentCred.userData.proof_id &&
+      VERIFY_URL + this.currentCred.userData.proof_id;
+  },
   computed: {
     ...mapGetters(['address', 'currentCred']),
 
@@ -208,6 +215,7 @@ export default {
     border: solid 1px #b8b9bb;
     position: relative;
     padding-right: 30px;
+    overflow: hidden;
 
     .password-input {
       font-size: 14px;
@@ -218,6 +226,7 @@ export default {
       letter-spacing: normal;
       color: var(--charcoal-grey);
       overflow-x: hidden;
+      width: 500px;
     }
   }
   #walletCopy {
