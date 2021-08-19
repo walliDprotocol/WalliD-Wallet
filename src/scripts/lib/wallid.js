@@ -8,7 +8,7 @@ export function getAuthenticationChallenge(wallet, idt, operation) {
   const url = `https://api.wallid.io/api/${API_VERSION}/auth`;
   const query = {
     client_id: 'wallid-web-dev',
-    client_secret: 'password',
+    client_secret: '_password_',
   };
   const data = { wallet, idt, operation };
 

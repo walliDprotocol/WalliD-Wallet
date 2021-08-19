@@ -108,8 +108,6 @@ export default class WalletController {
   }
 
   encryptData = function(data) {
-    console.log('data to encrypt: ', data);
-
     const privKey = ethUtil.toBuffer(this.#wallet.getPrivateKey());
     const publicKey = ethSigUtil.getEncryptionPublicKey(privKey);
     const cipher = ethSigUtil.encrypt(

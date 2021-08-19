@@ -276,7 +276,7 @@ export default {
     hint: 'Profile page from Linkedin or Instagram',
     urlError: 'This is not a valid profile page URL',
     text1:
-      'Below is the verifiable link for your credential and it was successfully associated to your social network account. Copy and paste it anywhere online and share it with world or only with someone you trust. Whoever accesses the link below will be able to see your credential and your public profile information.',
+      'The link below contains your credential data and the cryptographic proofs of issuance and ownership. Anyone who accesses it will be able to check the chain of trust supporting it and verify it on chain.',
     link: 'Verifiable credential link:',
     button: 'Generate link',
   },
