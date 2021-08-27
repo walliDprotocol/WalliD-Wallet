@@ -87,7 +87,7 @@ export default {
       cardStyles: {
         maxheight: Math.floor(this.width / Math.sqrt(2)) + 'px',
         width:
-          this.currentLayout == 'Badge'
+          this.currentLayout == 'Badge' || this.currentLayout == 'NFT'
             ? this.height + 'px'
             : this.width + 'px',
         borderRadius: this.currentLayout == 'Badge' ? '50%' : '',

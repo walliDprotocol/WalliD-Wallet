@@ -190,6 +190,12 @@ export default {
       //   new RegExp(WALLID_DOMAINS.join("|")).test(this.connected.url)
       // ) {
       // At least one match
+
+      if (this.isNFT(this.card)) {
+        return (
+          this.card && this.card.userData && this.card.userData.imgArray[0]
+        );
+      }
       return PDF_URL + this.card.id;
       // }
       // return this.card.userData.pdf_url;

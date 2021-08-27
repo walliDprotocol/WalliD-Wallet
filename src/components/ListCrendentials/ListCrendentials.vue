@@ -204,6 +204,9 @@ export default {
       //   new RegExp(WALLID_DOMAINS.join('|')).test(this.connected.url)
       //   //  && !card.userData.pdf_url // Required for old users < 14/4/2021 ?
       // ) {
+      if (this.isNFT(card)) {
+        return card && card.userData && card.userData.imgArray[0];
+      }
       return PDF_URL + card.id;
       // }
       // return card.userData.pdf_url;
