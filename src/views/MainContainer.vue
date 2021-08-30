@@ -12,7 +12,9 @@
         height="50"
         max-width="50"
         contain
-        src="../images/logo-header-wallid.png"
+        src="../images/logos/logo-wallid.png"
+        srcset="../images/logos/logo-wallid@2x.png 2x,
+             ../images/logos/logo-wallid@3x.png 3x"
       />
       <v-spacer />
       <div @click.stop="showMenu = !showMenu" style="cursor: pointer;">
@@ -38,48 +40,48 @@
 </template>
 
 <script>
-import MenuPlugin from "../components/MenuPlugin";
-import { mapGetters } from "vuex";
+import MenuPlugin from '../components/MenuPlugin';
+import { mapGetters } from 'vuex';
 
-import { UPDATE_CONNECTED } from "../store/actions";
+import { UPDATE_CONNECTED } from '../store/actions';
 
 export default {
   components: {
     MenuPlugin,
   },
-  props: ["hideAppHeader"],
+  props: ['hideAppHeader'],
   computed: {
-    ...mapGetters(["address", "unlocked", "connections"]),
+    ...mapGetters(['address', 'unlocked', 'connections']),
   },
   created() {
     //TO DO: add this to Store and on refreshState
-    this.debug("Connections", this.$store.getters.state.connections);
-    this.$store.dispatch("UPDATE_CONNECTED");
+    this.debug('Connections', this.$store.getters.state.connections);
+    this.$store.dispatch('UPDATE_CONNECTED');
   },
   methods: {},
 
   watch: {
     unlocked(value) {
       if (!value) {
-        this.$router.push("/login");
+        this.$router.push('/login');
       }
     },
     hideAppHeader(value) {
-      this.debug("hideAppHeader", this.address);
+      this.debug('hideAppHeader', this.address);
     },
   },
 
   data() {
     return {
       langs: [
-        { id: "pt", name: "Português" },
-        { id: "en", name: "English" },
+        { id: 'pt', name: 'Português' },
+        { id: 'en', name: 'English' },
       ],
       showMenu: false,
     };
   },
   mounted() {
-    this.debug("MOUNTED", this.hideAppHeader);
+    this.debug('MOUNTED', this.hideAppHeader);
   },
 
   methods: {

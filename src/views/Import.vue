@@ -1,5 +1,5 @@
 <template>
-  <v-container id="import-form" class="restore mt-n2">
+  <v-container id="import-form" class="restore mt-n2 pa-2">
     <v-row v-if="!imported">
       <form @submit="restorePassword">
         <v-col cols="12">
@@ -8,17 +8,17 @@
               <ArrowBack />
             </v-btn>
             <h2 class="T1">
-              {{ $t("import.title") }}
+              {{ $t('import.title') }}
             </h2>
           </div>
           <h2 class="sub-title-fields text-left">
-            {{ $t("import.subtitle") }}
+            {{ $t('import.subtitle') }}
           </h2>
         </v-col>
 
         <v-col cols="12" class="text-left pb-1 pt-2">
           <label class="sub-title-fields">
-            {{ $t("import.seedPhrase[0]") }}
+            {{ $t('import.seedPhrase[0]') }}
           </label>
 
           <v-text-field
@@ -45,10 +45,10 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("import.seedPhrase[1]") }}
+                  {{ $t('import.seedPhrase[1]') }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("import.seedPhrase[2]") }}
+                  {{ $t('import.seedPhrase[2]') }}
                 </p>
               </v-tooltip>
             </template>
@@ -77,10 +77,10 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("import.seedPhrase[1]") }}
+                  {{ $t('import.seedPhrase[1]') }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("import.seedPhrase[2]") }}
+                  {{ $t('import.seedPhrase[2]') }}
                 </p>
               </v-tooltip>
             </template>
@@ -89,7 +89,7 @@
         </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
           <label class="sub-title-fields">
-            {{ $t("import.password[0]") }}
+            {{ $t('import.password[0]') }}
           </label>
           <v-text-field
             v-model="password"
@@ -105,7 +105,7 @@
         </v-col>
         <v-col cols="12" class="text-left pb-0 pt-1">
           <label class="sub-title-fields">
-            {{ $t("import.password[1]") }}
+            {{ $t('import.password[1]') }}
           </label>
           <v-text-field
             v-model="passwordMatch"
@@ -127,7 +127,7 @@
             hide-details
           >
             <div slot="label">
-              {{ $t("create.stepper[0].terms[0]") }}
+              {{ $t('create.stepper[2].terms[0]') }}
               <a
                 class="links"
                 target="_blank"
@@ -135,7 +135,7 @@
                 href="https://www.wallid.io/terms"
                 @click.stop
               >
-                {{ $t("create.stepper[0].terms[1]") }}
+                {{ $t('create.stepper[2].terms[1]') }}
               </a>
             </div>
           </v-checkbox>
@@ -148,7 +148,7 @@
             @click="restorePassword"
             class="advance-btn"
           >
-            {{ $t("import.button") }}
+            {{ $t('import.button') }}
           </v-btn>
         </v-col>
       </form>
@@ -159,15 +159,15 @@
       /></v-col>
       <v-col cols="12" class="pt-1">
         <h2 class="T1 mb-5 text-center">
-          {{ $t("create.stepper[3].title") }}
+          {{ $t('create.stepper[3].title') }}
         </h2>
         <h3 class="sub-title-fields text-center">
-          {{ $t("import.text") }}
+          {{ $t('import.text') }}
         </h3>
       </v-col>
       <v-col cols="12">
         <v-btn text @click="goToLogin" class="advance-btn">
-          {{ $t("create.stepper[3].button") }}
+          {{ $t('create.stepper[3].button') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -175,11 +175,11 @@
 </template>
 
 <script>
-import ArrowBack from "../images/icon-arrow-back.vue";
-import EyeUnselected from "../images/icon-eye-unselected.vue";
-import EyeSelected from "../images/icon-eye-selected.vue";
-import Sucessfully from "../images/icon-sucessfully.vue";
-import { CREATE_NEW_WALLET } from "../store/actions";
+import ArrowBack from '../images/icon-arrow-back.vue';
+import EyeUnselected from '../images/icon-eye-unselected.vue';
+import EyeSelected from '../images/icon-eye-selected.vue';
+import Sucessfully from '../images/icon-sucessfully.vue';
+import { CREATE_NEW_WALLET } from '../store/actions';
 
 export default {
   components: {
@@ -203,30 +203,30 @@ export default {
     return {
       imported: false,
       showSeedPhrase: true,
-      seedPhrase: "",
-      password: "",
-      passwordMatch: "",
-      passwordError: "",
-      passwordMatchError: "",
+      seedPhrase: '',
+      password: '',
+      passwordMatch: '',
+      passwordError: '',
+      passwordMatchError: '',
       errorSeedPhrase: false,
-      seedPhraseErrorMessage: "",
+      seedPhraseErrorMessage: '',
       termsWallet: false,
     };
   },
   mounted() {},
   methods: {
     goToLogin() {
-      this.$router.push("/login");
+      this.$router.push('/login');
     },
     validSeedPhrase() {
       this.seedPhrase = this.seedPhrase.trim();
-      let valid = this.seedPhrase.split(" ").length == 12;
+      let valid = this.seedPhrase.split(' ').length == 12;
       this.errorSeedPhrase = !valid;
       this.seedPhraseErrorMessage = valid
-        ? ""
-        : this.$t("restore.seedPhrase[3]");
+        ? ''
+        : this.$t('restore.seedPhrase[3]');
       if (valid) {
-        this.scrollInto("import-form", 120);
+        this.scrollInto('import-form', 120);
       }
       return valid;
     },
@@ -235,7 +235,7 @@ export default {
       this.showSeedPhrase = !this.showSeedPhrase;
     },
     stepBack() {
-      this.$router.push("/home");
+      this.$router.push('/home');
     },
     restorePassword() {
       this.$store
@@ -249,22 +249,22 @@ export default {
         .catch((e) => {
           if ((e = this.INVALID)) {
             this.errorSeedPhrase = true;
-            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
+            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]');
           }
           console.error(err);
         });
     },
 
     checkForm() {
-      this.passwordError = "";
-      this.passwordMatchError = "";
+      this.passwordError = '';
+      this.passwordMatchError = '';
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = "Password not long enough";
+        this.passwordError = 'Password not long enough';
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = "Passwords don’t match";
+        this.passwordMatchError = 'Passwords don’t match';
       }
 
       if (this.passwordError || this.passwordMatchError) {

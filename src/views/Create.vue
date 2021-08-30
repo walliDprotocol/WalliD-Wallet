@@ -1,5 +1,5 @@
 <template>
-  <v-stepper class="stepper-create mt-n2" v-model="step">
+  <v-stepper class="stepper-create pa-2 mt-n2" v-model="step">
     <v-stepper-items>
       <v-stepper-content step="1">
         <v-container>
@@ -7,38 +7,77 @@
             <v-col cols="12" class="text-center my-8 pt-5">
               <v-img
                 center
-                width="151"
-                height="51"
+                width="65"
+                height="65"
                 class="ma-auto"
                 contain
-                src="../images/wallid-logo-01@3x.jpg"
-            /></v-col>
+                src="../images/logos/logo-wallid.png"
+                srcset="../images/logos/logo-wallid@2x.png 2x,
+             ../images/logos/logo-wallid@3x.png 3x"
+              />
+            </v-col>
             <v-col cols="12" class="pt-5 pb-8 px-14">
               <h2 class="T1 mb-5 text-center">
-                {{ $t("create.title") }}
+                {{ $t('create.title') }}
               </h2>
               <h3 class="sub-title-fields text-center">
-                {{ $t("create.text") }}
+                {{ $t('create.text') }}
               </h3>
             </v-col>
             <v-col cols="12" class="py-4">
-              <v-btn text @click="startOnboarding" class="advance-btn">
-                {{ $t("create.button") }}
+              <v-btn text @click="getStarted" class="advance-btn">
+                {{ $t('create.button') }}
               </v-btn>
-            </v-col>
-            <v-col cols="12" class="px-10">
-              <p class="text">
-                {{ $t("create.import[0]") }}
-                <router-link class="links mt-2" to="import">
-                  {{ $t("create.import[1]") }}
-                </router-link>
-              </p>
             </v-col>
           </v-row>
         </v-container>
       </v-stepper-content>
-
       <v-stepper-content step="2">
+        <v-container class="text-left">
+          <v-row>
+            <v-col cols="12" class="pb-2">
+              <div class="back-arrow mb-6">
+                <v-btn text @click="stepBack" class="back-btn">
+                  <ArrowBack />
+                </v-btn>
+                <h2 class="T1">
+                  {{ $t('create.stepper[' + step + '].title') }}
+                </h2>
+              </div>
+              <h3 class="sub-title-fields">
+                {{ $t('create.stepper[' + step + '].text') }}
+              </h3>
+            </v-col>
+            <v-col cols="12" class="pt-7">
+              <!-- Remove on click, add again if user clicks 
+              outside plugin login and doesnt sign in  -->
+              <div
+                class="flow-selector"
+                @mouseover="IconAdd = 'IconAddHover'"
+                @mouseout="IconAdd = 'IconAdd'"
+                @click="step = 3"
+              >
+                <component :is="IconAdd" class=""></component>
+                <p>
+                  {{ $t('create.stepper[' + step + '].buttonCreate') }}
+                </p>
+              </div>
+              <div
+                class="flow-selector"
+                @mouseover="IconImport = 'IconImportHover'"
+                @mouseout="IconImport = 'IconImport'"
+                @click="$router.push('/import')"
+              >
+                <component :is="IconImport" class=""></component>
+                <p>
+                  {{ $t('create.stepper[' + step + '].buttonImport') }}
+                </p>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-stepper-content>
+      <v-stepper-content step="3">
         <v-form
           class="cmd-form"
           ref="form"
@@ -54,21 +93,21 @@
                     <ArrowBack />
                   </v-btn>
                   <h2 class="T1">
-                    {{ $t("create.stepper[0].title") }}
+                    {{ $t('create.stepper[' + step + '].title') }}
                   </h2>
                 </div>
                 <h3 class="sub-title-fields">
-                  {{ $t("create.stepper[0].text") }}
+                  {{ $t('create.stepper[' + step + '].text') }}
                 </h3>
               </v-col>
               <v-col cols="12" class="pt-0 pb-2">
                 <label class="sub-title-fields ">{{
-                  $t("create.stepper[0].password[0]")
+                  $t('create.stepper[' + step + '].password[0]')
                 }}</label>
                 <v-text-field
                   v-model="password"
                   class="password-input mt-1"
-                  :hint="$t('create.stepper[0].password[2]')"
+                  :hint="$t('create.stepper[' + step + '].password[2]')"
                   flat
                   solo
                   @input="checkForm"
@@ -78,7 +117,7 @@
               </v-col>
               <v-col cols="12" class="pt-0 pb-1">
                 <label class="sub-title-fields ">{{
-                  $t("create.stepper[0].password[1]")
+                  $t('create.stepper[' + step + '].password[1]')
                 }}</label>
                 <v-text-field
                   v-model="passwordMatch"
@@ -100,7 +139,7 @@
                   hide-details
                 >
                   <div slot="label">
-                    {{ $t("create.stepper[0].terms[0]") }}
+                    {{ $t('create.stepper[' + step + '].terms[0]') }}
                     <a
                       class="links"
                       target="_blank"
@@ -108,7 +147,7 @@
                       href="https://www.wallid.io/terms"
                       @click.stop
                     >
-                      {{ $t("create.stepper[0].terms[1]") }}
+                      {{ $t('create.stepper[' + step + '].terms[1]') }}
                     </a>
                   </div>
                 </v-checkbox>
@@ -121,12 +160,12 @@
             :disabled="isDisabled"
             class="advance-btn float"
           >
-            {{ $t("create.stepper[0].button") }}
+            {{ $t('create.stepper[' + step + '].button') }}
           </v-btn>
         </v-form>
       </v-stepper-content>
 
-      <v-stepper-content step="3">
+      <v-stepper-content step="4">
         <v-container class="text-left">
           <v-row>
             <v-col cols="12">
@@ -135,7 +174,7 @@
                   <ArrowBack />
                 </v-btn>
                 <h2 class="T1">
-                  {{ $t("create.stepper[1].title") }}
+                  {{ $t('create.stepper[1].title') }}
                 </h2>
               </div>
               <h3
@@ -146,9 +185,9 @@
 
             <v-col cols="12" class="pt-2">
               <label class="sub-title-fields "
-                >{{ $t("create.stepper[1].seed[0]") }}
+                >{{ $t('create.stepper[1].seed[0]') }}
                 <span v-show="!seedLocked">
-                  {{ $t("create.stepper[1].seed[1]") }}
+                  {{ $t('create.stepper[1].seed[1]') }}
                 </span></label
               >
 
@@ -161,7 +200,7 @@
                   <Unlock />
                 </v-col>
                 <v-col cols="12" class="pt-1 ">
-                  {{ $t("create.stepper[1].seed[2]") }}
+                  {{ $t('create.stepper[1].seed[2]') }}
                 </v-col>
               </div>
               <div
@@ -171,7 +210,7 @@
                 {{ seedPhrase }}
               </div>
               <p class="hint-seed mt-2">
-                {{ $t("create.stepper[1].seed[3]") }}
+                {{ $t('create.stepper[1].seed[3]') }}
               </p>
             </v-col>
             <v-col cols="12" class="pb-0" style="min-height:36px">
@@ -181,7 +220,7 @@
                 v-show="seedLocked"
                 @click="setReminder"
               >
-                {{ $t("create.stepper[1].later") }}
+                {{ $t('create.stepper[1].later') }}
               </v-btn>
             </v-col>
             <v-col cols="12" class="pt-1">
@@ -191,14 +230,14 @@
                 @click="setSeedPhrase"
                 class="advance-btn"
               >
-                {{ $t("create.stepper[1].button") }}
+                {{ $t('create.stepper[1].button') }}
               </v-btn>
             </v-col>
           </v-row>
         </v-container>
       </v-stepper-content>
 
-      <v-stepper-content step="4">
+      <v-stepper-content step="5">
         <ConfirmSeed
           @stepBack="stepBack"
           @step="createWallet"
@@ -206,23 +245,32 @@
         />
       </v-stepper-content>
 
-      <v-stepper-content step="5">
+      <v-stepper-content step="6">
         <v-container>
           <v-row>
-            <v-col cols="12" class="text-center mt-13 pt-14 pb-1">
-              <Sucessfully
-            /></v-col>
-            <v-col cols="12" class="pt-1">
+            <v-col cols="12" class="text-center mt-12 pt-8 pb-1">
+              <v-img
+                center
+                width="142"
+                height="129"
+                class="ma-auto"
+                contain
+                src="../images/img/img-success.png"
+                srcset="../images/img/img-success@2x.png 2x,
+             ../images/img/img-success@3x.png 3x"
+              />
+            </v-col>
+            <v-col cols="12" class="">
               <h2 class="T1 mb-5 text-center">
-                {{ $t("create.stepper[3].title") }}
+                {{ $t('create.stepper[' + step + '].title') }}
               </h2>
               <h3 class="sub-title-fields text-center">
-                {{ $t("create.stepper[3].text") }}
+                {{ $t('create.stepper[' + step + '].text') }}
               </h3>
             </v-col>
             <v-col cols="12">
               <v-btn text @click="goToLogin" class="advance-btn">
-                {{ $t("create.stepper[3].button") }}
+                {{ $t('create.stepper[' + step + '].button') }}
               </v-btn>
             </v-col>
           </v-row>
@@ -233,21 +281,30 @@
 </template>
 
 <script>
-import ArrowBack from "../images/icon-arrow-back.vue";
-import Unlock from "../images/icon-unlock.vue";
-import ConfirmSeed from "../components/ConfirmSeed";
-import Sucessfully from "../images/icon-sucessfully.vue";
-import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from "../store/actions";
+import ArrowBack from '../images/icon-arrow-back.vue';
+import Unlock from '../images/icon-unlock.vue';
+import ConfirmSeed from '../components/ConfirmSeed';
+import Sucessfully from '../images/icon-sucessfully.vue';
 
+import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from '../store/actions';
+
+import IconAdd from '../images/icons/icon-add-new-unselected';
+import IconImport from '../images/icons/icon-download';
+import IconAddHover from '../images/icons/icon-add-new-selected';
+import IconImportHover from '../images/icons/icon-download-selected';
 const { API } = chrome.extension.getBackgroundPage();
 
 export default {
-  name: "Create",
+  name: 'Create',
   components: {
     ArrowBack,
     Unlock,
     ConfirmSeed,
     Sucessfully,
+    IconAdd,
+    IconImport,
+    IconAddHover,
+    IconImportHover,
   },
   computed: {
     isDisabled() {
@@ -255,6 +312,9 @@ export default {
     },
   },
   methods: {
+    getStarted() {
+      this.step += 1;
+    },
     stepBack() {
       this.step -= 1;
     },
@@ -282,15 +342,15 @@ export default {
         });
     },
     checkForm() {
-      this.passwordError = "";
-      this.passwordMatchError = "";
+      this.passwordError = '';
+      this.passwordMatchError = '';
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = this.$t("passwordErrors.lenght");
+        this.passwordError = this.$t('passwordErrors.lenght');
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = this.$t("passwordErrors.match");
+        this.passwordMatchError = this.$t('passwordErrors.match');
       }
 
       if (this.passwordError || this.passwordMatchError) {
@@ -312,21 +372,23 @@ export default {
     },
 
     goToLogin() {
-      API.eventProxy("wallid_wallet_done");
-      this.$router.push("/login");
+      API.eventProxy('wallid_wallet_done');
+      this.$router.push('/login');
     },
   },
   data() {
     return {
-      step: 1,
+      step: 6, // 1
       termsWallet: false,
       seedLocked: true,
       // Pass words as a string
-      seedPhrase: "",
-      password: "",
-      passwordMatch: "",
-      passwordError: "",
-      passwordMatchError: "",
+      seedPhrase: '',
+      password: '',
+      passwordMatch: '',
+      passwordError: '',
+      passwordMatchError: '',
+      IconAdd: 'IconAdd',
+      IconImport: 'IconImport',
     };
   },
 };
@@ -335,6 +397,41 @@ export default {
 <style lang="scss">
 .stepper-create {
   box-shadow: none;
+  .flow-selector {
+    padding: 24px;
+    border-radius: 6px;
+    border: solid 1px #b8b9bb;
+    max-width: 360px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    p {
+      margin-left: 20px;
+      margin-bottom: 0;
+      font-size: 15px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: normal;
+      color: var(--charcoal-grey);
+    }
+    svg {
+      width: 44px;
+      height: 44px;
+    }
+    &:hover {
+      border: solid 1px var(--teal-blue);
+
+      p {
+        color: var(--teal-blue);
+      }
+      svg {
+        fill: var(--teal-blue);
+      }
+    }
+  }
   .advance-btn.float {
     position: absolute;
     bottom: 12px;

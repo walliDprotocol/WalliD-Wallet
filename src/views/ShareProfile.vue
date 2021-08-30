@@ -84,6 +84,83 @@
                 </v-row>
               </v-container>
             </v-col>
+            <v-col
+              v-for="identity in identities"
+              :key="identity.id"
+              cols="12"
+              class="py-0 list-profiles"
+            >
+              <v-container class="py-0 wrapper text-left">
+                <v-row>
+                  <v-col cols="2" class="py-1 pl-0">
+                    <StoredProfileImg :size="38" :name="identity.idt" />
+                  </v-col>
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                    <v-container class="">
+                      <v-row>
+                        <v-col cols="12" class="py-0">
+                          <p class="sub-title-fields sub-title-fields--bold">
+                            {{ getIDTName(identity.idt) }}
+                          </p>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-col>
+                  <v-col cols="2" class="py-1 pr-0 ">
+                    <v-checkbox
+                      v-model="selectedProfiles[identity.idt]"
+                      @change="checkSelectedProfiles()"
+                      :hide-details="true"
+                      color="#009fb1"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-col
+              v-for="credential in credentials"
+              :key="credential.id"
+              cols="12"
+              class="py-0 list-profiles"
+            >
+              <v-container class="py-0 wrapper text-left">
+                <v-row>
+                  <v-col cols="2" class="py-1 pl-0">
+                    <StoredProfileImg :size="38" :src="credential.photoURL" />
+                  </v-col>
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                    <v-container class="">
+                      <v-row>
+                        <v-col cols="12" class="py-0">
+                          <p class="sub-title-fields sub-title-fields--bold">
+                            {{ credential.credName }}
+                          </p>
+                          <p class="sub-title-fields" style="font-weight:500">
+                            {{ credential.caName }}
+                          </p>
+                        </v-col>
+                        <!-- <v-col cols="12" class="py-0">
+                          <p class="sub-title-fields text-left">
+                            {{
+                              profile.profileData.screen_name ||
+                                profile.username
+                            }}
+                          </p>
+                        </v-col>-->
+                      </v-row>
+                    </v-container>
+                  </v-col>
+                  <v-col cols="2" class="py-1 pr-0 ">
+                    <v-checkbox
+                      v-model="selectedProfiles[credential.id]"
+                      @change="checkSelectedProfiles()"
+                      :hide-details="true"
+                      color="#009fb1"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
             <v-col v-if="false" cols="12" class="py-0 list-profiles">
               <v-container class="py-0 pt-1 wrapper">
                 <v-row>
@@ -175,13 +252,20 @@ export default {
   },
   created() {
     console.log('currentProfile', this.currentProfile);
+    console.log('list credentials', this.credentials);
 
     this.selectedProfiles[this.currentProfile.id] = true;
     this.isDisabled = false;
   },
   mounted() {},
   computed: {
-    ...mapGetters(['address', 'currentProfile', 'profiles']),
+    ...mapGetters([
+      'address',
+      'currentProfile',
+      'profiles',
+      'identities',
+      'credentials',
+    ]),
   },
   methods: {
     checkSelectedProfiles() {
@@ -237,10 +321,21 @@ export default {
       let social_data = this.profiles.filter(
         ({ id }) => this.selectedProfiles[id]
       );
+
+      social_data = social_data.concat(
+        this.identities.filter(({ idt }) => this.selectedProfiles[idt])
+      );
+
+      social_data = social_data.concat(
+        this.credentials.filter(({ id }) => this.selectedProfiles[id])
+      );
+
       let body = {
         wa: this.address,
         social_data: social_data,
       };
+
+      console.log(social_data);
 
       this.$store
         .dispatch('socialIds/' + SHARE_PROFILE, body)

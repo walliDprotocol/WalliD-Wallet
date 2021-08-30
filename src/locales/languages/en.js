@@ -325,14 +325,26 @@ export default {
   },
   create: {
     title: 'Welcome to MyWalliD',
-    text: 'The digital wallet for your credentials and identity documents',
-    button: 'Create MyWalliD',
+    text: 'The digital wallet for your ID assets',
+    button: 'Get started',
     import: [
       'Already have a MyWalliD wallet?',
       'Import now using the seed phrase',
     ],
 
     stepper: [
+      {},
+      {},
+      {
+        title: 'MyWalliD setup',
+        text:
+          'Create a new wallet or import an existing ethereum wallet address using it’s seedphrase.',
+        buttonCreate: 'Create a new MyWalliD wallet',
+        buttonImport: 'Import an existing ethereum wallet address',
+
+        terms: ['I have read and agree with', 'WalliD’s Terms and conditions'],
+        button: 'Set up password',
+      },
       {
         title: 'Set up your password',
         text:
