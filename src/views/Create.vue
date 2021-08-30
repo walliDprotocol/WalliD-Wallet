@@ -174,20 +174,20 @@
                   <ArrowBack />
                 </v-btn>
                 <h2 class="T1">
-                  {{ $t('create.stepper[1].title') }}
+                  {{ $t('create.stepper[' + step + '].title') }}
                 </h2>
               </div>
               <h3
                 class="sub-title-fields"
-                v-html="$t('create.stepper[1].text')"
+                v-html="$t('create.stepper[' + step + '].text')"
               ></h3>
             </v-col>
 
             <v-col cols="12" class="pt-2">
               <label class="sub-title-fields "
-                >{{ $t('create.stepper[1].seed[0]') }}
+                >{{ $t('create.stepper[' + step + '].seed[0]') }}
                 <span v-show="!seedLocked">
-                  {{ $t('create.stepper[1].seed[1]') }}
+                  {{ $t('create.stepper[' + step + '].seed[1]') }}
                 </span></label
               >
 
@@ -200,7 +200,7 @@
                   <Unlock />
                 </v-col>
                 <v-col cols="12" class="pt-1 ">
-                  {{ $t('create.stepper[1].seed[2]') }}
+                  {{ $t('create.stepper[' + step + '].seed[2]') }}
                 </v-col>
               </div>
               <div
@@ -210,7 +210,7 @@
                 {{ seedPhrase }}
               </div>
               <p class="hint-seed mt-2">
-                {{ $t('create.stepper[1].seed[3]') }}
+                {{ $t('create.stepper[' + step + '].seed[3]') }}
               </p>
             </v-col>
             <v-col cols="12" class="pb-0" style="min-height:36px">
@@ -220,7 +220,7 @@
                 v-show="seedLocked"
                 @click="setReminder"
               >
-                {{ $t('create.stepper[1].later') }}
+                {{ $t('create.stepper[' + step + '].later') }}
               </v-btn>
             </v-col>
             <v-col cols="12" class="pt-1">
@@ -230,7 +230,7 @@
                 @click="setSeedPhrase"
                 class="advance-btn"
               >
-                {{ $t('create.stepper[1].button') }}
+                {{ $t('create.stepper[' + step + '].button') }}
               </v-btn>
             </v-col>
           </v-row>
@@ -326,7 +326,6 @@ export default {
     },
     setReminder() {
       this.createWallet();
-      this.step = 5;
     },
     createWallet() {
       this.$store
@@ -335,7 +334,7 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.step = 5;
+          this.step = 6;
         })
         .catch((e) => {
           console.error(e);
@@ -362,7 +361,7 @@ export default {
       this.$store
         .dispatch(GENERATE_NEW_SEED_PHRASE, this.password)
         .then((seed) => {
-          this.debug(seed);
+          this.seedLocked = true;
           this.seedPhrase = seed;
           this.step += 1;
         })
@@ -378,7 +377,7 @@ export default {
   },
   data() {
     return {
-      step: 6, // 1
+      step: 1, // 1
       termsWallet: false,
       seedLocked: true,
       // Pass words as a string
