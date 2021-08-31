@@ -51,9 +51,11 @@
           <p
             class="FIELD-TEXT text-center"
             v-html="$t('request.' + type + '.permissions')"
-          >
-            {{}}
-          </p>
+          ></p>
+          <p
+            class="FIELD-TEXT text-center"
+            v-html="$t('request.' + type + '.level[' + level + ']')"
+          ></p>
         </v-col>
 
         <v-col cols="10" class="px-6 pb-8">
@@ -73,7 +75,7 @@
             text
             class="advance-btn"
             :disabled="disableButtonRequest"
-            @click="authorizeRequest"
+            @click="authorizeRequest(12)"
           >
             {{ $t('request.' + type + '.button') }}
           </v-btn>
@@ -149,7 +151,6 @@ export default {
   },
   created() {
     this.debug('Address: ', this.address);
-    this.debug('Request: ', this.request);
 
     this.type = this.request.type;
     this.debug('Request type: ', this.type);
@@ -183,9 +184,12 @@ export default {
           });
         break;
       case 'wallid_connect':
-        let level = this.request.data.level || 1;
+        this.level = 1; // this.request.data.level || 1;
         this.$store
-          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level })
+          .dispatch(ACCESS_LEVEL, {
+            url: this.request.origin,
+            level: this.level,
+          })
           .then((hasAccess) => {
             this.debug('hasAccess', hasAccess);
             if (hasAccess) {
@@ -272,7 +276,7 @@ export default {
       return { name: name, icon: icon };
     },
 
-    authorizeRequest(time = 10) {
+    authorizeRequest(time = 30) {
       this.disableButtonRequest = true;
       this.$store
         .dispatch(AUTHORIZE_REQUEST, {

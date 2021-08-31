@@ -17,6 +17,7 @@ export default {
       credential: 'credential',
       identity: 'identity',
       profile: 'online ID',
+      card: 'identity',
       text: [
         'Are you sure you want to delete <b> {0} </b>? ',
         'Once you delete this, you will not be able to revert this action.',
@@ -102,8 +103,12 @@ export default {
       title: 'Connection Request',
       description: ' is asking for permission to connect to wallet:',
       alert: 'Only connect with sites you fully trust.',
-      permissions:
-        'This website is requesting wallet permissions to:<br><br>- Access wallet address',
+      permissions: 'This website is requesting wallet permissions to:',
+      level: [
+        '',
+        '<br>- Access wallet address<br>-Store identity assets',
+        '- Access wallet address<br>-Extract identities<br>-Encrypt and decrypt data<br>-Sign data using diferent signature types',
+      ],
       button: 'Connect',
       success: 'Successfully connected',
       successText: ' sucessfully conected with your wallet!',

@@ -75,10 +75,25 @@ export default {
       'address',
       'identities',
       'credentials',
+      'profiles',
       'showDeleteConfirmation',
     ]),
   },
-  mounted() {},
+  mounted() {
+    switch (true) {
+      case this.profiles.length > 0:
+        this.tab = 'tab-2';
+        break;
+      case this.identities.length > 0:
+        this.tab = 'tab-1';
+        break;
+      case this.credentials.length > 0:
+        this.tab = 'tab-3';
+        break;
+      default:
+        break;
+    }
+  },
   methods: {
     close() {
       this.$store.commit('showDeleteConfirmation', false);
