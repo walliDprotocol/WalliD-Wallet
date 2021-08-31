@@ -53,10 +53,41 @@
                 </v-row>
               </v-container> </v-col
             ><v-col cols="1" class="pl-0 pr-1">
-              <v-btn text @click="moreInfo(card)" class="back-btn">
-                <arrow-front />
-              </v-btn> </v-col></v-row
-        ></v-container>
+              <v-menu bottom left class="dot-menu" content-class="dot-menu">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    :ripple="false"
+                    width="36"
+                    class="dot-menu-button mt-3"
+                    icon
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <IconDotMenu class="" />
+                  </v-btn>
+                </template>
+
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="moreInfo(card)"
+                      >{{ $t('profiles.menu[0]') }}</v-list-item-title
+                    >
+                  </v-list-item>
+
+                  <v-list-item>
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="deleteProfile(card)"
+                      >{{ $t('profiles.menu[2]') }}</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-col>
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
         <v-container class="py-0 px-3">
@@ -117,6 +148,8 @@ import idcardImg from '../../images/icon-id-document.vue';
 import invalid from '../../images/invalid.vue';
 import valid from '../../images/valid.vue';
 
+import IconDotMenu from '../../images/icon-dot-menu.vue';
+
 import StoredProfileImg from '../../components/StoredProfileImg';
 
 import { mapGetters } from 'vuex';
@@ -129,11 +162,17 @@ export default {
     valid,
     invalid,
     StoredProfileImg,
+    IconDotMenu,
   },
   computed: {
     ...mapGetters(['identities']),
   },
   methods: {
+    deleteProfile(card) {
+      this.$store.commit('showDeleteConfirmation', true);
+
+      this.$store.commit('setCurrentCard', card);
+    },
     moreInfo(card) {
       console.log(card);
 

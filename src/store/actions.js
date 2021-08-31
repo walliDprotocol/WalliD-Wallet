@@ -22,8 +22,8 @@ export const SIGN = 'SIGN';
 export const GEN_PROOF = 'GEN_PROOF';
 export const SHARE = 'SHARE';
 
+export const DELETE_CARD = 'DELETE_CARD';
 export const DELETE_CRED = 'DELETE_CRED';
-
 export const DELETE_PROFILE = 'DELETE_PROFILE';
 
 export const IMPORT_CRED = 'IMPORT_CRED';

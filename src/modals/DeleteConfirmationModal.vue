@@ -44,7 +44,7 @@ import ArrowBack from '../images/icon-arrow-back.vue';
 import IDCard from '../components/IDCard';
 
 import { mapGetters } from 'vuex';
-import { DELETE_CRED, DELETE_PROFILE } from '../store/actions';
+import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
 
 export default {
   components: {
@@ -54,12 +54,18 @@ export default {
     IDCard,
   },
   computed: {
-    ...mapGetters({ credential: 'currentCred', profile: 'currentProfile' }),
+    ...mapGetters({
+      credential: 'currentCred',
+      profile: 'currentProfile',
+      card: 'currentCard',
+    }),
     name() {
       if (this.credential) {
         return this.credential.credName;
       } else if (this.profile) {
         return this.profile.socialName;
+      } else if (this.card) {
+        return this.card.idtName;
       } else {
         return null;
       }
@@ -69,6 +75,8 @@ export default {
         return this.$t('modals.delete.credential');
       } else if (this.profile) {
         return this.$t('modals.delete.profile');
+      } else if (this.card) {
+        return this.$t('modals.delete.card');
       } else {
         return null;
       }
@@ -79,6 +87,8 @@ export default {
       console.log(this.credential);
     } else if (this.profile) {
       console.log(this.profile);
+    } else if (this.card) {
+      console.log(this.card);
     }
   },
   mounted() {},
@@ -99,11 +109,20 @@ export default {
           .catch((e) => {
             console.error(e);
           });
+      } else if (this.card) {
+        console.log(this.card);
+        this.$store
+          .dispatch(DELETE_CARD, this.card.idt)
+          .then(() => this.close())
+          .catch((e) => {
+            console.error(e);
+          });
       }
     },
     close() {
       this.$store.commit('currentProfile', null);
       this.$store.commit('setCurrentCred', null);
+      this.$store.commit('setCurrentCard', null);
 
       this.$emit('close');
     },

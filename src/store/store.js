@@ -28,6 +28,7 @@ import {
   IMPORT_SIGN,
   DELETE_CRED,
   DELETE_PROFILE,
+  DELETE_CARD,
 } from './actions';
 
 import * as modules from './modules';
@@ -54,6 +55,7 @@ export default new Vuex.Store({
     debug: null,
     unlocked: API.getState().unlocked,
     currentCred: null,
+    currentCard: null,
     showDeleteConfirmation: false,
   },
   getters: {
@@ -70,6 +72,7 @@ export default new Vuex.Store({
     currentCred: (state) => state.currentCred,
     profiles: (state) => state.profiles,
     currentProfile: (state) => state.currentProfile,
+    currentCard: (state) => state.currentCard,
   },
   actions: {
     // []: ({ commit, state }) => {
@@ -200,7 +203,7 @@ export default new Vuex.Store({
       // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
-    [CONNECT]: ({ commit, state }, { origin, name, level = 2 }) => {
+    [CONNECT]: ({ commit, state }, { origin, name, level }) => {
       return new Promise((resolve, reject) => {
         console.log('Action CONNECT');
         state.debug('URL: ', origin);
@@ -240,6 +243,20 @@ export default new Vuex.Store({
         console.log('Action DELETE_PROFILE');
         state.debug('Data: ', id);
         API.deleteProfile(id)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+    [DELETE_CARD]: ({ commit, state }, idt) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action DELETE_CARD');
+        state.debug('Data: ', idt);
+        API.deleteIdentity(idt)
           .then((res) => {
             resolve(res);
           })
@@ -621,6 +638,9 @@ export default new Vuex.Store({
     },
     currentProfile(state, value) {
       state.currentProfile = value;
+    },
+    setCurrentCard(state, value) {
+      state.currentCard = value;
     },
     setCurrentCred(state, value) {
       state.currentCred = value;

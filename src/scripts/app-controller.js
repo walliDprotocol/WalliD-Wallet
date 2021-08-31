@@ -526,6 +526,26 @@ export default class AppController {
   }
 
   /**
+   * Deletes an identity with @idt in WalliD Plugin.
+   *
+   * @param {string} idt - WalliD identity idt
+   */
+  deleteIdentity(idt) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    console.log(idt);
+    const identities = this.#store.getState().identities;
+    return Promise.resolve(identities.deleteIdentity(idt)).then(
+      vault.putIdentities(
+        identities.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+
+  /**
    * Imports a new identity of type @idt into WalliD Plugin.
    *
    * @param {string} id - Social Profile name + username tag
@@ -688,6 +708,8 @@ export default class AppController {
       importCredentialSign: this.importCredentialSign.bind(this),
       deleteCredential: this.deleteCredential.bind(this),
       deleteProfile: this.deleteProfile.bind(this),
+      deleteIdentity: this.deleteIdentity.bind(this),
+
       eventProxy: this.eventProxy.bind(this),
 
       importSocialProfile: this.importSocialProfile.bind(this),
