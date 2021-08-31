@@ -106,7 +106,7 @@ export default {
       permissions: 'This website is requesting wallet permissions to:',
       level: [
         '',
-        '<br>- Access wallet address<br>-Store identity assets',
+        '- Access wallet address<br>-Store identity assets',
         '- Access wallet address<br>-Extract identities<br>-Encrypt and decrypt data<br>-Sign data using diferent signature types',
       ],
       button: 'Connect',
