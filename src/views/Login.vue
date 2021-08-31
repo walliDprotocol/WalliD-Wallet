@@ -5,21 +5,23 @@
         <v-col cols="12" class="text-center my-6 pt-5">
           <v-img
             center
-            width="192"
+            width="65"
             height="65"
             class="ma-auto"
             contain
-            src="../images/logo-wallid.png"
+            src="../images/logos/logo-wallid.png"
+            srcset="../images/logos/logo-wallid@2x.png 2x,
+             ../images/logos/logo-wallid@3x.png 3x"
         /></v-col>
         <v-col cols="12" class="pb-6 px-14">
           <h2 class="T1 mb-2 text-center">
-            {{ $t("login.title") }}
+            {{ $t('login.title') }}
           </h2>
         </v-col>
 
         <v-col cols="12" class="text-left pb-3">
           <label class="sub-title-fields">
-            {{ $t("login.password[0]") }}
+            {{ $t('login.password[0]') }}
           </label>
           <v-text-field
             v-model="password"
@@ -33,20 +35,20 @@
             @input="passwordError = false"
           ></v-text-field>
           <p v-show="passwordError" class="error--text">
-            {{ $t("login.password[1]") }}
+            {{ $t('login.password[1]') }}
           </p></v-col
         >
 
         <v-col cols="12" class="pt-2">
           <v-btn text @click="unlockPlugin" class="advance-btn">
-            {{ $t("login.button") }}
+            {{ $t('login.button') }}
           </v-btn>
         </v-col>
         <v-col cols="12" class=" text-left">
           <p class="links mt-2 text-left" style="color: #373c43;">
-            {{ $t("login.restore[0]") }}<br />
+            {{ $t('login.restore[0]') }}<br />
             <router-link to="/restore" class="links">
-              {{ $t("login.restore[1]") }}
+              {{ $t('login.restore[1]') }}
             </router-link>
           </p>
         </v-col>
@@ -56,12 +58,12 @@
 </template>
 
 <script>
-import { UNLOCK_WALLET } from "../store/actions";
+import { UNLOCK_WALLET } from '../store/actions';
 
 export default {
   data() {
     return {
-      password: "",
+      password: '',
       passwordError: false,
       completedOnboarding: this.$API.getState().initialized,
     };
@@ -69,8 +71,8 @@ export default {
   methods: {
     unlockPlugin() {
       if (!this.completedOnboarding) {
-        this.debug("Onboarding not completed");
-        this.$router.push("/create");
+        this.debug('Onboarding not completed');
+        this.$router.push('/create');
       } else {
         this.$store
           .dispatch(UNLOCK_WALLET, this.password)
@@ -83,11 +85,11 @@ export default {
     },
 
     checkRequests() {
-      this.debug("Check for Requests");
+      this.debug('Check for Requests');
       if (this.$store.getters.hasPermissionsRequests) {
-        this.$router.push("/request");
+        this.$router.push('/request');
       } else {
-        this.$router.push("/home");
+        this.$router.push('/home');
       }
     },
   },

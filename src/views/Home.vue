@@ -1,7 +1,7 @@
 <template>
-  <v-container class="home">
-    <v-row class="pt-0">
-      <v-col cols="12" class="pt-0 pb-0">
+  <v-container class="home pb-0" fill-height>
+    <v-row class="">
+      <v-col cols="12" class=" pb-0">
         <jazz-icon :address="address" :id="'home'" :size="58" :margin="4" />
       </v-col>
       <v-col cols="12" class="pt-4 pb-2 px-14">
