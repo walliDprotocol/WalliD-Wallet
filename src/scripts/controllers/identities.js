@@ -61,10 +61,16 @@ export default class IdentitiesController {
   }
 
   deleteIdentity(idt) {
-    return Promise.resolve(
-      this.#identities.findIndex((id) => id.idt == idt)
-    ).then((index) => {
-      if (index != -1) this.#identities.splice(index, 1);
+    return new Promise((resolve, reject) => {
+      const index = this.#identities.findIndex((id) => id.idt == idt);
+
+      if (index != -1) {
+        console.log('EXISTs w/ ', index);
+        this.#identities.splice(index, 1);
+        return resolve();
+      } else {
+        return reject(`Profile id  ${idt}  doesn´t exists`);
+      }
     });
   }
 
