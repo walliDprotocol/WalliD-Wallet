@@ -47,9 +47,9 @@ const mixinPlugin = {
       return (
         cred &&
         cred.userData &&
-        cred.userData.user_data &&
-        cred.userData.user_data['CONTRACT ADDRESS'] &&
-        Contracts.includes(cred.userData.user_data['CONTRACT ADDRESS'])
+        cred.userData.frontend_props &&
+        cred.userData.frontend_props.currentLayout &&
+        cred.userData.frontend_props.currentLayout === 'NFT'
       );
     },
     scrollInto(id_top, offset) {

@@ -212,7 +212,7 @@ export default new Vuex.Store({
         state.debug('Connections: ', state.connections);
         // state.debug("Notification: ", state.notification);
         let icon = origin + '/favicon.ico';
-        API.approveConnection(origin, icon, name, level)
+        API.approveConnection(origin, icon, name, 2)
           .then((res) => {
             resolve(res);
           })
