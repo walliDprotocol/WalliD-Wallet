@@ -159,7 +159,7 @@
       /></v-col>
       <v-col cols="12" class="pt-1">
         <h2 class="T1 mb-5 text-center">
-          {{ $t('create.stepper[3].title') }}
+          {{ $t('create.stepper[6].title') }}
         </h2>
         <h3 class="sub-title-fields text-center">
           {{ $t('import.text') }}
@@ -167,7 +167,7 @@
       </v-col>
       <v-col cols="12">
         <v-btn text @click="goToLogin" class="advance-btn">
-          {{ $t('create.stepper[3].button') }}
+          {{ $t('create.stepper[6].button') }}
         </v-btn>
       </v-col>
     </v-row>

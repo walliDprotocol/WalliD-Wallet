@@ -21,7 +21,7 @@
       <v-col cols="12" class="">
         <v-form @submit.prevent="generateProof" ref="form">
           <v-card class="form-card">
-            <v-col cols="12" class="">
+            <v-col v-if="false" cols="12" class="">
               <jazz-icon
                 :address="address"
                 :id="'proof'"
@@ -126,14 +126,21 @@
               <v-container class="py-0 wrapper text-left">
                 <v-row>
                   <v-col cols="2" class="py-1 pl-0">
-                    <StoredProfileImg :size="38" :src="credential.photoURL" />
+                    <StoredProfileImg
+                      :size="38"
+                      :src="
+                        isNFT(credential)
+                          ? credential.userData.credential_img
+                          : credential.photoURL
+                      "
+                    />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
                           <p class="sub-title-fields sub-title-fields--bold">
-                            {{ credential.credName }}
+                            {{ getName(credential) }}
                           </p>
                           <p class="sub-title-fields" style="font-weight:500">
                             {{ credential.caName }}
@@ -268,6 +275,17 @@ export default {
     ]),
   },
   methods: {
+    getName(credential) {
+      if (this.isNFT(credential)) {
+        return (
+          credential.userData.user_data['PROJECT'] +
+          '#' +
+          credential.userData.user_data['TOKEN ID']
+        );
+      }
+
+      return credential.credName;
+    },
     checkSelectedProfiles() {
       this.isDisabled = !Object.keys(this.selectedProfiles)
         .filter((el) => this.selectedProfiles[el])
@@ -412,6 +430,7 @@ export default {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     overflow: auto;
     max-height: 320px;
+    border-radius: 14px;
 
     .list-profiles {
       padding-left: 34px;
