@@ -184,7 +184,7 @@ export default {
           });
         break;
       case 'wallid_connect':
-        this.level = 1; // this.request.data.level || 1;
+        this.level = this.request.data.level || 1;
         this.$store
           .dispatch(ACCESS_LEVEL, {
             url: this.request.origin,
