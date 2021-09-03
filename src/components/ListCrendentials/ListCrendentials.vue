@@ -14,7 +14,7 @@
         <v-container class="py-0">
           <v-row>
             <v-col cols="2" class="pr-2 pb-0">
-              <StoredProfileImg :size="38" :src="card.photoURL"
+              <StoredProfileImg :size="38" :src="getImage(card)"
             /></v-col>
             <v-col cols="8" class="pl-5 pb-0 pt-1">
               <v-container class="">
@@ -198,6 +198,15 @@ export default {
     ...mapGetters(['credentials']),
   },
   methods: {
+    getImage(card) {
+      console.log(card);
+      return (
+        card.userData.credential_img ||
+        (card.userData.frontend_props &&
+          card.userData.frontend_props.preview) ||
+        card.photoURL
+      );
+    },
     downloadURL(card) {
       // if (
       //   this.connected &&

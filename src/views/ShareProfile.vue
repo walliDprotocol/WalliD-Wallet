@@ -126,14 +126,7 @@
               <v-container class="py-0 wrapper text-left">
                 <v-row>
                   <v-col cols="2" class="py-1 pl-0">
-                    <StoredProfileImg
-                      :size="38"
-                      :src="
-                        isNFT(credential)
-                          ? credential.userData.credential_img
-                          : credential.photoURL
-                      "
-                    />
+                    <StoredProfileImg :size="38" :src="getImage(credential)" />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
                     <v-container class="">
@@ -275,6 +268,15 @@ export default {
     ]),
   },
   methods: {
+    getImage(card) {
+      console.log(card);
+      return (
+        card.userData.credential_img ||
+        (card.userData.frontend_props &&
+          card.userData.frontend_props.preview) ||
+        card.photoURL
+      );
+    },
     getName(credential) {
       if (this.isNFT(credential)) {
         return (
