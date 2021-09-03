@@ -282,7 +282,9 @@ export default {
         return (
           credential.userData.user_data['PROJECT'] +
           '#' +
-          credential.userData.user_data['TOKEN ID']
+          (credential.userData.user_data['TOKEN ID'].length > 10
+            ? this.reducedString(credential.userData.user_data['TOKEN ID'])
+            : credential.userData.user_data['TOKEN ID'])
         );
       }
 

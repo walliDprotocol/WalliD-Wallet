@@ -43,6 +43,9 @@ const mixinPlugin = {
     },
   },
   methods: {
+    reducedString(val) {
+      return val && val.slice(0, 6) + '...' + val.slice(36, 40);
+    },
     isNFT(cred) {
       return (
         cred &&

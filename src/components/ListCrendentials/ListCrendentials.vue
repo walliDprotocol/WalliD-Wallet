@@ -21,7 +21,7 @@
                 <v-row>
                   <v-col cols="12" class="pt-0 pb-2">
                     <p class="sub-title-fields sub-title-fields--bold">
-                      {{ card.credName }}
+                      {{ getName(card) }}
                     </p>
                     <p class="sub-title-fields" style="font-weight:500">
                       {{ card.caName }}
@@ -198,6 +198,20 @@ export default {
     ...mapGetters(['credentials']),
   },
   methods: {
+    getName(credential) {
+      if (this.isNFT(credential)) {
+        return (
+          credential.userData.user_data['PROJECT'] +
+          '#' +
+          (credential.userData.user_data['TOKEN ID'].length > 10
+            ? this.reducedString(credential.userData.user_data['TOKEN ID'])
+            : credential.userData.user_data['TOKEN ID'])
+        );
+      }
+
+      return credential.credName;
+    },
+
     getImage(card) {
       console.log(card);
       return (
