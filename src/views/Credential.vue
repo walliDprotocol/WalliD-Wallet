@@ -112,10 +112,14 @@ export default {
   },
   methods: {
     proofPage() {
-      this.$router.push({
-        name: 'Proof',
-        params: { card: this.currentCred },
-      });
+      this.$store.commit('setCurrentCred', this.card);
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
+
+      // this.$router.push({
+      //   name: 'Proof',
+      //   params: { card: this.currentCred },
+      // });
     },
   },
   beforeDestroy() {

@@ -254,7 +254,13 @@ export default {
     console.log('currentProfile', this.currentProfile);
     console.log('list credentials', this.credentials);
 
-    this.selectedProfiles[this.currentProfile.id] = true;
+    if (this.currentProfile) {
+      this.selectedProfiles[this.currentProfile.id] = true;
+    }
+    if (this.currentCred) {
+      this.selectedProfiles[this.currentCred.id] = true;
+    }
+
     this.isDisabled = false;
   },
   mounted() {},
@@ -262,8 +268,9 @@ export default {
     ...mapGetters([
       'address',
       'currentProfile',
+      'currentCred',
       'profiles',
-      'identities',
+      // 'identities',
       'credentials',
     ]),
   },
@@ -393,6 +400,8 @@ export default {
         en: 'Copied!',
         pt: 'Copiado!',
       },
+      // Delete this and add identities in getters
+      identities: [],
     };
   },
 };

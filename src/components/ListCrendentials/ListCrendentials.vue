@@ -247,7 +247,9 @@ export default {
     },
     proofPage(card) {
       this.$store.commit('setCurrentCred', card);
-      this.$router.push({ name: 'Proof' });
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
+      // this.$router.push({ name: 'Proof' });
     },
     isValid(_expDate) {
       if (_expDate) {
