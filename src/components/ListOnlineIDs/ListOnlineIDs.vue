@@ -28,7 +28,7 @@
                     <p class="sub-title-fields">
                       {{
                         profile.profileData.screen_name ||
-                          profile.profileData.username
+                          profile.profileData.username | truncate(30, '...')
                       }}
                     </p>
                   </v-col>

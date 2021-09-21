@@ -22,6 +22,7 @@ import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin';
 import IconReddit from '../../images/SocialNetworks/icon-reddit';
 import IconGitHub from '../../images/SocialNetworks/icon-github';
 import IconDiscord from '../../images/SocialNetworks/icon-discord';
+import IconMetaMask from '../../images/SocialNetworks/icon-metamask';
 
 import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
 
@@ -48,13 +49,14 @@ export default {
     IconReddit,
     IconGitHub,
     IconDiscord,
+    IconMetaMask,
     IconAddProfile,
     IconCC_PT,
     IconSHUFTI_CC_PT,
   },
   computed: {
     currentSocialImg() {
-      return 'Icon' + this.name;
+      return ('Icon' + this.name).trim();
     },
   },
   methods: {},
