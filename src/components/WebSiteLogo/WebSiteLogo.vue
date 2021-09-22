@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-0 text-center website-logo">
     <div id="website-logo-request">
-      <img width="54" height="48" :src="url" />
+      <img width="62" height="62" :src="url" />
     </div>
     <div class="website-logo--name">
       <p class="FIELD-TEXT">{{ name }}</p>
@@ -11,13 +11,13 @@
 
 <script>
 export default {
-  props: ["url", "name"],
+  props: ['url', 'name'],
 };
 </script>
 
 <style lang="scss">
 .website-logo {
-  margin-right: -22px;
+  // margin-right: -22px;
   #website-logo-request {
     max-height: 74px;
     max-width: 74px;
@@ -42,7 +42,7 @@ export default {
     }
   }
   img {
-    margin: 12px 0 2px 6px;
+    margin: 4px;
     border-radius: 50%;
   }
 }

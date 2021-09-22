@@ -9,7 +9,7 @@
     <div
       v-if="src"
       class="img-wrapper"
-      :style="{ width: size + 'px', height: size + 'px' }"
+      :style="{ width: size + 2 + 'px', height: size + 'px' }"
     >
       <v-img :src="src" contain :width="size" :height="size" />
     </div>

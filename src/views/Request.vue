@@ -22,7 +22,7 @@
         class="justify-space-around mt-2px"
         style="height:500px"
       >
-        <v-col cols="12" class="my-3 py-7 ">
+        <v-col cols="12" class="my-3 pt-7 ">
           <h2 class="sub-title-fields">
             <b> {{ websiteData.name }}</b>
             {{ $t('request.' + type + '.description') }}
@@ -30,7 +30,7 @@
         </v-col>
 
         <!-- website info and wallet -->
-        <v-col cols="4" class="pr-0 pt-4">
+        <v-col cols="4" class="pr-1 pt-4 mr-n14 text-center">
           <WebSiteLogo :url="websiteData.icon" :name="websiteData.name" />
         </v-col>
 
@@ -38,7 +38,7 @@
           <v-divider class="dashed" />
         </v-col>
 
-        <v-col cols="4" class="pl-0 pt-4">
+        <v-col cols="4" class="pl-1 pt-4 ml-n14 text-center">
           <jazz-icon
             :address="address"
             :id="'request'"
@@ -337,14 +337,14 @@ export default {
   border: solid 2px #b8b9bb;
   margin: auto;
   margin-bottom: 12px;
-  margin-left: 0;
+  // margin-left: 0;
   .connected & {
     border: solid 2px var(--turquoise-green);
   }
 }
 
 [id^='metamask-logo-request'] + p {
-  max-width: 76px;
+  // max-width: 76px;
   word-break: break-all;
 }
 
