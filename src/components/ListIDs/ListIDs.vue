@@ -16,13 +16,13 @@
             <v-col cols="2" class="pr-1">
               <StoredProfileImg :size="38" :name="card.idt" />
             </v-col>
-            <v-col cols="9" class="pl-5 pr-0 pb-1">
+            <v-col cols="9" class="pl-5 pr-0 ">
               <p class="sub-title-fields sub-title-fields--bold">
                 {{ getIDTName(card.idt) }}
               </p>
-              <v-container class="py-1">
+              <v-container class="py-1" v-if="showExpiry(card.idt)">
                 <v-row>
-                  <v-col cols="3" class="px-1 py-2" style="max-width:unset;">
+                  <v-col cols="auto" class="px-1 py-2 pb-0">
                     <div
                       class="validity"
                       style="background-color: #d9fbed;"
@@ -35,7 +35,7 @@
                     </div>
                     <div
                       v-else
-                      class="validity"
+                      class="validity pb-0"
                       style="background-color: #fce7e7;"
                     >
                       <invalid />
@@ -44,15 +44,28 @@
                       </p>
                     </div>
                   </v-col>
-                  <v-col cols="8" class="py-2 pr-0">
+                  <v-col cols="8" class="py-2 pr-0 pb-0">
                     <p class="FIELD-TEXT" style="font-size:12px">
                       {{ $t('cards.validity[0]') }}
                       {{ card.expDate }}
                     </p>
                   </v-col>
                 </v-row>
-              </v-container> </v-col
-            ><v-col cols="1" class="pl-0 pr-1">
+              </v-container>
+              <v-row v-if="card.idt === UC_CMD_PT">
+                <v-col cols="auto" class="py-2 pb-0">
+                  <p class="FIELD-TEXT">
+                    {{
+                      `${
+                        WallidConst.UC_CMD_PT_LABELS['telephone'][$i18n.locale]
+                      }:`
+                    }}
+                    {{ card.data.telephone }}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="1" class="pl-0 pr-1">
               <v-menu bottom left class="dot-menu" content-class="dot-menu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -152,6 +165,8 @@ import IconDotMenu from '../../images/icon-dot-menu.vue';
 
 import StoredProfileImg from '../../components/StoredProfileImg';
 
+import * as WallidConst from '../../scripts/const';
+
 import { mapGetters } from 'vuex';
 
 export default {
@@ -168,6 +183,11 @@ export default {
     ...mapGetters(['identities']),
   },
   methods: {
+    showExpiry(idt) {
+      const noExpiryIdts = [this.UC_CMD_PT];
+
+      return !noExpiryIdts.includes(idt);
+    },
     deleteProfile(card) {
       this.$store.commit('showDeleteConfirmation', true);
 
@@ -194,7 +214,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      WallidConst,
+    };
   },
 };
 </script>
