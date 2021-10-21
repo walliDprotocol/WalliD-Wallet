@@ -157,8 +157,29 @@ router.beforeEach((to, from, next) => {
   const isUnlocked = store.getters.unlocked;
   const completedOnboarding = store.getters.completedOnboarding;
   debug('completedOnboarding', completedOnboarding);
-  debug('Path', to.path);
+  debug('toPath', to.path);
+  debug('fromPath', from.path);
+
   debug('isUnlocked', isUnlocked);
+
+  if (to.path == '/popup.html') {
+    const identities = store.getters.identities || [];
+    const credentials = store.getters.credentials || [];
+    const profiles = store.getters.profiles || [];
+    switch (true) {
+      case profiles.length > 0:
+        store.commit('currentTab', 'tab-2');
+        break;
+      case identities.length > 0:
+        store.commit('currentTab', 'tab-1');
+        break;
+      case credentials.length > 0:
+        store.commit('currentTab', 'tab-3');
+        break;
+      default:
+        break;
+    }
+  }
 
   if (
     to.path == '/login' ||

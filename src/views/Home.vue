@@ -78,21 +78,30 @@ export default {
       'profiles',
       'showDeleteConfirmation',
     ]),
+    tab: {
+      get() {
+        return this.$store.getters.currentTab;
+      },
+      set(value) {
+        this.$store.commit('currentTab', value);
+      },
+    },
   },
   mounted() {
-    switch (true) {
-      case this.profiles.length > 0:
-        this.tab = 'tab-2';
-        break;
-      case this.identities.length > 0:
-        this.tab = 'tab-1';
-        break;
-      case this.credentials.length > 0:
-        this.tab = 'tab-3';
-        break;
-      default:
-        break;
-    }
+    // switch (true) {
+    //   case this.profiles.length > 0:
+    //     this.tab = 'tab-2';
+    //     break;
+    //   case this.identities.length > 0:
+    //     this.tab = 'tab-1';
+    //     break;
+    //   case this.credentials.length > 0:
+    //     this.tab = 'tab-3';
+    //     break;
+    //   default:
+    //     break;
+    // }
+    console.log(this.tab);
   },
   methods: {
     close() {
@@ -102,7 +111,6 @@ export default {
   data() {
     return {
       iconSet: false,
-      tab: 0,
     };
   },
 };

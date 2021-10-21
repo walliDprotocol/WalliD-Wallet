@@ -57,6 +57,7 @@ export default new Vuex.Store({
     currentCred: null,
     currentCard: null,
     showDeleteConfirmation: false,
+    currentTab: 0,
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
@@ -73,6 +74,7 @@ export default new Vuex.Store({
     profiles: (state) => state.profiles,
     currentProfile: (state) => state.currentProfile,
     currentCard: (state) => state.currentCard,
+    currentTab: (state) => state.currentTab,
   },
   actions: {
     // []: ({ commit, state }) => {
@@ -404,10 +406,8 @@ export default new Vuex.Store({
     [DECRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
         console.log('Action DECRYPT');
-        state.debug('Data: ', data);
         API.decryptData(data)
           .then((res) => {
-            console.log(res);
             resolve(res);
           })
           .catch((e) => {
@@ -681,6 +681,9 @@ export default new Vuex.Store({
     },
     appendgetDomain(state, getDomain) {
       state.getDomain = getDomain;
+    },
+    currentTab(state, value) {
+      state.currentTab = value;
     },
   },
 });
