@@ -381,6 +381,19 @@ export default class AppController {
     );
   }
 
+  extractIdentityData_v2(id) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const identities = this.#store.getState().identities;
+    console.log(identities);
+
+    return Promise.resolve(
+      identities.extractIdentity(id).catch((err) => Promise.reject(err))
+    );
+  }
+
   /**
    * Imports a new identity of type @idt into WalliD Plugin.
    *
@@ -696,7 +709,7 @@ export default class AppController {
       encryptData: this.encryptData.bind(this),
       decryptData: this.decryptData.bind(this),
       getAuthorizationToken: this.getAuthorizationToken.bind(this),
-      extractIdentityData_v1: this.extractIdentityData_v1.bind(this),
+      extractIdentityData: this.extractIdentityData_v2.bind(this),
       importIdentity_v2: this.importIdentity_v2.bind(this),
       importCredential: this.importCredential.bind(this),
       exportCredential: this.exportCredential.bind(this),
