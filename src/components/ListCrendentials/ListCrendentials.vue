@@ -213,7 +213,9 @@ export default {
     },
 
     getImage(card) {
-      console.log(card);
+      if (card?.userData?.frontend_props?.currentLayout === 'Badge') {
+        return card.userData?.imgArray?.[0];
+      }
       return (
         card.userData.credential_img ||
         (card.userData.frontend_props &&
