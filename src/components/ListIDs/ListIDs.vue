@@ -20,7 +20,7 @@
               <p class="sub-title-fields sub-title-fields--bold">
                 {{ getIDTName(card.idt) }}
               </p>
-              <v-container class="py-1" v-if="showExpiry(card.idt)">
+              <v-container class="py-1" v-if="hideOptions(card.idt)">
                 <v-row>
                   <v-col cols="auto" class="px-1 py-2 pb-0">
                     <div
@@ -81,7 +81,7 @@
                 </template>
 
                 <v-list>
-                  <v-list-item>
+                  <v-list-item v-if="hideOptions(card.idt)">
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="moreInfo(card)"
@@ -183,7 +183,7 @@ export default {
     ...mapGetters(['identities']),
   },
   methods: {
-    showExpiry(idt) {
+    hideOptions(idt) {
       const noExpiryIdts = [this.UC_CMD_PT];
 
       return !noExpiryIdts.includes(idt);
