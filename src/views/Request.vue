@@ -146,11 +146,13 @@ export default {
   },
   watch: {},
   mounted() {
-    this.debug('Request: ', this.request);
+    // this.debug('Request: ', this.request);
     this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
     this.debug('Address: ', this.address);
+    this.debug('Request: ', this.request);
+    this.debug('Request origin: ', this.request.origin);
 
     this.type = this.request.type;
     this.debug('Request type: ', this.type);
@@ -213,7 +215,7 @@ export default {
       case 'wallet_decrypt':
         var params;
         params = {
-          url: this.request.origin,
+          origin: this.request.origin,
           icon: this.request.origin + '/favicon.ico',
           name: this.getDomain(this.request.origin),
         };
@@ -225,6 +227,27 @@ export default {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug('Connected');
                 this.authorizeRequest(0);
+              });
+            } else {
+              this.authorizeRequest(0);
+            }
+          });
+        break;
+      case 'wallid_extract':
+        var params;
+        params = {
+          origin: this.request.origin,
+          icon: this.request.origin + '/favicon.ico',
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug('hasAccess', hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, params).then(() => {
+                this.debug('Connected');
+                // this.authorizeRequest(0);
               });
             } else {
               this.authorizeRequest(0);

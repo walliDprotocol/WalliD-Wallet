@@ -28,6 +28,7 @@ import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
 
 import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt';
 import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt';
+import IconCMD_PT from '../../images/CitizenIDs/icon-cc-pt';
 
 export default {
   name: 'StoredProfileImg',
@@ -53,10 +54,13 @@ export default {
     IconAddProfile,
     IconCC_PT,
     IconSHUFTI_CC_PT,
+    IconCMD_PT,
   },
   computed: {
     currentSocialImg() {
-      return ('Icon' + this.name).trim();
+      // Remove UC_ from name to get the standard CMD logo
+      const _name = this.name.replace(/UC_/g, '');
+      return ('Icon' + _name).trim();
     },
   },
   methods: {},

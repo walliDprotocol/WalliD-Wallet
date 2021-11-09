@@ -7,7 +7,7 @@ const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 module.exports = {
   mode: 'development',
   entry: {
-    background: './src/scripts/background.js',
+    background: ['@babel/polyfill', './src/scripts/background.js'],
     popup: './src/scripts/popup.js',
     notification: './src/scripts/notification.js',
     content: './src/scripts/content-script.js',

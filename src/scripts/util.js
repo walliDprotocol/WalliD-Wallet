@@ -120,12 +120,14 @@ const mixinPlugin = {
       return (idtsNames[idt] || idtsNames[SHUFTI])[this.$i18n.locale];
     },
     debug(a, ...args) {
-      if (this) {
-        let methodName = this.getMethodName();
+      if (process.env.NODE_ENV !== 'production') {
+        if (this) {
+          let methodName = this.getMethodName();
 
-        this.$log.debug(methodName + ' | ', a, ...args);
-      } else {
-        console.log(a, ...args);
+          this.$log.debug(methodName + ' | ', a, ...args);
+        } else {
+          console.log(a, ...args);
+        }
       }
     },
     logError(a, ...args) {
@@ -137,7 +139,10 @@ const mixinPlugin = {
     },
   },
   data() {
-    return { INVALID: INVALID };
+    return {
+      INVALID: INVALID,
+      UC_CMD_PT: 'UC_CMD_PT',
+    };
   },
 };
 

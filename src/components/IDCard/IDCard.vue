@@ -3,10 +3,7 @@
     class="id-card mb-4"
     v-if="!loading"
     :hasBack="card.back"
-    :isForeign="
-      !cardInfo.idt.startsWith('SHUFTI_CC_PT') &&
-        !cardInfo.idt.startsWith('CC_PT')
-    "
+    :isForeign="!cardInfo.idt.includes('_PT')"
   >
     <template slot="front">
       <v-container class="px-5">
@@ -51,7 +48,7 @@
           >
             <div :style="idCardStyle(card.idt, name)">
               <label>{{ field.label[$i18n.locale] }}</label>
-              <p>{{ field.value }}</p>
+              <p>{{ field.value | truncate(15, '...') }}</p>
             </div>
           </v-col>
         </v-row>
@@ -108,6 +105,34 @@ export default {
     this.unlockData();
   },
   methods: {
+    getCMDValues({ idt, decryptedObj, data }) {
+      console.log('getCMDValues', decryptedObj);
+      let fields = {};
+      let side = 'front';
+      fields[side] = {};
+      fields.idt = idt;
+      fields.idtName = {
+        label: { pt: 'Tipo de documento ID', en: 'ID document type' },
+        value: this.cardInfo.idtName || HIDDEN,
+      };
+      fields.idtName.type = '';
+
+      Object.keys(WallidConst.UC_CMD_PT_LABELS).forEach((label) => {
+        if (label === 'telephone') {
+          fields[side][label] = {
+            label: WallidConst.UC_CMD_PT_LABELS[label],
+            value: data[label] || HIDDEN,
+          };
+        } else {
+          fields[side][label] = {
+            label: WallidConst.UC_CMD_PT_LABELS[label],
+            value: decryptedObj[label] || HIDDEN,
+          };
+        }
+      });
+
+      return fields;
+    },
     getCCValues: ({ idt, obj, unlocked }) => {
       console.log('getCCValues', obj);
       console.log(idt);
@@ -249,17 +274,31 @@ export default {
       return fields;
     },
     unlockData() {
-      console.log(this.cardInfo);
+      console.log('unlockData', this.cardInfo);
       this.loading = true;
 
+      const dataIdEncrypted =
+        this.cardInfo.idt === this.UC_CMD_PT
+          ? this.cardInfo.data.dataIdEncrypted
+          : this.cardInfo.data;
+
       this.$store
-        .dispatch(DECRYPT, { data: this.cardInfo.data })
+        .dispatch(DECRYPT, { data: dataIdEncrypted })
         .then((res) => {
-          this.card = this.getCCValues({
-            idt: this.cardInfo.idt,
-            obj: JSON.parse(res),
-            unlocked: true,
-          });
+          if (this.cardInfo.idt !== this.UC_CMD_PT) {
+            this.card = this.getCCValues({
+              idt: this.cardInfo.idt,
+              obj: JSON.parse(res),
+              unlocked: true,
+            });
+          } else {
+            this.card = this.getCMDValues({
+              idt: this.cardInfo.idt,
+              data: this.cardInfo.data,
+              decryptedObj: JSON.parse(res),
+              unlocked: true,
+            });
+          }
           this.loading = false;
           this.unlocked = true;
         })
@@ -303,6 +342,7 @@ export default {
     },
     idCardStyle(idt, name) {
       switch (idt) {
+        case 'UC_CMD_PT':
         case 'CMD_PT':
           return 'padding: 12px';
       }

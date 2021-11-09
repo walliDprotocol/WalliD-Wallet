@@ -29,6 +29,7 @@ import {
   DELETE_CRED,
   DELETE_PROFILE,
   DELETE_CARD,
+  EXTRACT,
 } from './actions';
 
 import * as modules from './modules';
@@ -214,7 +215,7 @@ export default new Vuex.Store({
         state.debug('Connections: ', state.connections);
         // state.debug("Notification: ", state.notification);
         let icon = origin + '/favicon.ico';
-        API.approveConnection(origin, icon, name, 2)
+        API.approveConnection(origin, icon, name, level)
           .then((res) => {
             resolve(res);
           })
@@ -463,6 +464,22 @@ export default new Vuex.Store({
       });
     },
 
+    [EXTRACT]: ({ state, commit, dispatch }, { idt }) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action EXTRACT');
+        state.debug('Data: ', idt);
+        API.extractIdentityData(idt)
+          .then((res) => {
+            console.log(res);
+            resolve(res);
+          })
+          .catch((e) => {
+            console.error(e);
+            reject(e);
+          });
+      });
+    },
+
     [AUTHORIZE_REQUEST]: (
       { state, commit, dispatch },
       { data, type, callback, origin }
@@ -559,6 +576,15 @@ export default new Vuex.Store({
               .then((res) => {
                 console.log('res import:', res);
                 resolve(callback(null, true));
+              })
+              .catch(() => resolve(callback('REJECTED')));
+
+            break;
+          case 'wallid_extract':
+            dispatch(EXTRACT, { idt: data[0] })
+              .then((res) => {
+                console.log('res EXTRACT:', res);
+                resolve(callback(null, res));
               })
               .catch(() => resolve(callback('REJECTED')));
 
