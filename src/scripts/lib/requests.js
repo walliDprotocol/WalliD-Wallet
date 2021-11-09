@@ -15,7 +15,7 @@ const RequestAPIMethods = {
   },
   wallid_identities: {
     popup: false,
-    level: 1,
+    level: 0,
     executor: ['identities', 'getIDTsList'],
   },
   wallid_extract: {
