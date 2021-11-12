@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-0 text-center website-logo">
     <div id="website-logo-request">
-      <img width="62" height="62" :src="url" />
+      <img width="62" :src="url" />
     </div>
     <div class="website-logo--name">
       <p class="FIELD-TEXT">{{ name }}</p>
@@ -19,13 +19,15 @@ export default {
 .website-logo {
   // margin-right: -22px;
   #website-logo-request {
-    max-height: 74px;
-    max-width: 74px;
+    height: 72px;
+    max-width: 72px;
     border-radius: 50%;
     border: solid 2px #b8b9bb;
     margin: auto;
     margin-bottom: 12px;
 
+    display: flex;
+    align-items: center;
     .connected & {
       border: solid 2px var(--turquoise-green);
     }
@@ -42,8 +44,9 @@ export default {
     }
   }
   img {
-    margin: 4px;
-    border-radius: 50%;
+    margin: 4px auto;
+    // height: auto;
+    // border-radius: 50%;
   }
 }
 </style>
