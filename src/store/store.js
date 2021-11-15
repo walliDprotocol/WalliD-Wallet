@@ -206,7 +206,11 @@ export default new Vuex.Store({
       // Add Refresh connection ( function on MainContainer.vue created() )
     },
 
-    [CONNECT]: ({ commit, state }, { origin, name, level }) => {
+    //
+    // Request level is forced at level 2, this will change for next major
+    // plugin version has it will be the user choosing the permission level
+    //
+    [CONNECT]: ({ commit, state }, { origin, name, level = 2 }) => {
       return new Promise((resolve, reject) => {
         console.log('Action CONNECT');
         state.debug('URL: ', origin);
