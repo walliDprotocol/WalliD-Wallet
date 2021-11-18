@@ -14,6 +14,9 @@ import CredentialsController from './controllers/credentials';
 import ProfilesController from './controllers/profiles';
 
 import ConfigurationsController from './controllers/configuration';
+
+import walletConnectController from './controllers/walletConnectController';
+
 import { setProvider } from './lib/eth-utils';
 
 const InitState = {
@@ -37,6 +40,11 @@ export default class AppController {
     const vault = new VaultController();
     vault.loadFromLocalStorage();
     this.#store.updateState({ vault });
+
+    // Initialize Wallet Connect controller
+    const walletConnect = new walletConnectController();
+
+    this.#store.updateState({ walletConnect });
   }
 
   //=============================================================================
@@ -149,9 +157,10 @@ export default class AppController {
           password,
         })
       )
-      .then(() =>
-        setProvider(this.#store.getState().configurations.getProvider())
-      )
+      .then(() => {
+        setProvider(this.#store.getState().configurations.getProvider());
+        this.#store.getState().walletConnect.init();
+      })
       .then(() => eventPipeIn('wallid_event_unlock'))
       .catch((err) => {
         console.error(err);
