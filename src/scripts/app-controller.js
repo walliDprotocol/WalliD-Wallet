@@ -773,6 +773,54 @@ export default class AppController {
    * @param string} origin - url of the caller web site
    */
   requestAPI(method, params = [], origin) {
+    const requestHandler = async function(details) {
+      let promise = {};
+      // Check if has permission to handle request
+      const hasAccess = await this.accessControl(origin, details.level);
+      console.log('accessControl account: ', hasAccess);
+
+      // has permission, do request
+      if (hasAccess) {
+        // Check if is to main_controller or for creating account
+        if (details.main_controller && details.create) {
+          promise = this[details.executor[0]](...params);
+        }
+        if (details.main_controller) {
+          const vault = this.#store.getState().vault;
+          if (!vault.isUnlocked()) {
+            promise = Promise.reject('ERR_PLUGIN_LOCKED');
+          } else {
+            promise = this[details.executor[0]](...params);
+          }
+        }
+      } else {
+        // when no permission (or no wallet ???)
+        promise = new Promise((resolve, reject) => {
+          var _request = {
+            origin,
+            type: method,
+            data: params,
+            level: details.level,
+            callback: function(err, result) {
+              if (err) return reject(err);
+              else return resolve(result);
+            },
+          };
+          this.updatePendingRequests(_request);
+        });
+        launchNotificationPopup().then((id) => this.updateActivePopups(id));
+      }
+
+      // promise to return
+      return promise;
+    };
+
+    return Promise.resolve(getRequestDetails(method)).then(
+      requestHandler.bind(this)
+    );
+  }
+
+  oldRequestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
       if (details.popup) {
