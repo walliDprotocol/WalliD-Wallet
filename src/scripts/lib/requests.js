@@ -18,11 +18,12 @@ const RequestAPIMethods = {
     level: 1,
     executor: ['connections', 'removeConnected'],
   },
-  wallid_token: {
-    main_controller: true,
-    level: 1,
-    executor: ['getAuthorizationToken'],
-  },
+  // Remove for v1.1
+  // wallid_token: {
+  //   main_controller: true,
+  //   level: 1,
+  //   executor: ['getAuthorizationToken'],
+  // },
   wallid_identities: {
     popup: false,
     level: 0,

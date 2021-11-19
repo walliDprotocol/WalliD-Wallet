@@ -309,17 +309,18 @@ export default {
           origin: this.request.origin,
           name: this.websiteData.name,
         })
-        .then(() => {
+        .then((res) => {
           if (this.request.type == 'wallid_connect') this.success = true;
           if (
             this.request.type != 'wallid_import_cred' &&
             this.request.type != 'wallid_import_sign' &&
             this.request.type != 'wallid_open'
-          )
-            setTimeout(() => {
-              this.$notification ? window.close() : this.$router.push('/home');
-            }, time * 100);
-          else {
+          ) {
+            // setTimeout(() => {
+            //   this.$notification ? window.close() : this.$router.push('/home');
+            // }, time * 100);
+            console.log(res);
+          } else {
             this.$router.push('/home');
           }
         });
