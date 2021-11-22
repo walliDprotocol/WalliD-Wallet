@@ -6,3 +6,4 @@ export const RESTORE = '/restore';
 export const CREATE = '/create';
 export const SOCIAL_PROFILE = '/SocialProfile';
 export const SHARE_PROFILE = '/ShareProfile';
+export const WALLET_CONNECT = '/WalletConnect';

@@ -13,9 +13,6 @@
       </v-col>
     </v-row>
 
-    <div class="wallet-connect">
-      <v-text-field v-model="wc_uri"> </v-text-field>
-    </div>
     <v-divider class="full-divider"></v-divider>
     <v-row>
       <v-col v-if="false" cols="12" class="pt-5 text-left">
@@ -90,121 +87,14 @@
 import ArrowBack from '../images/icon-arrow-back.vue';
 import IconDropdown from '../images/icon-arrow-dropdown.vue';
 
-import WalletConnect from '@walletconnect/client';
-import { mapGetters } from 'vuex';
-
 export default {
   components: {
     ArrowBack,
     IconDropdown,
   },
-  computed: {
-    ...mapGetters(['address']),
-  },
-  watch: {
-    async wc_uri(wc_uri) {
-      if (wc_uri) {
-        console.log(wc_uri);
-        await this.initWalletConnect(wc_uri);
-      }
-    },
-  },
-  methods: {
-    setState(obj) {
-      Object.keys(obj).forEach((e) => (this[e] = obj[e]));
-    },
-    // Wallet Connect methods
-    async initWalletConnect(uri) {
-      try {
-        const connector = new WalletConnect({ uri });
-
-        if (!connector.connected) {
-          await connector.createSession();
-        }
-
-        this.connector = connector;
-
-        this.subscribeToEvents();
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    subscribeToEvents() {
-      console.log('ACTION', 'subscribeToEvents');
-      const connector = this.connector;
-
-      if (connector) {
-        connector.on('session_request', (error, payload) => {
-          console.log('EVENT', 'session_request');
-
-          if (error) {
-            throw error;
-          }
-          connector.approveSession({
-            accounts: [
-              // required
-              this.address,
-            ],
-            chainId: 1, // required
-          });
-          console.log('SESSION_REQUEST', payload.params);
-          const { peerMeta } = payload.params[0];
-          this.setState({ peerMeta });
-        });
-
-        connector.on('session_update', (error) => {
-          console.log('EVENT', 'session_update');
-
-          if (error) {
-            throw error;
-          }
-        });
-
-        connector.on('call_request', async (error, payload) => {
-          // tslint:disable-next-line
-          console.log('EVENT', 'call_request', 'method', payload.method);
-          console.log('EVENT', 'call_request', 'params', payload.params);
-
-          if (error) {
-            throw error;
-          }
-        });
-
-        connector.on('connect', (error, payload) => {
-          console.log('EVENT', 'connect');
-
-          if (error) {
-            throw error;
-          }
-
-          this.setState({ connected: true });
-        });
-
-        connector.on('disconnect', (error, payload) => {
-          console.log('EVENT', 'disconnect');
-
-          if (error) {
-            throw error;
-          }
-
-          this.resetApp();
-        });
-
-        if (connector.connected) {
-          const { chainId, accounts } = connector;
-          const index = 0;
-          // const address = accounts[index];
-          console.log(accounts);
-          this.setState({
-            chainId,
-          });
-        }
-
-        this.setState({ connector });
-      }
-    },
-  },
+  computed: {},
+  watch: {},
+  methods: {},
   data() {
     return {
       langs: [
@@ -212,9 +102,6 @@ export default {
         { id: 'en', name: 'English' },
         { id: 'es', name: 'Español' },
       ],
-
-      // Wallet Connect
-      wc_uri: null,
     };
   },
 };

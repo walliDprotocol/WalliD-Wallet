@@ -45,6 +45,9 @@ export default class walletConnectController {
       ...INITIAL_STATE,
     };
   }
+  resetApp = async () => {
+    await this.setState({ ...INITIAL_STATE });
+  };
 
   getCachedSession() {
     const local = localStorage ? localStorage.getItem('walletconnect') : null;
@@ -65,7 +68,7 @@ export default class walletConnectController {
   }
 
   // Wallet Connect methods
-  async initWalletConnect(uri) {
+  async initFromURI(uri, address) {
     try {
       const connector = new WalletConnect({ uri });
 
@@ -73,9 +76,10 @@ export default class walletConnectController {
         await connector.createSession();
       }
 
-      this.setState({ connector });
+      this.setState({ connector, address });
 
       this.subscribeToEvents();
+      return { success: true, message: 'Call approveSession now' };
     } catch (error) {
       console.log(error);
       throw error;
@@ -84,7 +88,7 @@ export default class walletConnectController {
 
   subscribeToEvents() {
     console.log('ACTION', 'subscribeToEvents');
-    const { connector } = this.#state;
+    const { connector, address, chainId } = this.#state;
 
     if (connector) {
       connector.on('session_request', (error, payload) => {
@@ -136,7 +140,7 @@ export default class walletConnectController {
           throw error;
         }
 
-        // this.resetApp();
+        this.resetApp();
       });
 
       if (connector.connected) {
@@ -153,7 +157,7 @@ export default class walletConnectController {
     }
   }
 
-  async init() {
+  async initFromSession() {
     let { chainId } = this.#state;
 
     const session = this.getCachedSession();
@@ -193,9 +197,35 @@ export default class walletConnectController {
     console.log('ACTION', 'approveSession');
     const { connector, chainId, address } = this.#state;
     if (connector) {
-      connector.approveSession({ chainId, accounts: [address] });
+      return new Promise((resolve, reject) => {
+        const t = setTimeout(() => reject('ERR_TIMEOUT'), 6 * 1000);
+        try {
+          connector.on('session_request', (error, payload) => {
+            console.log('EVENT', 'session_request');
+
+            if (error) {
+              throw error;
+            }
+            console.log('SESSION_REQUEST', payload);
+
+            connector
+              .approveSession({ chainId, accounts: [address] })
+              .then((res) => {
+                clearTimeout(t);
+                resolve(res);
+              })
+              .catch((err) => resolve(err));
+
+            const { peerMeta } = payload.params[0];
+            this.setState({ peerMeta });
+          });
+        } catch (error) {
+          clearTimeout(t);
+          resolve(error);
+        }
+      });
     }
-    this.setState({ connector });
+    // this.setState({ connector });
   }
 
   /**
@@ -220,6 +250,7 @@ export default class walletConnectController {
   getAPI() {
     return {
       approveSession: this.approveSession.bind(this),
+      initFromURI: this.initFromURI.bind(this),
     };
   }
 }

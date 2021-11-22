@@ -48,6 +48,41 @@ export default class AppController {
   }
 
   //=============================================================================
+  // WalletConnect Interface
+  //=============================================================================
+
+  /**
+   *
+   */
+  initFromURI(uri) {
+    const vault = this.#store.getState().vault;
+    const walletConnect = this.#store.getState().walletConnect;
+    const wallet = this.#store.getState().wallet;
+
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    return Promise.resolve(walletConnect.initFromURI(uri, wallet.getAddress()))
+      .then(() => eventPipeIn('wallid_wallet_connect_init'))
+      .then(() => wallet.getAddress());
+  }
+
+  /**
+   *
+   */
+  approveSession() {
+    const vault = this.#store.getState().vault;
+    const walletConnect = this.#store.getState().walletConnect;
+    const wallet = this.#store.getState().wallet;
+
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    return Promise.resolve(walletConnect.approveSession())
+      .then(() => eventPipeIn('wallid_wallet_connect_approved'))
+      .then(() => wallet.getAddress());
+  }
+  //=============================================================================
   // APP CONTROLLER INTERFACE
   //=============================================================================
 
@@ -159,9 +194,12 @@ export default class AppController {
       )
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
-        this.#store.getState().walletConnect.init();
+        this.#store.getState().walletConnect.initFromSession();
       })
-      .then(() => eventPipeIn('wallid_event_unlock'))
+      .then(() => {
+        eventPipeIn('wallid_event_unlock');
+        return true;
+      })
       .catch((err) => {
         console.error(err);
         return Promise.reject('Wrong password');
@@ -745,6 +783,9 @@ export default class AppController {
       eventProxy: this.eventProxy.bind(this),
 
       importSocialProfile: this.importSocialProfile.bind(this),
+
+      initFromURI: this.initFromURI.bind(this),
+      approveSession: this.approveSession.bind(this),
     };
   }
 
@@ -784,6 +825,10 @@ export default class AppController {
   requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
+
+      if (details.args && params.length < details.args) {
+        return Promise.reject('WRONG_PARAMS');
+      }
       if (details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {

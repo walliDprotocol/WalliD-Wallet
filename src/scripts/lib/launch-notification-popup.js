@@ -1,4 +1,4 @@
-import extension from "extensionizer";
+import extension from 'extensionizer';
 
 export default function() {
   return new Promise((resolve) => {
@@ -8,8 +8,8 @@ export default function() {
     var top = 100;
     extension.windows.create(
       {
-        url: extension.runtime.getURL("notification.html"),
-        type: "popup",
+        url: extension.runtime.getURL('notification.html'),
+        type: 'popup',
         width,
         height,
         left,
