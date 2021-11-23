@@ -780,50 +780,55 @@ export default class AppController {
   requestAPI(method, params = [], origin) {
     const requestHandler = async function(details) {
       let promise = {};
+      try {
+        // Check if has permission to handle request
+        const accessLevel = await this.accessControl(origin, details.level);
 
-      // Check if has permission to handle request
-      const accessLevel = await this.accessControl(origin, details.level);
-
-      if (accessLevel < 0) {
-        return Promise.reject('ERR_NO_PERMISSION');
-      }
-
-      console.log('accessControl account: ', accessLevel);
-      if (details.main_controller && details.create) {
-        return this[details.executor[0]](...params);
-      }
-      // has permission, do request
-      if (accessLevel >= details.level && !details.popup) {
-        // Check if is to main_controller or for creating account
-        if (details.main_controller) {
-          promise = this[details.executor[0]](...params);
-        } else {
-          promise = Promise.resolve(
-            this.#store
-              .getState()
-              .then((state) =>
-                state[details.executor[0]][details.executor[1]](...params)
-              )
-          );
+        if (accessLevel < 0) {
+          return Promise.reject('ERR_NO_PERMISSION');
         }
-      } else {
-        // when no permission (or no wallet ???)
-        promise = new Promise((resolve, reject) => {
-          var _request = {
-            origin,
-            type: method,
-            data: params,
-            level: details.level,
-            callback: function(err, result) {
-              if (err) return reject(err);
-              else return resolve(result);
-            },
-          };
-          this.updatePendingRequests(_request);
-        });
-        launchNotificationPopup().then((id) => this.updateActivePopups(id));
-      }
 
+        console.log('accessControl account: ', accessLevel);
+        if (details.main_controller && details.create) {
+          return this[details.executor[0]](...params);
+        }
+
+        console.log('request details: ', details);
+        console.log('request params: ', params);
+
+        // has permission, do request
+        if (accessLevel >= details.level && !details.popup) {
+          // Check if is to main_controller or for creating account
+          if (details.main_controller) {
+            promise = this[details.executor[0]](...params);
+          } else {
+            console.log('state request');
+            promise = Promise.resolve(
+              this.#store
+                .getState()
+                [details.executor[0]][details.executor[1]](...params)
+            );
+          }
+        } else {
+          // when no permission (or no wallet ???)
+          promise = new Promise((resolve, reject) => {
+            var _request = {
+              origin,
+              type: method,
+              data: params,
+              level: details.level,
+              callback: function(err, result) {
+                if (err) return reject(err);
+                else return resolve(result);
+              },
+            };
+            this.updatePendingRequests(_request);
+          });
+          launchNotificationPopup().then((id) => this.updateActivePopups(id));
+        }
+      } catch (error) {
+        console.log(error);
+      }
       // promise to return
       return promise;
     };
