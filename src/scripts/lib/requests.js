@@ -39,11 +39,13 @@ const RequestAPIMethods = {
     main_controller: true,
     level: 1,
     executor: ['importIdentity_v2'],
+    args: 5,
   },
   wallid_import_cred: {
     main_controller: true,
     level: 1,
     executor: ['importCredential'],
+    args: 8,
   },
   wallid_export_cred: {
     main_controller: true,
@@ -54,12 +56,14 @@ const RequestAPIMethods = {
     main_controller: true,
     level: 1,
     executor: ['importCredentialSign'],
+    args: 3,
   },
 
   wallid_import_social_profile: {
     main_controller: true,
     level: 1,
     executor: ['importSocialProfile'],
+    args: 4,
   },
   wallid_set_provider: {
     level: 1,
