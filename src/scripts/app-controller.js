@@ -781,6 +781,9 @@ export default class AppController {
     const requestHandler = async function(details) {
       let promise = {};
       try {
+        if (details.args && params.length < details.args) {
+          return Promise.reject('WRONG_PARAMS');
+        }
         // Check if has permission to handle request
         const accessLevel = await this.accessControl(origin, details.level);
 
