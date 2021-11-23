@@ -91,17 +91,17 @@
 </template>
 
 <script>
-import FlipCard from "./FlipCard";
-import Pagination from "./Pagination";
-import MoreInfo from "./assets/more-info";
+import FlipCard from './FlipCard';
+import Pagination from './Pagination';
+import MoreInfo from './assets/more-info';
 
 //Templates
-import defaultTemplate from "./templates/defaultTemplate";
+import defaultTemplate from './templates/defaultTemplate';
 
-import keepCodingV1 from "./templates/keepCodingV1";
+import keepCodingV1 from './templates/keepCodingV1';
 
 export default {
-  name: "IDCard",
+  name: 'IDCard',
   components: {
     FlipCard,
     Pagination,
@@ -158,21 +158,20 @@ export default {
   },
   created() {
     this.templateName =
-      (this.frontend_props && this.frontend_props.customTemplateName) ||
-      this.templateName;
+      this.frontend_props?.customTemplateName || this.templateName;
   },
   mounted() {
     this.loading = false;
-    console.log("frontTemplate", this.frontTemplate);
-    console.log("backTemplate", this.backTemplate);
-    console.log("frontend_props", this.frontend_props);
+    console.log('frontTemplate', this.frontTemplate);
+    console.log('backTemplate', this.backTemplate);
+    console.log('frontend_props', this.frontend_props);
 
-    console.log("templateName", this.templateName);
+    console.log('templateName', this.templateName);
 
     this.hasColor =
-      (this.frontend_props && this.frontend_props.color) || "#eeeeee";
+      (this.frontend_props && this.frontend_props.color) || '#eeeeee';
 
-    console.log("hasColor", this.hasColor);
+    console.log('hasColor', this.hasColor);
     // [{ attribute: "File", input: "file", index: 2, cellCount: 1 }];
     // if (this.backTemplate) {
     //   this.createTable(this.backTemplate);
@@ -189,14 +188,14 @@ export default {
 
     if (this.editable) {
       this.headersTable.push({
-        value: "actions",
+        value: 'actions',
         width: 10,
         sortable: false,
       });
     }
 
     this.cardStyles.fontFamily = this.frontend_props.font
-      ? "'" + this.frontend_props.font + "'" + " !important"
+      ? "'" + this.frontend_props.font + "'" + ' !important'
       : null;
   },
 
@@ -211,16 +210,16 @@ export default {
   computed: {
     cssVars() {
       return {
-        "--nItens": this.tableItems.length + 1,
+        '--nItens': this.tableItems.length + 1,
       };
     },
     maxLengthDesc() {
-      return this.templateName == "keepCodingV1" ? 300 : 44;
+      return this.templateName == 'keepCodingV1' ? 300 : 44;
     },
 
     flipCardClass() {
-      let className = this.large ? "large_card " : " ";
-      className += this.extraLarge ? "extra-large " : " ";
+      let className = this.large ? 'large_card ' : ' ';
+      className += this.extraLarge ? 'extra-large ' : ' ';
       className += this.templateName;
       return className;
     },
@@ -254,24 +253,24 @@ export default {
     getValue(field) {
       if (this.templateValues.length > 0) {
         let res = this.templateValues.find((e) => e.attr == field.attr);
-        return res && res.value ? res.value : "[" + field.attr + "]";
+        return res && res.value ? res.value : '[' + field.attr + ']';
       }
 
       return field && field.value;
     },
     deleteItem(item) {
       let editedIndex = this.tableValues.indexOf(item);
-      this.$emit("removeItem", editedIndex);
+      this.$emit('removeItem', editedIndex);
     },
 
     fillBlank() {
       let el = {};
       this.headersTable.forEach((e) => {
-        el[e.value] = "-";
+        el[e.value] = '-';
       });
       this.tableItems.push(el);
     },
-    reduceText(text, length = 44, clamp = "...") {
+    reduceText(text, length = 44, clamp = '...') {
       let splitAt = (index) => (x) => [x.slice(0, index), x.slice(index)];
       if (text.length > length) {
         return [splitAt(length)(text)[0] + clamp, text];
@@ -320,8 +319,8 @@ export default {
       headersTable: [],
       loading: true,
       unlocked: false,
-      templateName: "defaultTemplate",
-      cardStyles: { height: this.height + "px", width: this.width + "px" },
+      templateName: 'defaultTemplate',
+      cardStyles: { height: this.height + 'px', width: this.width + 'px' },
     };
   },
 };
