@@ -46,6 +46,16 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-list-item @click="goRoute(WALLET_CONNECT)">
+        <v-list-item-icon>
+          <IconWalletConnect />
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>WalletConnect</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-divider class="my-2"></v-divider>
 
       <v-list-item @click="goRoute(SETTINGS)">
@@ -89,9 +99,16 @@ import IconSites from '../../images/icon-connect-unselected.vue';
 import IconSettings from '../../images/icon-settings-unselected.vue';
 import IconAbout from '../../images/icon-about-unselected.vue';
 import IconLock from '../../images/icon-logout-unselected.vue';
+import IconWalletConnect from '../../images/icons/icon-walletconnect.vue';
 
 import { LOCK_WALLET } from '../../store/actions';
-import { DETAILS, SITES, SETTINGS, ABOUT } from '../../router/routes';
+import {
+  DETAILS,
+  SITES,
+  SETTINGS,
+  ABOUT,
+  WALLET_CONNECT,
+} from '../../router/routes';
 
 export default {
   props: ['address', 'showMenu'],
@@ -101,12 +118,14 @@ export default {
     IconSettings,
     IconAbout,
     IconLock,
+    IconWalletConnect,
   },
   created() {
     this.DETAILS = DETAILS;
     this.SITES = SITES;
     this.SETTINGS = SETTINGS;
     this.ABOUT = ABOUT;
+    this.WALLET_CONNECT = WALLET_CONNECT;
   },
   watch: {},
   mounted() {},

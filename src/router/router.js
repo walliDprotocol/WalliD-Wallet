@@ -16,6 +16,8 @@ import Terms from '../views/Terms';
 import Card from '../views/Card';
 import Credential from '../views/Credential';
 
+import WALLET_CONNECT_VIEW from '../views/WalletConnect';
+
 import SHARE_PROFILE_VIEW from '../views/ShareProfile';
 import SOCIAL_PROFILE_VIEW from '../views/SocialProfile';
 
@@ -27,7 +29,7 @@ import mixinPlugin from '../scripts/util';
 import SeedPhrase from '../components/RevealSeedPhrase';
 import PrivKey from '../components/RevealPrivateKey';
 
-import { SHARE_PROFILE, SOCIAL_PROFILE } from './routes';
+import { SHARE_PROFILE, SOCIAL_PROFILE, WALLET_CONNECT } from './routes';
 
 const debug = mixinPlugin.methods.debug;
 Vue.use(Router);
@@ -85,6 +87,11 @@ let router = new Router({
           path: '/settings',
           name: 'settings',
           component: Settings,
+        },
+        {
+          path: WALLET_CONNECT,
+          name: 'WALLET_CONNECT',
+          component: WALLET_CONNECT_VIEW,
         },
         {
           path: '/about',

@@ -8,8 +8,8 @@ module.exports = {
   mode: 'development',
   entry: {
     background: ['@babel/polyfill', './src/scripts/background.js'],
-    popup: './src/scripts/popup.js',
-    notification: './src/scripts/notification.js',
+    popup: ['@babel/polyfill', './src/scripts/popup.js'],
+    notification: ['@babel/polyfill', './src/scripts/notification.js'],
     content: './src/scripts/content-script.js',
     injector: './src/scripts/injector.js',
   },

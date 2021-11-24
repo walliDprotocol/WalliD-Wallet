@@ -14,6 +14,9 @@ import CredentialsController from './controllers/credentials';
 import ProfilesController from './controllers/profiles';
 
 import ConfigurationsController from './controllers/configuration';
+
+import walletConnectController from './controllers/walletConnectController';
+
 import { setProvider } from './lib/eth-utils';
 
 const InitState = {
@@ -37,8 +40,48 @@ export default class AppController {
     const vault = new VaultController();
     vault.loadFromLocalStorage();
     this.#store.updateState({ vault });
+
+    // Initialize Wallet Connect controller
+    const walletConnect = new walletConnectController();
+
+    this.#store.updateState({ walletConnect });
   }
 
+  //=============================================================================
+  // WalletConnect Interface
+  //=============================================================================
+
+  /**
+   *
+   */
+  initFromURI(uri) {
+    const vault = this.#store.getState().vault;
+    const walletConnect = this.#store.getState().walletConnect;
+    const wallet = this.#store.getState().wallet;
+
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    return Promise.resolve(walletConnect.initFromURI(uri, wallet.getAddress()))
+      .then(() => eventPipeIn('wallid_wallet_connect_init'))
+      .then(() => wallet.getAddress());
+  }
+
+  /**
+   *
+   */
+  approveSession() {
+    const vault = this.#store.getState().vault;
+    const walletConnect = this.#store.getState().walletConnect;
+    const wallet = this.#store.getState().wallet;
+
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    return Promise.resolve(walletConnect.approveSession())
+      .then(() => eventPipeIn('wallid_wallet_connect_approved'))
+      .then(() => wallet.getAddress());
+  }
   //=============================================================================
   // APP CONTROLLER INTERFACE
   //=============================================================================
@@ -149,10 +192,14 @@ export default class AppController {
           password,
         })
       )
-      .then(() =>
-        setProvider(this.#store.getState().configurations.getProvider())
-      )
-      .then(() => eventPipeIn('wallid_event_unlock'))
+      .then(() => {
+        setProvider(this.#store.getState().configurations.getProvider());
+        this.#store.getState().walletConnect.initFromSession();
+      })
+      .then(() => {
+        eventPipeIn('wallid_event_unlock');
+        return true;
+      })
       .catch((err) => {
         console.error(err);
         return Promise.reject('Wrong password');
@@ -738,6 +785,9 @@ export default class AppController {
       eventProxy: this.eventProxy.bind(this),
 
       importSocialProfile: this.importSocialProfile.bind(this),
+
+      initFromURI: this.initFromURI.bind(this),
+      approveSession: this.approveSession.bind(this),
     };
   }
 
@@ -844,6 +894,10 @@ export default class AppController {
   oldRequestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
+
+      if (details.args && params.length < details.args) {
+        return Promise.reject('WRONG_PARAMS');
+      }
       if (details.popup) {
         promise = new Promise((resolve, reject) => {
           var _request = {
