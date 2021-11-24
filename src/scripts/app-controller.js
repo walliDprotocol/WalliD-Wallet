@@ -79,6 +79,9 @@ export default class AppController {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     return Promise.resolve(walletConnect.approveSession())
+      .then(({ url, icons, name }) =>
+        this.approveConnection(url, icons?.[0], name, 0)
+      )
       .then(() => eventPipeIn('wallid_wallet_connect_approved'))
       .then(() => wallet.getAddress());
   }

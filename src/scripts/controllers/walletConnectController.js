@@ -213,7 +213,7 @@ export default class walletConnectController {
 
             const { peerMeta } = payload.params[0];
             this.setState({ peerMeta });
-            resolve(true);
+            resolve(peerMeta);
           });
         } catch (error) {
           clearTimeout(t);
