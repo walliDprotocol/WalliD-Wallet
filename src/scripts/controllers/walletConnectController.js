@@ -208,16 +208,12 @@ export default class walletConnectController {
             }
             console.log('SESSION_REQUEST', payload);
 
-            connector
-              .approveSession({ chainId, accounts: [address] })
-              .then((res) => {
-                clearTimeout(t);
-                resolve(res);
-              })
-              .catch((err) => resolve(err));
+            connector.approveSession({ chainId, accounts: [address] });
+            clearTimeout(t);
 
             const { peerMeta } = payload.params[0];
             this.setState({ peerMeta });
+            resolve(true);
           });
         } catch (error) {
           clearTimeout(t);
