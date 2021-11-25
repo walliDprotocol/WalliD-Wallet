@@ -830,7 +830,7 @@ export default class AppController {
    * @param {Array} params - array containing the parameters
    * @param string} origin - url of the caller web site
    */
-  requestAPI(method, params = [], origin) {
+  requestAPIv2(method, params = [], origin) {
     const requestHandler = async function(details) {
       let promise = {};
       try {
@@ -894,7 +894,7 @@ export default class AppController {
     );
   }
 
-  oldRequestAPI(method, params = [], origin) {
+  requestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
 
