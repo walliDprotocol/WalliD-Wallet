@@ -316,9 +316,9 @@ export default {
             this.request.type != 'wallid_import_sign' &&
             this.request.type != 'wallid_open'
           ) {
-            // setTimeout(() => {
-            //   this.$notification ? window.close() : this.$router.push('/home');
-            // }, time * 100);
+            setTimeout(() => {
+              this.$notification ? window.close() : this.$router.push('/home');
+            }, time * 100);
             console.log(res);
           } else {
             this.$router.push('/home');
