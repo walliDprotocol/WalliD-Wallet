@@ -815,7 +815,7 @@ export default class AppController {
     return Promise.resolve(connections.getConnectionAccessLevel(origin)).then(
       (al) => {
         console.log(al);
-        return al;
+        return al >= level;
       }
     );
   }
