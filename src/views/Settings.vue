@@ -12,6 +12,7 @@
         </div>
       </v-col>
     </v-row>
+
     <v-divider class="full-divider"></v-divider>
     <v-row>
       <v-col v-if="false" cols="12" class="pt-5 text-left">
@@ -91,6 +92,9 @@ export default {
     ArrowBack,
     IconDropdown,
   },
+  computed: {},
+  watch: {},
+  methods: {},
   data() {
     return {
       langs: [

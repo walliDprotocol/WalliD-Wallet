@@ -43,6 +43,16 @@ const mixinPlugin = {
     },
   },
   methods: {
+    getSocialName(profile) {
+      return profile?.socialName;
+    },
+    getUsername(profile) {
+      return (
+        profile?.profileData?.screen_name ||
+        profile?.profileData?.username ||
+        ''
+      );
+    },
     reducedString(val) {
       return val && val.slice(0, 6) + '...' + val.slice(36, 40);
     },

@@ -217,9 +217,8 @@ export default {
         return card.userData?.imgArray?.[0];
       }
       return (
-        card.userData.credential_img ||
-        (card.userData.frontend_props &&
-          card.userData.frontend_props.preview) ||
+        card.userData?.credential_img ||
+        card.userData?.frontend_props?.preview ||
         card.photoURL
       );
     },

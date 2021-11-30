@@ -49,7 +49,7 @@
                     <StoredProfileImg
                       class="mt-1"
                       :size="30"
-                      :name="profile.socialName"
+                      :name="getSocialName(profile)"
                     />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
@@ -59,15 +59,12 @@
                           <p
                             class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
                           >
-                            {{ profile.socialName }}
+                            {{ getSocialName(profile) }}
                           </p>
                         </v-col>
                         <v-col cols="12" class="py-0">
                           <p class="sub-title-fields text-left">
-                            {{
-                              profile.profileData.screen_name ||
-                                profile.username
-                            }}
+                            {{ getUsername(profile) }}
                           </p>
                         </v-col>
                       </v-row>
@@ -278,9 +275,8 @@ export default {
     getImage(card) {
       console.log(card);
       return (
-        card.userData.credential_img ||
-        (card.userData.frontend_props &&
-          card.userData.frontend_props.preview) ||
+        card.userData?.credential_img ||
+        card.userData?.frontend_props?.preview ||
         card.photoURL
       );
     },

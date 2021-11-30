@@ -141,7 +141,7 @@ export default class Vault {
 
   // Updates vault with @conns
   putConnections(conns, password) {
-    console.log('putConnections');
+    console.log('putConnections', conns);
     return Promise.resolve(this._putData(2, conns, password));
   }
 

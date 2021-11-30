@@ -93,7 +93,6 @@ import CustomCard from '../components/CustomCard';
 import ShowCredentialImages from '../components/ShowCredentialImages';
 
 import { mapGetters } from 'vuex';
-const FILESTACK = 'https://www.filestackapi.com/api/file/';
 
 const WALLID_DOMAINS = [
   'https://demo.mycredentials.wallid.io',
@@ -128,36 +127,28 @@ export default {
   created() {
     console.log('card', this.currentCred);
     this.card = JSON.parse(JSON.stringify(this.currentCred));
-    this.frontend_props = this.card.userData.frontend_props;
+    this.frontend_props = this.card?.userData?.frontend_props || {};
 
-    this.customTemplateName =
-      this.card.userData.frontend_props &&
-      this.card.userData.frontend_props.customTemplateName;
+    this.customTemplateName = this.card?.userData?.frontend_props?.customTemplateName;
 
-    console.log(this.customTemplateName);
+    this.imgArray = [...(this.card.userData?.imgArray || [])];
 
-    this.imgArray = [...this.card.userData.imgArray];
-    if (
-      this.card.userData.img_url &&
-      !this.card.userData.img_url.startsWith('https')
-    ) {
-      this.photoCred = FILESTACK + this.card.userData.img_url;
-    } else {
+    if (this.card?.userData?.img_url.startsWith('https')) {
       this.photoCred = this.card.userData.img_url;
     }
   },
   mounted() {
-    if (this.card.userData.userData) {
-      this.userData = this.card.userData.userData;
+    if (this.card.userData?.userData) {
+      this.userData = this.card.userData?.userData;
     } else {
       let userData = { front: [], table: {} };
-      if (this.card.userData.user_data.tables) {
+      if (this.card.userData?.user_data.tables) {
         userData.table = JSON.parse(
           JSON.stringify(this.card.userData.user_data.tables)
         );
         delete this.card.userData.user_data.tables;
       }
-      if (this.card.userData.template_itens)
+      if (this.card.userData?.template_itens)
         for (
           let index = 0;
           index < this.card.userData.template_itens.length;
@@ -177,7 +168,7 @@ export default {
           }
         }
       else
-        for (var a in this.card.userData.user_data) {
+        for (var a in this.card.userData?.user_data) {
           var val = this.card.userData.user_data[a];
           this.templateValues.push({ attr: a, value: val });
         }
@@ -196,9 +187,7 @@ export default {
       // At least one match
 
       if (this.isNFT(this.card)) {
-        return (
-          this.card && this.card.userData && this.card.userData.imgArray[0]
-        );
+        return this.card?.userData?.imgArray[0];
       }
       return PDF_URL + this.card.id;
       // }

@@ -14,22 +14,19 @@
         <v-container class="py-0 px-3">
           <v-row>
             <v-col cols="2" class="">
-              <StoredProfileImg :size="38" :name="profile.socialName" />
+              <StoredProfileImg :size="38" :name="getSocialName(profile)" />
             </v-col>
             <v-col cols="8" class="pl-6 pr-0 pb-1">
               <v-container class="py-0">
                 <v-row>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields sub-title-fields--bold">
-                      {{ profile.socialName }}
+                      {{ getSocialName(profile) }}
                     </p>
                   </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields">
-                      {{
-                        profile.profileData.screen_name ||
-                          profile.profileData.username | truncate(30, '...')
-                      }}
+                      {{ getUsername(profile) | truncate(30, '...') }}
                     </p>
                   </v-col>
                 </v-row>

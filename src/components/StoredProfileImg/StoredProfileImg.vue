@@ -39,6 +39,7 @@ export default {
     },
     name: {
       type: String,
+      default: 'AddProfile',
     },
     src: {
       type: String,
