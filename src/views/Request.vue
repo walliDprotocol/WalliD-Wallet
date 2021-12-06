@@ -31,7 +31,7 @@
 
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-1 pt-4 mr-n14 text-center">
-          <WebSiteLogo :url="websiteData.icon" :name="websiteData.name" />
+          <WebSiteLogo :imageURL="websiteData.icon" :name="websiteData.name" />
         </v-col>
 
         <v-col cols="4" class="px-0 pt-4">
@@ -94,7 +94,7 @@
 
         <!-- website info and wallet -->
         <v-col cols="4" class="pr-0 pt-4">
-          <WebSiteLogo :url="websiteData.icon" :name="websiteData.name" />
+          <WebSiteLogo :imageURL="websiteData.icon" :name="websiteData.name" />
         </v-col>
 
         <v-col cols="4" class="px-0 pt-4 check">
