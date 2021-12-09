@@ -13,6 +13,7 @@
       <h1 v-else class="T2 ml-5">{{ $t('request.' + type + '.success') }}</h1>
 
       <div class="arrow-down-header"></div>
+      <!-- -->
     </v-app-bar>
 
     <v-container class="request">
@@ -21,7 +22,7 @@
         class="justify-space-around mt-2px"
         style="height:500px"
       >
-        <v-col cols="12" class=" pt-5 ">
+        <v-col cols="12" class="my-3 pt-7 ">
           <h2 class="sub-title-fields">
             <b> {{ websiteData.name }}</b>
             {{ $t('request.' + type + '.description') }}
@@ -46,38 +47,18 @@
           />
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
         </v-col>
-        <v-col
-          cols="10"
-          v-if="type == 'wallid_connect'"
-          class="px-4 direction-column"
-        >
-          <p class="FIELD-TEXT text-left">
-            {{ $t('request.wallid_connect.permissions') }}
-          </p>
-
-          <v-radio-group v-model="permissionLevel">
-            <v-radio
-              v-for="l in $t('request.wallid_connect.levels')"
-              :key="l.level"
-              :value="l.level"
-            >
-              <template #label>
-                <p v-html="l.label"></p>
-
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <TooltipIcon v-bind="attrs" v-on="on" />
-                  </template>
-                  <span>
-                    {{ l.tooltip }}
-                  </span>
-                </v-tooltip>
-              </template>
-            </v-radio>
-          </v-radio-group>
+        <v-col cols="10" v-if="type == 'wallid_connect'" class="px-4">
+          <p
+            class="FIELD-TEXT text-center"
+            v-html="$t('request.' + type + '.permissions')"
+          ></p>
+          <p
+            class="FIELD-TEXT text-center"
+            v-html="$t('request.' + type + '.level[' + level + ']')"
+          ></p>
         </v-col>
 
-        <v-col cols="10" class="px-6">
+        <v-col cols="10" class="px-6 pb-8">
           <router-link class="links" to="/">
             {{ $t('request.bScenes') }}
           </router-link>
@@ -132,14 +113,13 @@
           <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
         </v-col>
       </v-row>
+      <!-- Option buttons -->
     </v-container>
   </v-app>
 </template>
 
 <script>
 import WarningIcon from '../images/icon-warning-blue';
-import TooltipIcon from '../images/icons/icon-tooltip';
-
 import BrokenLine from '../images/broken-line';
 import CheckSuccessIcon from '../images/icon-sucessfully';
 import WebSiteLogo from '../components/WebSiteLogo';
@@ -151,7 +131,6 @@ import {
   CONNECT,
   IMPORT,
   UPDATE_CONNECTED,
-  ADDRESS,
 } from '../store/actions';
 import { mapGetters } from 'vuex';
 
@@ -161,7 +140,6 @@ export default {
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
-    TooltipIcon,
   },
   computed: {
     ...mapGetters(['address', 'credentials', 'connections']),
@@ -193,10 +171,7 @@ export default {
           name: this.getDomain(this.request.origin),
         };
         this.$store
-          .dispatch(ACCESS_LEVEL, {
-            url: this.request.origin,
-            level: this.permissionLevel,
-          })
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
             this.debug('hasAccess', hasAccess, params);
             if (!hasAccess) {
@@ -211,17 +186,17 @@ export default {
           });
         break;
       case 'wallid_connect':
-        // Rework this: is this realy needed??
+        this.level = this.request.data.level || 1;
         this.$store
           .dispatch(ACCESS_LEVEL, {
             url: this.request.origin,
-            level: this.permissionLevel,
+            level: this.level,
           })
           .then((hasAccess) => {
             this.debug('hasAccess', hasAccess);
             if (hasAccess) {
               Promise.resolve(
-                this.request.callback(null, this.address)
+                this.request.callback(null, 'EXECUTED')
               ).then(() => window.close());
             }
           });
@@ -235,6 +210,9 @@ export default {
       case 'wallid_import_sign':
       case 'wallid_import_cred':
       case 'wallid_token':
+      case 'wallid_import':
+      case 'wallet_encrypt':
+      case 'wallet_decrypt':
         var params;
         params = {
           origin: this.request.origin,
@@ -249,6 +227,27 @@ export default {
               this.$store.dispatch(CONNECT, { params }).then(() => {
                 this.debug('Connected');
                 this.authorizeRequest(0);
+              });
+            } else {
+              this.authorizeRequest(0);
+            }
+          });
+        break;
+      case 'wallid_extract':
+        var params;
+        params = {
+          origin: this.request.origin,
+          icon: this.request.origin + '/favicon.ico',
+          name: this.getDomain(this.request.origin),
+        };
+        this.$store
+          .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
+          .then((hasAccess) => {
+            this.debug('hasAccess', hasAccess, params);
+            if (!hasAccess) {
+              this.$store.dispatch(CONNECT, params).then(() => {
+                this.debug('Connected');
+                // this.authorizeRequest(0);
               });
             } else {
               this.authorizeRequest(0);
@@ -317,9 +316,9 @@ export default {
             this.request.type != 'wallid_import_sign' &&
             this.request.type != 'wallid_open'
           ) {
-            // setTimeout(() => {
-            //   this.$notification ? window.close() : this.$router.push('/home');
-            // }, time * 100);
+            setTimeout(() => {
+              this.$notification ? window.close() : this.$router.push('/home');
+            }, time * 100);
             console.log(res);
           } else {
             this.$router.push('/home');
@@ -348,7 +347,6 @@ export default {
       type: '',
       success: false,
       websiteData: { name: '', icon: '' },
-      permissionLevel: 1,
     };
   },
 };

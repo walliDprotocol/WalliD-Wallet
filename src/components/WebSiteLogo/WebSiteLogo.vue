@@ -33,6 +33,7 @@ export default {
 
     display: flex;
     align-items: center;
+
     background-size: contain;
     background-position: center;
     .connected & {

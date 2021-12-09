@@ -399,6 +399,22 @@ export default class AppController {
    * Returns WalliD authorization token ready for use with WalliD API.
    * Rejects with HTTP status code from server if request fail.
    *
+   */
+  listIdentities() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const identities = this.#store.getState().identities;
+    console.log(identities);
+
+    return Promise.resolve(identities.getIDTsList());
+  }
+
+  /**
+   * Returns WalliD authorization token ready for use with WalliD API.
+   * Rejects with HTTP status code from server if request fail.
+   *
    * @param {string} idt
    * @param {string} operation
    */
@@ -791,6 +807,8 @@ export default class AppController {
 
       initFromURI: this.initFromURI.bind(this),
       approveSession: this.approveSession.bind(this),
+
+      listIdentities: this.listIdentities.bind(this),
     };
   }
 
@@ -813,10 +831,11 @@ export default class AppController {
     }
     const connections = this.#store.getState().connections;
     return Promise.resolve(connections.getConnectionAccessLevel(origin)).then(
-      (al) => {
-        console.log(al);
-        return al;
-      }
+      (al) => al >= level //old version
+      // (al) => {
+      //   console.log(al);
+      //   return al;
+      // }
     );
   }
 
@@ -830,7 +849,7 @@ export default class AppController {
    * @param {Array} params - array containing the parameters
    * @param string} origin - url of the caller web site
    */
-  requestAPIv2(method, params = [], origin) {
+  requestAPI(method, params = [], origin) {
     const requestHandler = async function(details) {
       let promise = {};
       try {
@@ -838,22 +857,31 @@ export default class AppController {
           return Promise.reject('WRONG_PARAMS');
         }
         // Check if has permission to handle request
-        const accessLevel = await this.accessControl(origin, details.level);
+        const hasAccessLevel = await this.accessControl(origin, details.level);
 
-        if (accessLevel < 0) {
-          return Promise.reject('ERR_NO_PERMISSION');
-        }
+        // if (accessLevel < 0) {
+        //   return Promise.reject('ERR_NO_PERMISSION');
+        // }
 
-        console.log('accessControl account: ', accessLevel);
+        console.log('accessControl account: ', hasAccessLevel);
         if (details.main_controller && details.create) {
           return this[details.executor[0]](...params);
         }
-
         console.log('request details: ', details);
         console.log('request params: ', params);
 
+        // This shouldnt be here, maybe there is a better way to handle connected
+        const vault = this.#store.getState().vault;
+        if (
+          hasAccessLevel &&
+          method == 'wallid_connect' &&
+          vault.isUnlocked()
+        ) {
+          console.log('Already connect, return wallet address');
+          return this.#store.getState().wallet.getAddress();
+        }
         // has permission, do request
-        if (accessLevel >= details.level && !details.popup) {
+        if (hasAccessLevel && !details.popup) {
           // Check if is to main_controller or for creating account
           if (details.main_controller) {
             promise = this[details.executor[0]](...params);
@@ -894,7 +922,7 @@ export default class AppController {
     );
   }
 
-  requestAPI(method, params = [], origin) {
+  OldrequestAPI(method, params = [], origin) {
     const requestHandler = function(details) {
       let promise = {};
 

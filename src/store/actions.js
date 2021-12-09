@@ -12,7 +12,11 @@ export const CONNECT = 'CONNECT';
 export const ENCRYPT = 'ENCRYPT';
 export const DECRYPT = 'DECRYPT';
 export const IMPORT = 'IMPORT';
-export const EXTRACT = 'EXTRACT';
+
+// Plugin requests methods
+export const ADDRESS = 'wallet_address';
+export const LIST_IDENTITIES = 'wallid_list_identities';
+export const EXTRACT = 'wallid_extract';
 
 export const GET_TOKEN = 'GET_TOKEN';
 

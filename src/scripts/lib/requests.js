@@ -24,7 +24,13 @@ const RequestAPIMethods = {
   //   level: 1,
   //   executor: ['getAuthorizationToken'],
   // },
+  // deprecated
   wallid_identities: {
+    popup: false,
+    level: 0,
+    executor: ['identities', 'getIDTsList'],
+  },
+  wallid_list_identities: {
     popup: false,
     level: 0,
     executor: ['identities', 'getIDTsList'],
