@@ -3,6 +3,8 @@
     <div
       id="website-logo-request"
       :style="{
+        width: size + 'px',
+        height: size + 'px',
         backgroundImage: `url(${imageURL})`,
       }"
     >
@@ -16,7 +18,7 @@
 
 <script>
 export default {
-  props: ['imageURL', 'name'],
+  props: ['imageURL', 'name', 'size'],
 };
 </script>
 
@@ -24,8 +26,6 @@ export default {
 .website-logo {
   // margin-right: -22px;
   #website-logo-request {
-    height: 72px;
-    max-width: 72px;
     border-radius: 50%;
     border: solid 2px #b8b9bb;
     margin: auto;

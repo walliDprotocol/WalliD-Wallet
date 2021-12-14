@@ -2,14 +2,19 @@
   <div
     :class="connected ? 'connected-site' : ''"
     :id="'metamask-logo-' + id"
+    :style="{
+      width: size + (margin + 2) * 2 + 'px',
+      height: size + (margin + 2) * 2 + 'px',
+      padding: margin + 'px',
+    }"
   ></div>
 </template>
 
 <script>
-import jazzicon from "jazzicon";
-import { mapGetters } from "vuex";
+import jazzicon from 'jazzicon';
+import { mapGetters } from 'vuex';
 export default {
-  props: ["size", "margin", "id", "address"],
+  props: ['size', 'margin', 'id', 'address'],
   watch: {
     address(value) {
       if (value) {
@@ -23,17 +28,16 @@ export default {
   methods: {
     setIconWallet(size, margin, id, address) {
       if (address) {
-        let body = document.getElementById("metamask-logo-" + id);
-        let icon = document.getElementById("metamask-logo-" + id + "-icon");
+        let body = document.getElementById('metamask-logo-' + id);
+        let icon = document.getElementById('metamask-logo-' + id + '-icon');
         if (body && !icon) {
           let acc = parseInt(address.slice(2, 10), 16);
           var el = jazzicon(size, acc);
-          var styles = el.getAttribute("style");
-          styles = styles.concat(" margin: " + margin + "px;");
-          el.setAttribute("style", styles);
-          el.id = "metamask-logo-" + id + "-icon";
-          el.classList.add("icon");
+          el.id = 'metamask-logo-' + id + '-icon';
+          el.classList.add('icon');
+
           body.insertBefore(el, body.firstChild);
+
           //   this.iconSet = true;
         }
       }
@@ -42,4 +46,18 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+[id^='metamask-logo-request']:not([class*='icon']) {
+  max-height: 72px;
+  max-width: 72px;
+
+  border-radius: 50%;
+  border: solid 2px #b8b9bb;
+  margin: auto;
+  margin-bottom: 12px;
+  // margin-left: 0;
+  .connected & {
+    border: solid 2px var(--turquoise-green);
+  }
+}
+</style>
