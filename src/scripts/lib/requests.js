@@ -35,6 +35,12 @@ const RequestAPIMethods = {
     level: 0,
     executor: ['identities', 'getIDTsList'],
   },
+  wallid_list: {
+    main_controller: true,
+    level: 1,
+    executor: ['getList'],
+    // params: [listType]
+  },
   wallid_extract: {
     popup: false,
     level: 2,

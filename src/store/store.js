@@ -33,6 +33,7 @@ import {
   EXTRACT,
 
   // plugin requests
+  WALLID_LIST,
   LIST_IDENTITIES,
 } from './actions';
 
@@ -507,6 +508,20 @@ export default new Vuex.Store({
         }
       });
     },
+    [WALLID_LIST]: ({ state, commit, dispatch }, params) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action WALLID_LIST');
+        console.log('Params: ', params);
+
+        try {
+          if (!params?.[Symbol.iterator]) reject('INVALID_ARGUMENTS');
+          resolve(API.getList(...params));
+        } catch (error) {
+          console.error(error.message);
+          reject(error.message);
+        }
+      });
+    },
 
     [AUTHORIZE_REQUEST]: (
       { state, commit, dispatch },
@@ -635,7 +650,16 @@ export default new Vuex.Store({
             break;
 
           default:
-            reject(callback(null, 'ERR_NOT_IMPLEMENTED'));
+            dispatch(type, data)
+              .then((res) => {
+                console.log('res WALLID_LIST:', res);
+                resolve(callback(null, res));
+              })
+              .catch((error) => {
+                console.log(error);
+                resolve(callback(error));
+              });
+            // reject(callback(null, 'ERR_NOT_IMPLEMENTED'));
 
             break;
         }

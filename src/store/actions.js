@@ -17,6 +17,7 @@ export const IMPORT = 'IMPORT';
 export const ADDRESS = 'wallet_address';
 export const LIST_IDENTITIES = 'wallid_list_identities';
 export const EXTRACT = 'wallid_extract';
+export const WALLID_LIST = 'wallid_list';
 
 export const GET_TOKEN = 'GET_TOKEN';
 

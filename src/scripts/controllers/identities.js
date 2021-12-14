@@ -86,4 +86,12 @@ export default class IdentitiesController {
       };
     });
   }
+  getList() {
+    return this.#identities.map((id) => {
+      return {
+        idt: id.idt,
+        idtName: id.idtName,
+      };
+    });
+  }
 }

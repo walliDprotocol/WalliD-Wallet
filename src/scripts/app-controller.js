@@ -394,7 +394,43 @@ export default class AppController {
   //
   // WALLID RELATED METHODS
   //
+  /**
+   * Returns a list of assets id based on @param {String or Array<String>} listType.
+   * @returns {Array<Object> or Array<String>} list of ids (grouped
+   *  by controller if listType == 'assets')
+   */
+  getList(listType) {
+    console.log('Get list for: ', listType);
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    try {
+      if (Array.isArray(listType)) {
+        return Promise.any(listType.map((type) => this.getList(type)));
+      }
+      switch (listType) {
+        case 'assets':
+          const currentControllers = ['identities', 'credentials', 'profiles'];
+          let listResult = [];
+          currentControllers.forEach((element) => {
+            const listController = this.#store.getState()[element];
+            listResult.push({ [element]: [...listController.getList()] });
+          });
+          return Promise.resolve(listResult);
+        default:
+          const listController = this.#store.getState()[listType];
+          if (!listController)
+            return Promise.reject('NOT_IMPLEMENTED: ' + listType);
 
+          return Promise.resolve({ [listType]: [...listController.getList()] });
+
+          break;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   /**
    * Returns WalliD authorization token ready for use with WalliD API.
    * Rejects with HTTP status code from server if request fail.
@@ -808,7 +844,9 @@ export default class AppController {
       initFromURI: this.initFromURI.bind(this),
       approveSession: this.approveSession.bind(this),
 
+      // New methods for v.1.1
       listIdentities: this.listIdentities.bind(this),
+      getList: this.getList.bind(this),
     };
   }
 
