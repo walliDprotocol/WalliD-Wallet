@@ -99,6 +99,9 @@ export default {
     ],
   },
   request: {
+    description: ' is requesting permissions to:',
+    currentLevel: 'Current permissions level:',
+    edit: 'Edit',
     wallid_connect: {
       title: 'Connection Request',
       description: ' is asking for permission to connect to MyWalliD:',
@@ -129,10 +132,14 @@ export default {
       success: 'Successfully connected',
       successText: ' sucessfully conected with your wallet!',
     },
+    wallet_address: {
+      title: 'Authorisation Request',
+      description: 'Access wallet address',
+      button: 'Authorise',
+    },
     wallet_encrypt: {
       title: 'Authorisation Request',
-      description:
-        ' is requesting authorisation to store this identity document in wallet:',
+      description: 'Encrypt Identity asset data',
       button: 'Authorise',
     },
     wallet_decrypt: {
