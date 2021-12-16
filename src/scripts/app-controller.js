@@ -265,8 +265,7 @@ export default class AppController {
           this.#store.getState().password
         )
       )
-      .then(() => eventPipeIn('wallid_wallet_connected'))
-      .then(() => wallet.getAddress());
+      .then(() => eventPipeIn('wallid_wallet_connected'));
   }
 
   /**
@@ -829,6 +828,7 @@ export default class AppController {
       exportCredential: this.exportCredential.bind(this),
       getNextRequest: this.getNextRequest.bind(this),
       accessControl: this.accessControl.bind(this),
+      getAccessLevel: this.getAccessLevel.bind(this),
       currentTab: this.currentTab.bind(this),
       generateERC191Signature: this.generateERC191Signature.bind(this),
       generateECSignature: this.generateECSignature.bind(this),
@@ -865,7 +865,7 @@ export default class AppController {
   accessControl(origin, level) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
-      return undefined;
+      return true;
     }
     const connections = this.#store.getState().connections;
     return Promise.resolve(connections.getConnectionAccessLevel(origin)).then(
@@ -874,6 +874,25 @@ export default class AppController {
       //   console.log(al);
       //   return al;
       // }
+    );
+  }
+
+  /**
+   * Resolves to a bool indicating if @origin has access level @level .
+   *
+   * @param {string} origin - url of the caller web site
+   * @param {Number} level - request access level
+   *
+   * @returns {Promise<boolean>} - has access bool
+   */
+  getAccessLevel(origin) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return true;
+    }
+    const connections = this.#store.getState().connections;
+    return Promise.resolve(connections.getConnectionAccessLevel(origin)).then(
+      (al) => al
     );
   }
 
@@ -890,35 +909,46 @@ export default class AppController {
   requestAPI(method, params = [], origin) {
     const requestHandler = async function(details) {
       let promise = {};
+      console.log('request method: ', method);
+      console.log('request details: ', details);
+      console.log('request params: ', params);
+
+      // Check if has permission to handle request
+
       try {
+        const accessLevel = await this.getAccessLevel(origin);
+        console.log('getAccessLevel account: ', accessLevel);
+        const hasAccessLevel = await this.accessControl(origin, details.level);
+
         if (details.args && params.length < details.args) {
           return Promise.reject('WRONG_PARAMS');
         }
-        // Check if has permission to handle request
-        const hasAccessLevel = await this.accessControl(origin, details.level);
 
-        // if (accessLevel < 0) {
-        //   return Promise.reject('ERR_NO_PERMISSION');
-        // }
-
-        console.log('accessControl account: ', hasAccessLevel);
         if (details.main_controller && details.create) {
           return this[details.executor[0]](...params);
         }
-        console.log('request details: ', details);
-        console.log('request params: ', params);
+
+        const vault = this.#store.getState().vault;
+        if (!vault.isUnlocked() && method !== 'wallid_connect') {
+          return Promise.reject('ERR_PLUGIN_LOCKED');
+        }
+
+        if (-1 == accessLevel && method !== 'wallid_connect') {
+          return Promise.reject('ERR_NO_PERMISSION');
+        }
 
         // This shouldnt be here, maybe there is a better way to handle connected
-        const vault = this.#store.getState().vault;
+
         if (
-          hasAccessLevel &&
+          accessLevel > -1 &&
           method == 'wallid_connect' &&
           vault.isUnlocked()
         ) {
-          console.log('Already connect, return wallet address');
-          return this.#store.getState().wallet.getAddress();
+          console.log('Already connect');
+          return Promise.resolve('ALREADY_CONNECTED');
         }
         // has permission, do request
+
         if (hasAccessLevel && !details.popup) {
           // Check if is to main_controller or for creating account
           if (details.main_controller) {
@@ -932,7 +962,7 @@ export default class AppController {
             );
           }
         } else {
-          // when no permission (or no wallet ???)
+          // when no permission (or no wallet ??? or wallet locked ???)
           promise = new Promise((resolve, reject) => {
             var _request = {
               origin,
@@ -952,6 +982,7 @@ export default class AppController {
         console.log(error);
       }
       // promise to return
+      console.log(promise);
       return promise;
     };
 

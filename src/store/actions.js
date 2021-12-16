@@ -15,9 +15,9 @@ export const IMPORT = 'IMPORT';
 
 // Plugin requests methods
 export const ADDRESS = 'wallet_address';
-export const LIST_IDENTITIES = 'wallid_list_identities';
 export const EXTRACT = 'wallid_extract';
 export const WALLID_LIST = 'wallid_list';
+export const WALLID_IMPORT_SOCIAL_PROFILE = 'wallid_import_social_profile';
 
 export const GET_TOKEN = 'GET_TOKEN';
 
@@ -35,6 +35,7 @@ export const IMPORT_CRED = 'IMPORT_CRED';
 export const IMPORT_SIGN = 'IMPORT_SIGN';
 
 export const ACCESS_LEVEL = 'ACCESS_LEVEL';
+export const GET_ACCESS_LEVEL = 'GET_ACCESS_LEVEL';
 
 export const UPDATE_CONNECTED = 'UPDATE_CONNECTED';
 

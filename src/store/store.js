@@ -14,6 +14,7 @@ import {
   DECRYPT,
   DISCONNECT,
   ACCESS_LEVEL,
+  GET_ACCESS_LEVEL,
   GET_TOKEN,
   REVEAL_SEED_PHRASE,
   REVEAL_PRIV_KEY,
@@ -34,7 +35,7 @@ import {
 
   // plugin requests
   WALLID_LIST,
-  LIST_IDENTITIES,
+  WALLID_IMPORT_SOCIAL_PROFILE,
 } from './actions';
 
 import * as modules from './modules';
@@ -120,7 +121,15 @@ export default new Vuex.Store({
 
     [ACCESS_LEVEL]: ({ commit, state }, { url, level }) => {
       return new Promise((resolve, reject) => {
+        console.log('url:', url, 'level', level);
         API.accessControl(url, level).then((res) => {
+          resolve(res);
+        });
+      });
+    },
+    [GET_ACCESS_LEVEL]: ({ commit, state }, { url }) => {
+      return new Promise((resolve, reject) => {
+        API.getAccessLevel(url).then((res) => {
           resolve(res);
         });
       });
@@ -497,17 +506,6 @@ export default new Vuex.Store({
         }
       });
     },
-    [LIST_IDENTITIES]: ({ state, commit, dispatch }) => {
-      return new Promise((resolve, reject) => {
-        console.log('Action LIST_IDENTITIES');
-        try {
-          console.log(API.listIdentities());
-          resolve(API.listIdentities());
-        } catch (error) {
-          reject(error);
-        }
-      });
-    },
     [WALLID_LIST]: ({ state, commit, dispatch }, params) => {
       return new Promise((resolve, reject) => {
         console.log('Action WALLID_LIST');
@@ -516,6 +514,19 @@ export default new Vuex.Store({
         try {
           if (!params?.[Symbol.iterator]) reject('INVALID_ARGUMENTS');
           resolve(API.getList(...params));
+        } catch (error) {
+          console.error(error.message);
+          reject(error.message);
+        }
+      });
+    },
+    [WALLID_IMPORT_SOCIAL_PROFILE]: ({ state, commit, dispatch }, params) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action WALLID_IMPORT_SOCIAL_PROFILE');
+        console.log('Params: ', params);
+
+        try {
+          resolve(API.importSocialProfile(...params));
         } catch (error) {
           console.error(error.message);
           reject(error.message);
@@ -638,15 +649,8 @@ export default new Vuex.Store({
               .catch(() => resolve(callback('REJECTED')));
 
             break;
-
-          case LIST_IDENTITIES:
-            dispatch(LIST_IDENTITIES, { idt: data[0] })
-              .then((res) => {
-                console.log('res LIST_IDENTITIES:', res);
-                resolve(callback(null, res));
-              })
-              .catch(() => resolve(callback('REJECTED')));
-
+          case 'wallid_open':
+            resolve(true);
             break;
 
           default:
