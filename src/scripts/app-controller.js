@@ -404,27 +404,43 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
+
     try {
       if (Array.isArray(listType)) {
-        return Promise.any(listType.map((type) => this.getList(type)));
+        let object = {};
+        listType.forEach((type) => Object.assign(object, this.getList(type)));
+        console.log('object', object);
+        return object;
+
+        // let listResult = [];
+        // listType.forEach((type) => {
+        //   listResult.push(this.getList(type));
+        // });
+        // return listResult;
       }
+
       switch (listType) {
         case 'assets':
           const currentControllers = ['identities', 'credentials', 'profiles'];
-          let listResult = [];
-          currentControllers.forEach((element) => {
-            const listController = this.#store.getState()[element];
-            listResult.push({ [element]: [...listController.getList()] });
-          });
-          return Promise.resolve(listResult);
+          // let listResult = [];
+          // currentControllers.forEach((element) => {
+          //   const listController = this.#store.getState()[element];
+          //   listResult.push({ [element]: [...listController.getList()] });
+          // });
+          let object = {};
+          currentControllers.forEach((type) =>
+            Object.assign(object, this.getList(type))
+          );
+          console.log('object', object);
+          return object;
+        // return currentControllers.map((type) => this.getList(type));
+        // return Promise.resolve(listResult);
         default:
           const listController = this.#store.getState()[listType];
           if (!listController)
             return Promise.reject('NOT_IMPLEMENTED: ' + listType);
-
-          return Promise.resolve({ [listType]: [...listController.getList()] });
-
-          break;
+          console.log(listController.getList());
+          return { [listType]: [...listController.getList()] };
       }
     } catch (error) {
       console.error(error);

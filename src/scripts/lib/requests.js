@@ -136,7 +136,8 @@ const RequestAPIMethods = {
     main_controller: true,
     level: 2,
     executor: ['getList'],
-    // params: [listType]
+    // params: [listType], available types are  identities', 'credentials',
+    // 'profiles' and 'assets' to get all mentioned earlier
   },
 };
 

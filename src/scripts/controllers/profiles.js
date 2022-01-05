@@ -83,6 +83,12 @@ export default class ProfilesController {
   }
 
   getList() {
-    return this.#profiles.map((id) => id.id);
+    return this.#profiles.map((id) => {
+      return {
+        id: id.id,
+        socialName: id.socialName,
+        username: id.username,
+      };
+    });
   }
 }
