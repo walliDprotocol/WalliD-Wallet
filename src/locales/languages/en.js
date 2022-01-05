@@ -110,19 +110,19 @@ export default {
         'Select one of the following permission levels you want to give to this site:',
       levels: [
         {
-          level: 0,
+          level: 1,
           label: '<b>Level 1 </b> - Safe mode',
           tooltip:
             'Every signature and usage of keys within the Dapp will require your authorisation signature through a confirm button.',
         },
         {
-          level: 1,
+          level: 2,
           label: '<b>Level 2 </b> - Friendly mode',
           tooltip:
             'Only connecting to Dapps and operations that require the extraction and usage of Identity assets will require authorised signatures through a confirm button.',
         },
         {
-          level: 2,
+          level: 3,
           label: '<b>Level 3 </b> - Gung ho mode',
           tooltip:
             "Wallet extension won't be called in order to request authorisation signatures for mostly anything. Keys' usage will be triggered from Dapps frontend.",
