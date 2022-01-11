@@ -126,6 +126,12 @@ const RequestAPIMethods = {
     level: 0,
     executor: ['isOnboardingComplete'],
   },
+  wallid_list: {
+    main_controller: true,
+    level: 1,
+    executor: ['getList'],
+    // params: [listType]
+  },
 };
 
 export function getRequestDetails(method) {

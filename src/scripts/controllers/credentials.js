@@ -107,4 +107,7 @@ export default class CredentialsController {
   getIDTsList() {
     return this.#credentials.map((id) => id.id);
   }
+  getList() {
+    return this.#credentials.map((id) => id.id);
+  }
 }
