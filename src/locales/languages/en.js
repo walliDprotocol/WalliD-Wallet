@@ -178,6 +178,11 @@ export default {
         ' is requesting confirmation for this action with your wallet on WalliD platform',
       button: 'Confirm',
     },
+    wallid_list: {
+      title: 'Authorisation Request',
+      description: 'Access a list of stored assets',
+      button: 'Confirm',
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: 'Cancel',
   },

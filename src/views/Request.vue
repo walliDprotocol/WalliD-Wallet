@@ -31,7 +31,7 @@
               {{ $t('request.description') }}
             </h2>
           </v-col>
-          <v-col cols="7" class="">
+          <v-col cols="8" class="">
             <ul class="request-list-permissions text-center">
               <li class="sub-title-fields text-center">
                 {{ $t('request.' + request.type + '.description') }}
@@ -100,7 +100,7 @@
               class="SECUNDARY-LINKS text-left"
               v-html="getCurrentLevel.label"
             ></p>
-            <v-tooltip bottom>
+            <v-tooltip bottom :content-class="'connection-level-tooltip'">
               <template v-slot:activator="{ on, attrs }">
                 <span v-bind="attrs" v-on="on" class="d-flex align-center ml-2">
                   <TooltipIcon />
@@ -143,7 +143,7 @@
               <template #label>
                 <p v-html="l.label"></p>
 
-                <v-tooltip bottom>
+                <v-tooltip bottom :content-class="'connection-level-tooltip'">
                   <template v-slot:activator="{ on, attrs }">
                     <TooltipIcon v-bind="attrs" v-on="on" />
                   </template>
@@ -245,7 +245,9 @@ export default {
     ...mapGetters(['address', 'credentials', 'connections']),
     getCurrentLevel() {
       console.log(this.currentLevel);
-      return this.$t('request.wallid_connect.levels')[this.currentLevel] || {};
+      return (
+        this.$t('request.wallid_connect.levels')[this.currentLevel - 1] || {}
+      );
     },
   },
   watch: {},
@@ -431,6 +433,32 @@ export default {
 [id^='metamask-logo-request'] + p {
   // max-width: 76px;
   word-break: break-all;
+}
+
+.connection-level-tooltip {
+  max-width: 250px;
+  padding: 17px 10px 10px;
+  background-color: #eee;
+  ::before {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background-color: #eee;
+    transform: rotate(45deg);
+    top: -6px;
+    left: calc(50%-8px);
+  }
+  &.v-tooltip__content {
+    font-size: 11px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #3e444d;
+    text-align: left;
+  }
 }
 
 .plugin-request {
