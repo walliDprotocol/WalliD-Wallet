@@ -100,6 +100,17 @@ export default class CredentialsController {
     });
   }
 
+  exportAsset(id) {
+    return new Promise((resolve, reject) => {
+      console.log('log id get', id);
+      const index = this.#credentials.findIndex((cred) => cred.id == id);
+      if (index == -1) {
+        console.log('ALREADY EXISTs', index);
+        return reject(`ERR_CRED_INEXISTENT`);
+      }
+      return resolve(this.#credentials[index]);
+    });
+  }
   get() {
     return this.#credentials;
   }

@@ -434,7 +434,24 @@ export default class AppController {
       console.error(error);
     }
   }
+  /**
+   */
+  exportAsset(type, idt) {
+    console.log('exportAsset for: ', type, idt);
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
 
+    try {
+      const listController = this.#store.getState()[type];
+      if (!listController) return Promise.reject('NOT_IMPLEMENTED: ' + type);
+      console.log(listController.exportAsset(idt));
+      return listController.exportAsset(idt);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   /**
    * Returns WalliD authorization token ready for use with WalliD API.
    * Rejects with HTTP status code from server if request fail.

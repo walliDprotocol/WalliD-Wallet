@@ -132,6 +132,13 @@ const RequestAPIMethods = {
     executor: ['getList'],
     // params: [listType]
   },
+
+  wallid_export: {
+    popup: false,
+    level: 2,
+    main_controller: true,
+    executor: ['exportAsset'],
+  },
 };
 
 export function getRequestDetails(method) {
