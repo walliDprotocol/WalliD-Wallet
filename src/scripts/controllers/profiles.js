@@ -98,6 +98,7 @@ export default class ProfilesController {
         id: id.id,
         socialName: id.socialName,
         username: id.username,
+        domainENS: id?.profileData?.domainENS,
       };
     });
   }
