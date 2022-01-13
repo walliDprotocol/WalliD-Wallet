@@ -64,7 +64,7 @@
                         </v-col>
                         <v-col cols="12" class="py-0">
                           <p class="sub-title-fields text-left">
-                            {{ getUsername(profile) }}
+                            {{ getUsername(profile) | truncate(16, '...') }}
                           </p>
                         </v-col>
                       </v-row>
