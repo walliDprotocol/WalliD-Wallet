@@ -73,7 +73,7 @@ export default new Vuex.Store({
     credentials: (state) => state.credentials,
     currentCred: (state) => state.currentCred,
     profiles: (state) => {
-      return state.profiles.filter((p) => p.socialName != 'MyWalliD');
+      return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');
     },
     currentProfile: (state) => state.currentProfile,
     currentCard: (state) => state.currentCard,
