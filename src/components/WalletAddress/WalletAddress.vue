@@ -8,7 +8,7 @@
         @mouseleave="delay()"
       >
         <div class="wallet-address ">
-          <p>{{ address | truncate(6, "...") }}</p>
+          <p>{{ address | truncate(12, '...') }}</p>
           <input type="hidden" id="walletCopy" :value="walletAddress" />
           <Copy v-if="!copy"></Copy>
           <CopyHover v-else> </CopyHover>
@@ -28,31 +28,35 @@
 </template>
 
 <script>
-import CopyHover from "../../images/icon-copyclipboard-selected";
-import Copy from "../../images/icon-copyclipboard-unselected";
+import { mapGetters } from 'vuex';
+import CopyHover from '../../images/icon-copyclipboard-selected';
+import Copy from '../../images/icon-copyclipboard-unselected';
 
 export default {
   components: {
     CopyHover,
     Copy,
   },
+  computed: {
+    ...mapGetters(['address']),
+  },
   mounted() {
     this.walletAddress = this.address; //this.checksumAddress
   },
   methods: {
     copyToClip() {
-      let testingCodeToCopy = document.querySelector("#walletCopy");
-      testingCodeToCopy.setAttribute("type", "text");
+      let testingCodeToCopy = document.querySelector('#walletCopy');
+      testingCodeToCopy.setAttribute('type', 'text');
       testingCodeToCopy.select();
       try {
-        document.execCommand("copy");
+        document.execCommand('copy');
         this.show = true;
       } catch (err) {
         console.error(err);
       }
 
       /* unselect the range */
-      testingCodeToCopy.setAttribute("type", "hidden");
+      testingCodeToCopy.setAttribute('type', 'hidden');
       window.getSelection().removeAllRanges();
     },
     delay() {
@@ -66,12 +70,11 @@ export default {
     return {
       show: false,
       copy: false,
-      walletAddress: "",
-      address: this.$API.getState().address,
-      copyBefore: { en: "Copy to clipboard", pt: "Copiar" },
+      walletAddress: '',
+      copyBefore: { en: 'Copy to clipboard', pt: 'Copiar' },
       copyAfter: {
-        en: "Copied!",
-        pt: "Copiado!",
+        en: 'Copied!',
+        pt: 'Copiado!',
       },
     };
   },
@@ -86,7 +89,7 @@ export default {
   width: max-content;
   margin: auto;
 
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   font-size: 13px;
   font-weight: 500;
   font-stretch: normal;
@@ -116,5 +119,4 @@ export default {
     margin-right: 22px !important;
   }
 }
-
 </style>

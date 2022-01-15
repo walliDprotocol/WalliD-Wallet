@@ -216,7 +216,7 @@ export default {
   home: {
     title: 'MyWalliD',
     address: 'Endereço da carteira',
-    tabs: ['Documentos ID', 'Online IDs ', 'Credenciais'],
+    tabs: ['Documentos ID', 'Online IDs ', 'Web3 IDs'],
   },
   profiles: {
     menu: ['Identity info', 'Partilhar prova de identidade'],

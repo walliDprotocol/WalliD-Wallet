@@ -230,7 +230,7 @@ export default {
   home: {
     title: 'MyWalliD',
     address: 'Your wallet address',
-    tabs: ['Citizen IDs', 'Online IDs ', 'Credentials'],
+    tabs: ['Citizen IDs', 'Online IDs ', 'Web3 IDs'],
   },
   // NEW TExT
   profiles: {

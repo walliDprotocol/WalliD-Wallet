@@ -2,7 +2,12 @@
   <v-container class="home pb-0" fill-height>
     <v-row class="">
       <v-col cols="12" class=" pb-0">
-        <jazz-icon :address="address" :id="'home'" :size="58" :margin="4" />
+        <jazz-icon
+          :address="walletAddress"
+          :id="'home'"
+          :size="58"
+          :margin="4"
+        />
       </v-col>
       <v-col cols="12" class="pt-4 pb-2 px-14">
         <h2 class="T1 mb-2 text-center">
@@ -15,7 +20,7 @@
           {{ $t('home.address') }}
         </p>
 
-        <WalletAddress :address="address" />
+        <WalletAddress :address="walletAddress" />
       </v-col>
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
@@ -59,7 +64,7 @@ import ListOnlineIDs from '../components/ListOnlineIDs';
 
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -78,6 +83,9 @@ export default {
       'profiles',
       'showDeleteConfirmation',
     ]),
+    ...mapState({
+      walletAddress: 'address',
+    }),
     tab: {
       get() {
         return this.$store.getters.currentTab;
@@ -101,6 +109,7 @@ export default {
     //   default:
     //     break;
     // }
+
     console.log(this.tab);
   },
   methods: {

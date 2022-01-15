@@ -17,7 +17,12 @@ import ConfigurationsController from './controllers/configuration';
 
 import walletConnectController from './controllers/walletConnectController';
 
+import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
+
+const provider = new ethers.providers.JsonRpcProvider(
+  'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2'
+);
 
 const InitState = {
   wallet: {},
@@ -198,7 +203,11 @@ export default class AppController {
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
         this.#store.getState().walletConnect.initFromSession();
+        return provider.lookupAddress(
+          this.#store.getState().wallet.getAddress()
+        );
       })
+      .then((domain) => this.#store.updateState({ domainENS: domain }))
       .then(() => {
         eventPipeIn('wallid_event_unlock');
         return true;
@@ -792,11 +801,14 @@ export default class AppController {
     const identities = this.#store.getState().identities;
     const credentials = this.#store.getState().credentials;
     const profiles = this.#store.getState().profiles;
+    const domainENS = this.#store.getState().domainENS;
 
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
+      domainENS: vault.isUnlocked() ? domainENS : null,
+
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
       identities: vault.isUnlocked() ? identities.get() : null,
       credentials: vault.isUnlocked() ? credentials.get() : null,

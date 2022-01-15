@@ -11,20 +11,24 @@
     <template v-slot:prepend>
       <v-list-item two-line>
         <v-list-item-avatar>
-          <jazz-icon :address="address" :id="'menu'" :size="32" :margin="2" />
+          <jazz-icon
+            :address="walletAddress"
+            :id="'menu'"
+            :size="32"
+            :margin="2"
+          />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="T1" style="margin-bottom: 7px">
             {{ $t('menu.title') }}</v-list-item-title
           >
           <v-list-item-subtitle class="subtitle">{{
-            address | truncate(6, '...')
+            address | truncate(12, '...')
           }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
     <v-divider></v-divider>
-
     <v-list>
       <v-list-item @click="goRoute(DETAILS)">
         <v-list-item-icon>
@@ -109,6 +113,7 @@ import {
   ABOUT,
   WALLET_CONNECT,
 } from '../../router/routes';
+import { mapState } from 'vuex';
 
 export default {
   props: ['address', 'showMenu'],
@@ -120,12 +125,18 @@ export default {
     IconLock,
     IconWalletConnect,
   },
+  computed: {
+    ...mapState({
+      walletAddress: 'address',
+    }),
+  },
   created() {
     this.DETAILS = DETAILS;
     this.SITES = SITES;
     this.SETTINGS = SETTINGS;
     this.ABOUT = ABOUT;
     this.WALLET_CONNECT = WALLET_CONNECT;
+    console.log('walletaddress', this.walletAddress);
   },
   watch: {},
   mounted() {},
@@ -177,9 +188,7 @@ export default {
     },
   },
   data() {
-    return {
-      //   showMenu: false,
-    };
+    return {};
   },
 };
 </script>

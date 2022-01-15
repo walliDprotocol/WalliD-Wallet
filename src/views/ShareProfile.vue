@@ -23,7 +23,7 @@
           <v-card class="form-card">
             <v-col v-if="false" cols="12" class="">
               <jazz-icon
-                :address="address"
+                :address="walletAddress"
                 :id="'proof'"
                 :size="77"
                 :margin="4"
@@ -33,7 +33,7 @@
               </p>
               <div class="address-balloon">
                 <p>
-                  {{ address | truncate(8, '...') }}
+                  {{ address | truncate(12, '...') }}
                 </p>
               </div>
             </v-col>
@@ -229,7 +229,7 @@ import WalletAddress from '../components/WalletAddress';
 
 import StoredProfileImg from '../components/StoredProfileImg';
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { SHARE_PROFILE } from '../store/actions';
 
 const VERIFY_URL = 'https://verify.wallid.io/';
@@ -270,6 +270,9 @@ export default {
       // 'identities',
       'credentials',
     ]),
+    ...mapState({
+      walletAddress: 'address',
+    }),
   },
   methods: {
     getImage(card) {

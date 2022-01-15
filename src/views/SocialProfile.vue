@@ -19,7 +19,7 @@
             <v-row>
               <v-col cols="12" class="">
                 <jazz-icon
-                  :address="address"
+                  :address="walletAddress"
                   :id="'proof'"
                   :size="77"
                   :margin="4"
@@ -29,7 +29,7 @@
                 </p>
                 <div class="address-balloon">
                   <p>
-                    {{ address | truncate(8, '...') }}
+                    {{ address | truncate(12, '...') }}
                   </p>
                 </div>
               </v-col>
@@ -118,7 +118,7 @@ import IconArrowDropdown from '../images/icon-arrow-dropdown.vue';
 
 import StoredProfileImg from '../components/StoredProfileImg';
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -133,6 +133,9 @@ export default {
   mounted() {},
   computed: {
     ...mapGetters(['address', 'currentProfile']),
+    ...mapState({
+      walletAddress: 'address',
+    }),
   },
   methods: {
     goToSharePage() {

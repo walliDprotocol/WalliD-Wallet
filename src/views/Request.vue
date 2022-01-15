@@ -40,12 +40,12 @@
 
         <v-col cols="4" class="pl-1 pt-4 ml-n14 text-center">
           <jazz-icon
-            :address="address"
+            :address="walletAddress"
             :id="'request'"
             :size="62"
             :margin="3"
           />
-          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
+          <p class="FIELD-TEXT">{{ address | truncate(12, '...') }}</p>
         </v-col>
         <v-col cols="10" v-if="type == 'wallid_connect'" class="px-4">
           <p
@@ -105,12 +105,12 @@
 
         <v-col cols="4" class="pl-0 pt-4">
           <jazz-icon
-            :address="address"
+            :address="walletAddress"
             :id="'request-2'"
             :size="62"
             :margin="3"
           />
-          <p class="FIELD-TEXT">{{ walletAddress | truncate(8, '...') }}</p>
+          <p class="FIELD-TEXT">{{ address | truncate(12, '...') }}</p>
         </v-col>
       </v-row>
       <!-- Option buttons -->
@@ -132,7 +132,7 @@ import {
   IMPORT,
   UPDATE_CONNECTED,
 } from '../store/actions';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -143,11 +143,19 @@ export default {
   },
   computed: {
     ...mapGetters(['address', 'credentials', 'connections']),
+    ...mapState({
+      walletAddress: 'address',
+    }),
+    getCurrentLevel() {
+      console.log(this.currentLevel);
+      return (
+        this.$t('request.wallid_connect.levels')[this.currentLevel - 1] || {}
+      );
+    },
   },
   watch: {},
   mounted() {
     // this.debug('Request: ', this.request);
-    this.walletAddress = this.address; //this.checksumAddress
   },
   created() {
     this.debug('Address: ', this.address);
@@ -343,7 +351,6 @@ export default {
   data() {
     return {
       disableButtonRequest: false,
-      walletAddress: '',
       type: '',
       success: false,
       websiteData: { name: '', icon: '' },
