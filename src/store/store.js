@@ -46,6 +46,7 @@ export default new Vuex.Store({
   state: {
     address: API.getState().address,
     domainENS: API.getState().domainENS,
+    avatarENS: API.getState().avatarENS,
     completedOnboarding: API.getState().initialized,
     connections: API.getState().connections,
     connected: false,
@@ -199,6 +200,7 @@ export default new Vuex.Store({
       console.log('Action REFRESH_STATE');
       commit('updateAddress', API.getState().address);
       commit('domainENS', API.getState().domainENS);
+      commit('avatarENS', API.getState().avatarENS);
       commit('updateUnlocked', API.getState().unlocked);
       commit('updateConnections', API.getState().connections);
       commit('updateOnboarding', API.getState().initialized);
@@ -721,6 +723,9 @@ export default new Vuex.Store({
     },
     domainENS(state, value) {
       state.domainENS = value;
+    },
+    avatarENS(state, value) {
+      state.avatarENS = value;
     },
   },
 });

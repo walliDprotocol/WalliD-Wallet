@@ -2,7 +2,7 @@
   <v-container class="details-wallet">
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow mb-6">
+        <div class="back-arrow mb-4">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
@@ -12,8 +12,8 @@
         </div>
       </v-col>
     </v-row>
-    <v-row class="darker-background mt-10">
-      <v-col cols="12" class="pt-0 pb-2">
+    <v-row class="darker-background mt-8">
+      <v-col cols="12" class="pt-2 pb-2">
         <jazz-icon
           :address="walletAddress"
           :id="'details'"
@@ -35,8 +35,14 @@
           }"
         ></qrcode>
       </v-col>
-      <v-col cols="12" class="pb-9 pt-2">
-        <wallet-address />
+      <v-col cols="12" class="pb-1 pt-2">
+        <wallet-address class="" />
+      </v-col>
+      <v-col cols="12" class="pb-9 pt-1">
+        <wallet-address
+          v-if="$store.state.domainENS"
+          :forcedAddress="walletAddress"
+        />
       </v-col>
     </v-row>
   </v-container>

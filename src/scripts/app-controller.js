@@ -203,11 +203,8 @@ export default class AppController {
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
         this.#store.getState().walletConnect.initFromSession();
-        return provider.lookupAddress(
-          this.#store.getState().wallet.getAddress()
-        );
+        return this.setENSData(this.#store.getState().wallet.getAddress());
       })
-      .then((domain) => this.#store.updateState({ domainENS: domain }))
       .then(() => {
         eventPipeIn('wallid_event_unlock');
         return true;
@@ -216,6 +213,21 @@ export default class AppController {
         console.error(err);
         return Promise.reject('Wrong password');
       });
+  }
+
+  setENSData(address) {
+    console.log(address);
+    return Promise.resolve()
+      .then(() => provider.lookupAddress(address))
+      .then((domain) => {
+        this.#store.updateState({ domainENS: domain });
+        if (domain) {
+          return provider.getResolver(domain);
+        }
+        return;
+      })
+      .then((resolver) => resolver?.getAvatar())
+      .then((avatar) => this.#store.updateState({ avatarENS: avatar?.url }));
   }
 
   /**
@@ -802,12 +814,14 @@ export default class AppController {
     const credentials = this.#store.getState().credentials;
     const profiles = this.#store.getState().profiles;
     const domainENS = this.#store.getState().domainENS;
+    const avatarENS = this.#store.getState().avatarENS;
 
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
       domainENS: vault.isUnlocked() ? domainENS : null,
+      avatarENS: vault.isUnlocked() ? avatarENS : null,
 
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
       identities: vault.isUnlocked() ? identities.get() : null,

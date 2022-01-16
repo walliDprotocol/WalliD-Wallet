@@ -147,7 +147,7 @@ export default class walletConnectController {
         const { chainId, accounts } = connector;
         const index = 0;
         // const address = accounts[index];
-        console.log(accounts);
+        console.log(accounts, chainId);
         this.setState({
           chainId,
         });
