@@ -1,16 +1,10 @@
 {
   "name": "WalliD Wallet",
-  "version": "1.0.20",
+  "version": "1.0.67",
   "description": "WalliD Wallet Plugin",
-  "permissions": [
-    "storage",
-    "tabs",
-    "background"
-  ],
+  "permissions": ["storage", "tabs", "background"],
   "background": {
-    "scripts": [
-      "scripts/background.bundle.js"
-    ],
+    "scripts": ["scripts/background.bundle.js"],
     "persistent": true
   },
   "browser_action": {
@@ -24,21 +18,13 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*.wallid.io/*",
-        "http://localhost/*"
-      ],
-      "js": [
-        "scripts/injector.bundle.js",
-        "scripts/content.bundle.js"
-      ],
+      "matches": ["https://*.wallid.io/*", "http://localhost/*"],
+      "js": ["scripts/injector.bundle.js", "scripts/content.bundle.js"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
-  "web_accessible_resources": [
-    "scripts/injector.bundle.js"
-  ],
+  "web_accessible_resources": ["scripts/injector.bundle.js"],
   "icons": {
     "16": "images/extension-icon-16.png",
     "32": "images/extension-icon-32.png",
