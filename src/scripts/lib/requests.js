@@ -45,7 +45,7 @@ const RequestAPIMethods = {
     main_controller: true,
     level: 1,
     executor: ['importCredential'],
-    args: 8,
+    args: 7,
   },
   wallid_export_cred: {
     main_controller: true,
