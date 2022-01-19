@@ -54,8 +54,8 @@ export default {
       }
 
       /* unselect the range */
-      testingCodeToCopy.setAttribute('type', 'hidden');
-      window.getSelection().removeAllRanges();
+      // testingCodeToCopy.setAttribute('type', 'hidden');
+      // window.getSelection().removeAllRanges();
     },
     copyToClipboard(text) {
       if (window.clipboardData && window.clipboardData.setData) {
