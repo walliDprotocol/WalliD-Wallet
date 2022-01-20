@@ -269,6 +269,32 @@ export default class AppController {
   }
 
   /**
+   * Approves a pending connection request.
+   * Promise rejects if a connection with same @url already exists, or if vault is locked.
+   *
+   * @param {string} url - Identifier of the pendding connection
+   *
+   * @returns {Promise} - result
+   */
+  changePermissionLevel(url, level) {
+    const vault = this.#store.getState().vault;
+    const connections = this.#store.getState().connections;
+    const wallet = this.#store.getState().wallet;
+
+    console.log('changePermissionLevel');
+
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    return Promise.resolve(connections.changePermissionLevel(url, level)).then(
+      vault.putConnections(
+        connections.serialize(),
+        this.#store.getState().password
+      )
+    );
+  }
+
+  /**
    * Removes connection identified by @url from list of connected websites.
    * Promise rejects if @url does not match any approved connections, or if vault is locked.
    *
@@ -863,6 +889,7 @@ export default class AppController {
       // New methods for v.1.1
       listIdentities: this.listIdentities.bind(this),
       getList: this.getList.bind(this),
+      changePermissionLevel: this.changePermissionLevel.bind(this),
     };
   }
 
@@ -928,6 +955,7 @@ export default class AppController {
       console.log('request method: ', method);
       console.log('request details: ', details);
       console.log('request params: ', params);
+      console.log('request origin: ', origin);
 
       // Check if has permission to handle request
 
@@ -968,9 +996,15 @@ export default class AppController {
         if (hasAccessLevel && !details.popup) {
           // Check if is to main_controller or for creating account
           if (details.main_controller) {
-            promise = this[details.executor[0]](...params);
+            // use origin to disconnect calling website
+            if (method == 'wallid_disconnect') {
+              promise = this[details.executor[0]](origin);
+            } else {
+              promise = this[details.executor[0]](...params);
+            }
           } else {
             console.log('state request');
+
             promise = Promise.resolve(
               this.#store
                 .getState()

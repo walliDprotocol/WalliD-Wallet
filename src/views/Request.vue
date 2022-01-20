@@ -134,18 +134,20 @@
             {{ $t('request.wallid_connect.permissions') }}
           </p>
 
-          <v-radio-group v-model="permissionLevel">
+          <v-radio-group class="levels-radio-group" v-model="permissionLevel">
             <v-radio
               v-for="l in $t('request.wallid_connect.levels')"
               :key="l.level"
               :value="l.level"
             >
               <template #label>
-                <p v-html="l.label"></p>
+                <p class="mr-1" v-html="l.label"></p>
 
                 <v-tooltip bottom :content-class="'connection-level-tooltip'">
                   <template v-slot:activator="{ on, attrs }">
-                    <TooltipIcon v-bind="attrs" v-on="on" />
+                    <div class="d-flex" v-bind="attrs" v-on="on">
+                      <TooltipIcon />
+                    </div>
                   </template>
                   <span>
                     {{ l.tooltip }}
@@ -299,8 +301,6 @@ export default {
         console.error('Invalid Request Type');
         break;
       case 'wallid_address':
-        console.error('Invalid Request Type');
-        break;
       case 'wallid_import_sign':
       case 'wallid_import_cred':
       case 'wallid_token':
@@ -335,6 +335,12 @@ export default {
     },
   },
   methods: {
+    edit() {
+      this.$router.push({
+        name: 'sites',
+        params: { toEditSite: this.websiteData.url },
+      });
+    },
     updateConnected(site) {
       if (this.connections) {
         let connectedSite = this.connections.find((e) => {
@@ -366,7 +372,7 @@ export default {
     getWebsiteInfo(origin) {
       let name = origin.split('//')[1].split('/')[0];
       let icon = origin + '/favicon.ico';
-      return { name: name, icon: icon };
+      return { name: name, icon: icon, url: origin };
     },
 
     authorizeRequest(time = 30) {
@@ -433,32 +439,6 @@ export default {
 [id^='metamask-logo-request'] + p {
   // max-width: 76px;
   word-break: break-all;
-}
-
-.connection-level-tooltip {
-  max-width: 250px;
-  padding: 17px 10px 10px;
-  background-color: #eee;
-  ::before {
-    content: '';
-    position: absolute;
-    height: 16px;
-    width: 16px;
-    background-color: #eee;
-    transform: rotate(45deg);
-    top: -6px;
-    left: calc(50%-8px);
-  }
-  &.v-tooltip__content {
-    font-size: 11px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
-    color: #3e444d;
-    text-align: left;
-  }
 }
 
 .plugin-request {

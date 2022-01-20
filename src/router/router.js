@@ -82,6 +82,7 @@ let router = new Router({
           path: '/sites',
           name: 'sites',
           component: Sites,
+          props: (route) => ({ ...route.query, ...route.params }),
         },
         {
           path: '/settings',
@@ -188,10 +189,12 @@ router.beforeEach((to, from, next) => {
     }
   }
 
+  // whitelisted pages
   if (
     to.path == '/login' ||
     to.path == '/create' ||
     to.path == '/restore' ||
+    to.path == '/sites' ||
     to.path == '/import'
   ) {
     debug('Login/Create/Restore Path');

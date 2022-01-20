@@ -8,6 +8,7 @@ export const REVEAL_SEED_PHRASE = 'REVEAL_SEED_PHRASE';
 export const REVEAL_PRIV_KEY = 'REVEAL_PRIV_KEY';
 
 export const DISCONNECT = 'DISCONNECT';
+export const PERMISSION_LEVEL = 'PERMISSION_LEVEL';
 export const CONNECT = 'CONNECT';
 export const ENCRYPT = 'ENCRYPT';
 export const DECRYPT = 'DECRYPT';

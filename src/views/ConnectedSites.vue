@@ -1,7 +1,7 @@
 <template>
   <v-container class="connected-sites">
     <v-row v-if="!confirmDisconnect">
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-3">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
@@ -12,14 +12,14 @@
         </div>
       </v-col>
       <v-col v-show="connections.length != 0" cols="12" class="pt-0">
-        <h3 class="sub-title-fields mb-7 text-left">
+        <h3 class="sub-title-fields mb-4 text-left">
           {{ $t('sites.subtitle') }}
         </h3>
       </v-col>
       <v-col v-show="connections.length != 0" cols="12" class="pt-2 pb-1 pr-0">
         <v-list class="sites-list">
           <v-list-item class="pl-0" v-for="site in connections" :key="site.url">
-            <v-list-item-avatar>
+            <v-list-item-avatar class="align-self-baseline">
               <v-img
                 contain
                 class="site-logo"
@@ -29,14 +29,66 @@
               />
             </v-list-item-avatar>
 
-            <v-list-item-content>
+            <v-list-item-content
+              :id="toEditSite === site.url ? 'toEditSite' : null"
+            >
               <v-list-item-title
                 class="text-left"
                 v-text="site.url"
               ></v-list-item-title>
+
+              <v-expansion-panels
+                :value="toEditSite === site.url ? 0 : -1"
+                flat
+                class="flex-shrink-1"
+              >
+                <v-expansion-panel>
+                  <v-expansion-panel-header class="pa-0">
+                    {{ $t('sites.details.title') }}
+                    <template v-slot:actions>
+                      <v-icon color="#00acbc">
+                        $expand
+                      </v-icon>
+                    </template>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-radio-group
+                      class="levels-radio-group"
+                      :value="site.level"
+                      @change="changePermissionLevel(site.url, $event)"
+                      hide-details
+                      :disabled="radioReadOnly"
+                    >
+                      <v-radio
+                        v-for="l in $t('request.wallid_connect.levels')"
+                        :key="l.level"
+                        :value="l.level"
+                      >
+                        <template #label>
+                          <p class="mr-1" v-html="l.label"></p>
+
+                          <v-tooltip
+                            bottom
+                            :content-class="'connection-level-tooltip'"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <div class="d-flex" v-bind="attrs" v-on="on">
+                                <TooltipIcon />
+                              </div>
+                            </template>
+                            <span>
+                              {{ l.tooltip }}
+                            </span>
+                          </v-tooltip>
+                        </template>
+                      </v-radio>
+                    </v-radio-group>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </v-list-item-content>
 
-            <v-list-item-action>
+            <v-list-item-action class="align-self-baseline">
               <v-tooltip content-class="sites-tooltip" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn v-on="on" @click="disconnect(site)" icon>
@@ -96,17 +148,35 @@
 import { mapGetters } from 'vuex';
 import ArrowBack from '../images/icon-arrow-back.vue';
 import IconTrash from '../images/icon-trash-unselected.vue';
-import { DISCONNECT } from '../store/actions';
+import { DISCONNECT, PERMISSION_LEVEL } from '../store/actions';
+import TooltipIcon from '../images/icons/icon-tooltip';
 
 export default {
   components: {
     ArrowBack,
     IconTrash,
+    TooltipIcon,
   },
+  props: ['toEditSite'],
   computed: {
     ...mapGetters(['connections']),
   },
+  mounted() {
+    console.log(this.$route);
+    console.log(this.toEditSite);
+
+    var toEditSite = this.$el.querySelector(`#toEditSite`);
+    toEditSite.scrollIntoView();
+  },
   methods: {
+    async changePermissionLevel(url, level) {
+      this.radioReadOnly = true;
+      await this.$store.dispatch(PERMISSION_LEVEL, {
+        url: url,
+        level: level,
+      });
+      this.radioReadOnly = false;
+    },
     cancel() {
       this.site = {};
       this.confirmDisconnect = false;
@@ -126,6 +196,7 @@ export default {
     return {
       confirmDisconnect: false,
       site: '',
+      radioReadOnly: false,
     };
   },
 };
@@ -171,6 +242,37 @@ export default {
   }
 }
 .connected-sites {
+  .v-expansion-panels {
+    .v-expansion-panel-header {
+      font-size: 12px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.63;
+      letter-spacing: normal;
+      min-height: 24px;
+      color: #3e444d;
+      &:hover,
+      &--active {
+        color: #00acbc;
+      }
+      &__icon {
+        margin-left: unset;
+        .v-icon {
+          font-size: 18px;
+        }
+      }
+    }
+    .v-expansion-panel-content {
+      &__wrap {
+        padding: 0;
+      }
+    }
+    .levels-radio-group {
+      font-size: 16px;
+    }
+  }
+
   .sites-list {
     max-height: 365px;
     overflow-y: auto;

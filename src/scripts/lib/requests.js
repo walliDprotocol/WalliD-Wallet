@@ -15,9 +15,10 @@ const RequestAPIMethods = {
     level: 0,
   },
   wallid_disconnect: {
-    popup: false,
     level: 1,
-    executor: ['connections', 'removeConnected'],
+    main_controller: true,
+    popup: false,
+    executor: ['removeConnected'],
   },
   // LEGACY METHODS
   // Remove for v1.1

@@ -25,6 +25,79 @@
     margin: auto;
     width: fit-content;
   }
+}
+.connection-level-tooltip {
+  max-width: 250px;
+  padding: 17px 10px 10px;
+  background-color: #eee;
+  &.menuable__content__active {
+    opacity: 1 !important;
+  }
+  ::before {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background-color: #eee;
+    transform: rotate(45deg);
+    top: -6px;
+    left: calc(50% - 8px);
+  }
+  &.v-tooltip__content {
+    font-size: 11px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #3e444d;
+    text-align: left;
+  }
+}
+
+.levels-radio-group {
+  font-size: 18px;
+
+  &.v-input--radio-group {
+    margin-top: 10px;
+  }
+  .v-radio {
+    margin-bottom: 4px;
+    .v-input--selection-controls__ripple {
+      display: none;
+    }
+    .v-icon {
+      font-size: 1.11em;
+
+      &::after {
+        content: none;
+      }
+      &.mdi-radiobox-blank {
+        color: #b8b9bb !important;
+      }
+      &.mdi-radiobox-marked {
+        color: #00acbc !important;
+      }
+    }
+    .v-label {
+      font-size: 0.77em;
+      p {
+        font-size: inherit;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 2;
+        letter-spacing: normal;
+        color: #373c43;
+      }
+      svg path {
+        fill: #b8b9bb;
+        &:hover {
+          fill: #00acbc;
+        }
+      }
+    }
+  }
   p {
     margin: 0;
     font-size: 12px;

@@ -33,6 +33,8 @@ import {
   DELETE_CARD,
   EXTRACT,
 
+  // NEW
+  PERMISSION_LEVEL,
   // plugin requests
   WALLID_LIST,
   WALLID_IMPORT_SOCIAL_PROFILE,
@@ -723,6 +725,17 @@ export default new Vuex.Store({
             reject('Wrong password');
           }
         });
+      });
+    },
+
+    [PERMISSION_LEVEL]: ({ commit, dispatch }, { url, level }) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action PERMISSION_LEVEL');
+        API.changePermissionLevel(url, level)
+          .then(() => resolve(dispatch(REFRESH_STATE)))
+          .catch((e) => {
+            reject(e);
+          });
       });
     },
     [LOCK_WALLET]: ({ commit, dispatch }) => {

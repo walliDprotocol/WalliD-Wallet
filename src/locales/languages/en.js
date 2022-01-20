@@ -245,6 +245,9 @@ export default {
     disconnect: ['Disconnect ', ' site'],
     confirm:
       'Are you sure you want to disconnect? <br> You may lose site funcionality.',
+    details: {
+      title: 'Edit permissions details',
+    },
     button: ['Cancel', 'Disconnect'],
   },
   menu: {
