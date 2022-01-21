@@ -37,13 +37,11 @@ const { API } = chrome.extension.getBackgroundPage();
 window.$API = API;
 Vue.prototype.$API = API;
 
-var filter = function(text, length, clamp) {
-  clamp = clamp || '...';
-  var node = document.createElement('div');
-  node.innerHTML = text;
-  var content = node.textContent;
+var filter = function(text, length, clamp = '...') {
+  const content = text ? text.toString() : '';
+
   return content.length > length
-    ? content.slice(0, 6) +
+    ? content.slice(0, length - 4) +
         clamp +
         content.slice(content.length - 4, content.length)
     : content;

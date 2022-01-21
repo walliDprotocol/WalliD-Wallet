@@ -50,7 +50,7 @@ const RequestAPIMethods = {
     main_controller: true,
     level: 2,
     executor: ['importCredential'],
-    args: 8,
+    args: 7,
   },
   wallid_export_cred: {
     main_controller: true,
@@ -139,6 +139,12 @@ const RequestAPIMethods = {
     executor: ['getList'],
     // params: [listType], available types are  identities', 'credentials',
     // 'profiles' and 'assets' to get all mentioned earlier
+  },
+  wallid_export: {
+    popup: false,
+    level: 2,
+    main_controller: true,
+    executor: ['exportAsset'],
   },
 };
 

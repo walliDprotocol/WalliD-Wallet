@@ -2,22 +2,27 @@
   <v-container class="details-wallet">
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow mb-6">
+        <div class="back-arrow mb-4">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
-            {{ $t("menu.details") }}
+            {{ $t('menu.details') }}
           </h2>
         </div>
       </v-col>
     </v-row>
-    <v-row class="darker-background mt-10">
-      <v-col cols="12" class="pt-0 pb-2">
-        <jazz-icon :address="address" :id="'details'" :size="71" :margin="4" />
+    <v-row class="darker-background mt-8">
+      <v-col cols="12" class="pt-2 pb-2">
+        <jazz-icon
+          :address="walletAddress"
+          :id="'details'"
+          :size="71"
+          :margin="4"
+        />
       </v-col>
       <v-col cols="12" class="pt-2">
-        <h2 class="T1 mb-2">{{ $t("menu.title") }}</h2>
+        <h2 class="T1 mb-2">{{ $t('menu.title') }}</h2>
         <WalletState :website="connected.url"> </WalletState>
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
@@ -30,18 +35,24 @@
           }"
         ></qrcode>
       </v-col>
-      <v-col cols="12" class="pb-9 pt-2">
-        <wallet-address />
+      <v-col cols="12" class="pb-1 pt-2">
+        <wallet-address class="" />
+      </v-col>
+      <v-col cols="12" class="pb-9 pt-1">
+        <wallet-address
+          v-if="$store.state.domainENS"
+          :forcedAddress="walletAddress"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import WalletAddress from "../components/WalletAddress";
-import WalletState from "../components/WalletState";
-import ArrowBack from "../images/icon-arrow-back.vue";
-import { mapGetters } from "vuex";
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -52,11 +63,13 @@ export default {
   created() {},
   mounted() {},
   computed: {
-    ...mapGetters(["address"]),
+    ...mapGetters(['address']),
+    ...mapState({
+      walletAddress: 'address',
+    }),
   },
   data() {
-    return {
-    };
+    return {};
   },
 };
 </script>

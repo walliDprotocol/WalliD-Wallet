@@ -17,10 +17,14 @@
              ../images/logos/logo-wallid@3x.png 3x"
       />
       <v-spacer />
-      <div @click.stop="showMenu = !showMenu" style="cursor: pointer;">
+      <div
+        v-if="address"
+        @click.stop="showMenu = !showMenu"
+        style="cursor: pointer;"
+      >
         <jazz-icon
-          v-show="address"
-          :address="address"
+          v-show="walletAddress"
+          :address="walletAddress"
           :id="'bar'"
           :size="44"
           :margin="3"
@@ -41,7 +45,7 @@
 
 <script>
 import MenuPlugin from '../components/MenuPlugin';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import { UPDATE_CONNECTED } from '../store/actions';
 
@@ -52,6 +56,9 @@ export default {
   props: ['hideAppHeader'],
   computed: {
     ...mapGetters(['address', 'unlocked', 'connections']),
+    ...mapState({
+      walletAddress: 'address',
+    }),
   },
   created() {
     //TO DO: add this to Store and on refreshState

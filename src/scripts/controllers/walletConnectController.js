@@ -9,7 +9,7 @@ export const MAINNET_CHAIN_ID = 1;
 export const ROPSTEN_CHAIN_ID = 3;
 export const RINKEBY_CHAIN_ID = 4;
 export const GOERLI_CHAIN_ID = 5;
-export const DEFAULT_CHAIN_ID = RINKEBY_CHAIN_ID;
+export const DEFAULT_CHAIN_ID = MAINNET_CHAIN_ID;
 
 export const DEFAULT_ACCOUNTS = [];
 export const DEFAULT_ADDRESS = '';
@@ -147,7 +147,7 @@ export default class walletConnectController {
         const { chainId, accounts } = connector;
         const index = 0;
         // const address = accounts[index];
-        console.log(accounts);
+        console.log(accounts, chainId);
         this.setState({
           chainId,
         });

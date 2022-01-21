@@ -43,6 +43,7 @@ import {
 import * as modules from './modules';
 
 const { API } = chrome.extension.getBackgroundPage();
+
 import axios from 'axios';
 
 Vue.use(Vuex);
@@ -52,6 +53,8 @@ export default new Vuex.Store({
   modules,
   state: {
     address: API.getState().address,
+    domainENS: API.getState().domainENS,
+    avatarENS: API.getState().avatarENS,
     completedOnboarding: API.getState().initialized,
     connections: API.getState().connections,
     connected: false,
@@ -70,7 +73,7 @@ export default new Vuex.Store({
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
-    address: (state) => state.address,
+    address: (state) => state.domainENS || state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
     connected: (state) => state.connected,
@@ -80,7 +83,9 @@ export default new Vuex.Store({
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
     currentCred: (state) => state.currentCred,
-    profiles: (state) => state.profiles,
+    profiles: (state) => {
+      return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');
+    },
     currentProfile: (state) => state.currentProfile,
     currentCard: (state) => state.currentCard,
     currentTab: (state) => state.currentTab,
@@ -102,7 +107,6 @@ export default new Vuex.Store({
     //     }
     //   });
     // },
-
     [UPDATE_CONNECTED]: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
         API.currentTab(resolve);
@@ -211,6 +215,8 @@ export default new Vuex.Store({
     [REFRESH_STATE]: ({ commit, dispatch }) => {
       console.log('Action REFRESH_STATE');
       commit('updateAddress', API.getState().address);
+      commit('domainENS', API.getState().domainENS);
+      commit('avatarENS', API.getState().avatarENS);
       commit('updateUnlocked', API.getState().unlocked);
       commit('updateConnections', API.getState().connections);
       commit('updateOnboarding', API.getState().initialized);
@@ -795,6 +801,12 @@ export default new Vuex.Store({
     },
     currentTab(state, value) {
       state.currentTab = value;
+    },
+    domainENS(state, value) {
+      state.domainENS = value;
+    },
+    avatarENS(state, value) {
+      state.avatarENS = value;
     },
   },
 });

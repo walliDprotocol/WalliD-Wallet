@@ -48,6 +48,7 @@ const mixinPlugin = {
     },
     getUsername(profile) {
       return (
+        profile?.profileData?.domainENS ||
         profile?.profileData?.screen_name ||
         profile?.profileData?.username ||
         ''

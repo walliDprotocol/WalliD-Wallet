@@ -17,7 +17,12 @@ import ConfigurationsController from './controllers/configuration';
 
 import walletConnectController from './controllers/walletConnectController';
 
+import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
+
+const provider = new ethers.providers.JsonRpcProvider(
+  'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2'
+);
 
 const InitState = {
   wallet: {},
@@ -198,6 +203,7 @@ export default class AppController {
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
         this.#store.getState().walletConnect.initFromSession();
+        return this.setENSData(this.#store.getState().wallet.getAddress());
       })
       .then(() => {
         eventPipeIn('wallid_event_unlock');
@@ -207,6 +213,21 @@ export default class AppController {
         console.error(err);
         return Promise.reject('Wrong password');
       });
+  }
+
+  setENSData(address) {
+    console.log(address);
+    return Promise.resolve()
+      .then(() => provider.lookupAddress(address))
+      .then((domain) => {
+        this.#store.updateState({ domainENS: domain });
+        if (domain) {
+          return provider.getResolver(domain);
+        }
+        return;
+      })
+      .then((resolver) => resolver?.getAvatar())
+      .then((avatar) => this.#store.updateState({ avatarENS: avatar?.url }));
   }
 
   /**
@@ -437,30 +458,17 @@ export default class AppController {
         listType.forEach((type) => Object.assign(object, this.getList(type)));
         console.log('object', object);
         return object;
-
-        // let listResult = [];
-        // listType.forEach((type) => {
-        //   listResult.push(this.getList(type));
-        // });
-        // return listResult;
       }
 
       switch (listType) {
         case 'assets':
           const currentControllers = ['identities', 'credentials', 'profiles'];
-          // let listResult = [];
-          // currentControllers.forEach((element) => {
-          //   const listController = this.#store.getState()[element];
-          //   listResult.push({ [element]: [...listController.getList()] });
-          // });
           let object = {};
           currentControllers.forEach((type) =>
             Object.assign(object, this.getList(type))
           );
           console.log('object', object);
           return object;
-        // return currentControllers.map((type) => this.getList(type));
-        // return Promise.resolve(listResult);
         default:
           const listController = this.#store.getState()[listType];
           if (!listController)
@@ -473,21 +481,22 @@ export default class AppController {
     }
   }
   /**
-   * Returns WalliD authorization token ready for use with WalliD API.
-   * Rejects with HTTP status code from server if request fail.
-   *
    */
-  listIdentities() {
+  exportAsset(type, idt) {
+    console.log('exportAsset for: ', type, idt);
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
-    const identities = this.#store.getState().identities;
-    console.log(identities);
-
-    return Promise.resolve(identities.getIDTsList());
+    try {
+      const listController = this.#store.getState()[type];
+      if (!listController) return Promise.reject('NOT_IMPLEMENTED: ' + type);
+      console.log(listController.exportAsset(idt));
+      return listController.exportAsset(idt);
+    } catch (error) {
+      console.error(error);
+    }
   }
-
   /**
    * Returns WalliD authorization token ready for use with WalliD API.
    * Rejects with HTTP status code from server if request fail.
@@ -828,11 +837,16 @@ export default class AppController {
     const identities = this.#store.getState().identities;
     const credentials = this.#store.getState().credentials;
     const profiles = this.#store.getState().profiles;
+    const domainENS = this.#store.getState().domainENS;
+    const avatarENS = this.#store.getState().avatarENS;
 
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
       address: vault.isUnlocked() ? wallet.getAddress() : null,
+      domainENS: vault.isUnlocked() ? domainENS : null,
+      avatarENS: vault.isUnlocked() ? avatarENS : null,
+
       connections: vault.isUnlocked() ? connections.getAllConnections() : null,
       identities: vault.isUnlocked() ? identities.get() : null,
       credentials: vault.isUnlocked() ? credentials.get() : null,

@@ -1,20 +1,35 @@
 <template>
-  <div
-    :class="connected ? 'connected-site' : ''"
-    :id="'metamask-logo-' + id"
-    :style="{
-      width: size + (margin + 2) * 2 + 'px',
-      height: size + (margin + 2) * 2 + 'px',
-      padding: margin + 'px',
-    }"
-  ></div>
+  <div class="">
+    <v-img
+      v-if="avatarENS"
+      class="mx-auto"
+      style="border-radius: 50%"
+      contain
+      :width="size"
+      :height="size"
+      :src="avatarENS"
+    ></v-img>
+    <div
+      v-else
+      :class="connected ? 'connected-site' : ''"
+      :id="'metamask-logo-' + id"
+      :style="{
+        width: size + (margin + 2) * 2 + 'px',
+        height: size + (margin + 2) * 2 + 'px',
+        padding: margin + 'px',
+      }"
+    ></div>
+  </div>
 </template>
 
 <script>
 import jazzicon from 'jazzicon';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   props: ['size', 'margin', 'id', 'address'],
+  computed: {
+    ...mapState(['avatarENS']),
+  },
   watch: {
     address(value) {
       if (value) {

@@ -7,8 +7,8 @@
         @mouseover="copy = true"
         @mouseleave="delay()"
       >
-        <div class="wallet-address ">
-          <p>{{ address | truncate(6, "...") }}</p>
+        <div class="wallet-address">
+          <p>{{ walletAddress | truncate(12, '...') }}</p>
           <input type="hidden" id="walletCopy" :value="walletAddress" />
           <Copy v-if="!copy"></Copy>
           <CopyHover v-else> </CopyHover>
@@ -28,32 +28,57 @@
 </template>
 
 <script>
-import CopyHover from "../../images/icon-copyclipboard-selected";
-import Copy from "../../images/icon-copyclipboard-unselected";
+import { mapGetters } from 'vuex';
+import CopyHover from '../../images/icon-copyclipboard-selected';
+import Copy from '../../images/icon-copyclipboard-unselected';
 
 export default {
   components: {
     CopyHover,
     Copy,
   },
+  computed: {
+    ...mapGetters(['address']),
+  },
+  props: ['forcedAddress'],
   mounted() {
-    this.walletAddress = this.address; //this.checksumAddress
+    this.walletAddress = this.forcedAddress || this.address; //this.checksumAddress
   },
   methods: {
     copyToClip() {
-      let testingCodeToCopy = document.querySelector("#walletCopy");
-      testingCodeToCopy.setAttribute("type", "text");
-      testingCodeToCopy.select();
       try {
-        document.execCommand("copy");
+        this.copyToClipboard(this.walletAddress);
         this.show = true;
       } catch (err) {
         console.error(err);
       }
 
       /* unselect the range */
-      testingCodeToCopy.setAttribute("type", "hidden");
-      window.getSelection().removeAllRanges();
+      // testingCodeToCopy.setAttribute('type', 'hidden');
+      // window.getSelection().removeAllRanges();
+    },
+    copyToClipboard(text) {
+      if (window.clipboardData && window.clipboardData.setData) {
+        // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+        return window.clipboardData.setData('Text', text);
+      } else if (
+        document.queryCommandSupported &&
+        document.queryCommandSupported('copy')
+      ) {
+        const textarea = document.createElement('textarea');
+        textarea.textContent = text;
+        textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in Microsoft Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+          console.warn('Copy to clipboard failed.', ex);
+          return false;
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
     },
     delay() {
       this.copy = false;
@@ -66,12 +91,11 @@ export default {
     return {
       show: false,
       copy: false,
-      walletAddress: "",
-      address: this.$API.getState().address,
-      copyBefore: { en: "Copy to clipboard", pt: "Copiar" },
+      walletAddress: '',
+      copyBefore: { en: 'Copy to clipboard', pt: 'Copiar' },
       copyAfter: {
-        en: "Copied!",
-        pt: "Copiado!",
+        en: 'Copied!',
+        pt: 'Copiado!',
       },
     };
   },
@@ -86,7 +110,7 @@ export default {
   width: max-content;
   margin: auto;
 
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   font-size: 13px;
   font-weight: 500;
   font-stretch: normal;
@@ -116,5 +140,4 @@ export default {
     margin-right: 22px !important;
   }
 }
-
 </style>

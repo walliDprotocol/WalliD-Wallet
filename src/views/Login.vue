@@ -40,7 +40,12 @@
         >
 
         <v-col cols="12" class="pt-2">
-          <v-btn text @click="unlockPlugin" class="advance-btn">
+          <v-btn
+            text
+            :loading="loading"
+            @click="unlockPlugin"
+            class="advance-btn"
+          >
             {{ $t('login.button') }}
           </v-btn>
         </v-col>
@@ -66,10 +71,12 @@ export default {
       password: '',
       passwordError: false,
       completedOnboarding: this.$API.getState().initialized,
+      loading: false,
     };
   },
   methods: {
     unlockPlugin() {
+      this.loading = true;
       if (!this.completedOnboarding) {
         this.debug('Onboarding not completed');
         this.$router.push('/create');
@@ -80,6 +87,7 @@ export default {
           .catch((e) => {
             this.logError(e);
             this.passwordError = true;
+            this.loading = false;
           });
       }
     },
