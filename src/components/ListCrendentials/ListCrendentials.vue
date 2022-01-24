@@ -125,6 +125,35 @@
           </v-row>
         </v-container>
       </v-col>
+      <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
+        <v-container class="py-0 px-3">
+          <v-row>
+            <v-col cols="2" class="">
+              <StoredProfileImg :size="38" :name="'AddProfile'" />
+            </v-col>
+            <v-col cols="8" class="pl-6 pr-0">
+              <v-container class="py-0">
+                <v-row>
+                  <v-col cols="12" class="py-0 pr-0">
+                    <a
+                      class="MAIN-LINKS links"
+                      target="_blank"
+                      color="#01a3b0"
+                      :href="storeWeb3Link"
+                      @click.stop
+                    >
+                      {{ $t('credentials.addNew') }}
+                    </a>
+                  </v-col>
+                  <v-col cols="12" class="py-0">
+                    <p class="sub-title-fields"></p>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
     </v-row>
     <v-row
       v-else
@@ -141,7 +170,7 @@
           class="links"
           target="_blank"
           color="#01a3b0"
-          href="https://www.dca.wallid.io/Invite"
+          :href="storeWeb3Link"
           @click.stop
         >
           {{ $t('credentials.store') }}
@@ -269,7 +298,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      storeWeb3Link: "http://localhost:8000/Setup/?selectedDocumentType='Web3'", // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
+    };
   },
 };
 </script>

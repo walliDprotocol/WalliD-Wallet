@@ -49,7 +49,7 @@
           />
         </v-col>
 
-        <v-col cols="4" class="px-0  mx-n7">
+        <v-col cols="4" class="px-0 pt-4 mx-n7">
           <v-divider class="dashed" />
         </v-col>
 
@@ -177,7 +177,7 @@
       </v-row>
 
       <v-row v-show="success" class="justify-space-around connected mt-2px">
-        <v-col cols="12" class="my-3 py-7 px-14">
+        <v-col cols="12" class="pt-8 pb-1 px-14">
           <div class="back-arrow">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
@@ -187,7 +187,7 @@
         </v-col>
 
         <!-- website info and wallet -->
-        <v-col cols="4" class="pr-0 pt-4">
+        <v-col cols="4" class="pr-0 pt-4 mr-n7">
           <WebSiteLogo
             :size="58"
             :imageURL="websiteData.icon"
@@ -195,18 +195,18 @@
           />
         </v-col>
 
-        <v-col cols="4" class="px-0 pt-4 check">
+        <v-col cols="4" class="px-0 pt-4 mx-n16 check">
           <v-divider class="dashed" />
           <CheckSuccessIcon />
           <v-divider class="dashed" />
         </v-col>
 
-        <v-col cols="4" class="pl-0 pt-4">
+        <v-col cols="4" class="pl-0 pt-4 ml-n7">
           <jazz-icon
             :address="walletAddress"
             :id="'request-2'"
-            :size="62"
-            :margin="3"
+            :size="50"
+            :margin="2"
           />
           <p class="FIELD-TEXT">{{ address | truncate(12, '...') }}</p>
         </v-col>
@@ -483,7 +483,7 @@ export default {
     z-index: -1;
   }
   .dashed {
-    margin-top: 38px;
+    margin-top: 29px;
     border: dashed thin #b8b9bb;
   }
   .connected {
@@ -495,7 +495,7 @@ export default {
       svg {
         height: 32px;
         width: 32px;
-        margin-top: 22px;
+        margin-top: 13px;
       }
     }
   }

@@ -16,7 +16,7 @@
       :style="{
         width: size + (margin + 2) * 2 + 'px',
         height: size + (margin + 2) * 2 + 'px',
-        padding: margin + 'px',
+        padding: Math.abs(margin) + 'px',
       }"
     ></div>
   </div>

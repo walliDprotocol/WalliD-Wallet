@@ -901,7 +901,7 @@ export default class AppController {
       approveSession: this.approveSession.bind(this),
 
       // New methods for v.1.1
-      listIdentities: this.listIdentities.bind(this),
+      // listIdentities: this.listIdentities.bind(this),
       getList: this.getList.bind(this),
       changePermissionLevel: this.changePermissionLevel.bind(this),
     };

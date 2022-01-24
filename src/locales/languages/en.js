@@ -287,14 +287,19 @@ export default {
 
   credentials: {
     noCredentials:
-      'Seems like you don’t have any credentials stored in your wallet yet.',
-    store: 'Start issuing credentials now',
-    menu: [
+      'Seems like you don’t have Web3 IDs stored in your wallet yet.',
+    store: 'Store your Web3 ID now',
+
+    menuCredential: [
       'Credential info',
       'Share credential',
       'Download Credential',
       'Delete Credential',
     ],
+    menuENS: ['Check etherscan'],
+    menuWeb3: ['Share proof of identity', 'Delete identity'],
+    addNew: 'Add another Web3 ID',
+
     status: {
       active: 'Valid',
       revoke: 'Revoked',
