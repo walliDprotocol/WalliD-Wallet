@@ -51,6 +51,7 @@ const mixinPlugin = {
         profile?.profileData?.domainENS ||
         profile?.profileData?.screen_name ||
         profile?.profileData?.username ||
+        profile?.username ||
         ''
       );
     },

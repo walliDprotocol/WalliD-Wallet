@@ -38,6 +38,7 @@ import {
   // plugin requests
   WALLID_LIST,
   WALLID_IMPORT_SOCIAL_PROFILE,
+  WALLID_VERIFY,
 } from './actions';
 
 import * as modules from './modules';
@@ -446,7 +447,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('Action SIGN_EC');
         state.debug('Data: ', data);
-        API.generateECSignature(data)
+        API.generateECSignature(...data)
           .then((res) => {
             console.log(res);
             resolve(res);
@@ -477,7 +478,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('Action SIGN');
         state.debug('Data: ', data);
-        API.signPrivateKey(data)
+        API.signPrivateKey(...data)
           .then((res) => {
             console.log(res);
             resolve(res);
@@ -535,6 +536,19 @@ export default new Vuex.Store({
 
         try {
           resolve(API.importSocialProfile(...params));
+        } catch (error) {
+          console.error(error.message);
+          reject(error.message);
+        }
+      });
+    },
+    [WALLID_VERIFY]: ({ state, commit, dispatch }, params) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action WALLID_VERIFY');
+        console.log('Params: ', params);
+
+        try {
+          resolve(API.verifyEthereumSignedMessage(...params));
         } catch (error) {
           console.error(error.message);
           reject(error.message);
@@ -664,7 +678,7 @@ export default new Vuex.Store({
           default:
             dispatch(type, data)
               .then((res) => {
-                console.log('res WALLID_LIST:', res);
+                console.log(`res ${type} : `, res);
                 resolve(callback(null, res));
               })
               .catch((error) => {

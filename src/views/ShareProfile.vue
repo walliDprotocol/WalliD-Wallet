@@ -123,7 +123,11 @@
               <v-container class="py-0 wrapper text-left">
                 <v-row>
                   <v-col cols="2" class="py-1 pl-0">
-                    <StoredProfileImg :size="38" :src="getImage(credential)" />
+                    <StoredProfileImg
+                      :size="30"
+                      :name="credential.assetName"
+                      :src="getImage(credential)"
+                    />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
                     <v-container class="">
@@ -133,7 +137,10 @@
                             {{ getName(credential) }}
                           </p>
                           <p class="sub-title-fields" style="font-weight:500">
-                            {{ credential.caName }}
+                            {{
+                              getCredentialName(credential)
+                                | truncate(16, '...')
+                            }}
                           </p>
                         </v-col>
                         <!-- <v-col cols="12" class="py-0">
@@ -294,7 +301,10 @@ export default {
         );
       }
 
-      return credential.credName;
+      return credential.credName || credential.assetName;
+    },
+    getCredentialName(credential) {
+      return credential.caName || credential.username;
     },
     checkSelectedProfiles() {
       this.isDisabled = !Object.keys(this.selectedProfiles)

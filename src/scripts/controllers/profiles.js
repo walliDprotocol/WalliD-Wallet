@@ -66,7 +66,7 @@ export default class ProfilesController {
     });
   }
 
-  importAsset(id, { username, profileData, socialName }, ow = true) {
+  importAsset(id, assetData, ow = true) {
     return new Promise((resolve, reject) => {
       console.log('log id add', id);
       console.log('profiles', this.#profiles);
@@ -81,16 +81,12 @@ export default class ProfilesController {
       }
       this.#profiles.push({
         id,
-        profileData,
-        username,
-        socialName,
+        ...assetData,
       });
 
       return resolve({
         id,
-        profileData,
-        username,
-        socialName,
+        ...assetData,
         vaultName: 'putProfiles',
       });
     });

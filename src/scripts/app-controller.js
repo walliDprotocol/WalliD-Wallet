@@ -437,6 +437,23 @@ export default class AppController {
     }
     return wallet.signECMessage(data);
   }
+  /**
+   * verifies a signed message
+   *
+   * @param {string} message - original message
+   * @param {string} signature - signed message to verify
+   *
+   * @returns {Boolean} if the recovered wallet address matches the user wallet address
+   */
+  verifyEthereumSignedMessage(message, signature) {
+    const vault = this.#store.getState().vault;
+    const wallet = this.#store.getState().wallet;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+
+    return wallet.verifyEthereumSignedMessage(message, signature);
+  }
   //
   // WALLID RELATED METHODS
   //
@@ -940,6 +957,7 @@ export default class AppController {
       getList: this.getList.bind(this),
       changePermissionLevel: this.changePermissionLevel.bind(this),
       importAsset: this.importAsset.bind(this),
+      verifyEthereumSignedMessage: this.verifyEthereumSignedMessage.bind(this),
     };
   }
 
