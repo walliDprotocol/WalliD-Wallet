@@ -14,7 +14,10 @@
         <v-container class="py-0">
           <v-row>
             <v-col cols="2" class="pr-2 pb-0">
-              <StoredProfileImg :size="38" :src="getImage(card)"
+              <StoredProfileImg
+                :size="38"
+                :name="card.assetName"
+                :src="getImage(card)"
             /></v-col>
             <v-col cols="8" class="pl-5 pb-0 pt-1">
               <v-container class="">
@@ -24,7 +27,7 @@
                       {{ getName(card) }}
                     </p>
                     <p class="sub-title-fields" style="font-weight:500">
-                      {{ card.caName }}
+                      {{ getCredentialName(card) | truncate(16, '...') }}
                     </p>
                   </v-col>
                   <v-col cols="5" class="pr-0 py-0" style="max-width:unset;">
@@ -49,7 +52,7 @@
                       </p>
                     </div>
                     <div
-                      v-else
+                      v-else-if="card.status"
                       class="validity"
                       style="background-color: #fce7e7;"
                     >
@@ -86,37 +89,80 @@
                 </template>
 
                 <v-list>
-                  <v-list-item>
+                  <v-list-item v-if="!card.assetName">
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="viewCred(card)"
-                      >{{ $t('credentials.menu[0]') }}</v-list-item-title
+                      >{{
+                        $t('credentials.menuCredential[0]')
+                      }}</v-list-item-title
                     >
                   </v-list-item>
 
                   <v-list-item
-                    v-if="card.status != 'revoke'"
+                    v-if="card.status != 'revoke' && !card.assetName"
                     :class="card.status != 'active' ? '' : ''"
                   >
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="proofPage(card)"
-                      >{{ $t('credentials.menu[1]') }}</v-list-item-title
+                      >{{
+                        $t('credentials.menuCredential[1]')
+                      }}</v-list-item-title
                     >
                   </v-list-item>
 
-                  <v-list-item :class="!downloadURL(card) ? 'disabled' : ''">
+                  <v-list-item
+                    v-if="!card.assetName"
+                    :class="!downloadURL(card) ? 'disabled' : ''"
+                  >
                     <v-list-item-title class="SECUNDARY-LINKS text-left">
                       <a :href="downloadURL(card)" target="_blank">{{
-                        $t('credentials.menu[2]')
+                        $t('credentials.menuCredential[2]')
                       }}</a>
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item v-if="!card.assetName">
                     <v-list-item-title
                       class="SECUNDARY-LINKS text-left"
                       @click="deleteCred(card)"
-                      >{{ $t('credentials.menu[3]') }}</v-list-item-title
+                      >{{
+                        $t('credentials.menuCredential[3]')
+                      }}</v-list-item-title
+                    >
+                  </v-list-item>
+                  <v-list-item v-if="card.assetName == 'ENS'">
+                    <v-list-item-title class="SECUNDARY-LINKS text-left">
+                      <a
+                        class="SECUNDARY-LINKS "
+                        target="_blank"
+                        color="#01a3b0"
+                        :href="
+                          'https://etherscan.io/enslookup-search?search=' +
+                            card.username
+                        "
+                        @click.stop
+                      >
+                        {{ $t('credentials.menuENS[0]') }}
+                      </a>
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item v-if="card.assetName == 'MetaMask'">
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="proofPage(card)"
+                      >{{
+                        $t('credentials.menuMetaMask[0]')
+                      }}</v-list-item-title
+                    >
+                  </v-list-item>
+                  <v-list-item v-if="card.assetName == 'MetaMask'">
+                    <v-list-item-title
+                      class="SECUNDARY-LINKS text-left"
+                      @click="deleteCred(card)"
+                      >{{
+                        $t('credentials.menuMetaMask[1]')
+                      }}</v-list-item-title
                     >
                   </v-list-item>
                 </v-list>
@@ -238,9 +284,11 @@ export default {
         );
       }
 
-      return credential.credName;
+      return credential.credName || credential.assetName;
     },
-
+    getCredentialName(credential) {
+      return credential.caName || credential.username;
+    },
     getImage(card) {
       if (card?.userData?.frontend_props?.currentLayout === 'Badge') {
         return card.userData?.imgArray?.[0];
@@ -281,6 +329,7 @@ export default {
       this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
       // this.$router.push({ name: 'Proof' });
     },
+
     isValid(_expDate) {
       if (_expDate) {
         var parts = _expDate.split(' ');
@@ -299,7 +348,7 @@ export default {
   },
   data() {
     return {
-      storeWeb3Link: "http://localhost:8000/Setup/?selectedDocumentType='Web3'", // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
+      storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
     };
   },
 };

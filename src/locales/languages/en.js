@@ -15,6 +15,7 @@ export default {
     delete: {
       title: 'Delete',
       credential: 'credential',
+      web3Id: 'web3 ID',
       identity: 'identity',
       profile: 'online ID',
       card: 'identity',
@@ -192,7 +193,7 @@ export default {
     version: 'Version',
     links: [
       'Links',
-      'FAQ’s',
+      "FAQ's",
       'Terms and conditions',
       'Privacy Policy',
       'Contact us',
@@ -297,7 +298,7 @@ export default {
       'Delete Credential',
     ],
     menuENS: ['Check etherscan'],
-    menuWeb3: ['Share proof of identity', 'Delete identity'],
+    menuMetaMask: ['Share proof of identity', 'Delete identity'],
     addNew: 'Add another Web3 ID',
 
     status: {

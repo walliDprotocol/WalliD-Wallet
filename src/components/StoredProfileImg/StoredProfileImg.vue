@@ -24,6 +24,8 @@ import IconGitHub from '../../images/SocialNetworks/icon-github';
 import IconDiscord from '../../images/SocialNetworks/icon-discord';
 import IconMetaMask from '../../images/SocialNetworks/icon-metamask';
 
+import IconENS from '../../images/SocialNetworks/icon-ens';
+
 import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
 
 import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt';
@@ -52,6 +54,7 @@ export default {
     IconGitHub,
     IconDiscord,
     IconMetaMask,
+    IconENS,
     IconAddProfile,
     IconCC_PT,
     IconSHUFTI_CC_PT,

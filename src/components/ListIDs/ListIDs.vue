@@ -116,7 +116,7 @@
                       class="MAIN-LINKS links"
                       target="_blank"
                       color="#01a3b0"
-                      href="https://www.wallid.io/"
+                      href="https://www.wallid.io/Setup/?flow=ID_CARD_WITHOUT_RETURN_URL"
                       @click.stop
                     >
                       {{ $t('cards.addNew') }}

@@ -61,7 +61,7 @@ export default {
     }),
     name() {
       if (this.credential) {
-        return this.credential.credName;
+        return this.credential.credName || this.credential.assetName;
       } else if (this.profile) {
         return this.profile.socialName;
       } else if (this.card) {
@@ -71,7 +71,9 @@ export default {
       }
     },
     type() {
-      if (this.credential) {
+      if (this.credential?.assetName) {
+        return this.$t('modals.delete.web3Id');
+      } else if (this.credential) {
         return this.$t('modals.delete.credential');
       } else if (this.profile) {
         return this.$t('modals.delete.profile');
