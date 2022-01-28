@@ -497,6 +497,41 @@ export default class AppController {
       console.error(error);
     }
   }
+
+  importAsset(assetData) {
+    console.log('importAsset for: ', assetData);
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    try {
+      if (Array.isArray(assetData)) {
+        var promises = [];
+        assetData.forEach((asset) => promises.push(this.importAsset(asset)));
+        return Promise.all(promises);
+      }
+      const listController = this.#store.getState()[
+        assetData?.pluginController
+      ];
+      if (!listController)
+        return Promise.reject(
+          'NOT_IMPLEMENTED: ' + assetData?.pluginController
+        );
+      return listController
+        .importAsset(assetData?.uniqueId, assetData)
+        .then(({ vaultName }) => {
+          console.log(vaultName);
+          return vault[vaultName](
+            listController.serialize(),
+            this.#store.getState().password
+          );
+        })
+        .catch((error) => Promise.reject(error));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   /**
    * Returns WalliD authorization token ready for use with WalliD API.
    * Rejects with HTTP status code from server if request fail.
@@ -904,6 +939,7 @@ export default class AppController {
       // listIdentities: this.listIdentities.bind(this),
       getList: this.getList.bind(this),
       changePermissionLevel: this.changePermissionLevel.bind(this),
+      importAsset: this.importAsset.bind(this),
     };
   }
 

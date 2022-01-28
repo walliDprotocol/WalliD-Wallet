@@ -66,6 +66,36 @@ export default class ProfilesController {
     });
   }
 
+  importAsset(id, { username, profileData, socialName }, ow = true) {
+    return new Promise((resolve, reject) => {
+      console.log('log id add', id);
+      console.log('profiles', this.#profiles);
+      const index = this.#profiles.findIndex((profile) => profile.id == id);
+      console.log('index', index);
+      if (index != -1 && ow) {
+        console.log('ALREADY EXISTs w/ OW', index);
+        this.#profiles.splice(index, 1);
+      } else if (index != -1) {
+        console.log('ALREADY EXISTs', index);
+        return reject(`ERR_PROFILE_ALREADY_EXISTS`);
+      }
+      this.#profiles.push({
+        id,
+        profileData,
+        username,
+        socialName,
+      });
+
+      return resolve({
+        id,
+        profileData,
+        username,
+        socialName,
+        vaultName: 'putProfiles',
+      });
+    });
+  }
+
   getProfile(id) {
     return new Promise((resolve, reject) => {
       console.log('log id get', id);

@@ -170,7 +170,7 @@ router.beforeEach((to, from, next) => {
 
   debug('isUnlocked', isUnlocked);
 
-  if (to.path == '/popup.html') {
+  if (to.path == '/popup.html' || to.path == '/home') {
     const identities = store.getters.identities || [];
     const credentials = store.getters.credentials || [];
     const profiles = store.getters.profiles || [];

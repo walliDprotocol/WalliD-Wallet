@@ -45,6 +45,29 @@ export default class IdentitiesController {
     });
   }
 
+  importAsset(idt, { idtName, data, expDate }, ow = true) {
+    return new Promise((resolve, reject) => {
+      const index = this.#identities.findIndex((id) => id.idt == idt);
+      if (index != -1 && ow) {
+        console.log('ALREADY EXISTs w/ OW', index);
+        this.#identities.splice(index, 1);
+      } else if (index != -1) {
+        console.log('ALREADY EXISTs', index);
+
+        return reject(`Identity type ${idt} already exists`);
+      }
+      this.#identities.push({ idt, data, expDate, idtName });
+
+      return resolve({
+        idt,
+        data,
+        expDate,
+        idtName,
+        vaultName: 'putIdentities',
+      });
+    });
+  }
+
   extractIdentity(idt) {
     return new Promise((resolve, reject) => {
       console.log(this.#identities);

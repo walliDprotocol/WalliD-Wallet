@@ -146,6 +146,12 @@ const RequestAPIMethods = {
     main_controller: true,
     executor: ['exportAsset'],
   },
+  wallid_import_asset: {
+    popup: false,
+    level: 2,
+    main_controller: true,
+    executor: ['importAsset'],
+  },
 };
 
 export function getRequestDetails(method) {
