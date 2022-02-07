@@ -147,6 +147,12 @@ export default class CredentialsController {
     return this.#credentials.map((id) => id.id);
   }
   getList() {
-    return this.#credentials.map((id) => id.id);
+    return this.#credentials.map((id) => {
+      return {
+        id: id.id,
+        assetName: id.assetName,
+        username: id.username,
+      };
+    });
   }
 }

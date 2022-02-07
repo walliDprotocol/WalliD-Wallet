@@ -125,7 +125,10 @@ export default class AppController {
   }
 
   isOnboardingComplete() {
-    return { initialized: !this.#store?.getState()?.vault?.isEmpty() };
+    return {
+      initialized: !this.#store?.getState()?.vault?.isEmpty(),
+      unlocked: this.#store?.getState()?.vault?.isUnlocked(),
+    };
   }
 
   //
