@@ -45,5 +45,5 @@ export const AUTHORIZE_REQUEST = 'AUTHORIZE_REQUEST';
 export const CANCEL_REQUEST = 'CANCEL_REQUEST';
 
 // Social Profiles Actions
-
+export const WALLID_EXPORT = 'wallid_export';
 export const SHARE_PROFILE = 'SHARE_PROFILE';

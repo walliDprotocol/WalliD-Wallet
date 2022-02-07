@@ -961,6 +961,7 @@ export default class AppController {
       changePermissionLevel: this.changePermissionLevel.bind(this),
       importAsset: this.importAsset.bind(this),
       verifyEthereumSignedMessage: this.verifyEthereumSignedMessage.bind(this),
+      exportAsset: this.exportAsset.bind(this),
     };
   }
 

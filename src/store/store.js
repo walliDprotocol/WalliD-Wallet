@@ -39,6 +39,7 @@ import {
   WALLID_LIST,
   WALLID_IMPORT_SOCIAL_PROFILE,
   WALLID_VERIFY,
+  WALLID_EXPORT,
 } from './actions';
 
 import * as modules from './modules';
@@ -551,6 +552,20 @@ export default new Vuex.Store({
           resolve(API.verifyEthereumSignedMessage(...params));
         } catch (error) {
           console.error(error.message);
+          reject(error.message);
+        }
+      });
+    },
+
+    [WALLID_EXPORT]: ({ state, commit, dispatch }, params) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action WALLID_EXPORT');
+        console.log('Params: ', params);
+
+        try {
+          resolve(API.exportAsset(...params));
+        } catch (error) {
+          console.error(error);
           reject(error.message);
         }
       });
