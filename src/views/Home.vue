@@ -11,7 +11,7 @@
       </v-col>
       <v-col cols="12" class="pt-4 pb-2 px-14">
         <h2 class="T1 mb-2 text-center">
-          {{ $t('home.title') }}
+          {{ domainENS || $t('home.title') }}
         </h2>
         <WalletState :website="connected.url"> </WalletState>
       </v-col>
@@ -85,6 +85,7 @@ export default {
     ]),
     ...mapState({
       walletAddress: 'address',
+      domainENS: 'domainENS',
     }),
     tab: {
       get() {

@@ -253,7 +253,7 @@ export default {
   },
   menu: {
     title: 'MyWalliD',
-    details: 'Wallet details ',
+    details: 'MyWalliD details ',
     sites: 'Connected sites',
     settings: 'Settings',
     about: 'About',

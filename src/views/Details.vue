@@ -22,8 +22,13 @@
         />
       </v-col>
       <v-col cols="12" class="pt-2">
-        <h2 class="T1 mb-2">{{ $t('menu.title') }}</h2>
+        <h2 class="T1 mb-2">
+          {{ domainENS || $t('menu.title') }}
+        </h2>
         <WalletState :website="connected.url"> </WalletState>
+      </v-col>
+      <v-col cols="12" class="pb-1 pt-2">
+        <wallet-address class="" />
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
         <qrcode
@@ -34,15 +39,6 @@
             color: { dark: '#373c43', light: '#f7f7f7' },
           }"
         ></qrcode>
-      </v-col>
-      <v-col cols="12" class="pb-1 pt-2">
-        <wallet-address class="" />
-      </v-col>
-      <v-col cols="12" class="pb-9 pt-1">
-        <wallet-address
-          v-if="$store.state.domainENS"
-          :forcedAddress="walletAddress"
-        />
       </v-col>
     </v-row>
   </v-container>
@@ -66,6 +62,7 @@ export default {
     ...mapGetters(['address']),
     ...mapState({
       walletAddress: 'address',
+      domainENS: 'domainENS',
     }),
   },
   data() {

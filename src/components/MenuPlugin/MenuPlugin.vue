@@ -20,7 +20,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="T1" style="margin-bottom: 7px">
-            {{ $t('menu.title') }}</v-list-item-title
+            {{ domainENS || $t('menu.title') }}</v-list-item-title
           >
           <v-list-item-subtitle class="subtitle">{{
             address | truncate(12, '...')
@@ -128,6 +128,7 @@ export default {
   computed: {
     ...mapState({
       walletAddress: 'address',
+      domainENS: 'domainENS',
     }),
   },
   created() {

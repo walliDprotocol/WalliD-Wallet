@@ -75,7 +75,7 @@ export default new Vuex.Store({
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
-    address: (state) => state.domainENS || state.address,
+    address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
     connected: (state) => state.connected,
