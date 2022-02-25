@@ -2,6 +2,8 @@ import extension from 'extensionizer';
 import AppController from './app-controller';
 import { setPort } from './lib/event-pipe';
 
+import { EventEmitter } from 'events';
+
 var msgPort;
 var forwarderURL = 'https://www.wallid.io/';
 
@@ -48,6 +50,10 @@ extension.runtime.onConnect.addListener(connected);
 //     });
 //   }
 // });
+
+const eventEmitter = new EventEmitter();
+
+window.eventEmitter = eventEmitter;
 
 // Initialize main application controller
 const App = new AppController();

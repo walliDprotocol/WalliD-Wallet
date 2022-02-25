@@ -1,14 +1,7 @@
 const { API } = chrome.extension.getBackgroundPage();
 
-const state = {
-  LOGOS_FOLDER: 'wallid-template-logos/',
-  photos: [],
-};
-const mutations = {
-  photoUpload: (state, value) => {
-    state.photos.push({ url: value });
-  },
-};
+const state = {};
+const mutations = {};
 const actions = {
   ['INIT']: ({ rootState, commit, state }, { uri }) => {
     return new Promise((resolve, reject) => {

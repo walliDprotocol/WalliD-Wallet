@@ -234,16 +234,17 @@ export default new Vuex.Store({
     // Request level is forced at level 2, this will change for next major
     // plugin version has it will be the user choosing the permission level
     //
-    [CONNECT]: ({ commit, state }, { origin, name, level = 1 }) => {
+    [CONNECT]: ({ commit, state }, { origin, name, level = 1, options }) => {
       return new Promise((resolve, reject) => {
         console.log('Action CONNECT');
         state.debug('URL: ', origin);
         state.debug('level: ', level);
+        state.debug('options: ', options);
 
         state.debug('Connections: ', state.connections);
         // state.debug("Notification: ", state.notification);
         let icon = origin + '/favicon.ico';
-        API.approveConnection(origin, icon, name, level)
+        API.approveConnection(origin, icon, name, level, options)
           .then((res) => {
             resolve(res);
           })

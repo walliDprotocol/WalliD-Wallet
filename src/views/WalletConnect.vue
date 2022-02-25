@@ -25,7 +25,14 @@
           QR code URL:
         </label>
         <div class="wallet-connect">
-          <v-text-field flat solo v-model="wc_uri" class="link-input">
+          <v-text-field
+            flat
+            solo
+            v-model="wc_uri"
+            @input="initWalletConnect"
+            class="link-input"
+            :error-messages="wcErrorMsg"
+          >
           </v-text-field>
         </div>
       </v-col>
@@ -40,7 +47,8 @@
           text
           class="advance-btn"
           :loading="loading"
-          @click="initWalletConnect"
+          :disabled="!peerId"
+          @click="approveConnection"
         >
           {{ $t('buttons.connect') }}
         </v-btn>
@@ -53,34 +61,53 @@
 import ArrowBack from '../images/icon-arrow-back.vue';
 import IconDropdown from '../images/icon-arrow-dropdown.vue';
 
-import { mapGetters } from 'vuex';
+import WalletConnect from '../scripts/controllers/walletConnectController';
 
 export default {
   components: {
     ArrowBack,
     IconDropdown,
   },
-  computed: {
-    ...mapGetters(['address']),
-  },
+  computed: {},
   watch: {},
+  mounted() {
+    this.initializeWalletConnect();
+  },
   methods: {
+    initializeWalletConnect() {
+      console.log('initializeWalletConnect', this.$eventEmitter);
+      var self = this;
+      this.$eventEmitter.on('walletconnectSessionRequest', ({ peerId }) => {
+        console.log('walletconnectSessionRequest', peerId);
+        this.peerId = peerId;
+        // self.$eventEmitter.emit(
+        //   'walletconnectSessionRequest::approved',
+        //   peerId
+        // );
+        // setWalletConnectRequest(true);
+        // setWalletConnectRequestInfo(peerInfo);
+      });
+      WalletConnect.init();
+    },
     setState(obj) {
       Object.keys(obj).forEach((e) => (this[e] = obj[e]));
     },
     // Wallet Connect methods
     async initWalletConnect() {
       this.loading = true;
+      this.wcErrorMsg = null;
       try {
-        if (this.wc_uri) {
+        if (WalletConnect.isValidUri(this.wc_uri)) {
           console.log(this.wc_uri);
           const res = await this.$store.dispatch('walletConnect/INIT', {
             uri: this.wc_uri,
           });
-          console.log(res);
-
-          const res2 = await this.$store.dispatch('walletConnect/APPROVE');
-          console.log(res2);
+          console.log('peerId', res);
+          this.peerId = res;
+          this.loading = false;
+        } else {
+          console.log('Not a valid WC url');
+          this.wcErrorMsg = 'Please add a valid QR code URL';
         }
         // const connector = new WalletConnect({ uri });
 
@@ -98,6 +125,14 @@ export default {
         this.loading = false;
       }
     },
+    async approveConnection() {
+      this.$eventEmitter.emit(
+        'walletconnectSessionRequest::approved',
+        this.peerId
+      );
+      // const res2 = await this.$store.dispatch('walletConnect/APPROVE');
+      // console.log(res2);
+    },
   },
   data() {
     return {
@@ -110,6 +145,8 @@ export default {
       // Wallet Connect
       loading: false,
       wc_uri: null,
+      peerId: null,
+      wcErrorMsg: null,
     };
   },
 };

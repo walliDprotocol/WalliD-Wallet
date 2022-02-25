@@ -47,7 +47,7 @@ export default class AppController {
     this.#store.updateState({ vault });
 
     // Initialize Wallet Connect controller
-    const walletConnect = new walletConnectController();
+    const walletConnect = walletConnectController;
 
     this.#store.updateState({ walletConnect });
   }
@@ -67,15 +67,17 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
-    return Promise.resolve(walletConnect.initFromURI(uri, wallet.getAddress()))
-      .then(() => eventPipeIn('wallid_wallet_connect_init'))
-      .then(() => wallet.getAddress());
+    return (
+      Promise.resolve(walletConnect.initFromURI(uri, wallet.getAddress()))
+        // .then(() => eventPipeIn('wallid_wallet_connect_init'))
+        .then((peerId) => peerId)
+    );
   }
 
   /**
    *
    */
-  approveSession() {
+  approveSession(peerId) {
     const vault = this.#store.getState().vault;
     const walletConnect = this.#store.getState().walletConnect;
     const wallet = this.#store.getState().wallet;
@@ -83,9 +85,11 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
-    return Promise.resolve(walletConnect.approveSession())
+    return Promise.resolve(walletConnect.approveSession(peerId))
       .then(({ url, icons, name }) =>
-        this.approveConnection(url, icons?.[0], name, 0)
+        this.approveConnection(url, icons?.[0], name, 0, {
+          walletConnect: true,
+        })
       )
       .then(() => eventPipeIn('wallid_wallet_connect_approved'))
       .then(() => wallet.getAddress());
@@ -205,9 +209,14 @@ export default class AppController {
       )
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
-        this.#store.getState().walletConnect.initFromSession();
+        // initiate wallet connect
+        return this.#store.getState().walletConnect.init();
+      })
+
+      .then(() => {
         return this.setENSData(this.#store.getState().wallet.getAddress());
       })
+
       .then(() => {
         eventPipeIn('wallid_event_unlock');
         return true;
@@ -272,7 +281,7 @@ export default class AppController {
    *
    * @returns {Promise} - result
    */
-  approveConnection(url, icon, name, level = 1) {
+  approveConnection(url, icon, name, level = 1, options) {
     const vault = this.#store.getState().vault;
     const connections = this.#store.getState().connections;
     const wallet = this.#store.getState().wallet;
@@ -282,7 +291,9 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
-    return Promise.resolve(connections.addConnected(url, icon, name, level))
+    return Promise.resolve(
+      connections.addConnected(url, icon, name, level, options)
+    )
       .then(
         vault.putConnections(
           connections.serialize(),

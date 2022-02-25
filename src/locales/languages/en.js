@@ -434,6 +434,7 @@ export default {
     cancel: 'Cancel',
     confirm: 'Confirm',
     connect: 'Connect',
+    approve: 'Approve',
     disconnect: 'Disconnect',
     done: 'Done',
   },

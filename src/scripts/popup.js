@@ -33,9 +33,13 @@ Vue.use(VueLogger, options);
 
 //bind api to window
 const { API } = chrome.extension.getBackgroundPage();
-
 window.$API = API;
 Vue.prototype.$API = API;
+
+//bind eventEmitter to window and vue app
+const { eventEmitter } = chrome.extension.getBackgroundPage();
+window.$eventEmitter = eventEmitter;
+Vue.prototype.$eventEmitter = eventEmitter;
 
 var filter = function(text, length, clamp = '...') {
   const content = text ? text.toString() : '';

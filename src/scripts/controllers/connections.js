@@ -25,13 +25,14 @@ export default class ConnectionsController {
     return new ConnectionsController(conns);
   }
 
-  addConnected(url, icon, name, level) {
+  addConnected(url, icon, name, level, options) {
     return new Promise((resolve, reject) => {
       if (level < 1 || level > 3) return reject('ERR_INV_ACCESS_LEVEL');
       if (this.#connections.findIndex((c) => c.url == url) != -1) {
         return reject(`ERR_CONN_ALREADY_EXISTS`);
       }
-      this.#connections.push({ url, icon, name, level });
+      console.log(options);
+      this.#connections.push({ url, icon, name, level, ...options });
       return resolve();
     });
   }
