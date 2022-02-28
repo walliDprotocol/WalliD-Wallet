@@ -40,6 +40,7 @@ import {
   WALLID_IMPORT_SOCIAL_PROFILE,
   WALLID_VERIFY,
   WALLID_EXPORT,
+  WALLID_IMPORT_ASSET,
 } from './actions';
 
 import * as modules from './modules';
@@ -565,6 +566,20 @@ export default new Vuex.Store({
 
         try {
           resolve(API.exportAsset(...params));
+        } catch (error) {
+          console.error(error);
+          reject(error.message);
+        }
+      });
+    },
+
+    [WALLID_IMPORT_ASSET]: ({ state, commit, dispatch }, params) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action WALLID_IMPORT_ASSET');
+        console.log('Params: ', params);
+
+        try {
+          resolve(API.importAsset(...params));
         } catch (error) {
           console.error(error);
           reject(error.message);
