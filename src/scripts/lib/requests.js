@@ -75,7 +75,7 @@ const RequestAPIMethods = {
     executor: ['configurations', 'setProvider'],
   },
   wallet_address: {
-    level: 2,
+    level: 1,
     executor: ['wallet', 'getAddress'],
   },
   wallet_encrypt: {
