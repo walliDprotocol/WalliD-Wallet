@@ -8,9 +8,11 @@
         src="../images/logos/logo-wallid.png"
       />
       <h1 v-if="!success" class="T2 ml-5">
-        {{ $t('request.' + type + '.title') }}
+        {{ $t('request.' + requestType + '.title') }}
       </h1>
-      <h1 v-else class="T2 ml-5">{{ $t('request.' + type + '.success') }}</h1>
+      <h1 v-else class="T2 ml-5">
+        {{ $t('request.' + requestType + '.success') }}
+      </h1>
 
       <div class="arrow-down-header"></div>
     </v-app-bar>
@@ -22,7 +24,7 @@
         style="height:500px"
       >
         <v-row
-          v-if="request.type == 'wallid_connect'"
+          v-if="requestType == 'wallid_connect'"
           class="justify-space-around align-content-start mt-2px"
         >
           <v-col cols="8" class="pt-5 pb-0">
@@ -34,7 +36,7 @@
           <v-col cols="8" class="">
             <ul class="request-list-permissions text-center">
               <li class="sub-title-fields text-center">
-                {{ $t('request.' + request.type + '.description') }}
+                {{ $t('request.' + requestType + '.description') }}
               </li>
             </ul>
           </v-col>
@@ -64,7 +66,33 @@
         </v-col>
 
         <v-row
-          v-if="request.type !== 'wallid_connect'"
+          v-if="requestType === 'wallet_sign'"
+          class="justify-space-around align-content-start "
+        >
+          <v-col cols="8" class="" style="border-bottom: solid 1px #eeeeee">
+            <h2 class="normal-text">
+              {{ $t('request.' + requestType + '.label[0]') }}
+            </h2>
+          </v-col>
+          <v-col
+            cols="8"
+            class="px-0"
+            style="border-bottom: solid 1px #eeeeee; max-height: 160px; overflow-y: auto;"
+          >
+            <p class="SECUNDARY-LINKS text-left mb-3">
+              {{ $t('request.' + requestType + '.label[1]') }}
+            </p>
+            <p
+              class="SECUNDARY-LINKS text-left mb-5"
+              style="word-break: break-all;"
+            >
+              {{ requestData }}
+            </p>
+          </v-col>
+        </v-row>
+
+        <v-row
+          v-else-if="requestType !== 'wallid_connect'"
           class="justify-space-around align-content-start mt-2px"
         >
           <v-col cols="8" class="pt-5 pb-0">
@@ -76,14 +104,14 @@
           <v-col cols="7" class="">
             <ul class="request-list-permissions text-center">
               <li class="sub-title-fields text-center">
-                {{ $t('request.' + request.type + '.description') }}
+                {{ $t('request.' + requestType + '.description') }}
               </li>
             </ul>
           </v-col>
         </v-row>
 
         <v-row
-          v-if="request.type !== 'wallid_connect'"
+          v-if="requestType !== 'wallid_connect'"
           class="justify-center align-content-start mt-2px"
         >
           <v-col cols="8" class="text-left d-flex pb-0 px-0">
@@ -126,7 +154,7 @@
         </v-row>
 
         <v-col
-          v-if="type == 'wallid_connect'"
+          v-if="requestType == 'wallid_connect'"
           cols="10"
           class="px-4 direction-column"
         >
@@ -171,7 +199,7 @@
             :disabled="disableButtonRequest"
             @click="authorizeRequest(12)"
           >
-            {{ $t('request.' + type + '.button') }}
+            {{ $t('request.' + requestType + '.button') }}
           </v-btn>
         </v-col>
       </v-row>
@@ -181,7 +209,7 @@
           <div class="back-arrow">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
-              {{ $t('request.' + type + '.successText') }}
+              {{ $t('request.' + requestType + '.successText') }}
             </h2>
           </div>
         </v-col>
@@ -248,6 +276,12 @@ export default {
     ...mapState({
       walletAddress: 'address',
     }),
+    requestType() {
+      return this.request.type;
+    },
+    requestData() {
+      return this.request.data;
+    },
     getCurrentLevel() {
       console.log(this.currentLevel);
       return (
@@ -264,8 +298,8 @@ export default {
     this.debug('Request: ', this.request);
     this.debug('Request origin: ', this.request.origin);
 
-    this.type = this.request.type;
-    this.debug('Request type: ', this.type);
+    // this.type = this.request.type;
+    this.debug('Request type: ', this.requestType);
     this.websiteData = this.getWebsiteInfo(this.request.origin);
 
     // Get current access level to requesting webiste
@@ -274,7 +308,7 @@ export default {
     });
     console.log('currentLevel', this.currentLevel);
 
-    switch (this.type) {
+    switch (this.requestType) {
       case 'wallet_sign':
       case 'wallet_sign_erc191':
       case 'wallet_ec_sign':
@@ -426,7 +460,7 @@ export default {
   data() {
     return {
       disableButtonRequest: false,
-      type: '',
+      // type: '',
       success: false,
       websiteData: { name: '', icon: '' },
       permissionLevel: 1,

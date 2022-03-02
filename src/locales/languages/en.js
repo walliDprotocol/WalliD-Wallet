@@ -165,6 +165,7 @@ export default {
       title: 'Sign Request',
       description:
         ' is requesting your authorisation to sign the Certificate data with you private key',
+      label: ['You are signing:', 'Message:'],
       button: 'Sign',
     },
     wallet_ec_sign: {
