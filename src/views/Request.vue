@@ -55,7 +55,20 @@
           <v-divider class="dashed" />
         </v-col>
 
-        <v-col cols="4" class="pl-1 pt-4 ml-n14 text-center">
+        <v-col
+          v-if="getAssetInfo && getAssetInfo.length == 2"
+          cols="4"
+          class="pl-1 pt-4 ml-n14 text-center"
+        >
+          <StoredProfileImg
+            class="mt-n2 ml-n2"
+            :size="58"
+            :name="getAssetInfo[0]"
+          />
+
+          <p class="FIELD-TEXT">{{ getAssetInfo[1] | truncate(12, '...') }}</p>
+        </v-col>
+        <v-col v-else cols="4" class="pl-1 pt-4 ml-n14 text-center">
           <jazz-icon
             :address="walletAddress"
             :id="'request'"
@@ -250,6 +263,7 @@ import TooltipIcon from '../images/icons/icon-tooltip';
 import BrokenLine from '../images/broken-line';
 import CheckSuccessIcon from '../images/icon-sucessfully';
 import WebSiteLogo from '../components/WebSiteLogo';
+import StoredProfileImg from '../components/StoredProfileImg';
 
 import {
   CANCEL_REQUEST,
@@ -269,6 +283,7 @@ export default {
     WarningIcon,
     BrokenLine,
     WebSiteLogo,
+    StoredProfileImg,
     TooltipIcon,
   },
   computed: {
@@ -281,6 +296,15 @@ export default {
     },
     requestData() {
       return this.request.data;
+    },
+    getAssetInfo() {
+      if (this.requestType === 'wallid_export_asset') {
+        return this.requestData?.[1].split?.(':');
+
+        // MetaMask:0x11ef4f801a93ae06a00b13086d0066137f1937bd
+      } else {
+        return null;
+      }
     },
     getCurrentLevel() {
       console.log(this.currentLevel);
