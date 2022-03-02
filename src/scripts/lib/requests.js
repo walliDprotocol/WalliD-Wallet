@@ -140,7 +140,7 @@ const RequestAPIMethods = {
     // params: [listType], available types are  identities', 'credentials',
     // 'profiles' and 'assets' to get all mentioned earlier
   },
-  wallid_export: {
+  wallid_export_asset: {
     popup: false,
     level: 2,
     main_controller: true,

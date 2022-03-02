@@ -185,6 +185,11 @@ export default {
       description: 'Access a list of stored assets',
       button: 'Confirm',
     },
+    wallid_export_asset: {
+      title: 'Authorisation Request',
+      description: 'Get ID asset',
+      button: 'Authorise',
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: 'Cancel',
   },
