@@ -99,7 +99,7 @@
               class="SECUNDARY-LINKS text-left mb-5"
               style="word-break: break-word;"
             >
-              {{ requestData }}
+              {{ signatureMessage }}
             </p>
           </v-col>
         </v-row>
@@ -297,6 +297,9 @@ export default {
     },
     requestData() {
       return this.request.data;
+    },
+    signatureMessage() {
+      return this.request.data?.join?.('; ');
     },
     getAssetInfo() {
       if (this.requestType === 'wallid_export_asset') {
