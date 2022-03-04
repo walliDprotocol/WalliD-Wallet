@@ -97,7 +97,7 @@
             </p>
             <p
               class="SECUNDARY-LINKS text-left mb-5"
-              style="word-break: break-all;"
+              style="word-break: break-word;"
             >
               {{ requestData }}
             </p>
@@ -115,11 +115,12 @@
             </h2>
           </v-col>
           <v-col cols="7" class="">
-            <ul class="request-list-permissions text-center">
-              <li class="sub-title-fields text-center">
+            <div class="request-list-permissions text-center">
+              <p class="sub-title-fields text-left">
+                <span style="font-size:22px; line-height: 0;"> &#8226; </span>
                 {{ $t('request.' + requestType + '.description') }}
-              </li>
-            </ul>
+              </p>
+            </div>
           </v-col>
         </v-row>
 
