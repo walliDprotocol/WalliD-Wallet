@@ -190,6 +190,11 @@ export default {
       description: 'Get ID asset',
       button: 'Authorise',
     },
+    wallid_import_asset: {
+      title: 'Authorisation Request',
+      description: 'Store ID assets in your wallet',
+      button: 'Authorise',
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: 'Cancel',
   },
