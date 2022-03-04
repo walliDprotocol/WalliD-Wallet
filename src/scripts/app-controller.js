@@ -381,7 +381,7 @@ export default class AppController {
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
-    return wallet.signEthereumMessage(JSON.stringify(data));
+    return wallet.signEthereumMessage(data);
   }
 
   /**
