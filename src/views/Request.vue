@@ -89,14 +89,14 @@
           </v-col>
           <v-col
             cols="8"
-            class="px-0"
-            style="border-bottom: solid 1px #eeeeee; max-height: 160px; overflow-y: auto;"
+            class="px-0 pb-5"
+            style="border-bottom: solid 1px #eeeeee; max-height: 170px; overflow-y: auto;"
           >
             <p class="SECUNDARY-LINKS text-left mb-3">
               {{ $t('request.' + requestType + '.label[1]') }}
             </p>
             <p
-              class="SECUNDARY-LINKS text-left mb-5"
+              class="SECUNDARY-LINKS text-left"
               style="word-break: break-word;"
             >
               {{ signatureMessage }}
