@@ -1072,7 +1072,7 @@ export default class AppController {
           vault.isUnlocked()
         ) {
           console.log('Already connect');
-          return Promise.resolve('ALREADY_CONNECTED');
+          return Promise.resolve({msg:'ALREADY_CONNECTED', level: accessLevel});
         }
         // has permission, do request
 

@@ -27,18 +27,11 @@
           v-if="requestType == 'wallid_connect'"
           class="justify-space-around align-content-start mt-2px"
         >
-          <v-col cols="8" class="pt-5 pb-0">
+          <v-col cols="9" class="pt-5 pb-0">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
-              {{ $t('request.description') }}
+              {{ $t('request.' + requestType + '.description') }}
             </h2>
-          </v-col>
-          <v-col cols="8" class="">
-            <ul class="request-list-permissions text-center">
-              <li class="sub-title-fields text-center">
-                {{ $t('request.' + requestType + '.description') }}
-              </li>
-            </ul>
           </v-col>
         </v-row>
 

@@ -162,7 +162,7 @@ export default {
       button: 'Store',
     },
     wallet_sign: {
-      title: 'Sign Request',
+      title: 'Signature request',
       description:
         ' is requesting your authorisation to sign the Certificate data with you private key',
       label: ['You are signing:', 'Message:'],
