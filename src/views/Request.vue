@@ -17,10 +17,10 @@
       <div class="arrow-down-header"></div>
     </v-app-bar>
 
-    <v-container class="request">
+    <v-container class="request px-5">
       <v-row
         v-show="!success"
-        class="justify-space-around mt-2px"
+        class="justify-space-around mt-3"
         style="height:500px"
       >
         <v-row
@@ -36,7 +36,7 @@
         </v-row>
 
         <!-- website info and wallet -->
-        <v-col cols="4" class="pr-1 pt-4 mr-n14 text-center">
+        <v-col cols="4" class="pr-1 pt-4 mr-n16 text-center">
           <WebSiteLogo
             :size="58"
             :imageURL="websiteData.icon"
@@ -44,14 +44,14 @@
           />
         </v-col>
 
-        <v-col cols="4" class="px-0 pt-4 mx-n7">
+        <v-col cols="3" class="px-0 pt-4 mx-n16">
           <v-divider class="dashed" />
         </v-col>
 
         <v-col
           v-if="getAssetInfo && getAssetInfo.length == 2"
           cols="4"
-          class="pl-1 pt-4 ml-n14 text-center"
+          class="pl-1 pt-4 ml-n16 text-center"
         >
           <StoredProfileImg
             class="mt-n2 ml-n2"
@@ -61,7 +61,7 @@
 
           <p class="FIELD-TEXT">{{ getAssetInfo[1] | truncate(12, '...') }}</p>
         </v-col>
-        <v-col v-else cols="4" class="pl-1 pt-4 ml-n14 text-center">
+        <v-col v-else cols="4" class="pl-1 pt-4 ml-n16 text-center">
           <jazz-icon
             :address="walletAddress"
             :id="'request'"
@@ -109,7 +109,7 @@
           </v-col>
           <v-col cols="7" class="">
             <div class="request-list-permissions text-center">
-              <p class="sub-title-fields text-left">
+              <p class="sub-title-fields text-center">
                 <span style="font-size:22px; line-height: 0;"> &#8226; </span>
                 {{ $t('request.' + requestType + '.description') }}
               </p>

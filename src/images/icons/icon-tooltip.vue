@@ -12,3 +12,15 @@
     />
   </svg>
 </template>
+<style lang="scss" scoped>
+svg {
+  path {
+    fill: #b8b9bb;
+  }
+  &:hover {
+    path {
+      fill: #009fb1;
+    }
+  }
+}
+</style>

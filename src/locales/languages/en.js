@@ -183,7 +183,7 @@ export default {
     wallid_list: {
       title: 'Authorisation Request',
       description: 'Access a list of stored assets',
-      button: 'Confirm',
+      button: 'Authorise',
     },
     wallid_export_asset: {
       title: 'Authorisation Request',
