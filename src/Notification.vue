@@ -52,6 +52,12 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  overflow: hidden;
+  width: 400px;
+  height: 600px;
+}
+
 #app.plugin {
   &.notification {
     max-width: 400px;

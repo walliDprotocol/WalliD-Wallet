@@ -1,5 +1,5 @@
 <template>
-  <v-app class="plugin popup" style="margin-top: 8px">
+  <v-app class="plugin popup" style="margin-top: 12px">
     <v-container fluid class="router-views pa-0">
       <router-view :hideAppHeader="hideAppHeader"></router-view>
     </v-container>
@@ -48,6 +48,11 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  overflow: hidden;
+  width: 400px;
+}
+
 #app.plugin {
   .plugin-header {
     background: #eeeeee;
