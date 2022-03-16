@@ -169,7 +169,11 @@
             {{ $t('request.wallid_connect.permissions') }}
           </p>
 
-          <v-radio-group class="levels-radio-group" v-model="permissionLevel">
+          <v-radio-group
+            class="levels-radio-group"
+            v-model="permissionLevel"
+            hide-details
+          >
             <v-radio
               v-for="l in $t('request.wallid_connect.levels')"
               :key="l.level"

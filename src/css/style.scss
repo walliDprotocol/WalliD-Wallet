@@ -62,7 +62,11 @@
     margin-top: 10px;
   }
   .v-radio {
-    margin-bottom: 4px;
+    &:not(:last-child) {
+      border-bottom: solid 1px #eeeeee;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+    }
     .v-input--selection-controls__ripple {
       display: none;
     }
