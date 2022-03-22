@@ -25,9 +25,9 @@
       >
         <v-row
           v-if="requestType == 'wallid_connect'"
-          class="justify-space-around align-content-start mt-2px"
+          class="justify-space-around align-content-start "
         >
-          <v-col cols="9" class="pt-5 pb-0">
+          <v-col cols="9" class="pt-0 pb-0">
             <h2 class="sub-title-fields">
               <b> {{ websiteData.name }}</b>
               {{ $t('request.' + requestType + '.description') }}
@@ -163,9 +163,9 @@
         <v-col
           v-if="requestType == 'wallid_connect'"
           cols="10"
-          class="px-4 direction-column"
+          class="px-4 pt-10 direction-column"
         >
-          <p class="FIELD-TEXT text-left">
+          <p class="SECUNDARY-LINKS text-left">
             {{ $t('request.wallid_connect.permissions') }}
           </p>
 
@@ -197,6 +197,15 @@
           </v-radio-group>
         </v-col>
 
+        <v-col
+          v-if="requestType == 'wallid_connect'"
+          cols="10"
+          class="px-4 py-0 direction-column"
+        >
+          <p class="WARNING-NOTES-1 text-left" style="color:#b8b9bb">
+            Only connect with sites you trust
+          </p>
+        </v-col>
         <!-- Option buttons -->
         <v-col v-show="!success" cols="6" class="pr-2 pb-0" align-self="end">
           <v-btn text class="cancel-btn" @click="cancel">
