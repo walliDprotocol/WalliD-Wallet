@@ -1,8 +1,12 @@
-import { ExternalConnectorBackend } from "./lib/web-connector";
-import { eventPipeOut } from "./lib/event-pipe";
+import {
+  ExternalConnectorBackend,
+  ExternalConnectorFrontend,
+} from './lib/web-connector';
+import { eventPipeOut } from './lib/event-pipe';
+import extension from 'extensionizer';
 
 function injectScript(file) {
-  var scriptTag = document.createElement("script");
+  var scriptTag = document.createElement('script');
   scriptTag.src = file;
   scriptTag.onload = function() {
     // this.parentNode.removeChild(this);
@@ -15,9 +19,11 @@ function injectScript(file) {
 }
 
 function init() {
-  injectScript(chrome.extension.getURL("/scripts/injector.bundle.js"));
+  injectScript(extension.extension.getURL('/scripts/injector.bundle.js'));
   ExternalConnectorBackend();
   eventPipeOut();
 }
 
 init();
+
+// exportFunction(ExternalConnectorFrontend, window, { defineAs: 'wallid' });

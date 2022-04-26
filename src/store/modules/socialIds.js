@@ -1,7 +1,8 @@
 import { SHARE_PROFILE } from '../actions';
 import axios from 'axios';
+import extension from 'extensionizer';
 
-const { API } = chrome.extension.getBackgroundPage();
+const { API } = extension.extension.getBackgroundPage();
 
 const state = {
   LOGOS_FOLDER: 'wallid-template-logos/',

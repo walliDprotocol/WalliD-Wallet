@@ -43,8 +43,9 @@ import {
 } from './actions';
 
 import * as modules from './modules';
+import extension from 'extensionizer';
 
-const { API } = chrome.extension.getBackgroundPage();
+const { API } = extension.extension.getBackgroundPage();
 
 import axios from 'axios';
 

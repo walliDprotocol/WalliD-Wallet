@@ -9,6 +9,7 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 import store from '../store';
 import VueLogger from 'vuejs-logger';
 import mixinPlugin from '../scripts/util';
+import extension from 'extensionizer';
 
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(Vuetify);
@@ -32,7 +33,7 @@ const options = {
 Vue.use(VueLogger, options);
 
 //bind api to window
-const { API } = chrome.extension.getBackgroundPage();
+const { API } = extension.extension.getBackgroundPage();
 
 window.$API = API;
 Vue.prototype.$API = API;

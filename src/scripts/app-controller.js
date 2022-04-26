@@ -19,6 +19,7 @@ import walletConnectController from './controllers/walletConnectController';
 
 import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
+import extension from 'extensionizer';
 
 const provider = new ethers.providers.JsonRpcProvider(
   'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2'
@@ -360,7 +361,7 @@ export default class AppController {
       var currentTab = tabs[0]; // there will be only one in this array
       f(currentTab);
     }
-    chrome.tabs.query(query, callback);
+    extension.tabs.query(query, callback);
   }
 
   //
@@ -1072,7 +1073,10 @@ export default class AppController {
           vault.isUnlocked()
         ) {
           console.log('Already connect');
-          return Promise.resolve('ALREADY_CONNECTED');
+          return Promise.resolve({
+            msg: 'ALREADY_CONNECTED',
+            level: accessLevel,
+          });
         }
         // has permission, do request
 
