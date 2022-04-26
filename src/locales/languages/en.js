@@ -105,7 +105,7 @@ export default {
     edit: 'Edit',
     wallid_connect: {
       title: 'Connection Request',
-      description: ' is asking for permission to connect to MyWalliD:',
+      description: ' is asking for your permission to connect to MyWalliD:',
       alert: 'Only connect with sites you fully trust.',
       permissions:
         'Select one of the following permission levels you want to give to this site:',

@@ -2,7 +2,7 @@
   <v-container
     class="social-profiles-list list-storage pt-1"
     style="overflow-y: auto;
-    height: 208px;"
+    height: 203px;"
   >
     <v-row v-if="profiles.length > 0">
       <v-col
