@@ -67,6 +67,7 @@ extension.runtime.onMessage.addListener(function(
   sender,
   sendResponse
 ) {
+  console.log('onMessage listener');
   App.requestAPI(request.method, request.params, sender.origin)
     .then((result) =>
       sendResponse({ data: result, error: null, nonce: request.nonce })

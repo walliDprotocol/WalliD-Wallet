@@ -12,6 +12,7 @@ import ConnectionsController from './controllers/connections';
 import IdentitiesController from './controllers/identities';
 import CredentialsController from './controllers/credentials';
 import ProfilesController from './controllers/profiles';
+import NetworksController from './controllers/networks';
 
 import ConfigurationsController from './controllers/configuration';
 
@@ -20,6 +21,8 @@ import walletConnectController from './controllers/walletConnectController';
 import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
 import extension from 'extensionizer';
+
+// Load new controllers for v2
 
 const provider = new ethers.providers.JsonRpcProvider(
   'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2'
@@ -51,6 +54,14 @@ export default class AppController {
     const walletConnect = walletConnectController;
 
     this.#store.updateState({ walletConnect });
+
+    const network = new NetworksController();
+
+    console.log(network.lookupNetwork());
+    console.log(network.setCurrentChainId(1));
+    console.log(network.getCurrentNetworkRpcTarget());
+
+    network.updateProvider();
   }
 
   //=============================================================================
@@ -1034,6 +1045,7 @@ export default class AppController {
    * @param string} origin - url of the caller web site
    */
   requestAPI(method, params = [], origin) {
+    console.log('requestAPI');
     const requestHandler = async function(details) {
       let promise = {};
       console.log('request method: ', method);
