@@ -195,6 +195,11 @@ export default {
       description: 'Store ID assets in your wallet',
       button: 'Authorise',
     },
+    wallid_verify: {
+      title: 'Authorisation Request',
+      description: 'Verify encrypted data integrity',
+      button: 'Authorise',
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: 'Cancel',
   },

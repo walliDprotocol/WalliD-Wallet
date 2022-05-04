@@ -432,13 +432,13 @@ export default new Vuex.Store({
           });
       });
     },
-    [DECRYPT]: ({ commit, state }, data) => {
+    [DECRYPT]: ({ commit, state }, { data }) => {
       return new Promise((resolve, reject) => {
         console.log('Action DECRYPT');
         state.debug('Data: ', data);
-        API.decryptData(...data)
+        API.decryptData(data)
           .then((res) => {
-            resolve(res);
+            resolve(JSON.parse(res));
           })
           .catch((e) => {
             console.error(e);
