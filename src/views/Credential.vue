@@ -52,7 +52,7 @@
                 :disabled="card.status != 'active'"
                 class="advance-btn "
               >
-                {{ $t('credentials.menu[1]') }}
+                {{ $t('credentials.menuCredential[1]') }}
               </v-btn>
             </div>
           </template>
@@ -75,7 +75,7 @@
           style="text-decoration:none"
         >
           <v-btn :disabled="!downloadURL" text class="advance-btn">
-            {{ $t('credentials.menu[2]') }}
+            {{ $t('credentials.menuCredential[2]') }}
           </v-btn>
         </a>
       </v-col>

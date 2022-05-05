@@ -70,7 +70,7 @@
           />
           <p class="FIELD-TEXT">{{ address | truncate(12, '...') }}</p>
         </v-col>
-        <v-col cols="auto" class="">
+        <v-col v-if="requestType !== 'wallid_connect'" cols="auto" class="">
           <v-row
             v-if="requestType === 'wallet_sign'"
             class="justify-space-around align-content-start "
