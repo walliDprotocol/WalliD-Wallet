@@ -68,6 +68,18 @@ export default class IdentitiesController {
     });
   }
 
+  exportAsset(idt) {
+    return new Promise((resolve, reject) => {
+      console.log('log id get', idt);
+      const index = this.#identities.findIndex((id) => id.idt == idt);
+      if (index == -1) {
+        console.log('ALREADY EXISTs', index);
+        return reject(`ERR_IDENTITY_INEXISTENT`);
+      }
+      return resolve(this.#identities[index]);
+    });
+  }
+
   extractIdentity(idt) {
     return new Promise((resolve, reject) => {
       console.log(this.#identities);
