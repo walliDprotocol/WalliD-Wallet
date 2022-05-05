@@ -70,95 +70,100 @@
           />
           <p class="FIELD-TEXT">{{ address | truncate(12, '...') }}</p>
         </v-col>
-
-        <v-row
-          v-if="requestType === 'wallet_sign'"
-          class="justify-space-around align-content-start "
-        >
-          <v-col cols="8" class="" style="border-bottom: solid 1px #eeeeee">
-            <h2 class="normal-text">
-              {{ $t('request.' + requestType + '.label[0]') }}
-            </h2>
-          </v-col>
-          <v-col
-            cols="8"
-            class="px-0 pb-5"
-            style="border-bottom: solid 1px #eeeeee; max-height: 170px; overflow-y: auto;"
+        <v-col cols="auto" class="">
+          <v-row
+            v-if="requestType === 'wallet_sign'"
+            class="justify-space-around align-content-start "
           >
-            <p class="SECUNDARY-LINKS text-left mb-3">
-              {{ $t('request.' + requestType + '.label[1]') }}
-            </p>
-            <p
-              class="SECUNDARY-LINKS text-left"
-              style="word-break: break-word;"
+            <v-col cols="8" class="" style="border-bottom: solid 1px #eeeeee">
+              <h2 class="normal-text">
+                {{ $t('request.' + requestType + '.label[0]') }}
+              </h2>
+            </v-col>
+            <v-col
+              cols="8"
+              class="px-0 pb-5"
+              style="border-bottom: solid 1px #eeeeee; max-height: 170px; overflow-y: auto;"
             >
-              {{ signatureMessage }}
-            </p>
-          </v-col>
-        </v-row>
-
-        <v-row
-          v-else-if="requestType !== 'wallid_connect'"
-          class="justify-space-around align-content-start mt-2px"
-        >
-          <v-col cols="8" class="pt-5 pb-0">
-            <h2 class="sub-title-fields">
-              <b> {{ websiteData.name }}</b>
-              {{ $t('request.description') }}
-            </h2>
-          </v-col>
-          <v-col cols="7" class="">
-            <div class="request-list-permissions text-center">
-              <p class="sub-title-fields text-center">
-                <span style="font-size:22px; line-height: 0;"> &#8226; </span>
-                {{ $t('request.' + requestType + '.description') }}
+              <p class="SECUNDARY-LINKS text-left mb-3">
+                {{ $t('request.' + requestType + '.label[1]') }}
               </p>
-            </div>
-          </v-col>
-        </v-row>
+              <p
+                class="SECUNDARY-LINKS text-left"
+                style="word-break: break-word;"
+              >
+                {{ signatureMessage }}
+              </p>
+            </v-col>
+          </v-row>
 
-        <v-row
-          v-if="requestType !== 'wallid_connect'"
-          class="justify-center align-content-start mt-2px"
-        >
-          <v-col cols="8" class="text-left d-flex pb-0 px-0">
-            <label class="SECUNDARY-LINKS">
-              {{ $t('request.currentLevel') }}
-            </label>
-          </v-col>
-          <v-col
-            cols="6"
-            class=" d-flex pb-2 px-0"
-            style="border-bottom: solid 1px #eee;"
+          <v-row
+            v-else-if="requestType !== 'wallid_connect'"
+            class="justify-space-around align-content-start mt-2px"
           >
-            <p
-              class="SECUNDARY-LINKS text-left"
-              v-html="getCurrentLevel.label"
-            ></p>
-            <v-tooltip bottom :content-class="'connection-level-tooltip'">
-              <template v-slot:activator="{ on, attrs }">
-                <span v-bind="attrs" v-on="on" class="d-flex align-center ml-2">
-                  <TooltipIcon />
-                </span>
-              </template>
-              <span>
-                {{ getCurrentLevel.tooltip }}
-              </span>
-            </v-tooltip>
-          </v-col>
-          <v-col
-            cols="2"
-            class="justify-end d-flex pb-2 px-0"
-            style="border-bottom: solid 1px #eee;"
+            <v-col cols="8" class="pt-5 pb-0">
+              <h2 class="sub-title-fields">
+                <b> {{ websiteData.name }}</b>
+                {{ $t('request.description') }}
+              </h2>
+            </v-col>
+            <v-col cols="7" class="">
+              <div class="request-list-permissions text-center">
+                <p class="sub-title-fields text-center">
+                  <span style="font-size:22px; line-height: 0;"> &#8226; </span>
+                  {{ $t('request.' + requestType + '.description') }}
+                </p>
+              </div>
+            </v-col>
+          </v-row>
+
+          <v-row
+            v-if="requestType !== 'wallid_connect'"
+            class="justify-center align-content-start mt-2px"
           >
-            <a
-              @click="edit()"
-              class="WARNING-NOTES-1 text-right text-decoration-none"
+            <v-col cols="8" class="text-left d-flex pb-0 px-0">
+              <label class="SECUNDARY-LINKS">
+                {{ $t('request.currentLevel') }}
+              </label>
+            </v-col>
+            <v-col
+              cols="6"
+              class=" d-flex pb-2 px-0"
+              style="border-bottom: solid 1px #eee;"
             >
-              {{ $t('request.edit') }}
-            </a>
-          </v-col>
-        </v-row>
+              <p
+                class="SECUNDARY-LINKS text-left"
+                v-html="getCurrentLevel.label"
+              ></p>
+              <v-tooltip bottom :content-class="'connection-level-tooltip'">
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    v-bind="attrs"
+                    v-on="on"
+                    class="d-flex align-center ml-2"
+                  >
+                    <TooltipIcon />
+                  </span>
+                </template>
+                <span>
+                  {{ getCurrentLevel.tooltip }}
+                </span>
+              </v-tooltip>
+            </v-col>
+            <v-col
+              cols="2"
+              class="justify-end d-flex pb-2 px-0"
+              style="border-bottom: solid 1px #eee;"
+            >
+              <a
+                @click="edit()"
+                class="WARNING-NOTES-1 text-right text-decoration-none"
+              >
+                {{ $t('request.edit') }}
+              </a>
+            </v-col>
+          </v-row>
+        </v-col>
 
         <v-col
           v-if="requestType == 'wallid_connect'"
