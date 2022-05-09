@@ -557,6 +557,9 @@ export default class AppController {
             this.#store.getState().password
           );
         })
+        .then(() => {
+          return { stored: true };
+        })
         .catch((error) => Promise.reject(error));
     } catch (error) {
       console.error(error);
@@ -1072,7 +1075,10 @@ export default class AppController {
           vault.isUnlocked()
         ) {
           console.log('Already connect');
-          return Promise.resolve({msg:'ALREADY_CONNECTED', level: accessLevel});
+          return Promise.resolve({
+            msg: 'ALREADY_CONNECTED',
+            level: accessLevel,
+          });
         }
         // has permission, do request
 
