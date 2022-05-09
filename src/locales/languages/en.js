@@ -200,6 +200,11 @@ export default {
       description: 'Verify encrypted data integrity',
       button: 'Authorise',
     },
+    wallet_sign_ec: {
+      title: 'Authorisation Request',
+      description: 'Alter the status of the credential',
+      button: 'Authorise',
+    },
     bScenes: "Know what's happening behind the scenes",
     cancel: 'Cancel',
   },

@@ -20,6 +20,7 @@ export const EXTRACT = 'wallid_extract';
 export const WALLID_LIST = 'wallid_list';
 export const WALLID_IMPORT_SOCIAL_PROFILE = 'wallid_import_social_profile';
 export const WALLID_VERIFY = 'wallet_verify';
+export const WALLET_SIGN_EC = 'wallet_sign_ec';
 
 export const GET_TOKEN = 'GET_TOKEN';
 
