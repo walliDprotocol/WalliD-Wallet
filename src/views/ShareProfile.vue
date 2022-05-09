@@ -283,8 +283,8 @@ export default {
   },
   methods: {
     getImage(card) {
-      console.log(card);
       return (
+        card.userData?.imgArray?.[0] ||
         card.userData?.credential_img ||
         card.userData?.frontend_props?.preview ||
         card.photoURL
