@@ -145,9 +145,7 @@
                     <TooltipIcon />
                   </span>
                 </template>
-                <span>
-                  {{ getCurrentLevel.tooltip }}
-                </span>
+                <span v-html="getCurrentLevel.tooltip"> </span>
               </v-tooltip>
             </v-col>
             <v-col
@@ -193,9 +191,7 @@
                       <TooltipIcon />
                     </div>
                   </template>
-                  <span>
-                    {{ l.tooltip }}
-                  </span>
+                  <span v-html="l.tooltip"> </span>
                 </v-tooltip>
               </template>
             </v-radio>

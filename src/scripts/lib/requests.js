@@ -140,12 +140,28 @@ const RequestAPIMethods = {
     // params: [listType], available types are  identities', 'credentials',
     // 'profiles' and 'assets' to get all mentioned earlier
   },
+
+  /**
+   *
+   * Used to export an asset in wallet
+   * @param pluginController The controller where the asset is stored
+   * @param uniqueId The asset unique id
+   */
   wallid_export_asset: {
     popup: false,
     level: 2,
     main_controller: true,
     executor: ['exportAsset'],
   },
+  /**
+   *
+   * Used to store assets in wallet
+   * @param assetData Asset object, can also be an Array<Objects>
+   * @param assetData.pluginController (required) The controller where the asset will be stored
+   *                                   the values are credentials, identities, profiles
+   * @param assetData.uniqueId (required) An unique id that is used to map the asset and its the key to export the asset.
+   * the rest of the keys are specific to each controller
+   */
   wallid_import_asset: {
     popup: false,
     level: 2,
