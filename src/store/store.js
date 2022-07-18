@@ -466,7 +466,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('Action SIGN_ERC');
         state.debug('Data: ', data);
-        API.generateERC191Signature(data.target, data.data)
+        API.generateERC191Signature(...data)
           .then((res) => {
             console.log(res);
             resolve(res);
