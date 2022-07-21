@@ -44,6 +44,7 @@ export const UPDATE_CONNECTED = 'UPDATE_CONNECTED';
 
 export const AUTHORIZE_REQUEST = 'AUTHORIZE_REQUEST';
 export const CANCEL_REQUEST = 'CANCEL_REQUEST';
+export const REQUEST_POP = 'REQUEST_POP';
 
 // Social Profiles Actions
 export const WALLID_EXPORT = 'wallid_export_asset';

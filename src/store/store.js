@@ -35,6 +35,7 @@ import {
 
   // NEW
   PERMISSION_LEVEL,
+  REQUEST_POP,
   // plugin requests
   WALLID_LIST,
   WALLID_IMPORT_SOCIAL_PROFILE,
@@ -252,6 +253,7 @@ export default new Vuex.Store({
           })
           .catch((e) => {
             console.error(e);
+            if (e === 'ERR_CONN_ALREADY_EXISTS') resolve(e);
             reject(e);
           });
       });
@@ -737,12 +739,27 @@ export default new Vuex.Store({
         }
       })
         .then(() => {
-          dispatch(REFRESH_STATE);
           state.debug('Connections: ', state.connections);
+          return dispatch(REFRESH_STATE);
+        })
+        .then(() => {
+          return API.getNextRequestPop();
         })
         .catch((err) => {
           throw err;
         });
+    },
+    [REQUEST_POP]: (
+      { commit, dispatch, state },
+      { request, notification, callback }
+    ) => {
+      return new Promise((resolve, reject) => {
+        console.log('Action REQUEST_POP', callback);
+        API.getNextRequestPop();
+        resolve(API.getNextRequest());
+
+        dispatch(REFRESH_STATE);
+      });
     },
     [CANCEL_REQUEST]: (
       { commit, dispatch, state },
@@ -751,6 +768,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('Action CANCEL_REQUEST', callback);
         resolve(callback('REJECTED'));
+        API.getNextRequestPop();
 
         commit('updatePendingRequests');
         dispatch(REFRESH_STATE);

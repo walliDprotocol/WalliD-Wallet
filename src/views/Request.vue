@@ -154,7 +154,7 @@
               style="border-bottom: solid 1px #eee;"
             >
               <a
-                @click="edit()"
+                @click="editSitesConnectionLevel()"
                 class="WARNING-NOTES-1 text-right text-decoration-none"
               >
                 {{ $t('request.edit') }}
@@ -282,6 +282,7 @@ import {
   IMPORT,
   UPDATE_CONNECTED,
   ADDRESS,
+  REQUEST_POP,
 } from '../store/actions';
 import { mapGetters, mapState } from 'vuex';
 
@@ -327,6 +328,8 @@ export default {
   watch: {},
   mounted() {
     // this.debug('Request: ', this.request);
+
+    this.requestsWatcher();
   },
   async created() {
     this.debug('Address: ', this.address);
@@ -354,19 +357,17 @@ export default {
         break;
       case 'wallid_connect':
         // Rework this: is this realy needed??
-        this.$store
-          .dispatch(ACCESS_LEVEL, {
-            url: this.request.origin,
-            level: this.request.level,
-          })
-          .then((hasAccess) => {
-            this.debug('hasAccess', hasAccess);
-            if (hasAccess) {
-              Promise.resolve(
-                this.request.callback(null, 'ALREADY_CONNECTED')
-              ).then(() => window.close());
-            }
-          });
+        let hasAccess = await this.$store.dispatch(ACCESS_LEVEL, {
+          url: this.request.origin,
+          level: this.request.level,
+        });
+        this.debug('hasAccess', hasAccess);
+        if (hasAccess) {
+          await this.request.callback(null, 'ALREADY_CONNECTED');
+          let nextRequest = await this.$store.dispatch(REQUEST_POP, {});
+          console.log(nextRequest);
+          window.close();
+        }
         break;
       case 'wallid_disconnect':
         console.error('Invalid Request Type');
@@ -406,7 +407,17 @@ export default {
     },
   },
   methods: {
-    edit() {
+    // Pool every 2 seconds to see if current request has already been accepted
+    requestsWatcher() {
+      setInterval(() => {
+        this.$store.commit('updatePendingRequests');
+
+        if (!this.$store.getters.getRequest) {
+          window.close();
+        }
+      }, 2 * 1000);
+    },
+    editSitesConnectionLevel() {
       this.$router.push({
         name: 'sites',
         params: { toEditSite: this.websiteData.url },

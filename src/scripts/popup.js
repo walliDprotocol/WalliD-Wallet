@@ -9,6 +9,9 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 import store from '../store';
 import VueLogger from 'vuejs-logger';
 import mixinPlugin from '../scripts/util';
+import extension from 'extensionizer';
+
+extension.browserAction.setBadgeText({ text: null });
 
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.use(Vuetify);
@@ -32,12 +35,12 @@ const options = {
 Vue.use(VueLogger, options);
 
 //bind api to window
-const { API } = chrome.extension.getBackgroundPage();
+const { API } = extension.extension.getBackgroundPage();
 window.$API = API;
 Vue.prototype.$API = API;
 
 //bind eventEmitter to window and vue app
-const { eventEmitter } = chrome.extension.getBackgroundPage();
+const { eventEmitter } = extension.extension.getBackgroundPage();
 window.$eventEmitter = eventEmitter;
 Vue.prototype.$eventEmitter = eventEmitter;
 
