@@ -885,6 +885,7 @@ export default class AppController {
    * @param {boolean} remove - remove flag
    */
   updateActivePopups(id, remove) {
+    console.log('updateActivePopups id: ', id);
     let popups = this.#store.getState().popups;
     if (remove) {
       popups.splice(popups.indexOf(id), 1);

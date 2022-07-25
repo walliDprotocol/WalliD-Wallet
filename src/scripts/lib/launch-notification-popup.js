@@ -21,8 +21,8 @@ export default function(currentRequests) {
         left,
         top,
       },
-      (win) => resolve(win.id)
+      (win) => resolve(win?.id)
     );
-    console.log(windowId);
+    console.log(extension.runtime.getURL('notification.html'));
   });
 }
