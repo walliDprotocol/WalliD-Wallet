@@ -12,6 +12,7 @@ import ConnectionsController from './controllers/connections';
 import IdentitiesController from './controllers/identities';
 import CredentialsController from './controllers/credentials';
 import ProfilesController from './controllers/profiles';
+import NetworksController from './controllers/networks';
 
 import ConfigurationsController from './controllers/configuration';
 
@@ -19,6 +20,9 @@ import walletConnectController from './controllers/walletConnectController';
 
 import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
+import extension from 'extensionizer';
+
+// Load new controllers for v2
 
 import extension from 'extensionizer';
 
@@ -52,6 +56,14 @@ export default class AppController {
     const walletConnect = walletConnectController;
 
     this.#store.updateState({ walletConnect });
+
+    const network = new NetworksController();
+
+    console.log(network.lookupNetwork());
+    console.log(network.setCurrentChainId(1));
+    console.log(network.getCurrentNetworkRpcTarget());
+
+    network.updateProvider();
   }
 
   //=============================================================================
@@ -361,7 +373,7 @@ export default class AppController {
       var currentTab = tabs[0]; // there will be only one in this array
       f(currentTab);
     }
-    chrome.tabs.query(query, callback);
+    extension.tabs.query(query, callback);
   }
 
   //
@@ -1058,6 +1070,7 @@ export default class AppController {
    * @param string} origin - url of the caller web site
    */
   requestAPI(method, params = [], origin) {
+    console.log('requestAPI');
     const requestHandler = async function(details) {
       let promise = {};
       let currentRequests;

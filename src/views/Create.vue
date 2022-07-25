@@ -292,7 +292,9 @@ import IconAdd from '../images/icons/icon-add-new-unselected';
 import IconImport from '../images/icons/icon-download';
 import IconAddHover from '../images/icons/icon-add-new-selected';
 import IconImportHover from '../images/icons/icon-download-selected';
-const { API } = chrome.extension.getBackgroundPage();
+import extension from 'extensionizer';
+
+const { API } = extension.extension.getBackgroundPage();
 
 export default {
   name: 'Create',

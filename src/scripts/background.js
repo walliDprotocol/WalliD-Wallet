@@ -21,15 +21,15 @@ function gotMessage(msg) {
 
   if (msg.type == 'website:url') {
     forwarderURL = msg.url;
-    // chrome.tabs.create({ url: forwarderURL }, function(tab) {
+    // browser.tabs.create({ url: forwarderURL }, function(tab) {
     //   console.log("options page opened");
     //   //     //https://www.dev.wallid.io/import http://localhost:8080/import
     // });
 
-    chrome.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
+    extension.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
       console.log('tab', tab);
-      chrome.tabs.get(tab[0].id, function(tab) {
-        chrome.tabs.highlight(
+      extension.tabs.get(tab[0].id, function(tab) {
+        extension.tabs.highlight(
           {
             windowId: tab.windowId,
             tabs: tab.index,
@@ -45,7 +45,7 @@ extension.runtime.onConnect.addListener(connected);
 // This cannot happens because of mycredentials
 // extension.runtime.onInstalled.addListener(function(object) {
 //   if (object.reason === 'install') {
-//     chrome.tabs.create({ url: 'https://www.wallid.io/Setup' }, function(tab) {
+//     browser.tabs.create({ url: 'https://www.wallid.io/Setup' }, function(tab) {
 //       console.log('New tab launched with installed.html for user SignUp');
 //     });
 //   }
@@ -67,6 +67,7 @@ extension.runtime.onMessage.addListener(function(
   sender,
   sendResponse
 ) {
+  console.log('onMessage listener');
   App.requestAPI(request.method, request.params, sender.origin)
     .then((result) =>
       sendResponse({ data: result, error: null, nonce: request.nonce })

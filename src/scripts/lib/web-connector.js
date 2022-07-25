@@ -18,7 +18,12 @@ export function ExternalConnectorFrontend() {
   var nonce = 0;
   function newResponseListener(resolve, reject, _nonce) {
     var listener = function(event) {
-      if (event?.detail?.nonce == _nonce) {
+      console.log(event);
+      console.log(event.detail);
+      const { detail } = event;
+      const { nonce } = detail;
+      console.log(nonce);
+      if (detail?.nonce == _nonce) {
         if (event.detail.error) reject(event.detail.error);
         else resolve(event.detail.data);
 

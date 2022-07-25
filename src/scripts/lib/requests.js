@@ -171,6 +171,7 @@ const RequestAPIMethods = {
 };
 
 export function getRequestDetails(method) {
+  console.log('getRequestDetails');
   if (RequestAPIMethods[method] == undefined) {
     return Promise.reject('Invalid method call');
   }

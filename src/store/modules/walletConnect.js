@@ -1,4 +1,6 @@
-const { API } = chrome.extension.getBackgroundPage();
+import extension from 'extensionizer';
+
+const { API } = extension.extension.getBackgroundPage();
 
 const state = {};
 const mutations = {};
