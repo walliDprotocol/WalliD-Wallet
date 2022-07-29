@@ -7,6 +7,13 @@
       :showMenu="showMenu"
     />
 
+    <MenuNetworks
+      v-if="!hideAppHeader"
+      :address="address"
+      @close="closeNetworksDrawer"
+      :showNetworks="showNetworks"
+    />
+
     <v-app-bar v-if="!hideAppHeader" height="74" flat app class="plugin-header">
       <v-img
         height="50"
@@ -17,6 +24,29 @@
              ../images/logos/logo-wallid@3x.png 3x"
       />
       <v-spacer />
+      <!-- Networks -->
+      <div
+        v-if="address"
+        @click.stop="showNetworks = !showNetworks"
+        class="current-network"
+      >
+        <div
+          class="network-color"
+          :style="{ backgroundColor: currentNetwork.color }"
+        ></div>
+        {{ currentNetwork.name }}
+        <IconArrowDropdown
+          :style="{
+            transform: 'rotate(' + (showNetworks ? '180deg' : '0deg') + ')',
+            animation: 'transform 1s infinite linear',
+            width: '8px',
+            marginLeft: '6px',
+            animation: 'transform 1s linear',
+          }"
+        />
+      </div>
+      <v-spacer />
+      <!-- End of Networks -->
       <div
         v-if="address"
         @click.stop="showMenu = !showMenu"
@@ -33,7 +63,7 @@
       <!-- -->
     </v-app-bar>
     <!-- Sizes your content based upon application components -->
-    <v-main style="padding-top:74px">
+    <v-main style="padding-top: 74px;">
       <!-- Provides the application the proper gutter -->
       <v-container fluid class="router-views pa-0">
         <!-- If using vue-router -->
@@ -44,14 +74,18 @@
 </template>
 
 <script>
-import MenuPlugin from '../components/MenuPlugin';
-import { mapGetters, mapState } from 'vuex';
+import MenuPlugin from '../components/MenuPlugin'
+import MenuNetworks from '../components/MenuNetworks'
+import { mapGetters, mapState } from 'vuex'
 
-import { UPDATE_CONNECTED } from '../store/actions';
+import { UPDATE_CONNECTED } from '../store/actions'
+import IconArrowDropdown from '../images/icon-arrow-dropdown.vue'
 
 export default {
   components: {
     MenuPlugin,
+    IconArrowDropdown,
+    MenuNetworks,
   },
   props: ['hideAppHeader'],
   computed: {
@@ -59,22 +93,21 @@ export default {
     ...mapState({
       walletAddress: 'address',
     }),
+    ...mapState('networks', ['currentNetwork']),
   },
   created() {
     //TO DO: add this to Store and on refreshState
-    this.debug('Connections', this.$store.getters.state.connections);
-    this.$store.dispatch('UPDATE_CONNECTED');
+    this.debug('Connections', this.$store.getters.state.connections)
+    this.$store.dispatch('UPDATE_CONNECTED')
   },
-  methods: {},
-
   watch: {
     unlocked(value) {
       if (!value) {
-        this.$router.push('/login');
+        this.$router.push('/login')
       }
     },
     hideAppHeader(value) {
-      this.debug('hideAppHeader', this.address);
+      this.debug('hideAppHeader', this.address)
     },
   },
 
@@ -85,25 +118,32 @@ export default {
         { id: 'en', name: 'English' },
       ],
       showMenu: false,
-    };
+      showNetworks: false,
+    }
   },
   mounted() {
-    this.debug('MOUNTED', this.hideAppHeader);
+    this.debug('MOUNTED', this.hideAppHeader)
   },
 
   methods: {
     closeDrawer(e) {
-      this.debug(e);
+      this.debug(e)
       if (!e) {
-        this.showMenu = !this.showMenu;
+        this.showMenu = !this.showMenu
+      }
+    },
+    closeNetworksDrawer(e) {
+      this.debug(e)
+      if (!e) {
+        this.showNetworks = !this.showNetworks
       }
     },
 
     resetPlugin() {
-      API.deleteVault(this.password).then(this.refreshState());
+      API.deleteVault(this.password).then(this.refreshState())
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
@@ -123,5 +163,26 @@ export default {
   }
 }
 .main-box {
+}
+
+.current-network {
+  cursor: pointer;
+  border-radius: 15px;
+  border: 1px solid #b8b9bb;
+  max-height: 28px;
+  font-size: 12px !important;
+  font-weight: 500;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.network-color {
+  width: 8px;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  margin-right: 6px;
+  margin-left: 0;
 }
 </style>

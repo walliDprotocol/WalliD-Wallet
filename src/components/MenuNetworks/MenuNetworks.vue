@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :value="showMenu"
+    :value="showNetworks"
     @input="close"
     app
     right
@@ -10,133 +10,54 @@
   >
     <template v-slot:prepend>
       <v-list-item two-line>
-        <v-list-item-avatar>
-          <jazz-icon
-            :address="walletAddress"
-            :id="'menu'"
-            :size="32"
-            :margin="2"
-          />
-        </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="T1" style="margin-bottom: 7px;">
-            {{ domainENS || $t('menu.title') }}
+            Networks
           </v-list-item-title>
-          <v-list-item-subtitle class="subtitle">
-            {{ address | truncate(12, '...') }}
-          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
     <v-divider></v-divider>
     <v-list>
-      <v-list-item @click="goRoute(DETAILS)">
-        <v-list-item-icon>
-          <IconWallet />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.details') }}</v-list-item-title>
-        </v-list-item-content>
+      <v-list-item
+        v-for="n in network"
+        :key="n.name"
+        @click="goRoute(NETWORK, n)"
+        class="network"
+      >
+        <IconNetworkSelected
+          v-if="currentNetwork.name === n.name"
+          class="network-selected"
+        />
+        <div class="network-color" :style="{ backgroundColor: n.color }"></div>
+        {{ n.name }}
       </v-list-item>
-
-      <v-list-item @click="goRoute(SITES)">
-        <v-list-item-icon>
-          <IconSites />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.sites') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item @click="goRoute(WALLET_CONNECT)">
-        <v-list-item-icon>
-          <IconWalletConnect />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>WalletConnect</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider class="my-2"></v-divider>
-
-      <v-list-item @click="goRoute(SETTINGS)">
-        <v-list-item-icon>
-          <IconSettings />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.settings') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item @click="goRoute(ABOUT)">
-        <v-list-item-icon>
-          <IconAbout />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.about') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item @click="lock">
-        <v-list-item-icon>
-          <IconLock />
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.lock') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider class="mt-2"></v-divider>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
-import IconWallet from '../../images/icon-wallet-unselected.vue'
-import IconSites from '../../images/icon-connect-unselected.vue'
-import IconSettings from '../../images/icon-settings-unselected.vue'
-import IconAbout from '../../images/icon-about-unselected.vue'
-import IconLock from '../../images/icon-logout-unselected.vue'
-import IconWalletConnect from '../../images/icons/icon-walletconnect.vue'
+import IconNetworkSelected from '../../images/icon-network-selected.vue'
 
 import { LOCK_WALLET } from '../../store/actions'
-import {
-  DETAILS,
-  SITES,
-  SETTINGS,
-  ABOUT,
-  WALLET_CONNECT,
-} from '../../router/routes'
+import { DETAILS, NETWORK } from '../../router/routes'
 import { mapState } from 'vuex'
 
 export default {
-  props: ['address', 'showMenu'],
+  props: ['address', 'showNetworks'],
   components: {
-    IconWallet,
-    IconSites,
-    IconSettings,
-    IconAbout,
-    IconLock,
-    IconWalletConnect,
+    IconNetworkSelected,
   },
   computed: {
     ...mapState({
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
+    ...mapState('networks', ['currentNetwork', 'network']),
   },
   created() {
     this.DETAILS = DETAILS
-    this.SITES = SITES
-    this.SETTINGS = SETTINGS
-    this.ABOUT = ABOUT
-    this.WALLET_CONNECT = WALLET_CONNECT
+    this.NETWORK = NETWORK
     console.log('walletaddress', this.walletAddress)
   },
   watch: {},
@@ -144,19 +65,21 @@ export default {
   methods: {
     close(input) {
       if (!input) {
-        this.$emit('close', !this.showMenu)
+        this.$emit('close', !this.showNetworks)
       }
     },
 
     // se estiver ja na pagina fechar o menu
-    goRoute(route) {
+    goRoute(route, n) {
+      this.$store.commit('networks/currentNetwork', n)
+
       this.debug('Menu Option: ', route)
       this.debug(this.$route.path)
       this.debug(this.$route?.path == route)
-      this.$emit('close', !this.showMenu)
+      this.$emit('close', !this.showNetworks)
       if (this.$route.path != route) {
-        this.debug(this.showMenu)
-        this.$router.push(route)
+        this.debug(this.showNetworks)
+        this.$router.push({ name: 'Network' })
       }
     },
     details() {
@@ -263,5 +186,29 @@ export default {
       }
     }
   }
+}
+
+.network {
+  font-size: 16px !important;
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex !important;
+  padding-inline: 30px !important;
+  position: relative;
+}
+
+.network-color {
+  width: 8px;
+  max-width: 8px;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  margin-inline: 8px !important;
+}
+
+.network-selected {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translate(0, -50%);
 }
 </style>
