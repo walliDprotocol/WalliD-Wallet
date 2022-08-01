@@ -283,7 +283,7 @@ export default {
   home: {
     title: 'MyWalliD',
     address: 'Your wallet address',
-    tabs: ['Citizen IDs', 'Online IDs ', 'Web3 IDs'],
+    tabs: ['Fungible tokens', 'NFTs ', 'IDs'],
   },
   // NEW TExT
   profiles: {

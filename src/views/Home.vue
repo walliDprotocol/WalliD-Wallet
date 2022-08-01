@@ -1,7 +1,7 @@
 <template>
   <v-container class="home pb-0" fill-height>
     <v-row class="">
-      <v-col cols="12" class=" pb-0">
+      <v-col cols="12" class="pb-0">
         <jazz-icon
           :address="walletAddress"
           :id="'home'"
@@ -13,7 +13,7 @@
         <h2 class="T1 mb-2 text-center">
           {{ domainENS || $t('home.title') }}
         </h2>
-        <WalletState :website="connected.url"> </WalletState>
+        <WalletState :website="connected.url"></WalletState>
       </v-col>
       <v-col cols="12" class="px-14">
         <p class="normal-text mb-3 text-center">
@@ -24,15 +24,15 @@
       </v-col>
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
-          <v-tab href="#tab-2" class="MENU-SELECTED">{{
-            $t('home.tabs[1]')
-          }}</v-tab>
-          <v-tab href="#tab-1" class="MENU-SELECTED">{{
-            $t('home.tabs[0]')
-          }}</v-tab>
-          <v-tab href="#tab-3" class="MENU-SELECTED">{{
-            $t('home.tabs[2]')
-          }}</v-tab>
+          <v-tab href="#tab-2" class="MENU-SELECTED">
+            {{ $t('home.tabs[0]') }}
+          </v-tab>
+          <v-tab href="#tab-1" class="MENU-SELECTED">
+            {{ $t('home.tabs[1]') }}
+          </v-tab>
+          <v-tab href="#tab-3" class="MENU-SELECTED">
+            {{ $t('home.tabs[2]') }}
+          </v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
@@ -56,15 +56,15 @@
 </template>
 
 <script>
-import WalletState from '../components/WalletState';
-import WalletAddress from '../components/WalletAddress';
-import ListIDs from '../components/ListIDs';
-import ListCrendentials from '../components/ListCrendentials';
-import ListOnlineIDs from '../components/ListOnlineIDs';
+import WalletState from '../components/WalletState'
+import WalletAddress from '../components/WalletAddress'
+import ListIDs from '../components/ListIDs'
+import ListCrendentials from '../components/ListCrendentials'
+import ListOnlineIDs from '../components/ListOnlineIDs'
 
-import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal'
 
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   components: {
@@ -89,10 +89,10 @@ export default {
     }),
     tab: {
       get() {
-        return this.$store.getters.currentTab;
+        return this.$store.getters.currentTab
       },
       set(value) {
-        this.$store.commit('currentTab', value);
+        this.$store.commit('currentTab', value)
       },
     },
   },
@@ -111,19 +111,19 @@ export default {
     //     break;
     // }
 
-    console.log(this.tab);
+    console.log(this.tab)
   },
   methods: {
     close() {
-      this.$store.commit('showDeleteConfirmation', false);
+      this.$store.commit('showDeleteConfirmation', false)
     },
   },
   data() {
     return {
       iconSet: false,
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">

@@ -12,11 +12,13 @@ const state = () => ({
         luksoMainnet :  {name: 'Lukso Mainnet' ,color: '#65a5f1',},
         l16PublicTestnet :  {name: 'L16 Public Testnet' ,color: '#c787a1',},
         localhostNet :  {name: 'Localhost Net' ,color: '#373c43',},
-    },
+  },
+  previousNetwork: {},
     currentNetwork: {name: 'Ethereum Mainnet' ,color: '#009fb1',},
 });
 const mutations = {
   currentNetwork: (state, value) => {
+    state.previousNetwork = state.currentNetwork;
     state.currentNetwork = value ;
   },
 };

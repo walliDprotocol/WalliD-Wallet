@@ -15,34 +15,122 @@
     </v-app-bar>
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow mb-3">
-          <v-btn text @click="$router.push('/home')" class="back-btn">
-            <ArrowBack />
-          </v-btn>
-          <h2 class="T1 text-left">
-            {{ $t('modals.delete.title') }}
-            {{ type }}
+        <div class="back-arrow mb-3 d-flex justify-center">
+          <h2 class="T1 text-center">
+            Allow WalliD wallet to sync
+            <br />
+            with {{ currentNetwork.name }}
           </h2>
         </div>
       </v-col>
       <v-col cols="12" class="pt-1">
-        <p
-          class="sub-title-fields text-left"
-          v-html="$t('modals.delete.text[0]', [name])"
-        ></p>
-        <p class="sub-title-fields text-left">
-          {{ $t('modals.delete.text[1]') }}
+        <p class="sub-title-fields text-center">
+          WalliD will fetch your Universal Profile and access the assets within.
+          <br />
+          <br />
+          If you don't have a Universal Profile,
+          <br />
+          WalliD wallet will create a smart contract for your wallet address.
         </p>
       </v-col>
-
-      <v-col cols="6" class="pt-1">
+      <v-col cols="12" style="margin-bottom: 130px;">
+        <div class="d-flex align-center flex-column">
+          <div class="d-flex align-center">
+            <div style="position: relative;">
+              <v-img
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-wallid.png"
+              />
+              <p
+                class="sub-title-fields"
+                style="
+                  position: absolute;
+                  bottom: 0;
+                  left: 50%;
+                  transform: translate(-50%, 100%);
+                  padding-top: 9px;
+                "
+              >
+                WalliD wallet
+              </p>
+            </div>
+            <hr />
+            <div style="position: relative;">
+              <v-img
+                v-if="currentNetwork.name === 'Ethereum Mainnet'"
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-ethereum.png"
+              />
+              <v-img
+                v-if="currentNetwork.name === 'Rinkeby Test Network'"
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-ethereum.png"
+              />
+              <v-img
+                v-if="currentNetwork.name === 'Polygon Mainnet'"
+                height="50"
+                max-width="50"
+                contain
+                src=""
+              />
+              <v-img
+                v-if="currentNetwork.name === 'Mumbai Testnet'"
+                height="50"
+                max-width="50"
+                contain
+                src=""
+              />
+              <v-img
+                v-if="currentNetwork.name === 'Lukso Mainnet'"
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-l16PublicTestnet.png"
+              />
+              <v-img
+                v-if="currentNetwork.name === 'L16 Public Testnet'"
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-l16PublicTestnet.png"
+              />
+              <v-img
+                v-else="currentNetwork.name === 'Localhost Net'"
+                height="50"
+                max-width="50"
+                contain
+                src="../images/logos/logo-wallid.png"
+              />
+              <p
+                class="sub-title-fields"
+                style="
+                  position: absolute;
+                  bottom: 0;
+                  right: 50%;
+                  transform: translate(50%, 100%);
+                  padding-top: 9px;
+                "
+              >
+                {{ currentNetwork.name }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </v-col>
+      <v-col cols="6">
         <v-btn text @click="close()" class="cancel-btn">
           Cancel
         </v-btn>
       </v-col>
-      <v-col cols="6" class="pt-1">
+      <v-col cols="6">
         <v-btn text @click="confirmDelete()" class="advance-btn">
-          Delete
+          Sync
         </v-btn>
       </v-col>
     </v-row>
@@ -160,5 +248,11 @@ export default {
   background-color: white;
   padding: 16px;
   overflow-x: auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px dashed #b8b9bb;
+  min-width: 91px;
 }
 </style>

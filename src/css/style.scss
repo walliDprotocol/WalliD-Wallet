@@ -507,6 +507,7 @@
     text-transform: none;
     color: var(--charcoal-grey);
     padding: 0 10px;
+    white-space: nowrap;
     &:hover {
       color: var(--teal-blue);
     }
