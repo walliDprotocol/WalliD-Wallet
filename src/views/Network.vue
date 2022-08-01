@@ -115,6 +115,7 @@
                   right: 50%;
                   transform: translate(50%, 100%);
                   padding-top: 9px;
+                  width: 92px;
                 "
               >
                 {{ currentNetwork.name }}

@@ -9,18 +9,23 @@
           :margin="4"
         />
       </v-col>
-      <v-col cols="12" class="pt-4 pb-2 px-14">
-        <h2 class="T1 mb-2 text-center">
+      <v-col cols="12" class="pt-4 px-14 pb-0">
+        <h2 class="T1 text-center">
           {{ domainENS || $t('home.title') }}
         </h2>
-        <WalletState :website="connected.url"></WalletState>
       </v-col>
       <v-col cols="12" class="px-14">
-        <p class="normal-text mb-3 text-center">
-          {{ $t('home.address') }}
-        </p>
-
         <WalletAddress :address="walletAddress" />
+      </v-col>
+      <v-col cols="12" class="d-flex justify-center mb-5">
+        <div class="home-icons">
+          <IconSend />
+          <p class="mt-2">Send</p>
+        </div>
+        <div class="home-icons">
+          <IconProve />
+          <p class="mt-2">Prove</p>
+        </div>
       </v-col>
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">
@@ -37,7 +42,7 @@
 
         <v-tabs-items v-model="tab">
           <v-tab-item value="tab-2">
-            <ListOnlineIDs />
+            <FungibleTokens />
           </v-tab-item>
           <v-tab-item value="tab-1">
             <ListIDs />
@@ -60,7 +65,9 @@ import WalletState from '../components/WalletState'
 import WalletAddress from '../components/WalletAddress'
 import ListIDs from '../components/ListIDs'
 import ListCrendentials from '../components/ListCrendentials'
-import ListOnlineIDs from '../components/ListOnlineIDs'
+import FungibleTokens from '../components/FungibleTokens'
+import IconSend from '../images/icons/icon-send.vue'
+import IconProve from '../images/icons/icon-prove.vue'
 
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal'
 
@@ -70,10 +77,12 @@ export default {
   components: {
     WalletState,
     WalletAddress,
+    FungibleTokens,
     ListIDs,
     ListCrendentials,
-    ListOnlineIDs,
     DeleteConfirmationModal,
+    IconSend,
+    IconProve,
   },
   computed: {
     ...mapGetters([
@@ -150,5 +159,14 @@ export default {
       border-bottom: solid 2px var(--very-light-grey);
     }
   }
+}
+
+.home-icons {
+  display: flex;
+  flex-direction: column;
+  color: #009fb1;
+  font-size: 14px;
+  font-weight: 500;
+  margin-inline: 21px;
 }
 </style>

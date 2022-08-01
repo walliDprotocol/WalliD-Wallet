@@ -281,7 +281,7 @@ export default {
     lock: 'Sign Out',
   },
   home: {
-    title: 'MyWalliD',
+    title: 'Account 1',
     address: 'Your wallet address',
     tabs: ['Fungible tokens', 'NFTs ', 'IDs'],
   },
