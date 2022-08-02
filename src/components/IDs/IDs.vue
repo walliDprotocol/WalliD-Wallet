@@ -3,6 +3,17 @@
     class="credentials list-storage pt-1"
     style="overflow-y: auto; height: 208px;"
   >
+    <v-row class="pl-4 py-4">
+      <div class="id-chip">
+        Legacy IDs
+      </div>
+      <div class="id-chip">
+        Web2 IDs
+      </div>
+      <div class="id-chip">
+        Web3 IDs
+      </div>
+    </v-row>
     <v-row>
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
@@ -113,7 +124,7 @@
                       :href="storeWeb3Link"
                       @click.stop
                     >
-                      Import custom token
+                      Import an ID
                     </a>
                   </v-col>
                   <v-col cols="12" class="py-0">
@@ -138,7 +149,7 @@ import { mapGetters } from 'vuex'
 const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/'
 
 export default {
-  name: 'FungibleTokens',
+  name: 'IDs',
   components: {
     StoredProfileImg,
     Asset,
@@ -345,5 +356,15 @@ export default {
       }
     }
   }
+}
+
+.id-chip {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 21px;
+  border: solid 1px #e5e5ec;
+  background-color: #fff;
+  margin-right: 12px;
 }
 </style>

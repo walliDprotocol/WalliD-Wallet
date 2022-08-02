@@ -45,10 +45,10 @@
             <FungibleTokens />
           </v-tab-item>
           <v-tab-item value="tab-1">
-            <ListIDs />
+            <NFTs />
           </v-tab-item>
           <v-tab-item value="tab-3">
-            <ListCrendentials />
+            <IDs />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -63,9 +63,9 @@
 <script>
 import WalletState from '../components/WalletState'
 import WalletAddress from '../components/WalletAddress'
-import ListIDs from '../components/ListIDs'
-import ListCrendentials from '../components/ListCrendentials'
 import FungibleTokens from '../components/FungibleTokens'
+import NFTs from '../components/NFTs'
+import IDs from '../components/IDs'
 import IconSend from '../images/icons/icon-send.vue'
 import IconProve from '../images/icons/icon-prove.vue'
 
@@ -78,8 +78,8 @@ export default {
     WalletState,
     WalletAddress,
     FungibleTokens,
-    ListIDs,
-    ListCrendentials,
+    NFTs,
+    IDs,
     DeleteConfirmationModal,
     IconSend,
     IconProve,

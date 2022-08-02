@@ -471,6 +471,7 @@
     line-height: 1.5;
     letter-spacing: normal;
     color: var(--charcoal-grey);
+    white-space: nowrap;
   }
 
   .sub-title-fields {
@@ -485,6 +486,7 @@
     &--bold {
       font-weight: 600;
     }
+    white-space: nowrap;
   }
   .normal-text {
     font-family: Montserrat;

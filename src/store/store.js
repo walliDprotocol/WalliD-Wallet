@@ -65,7 +65,32 @@ export default new Vuex.Store({
     connected: false,
     initialized: API.getState().initialized,
     identities: API.getState().identities,
-    credentials: API.getState().credentials,
+    credentials: [{
+      id: 1,
+      credName: 'credName',
+      caName: 'caName',
+      photoURL: 'photoURL',
+      userData: 'userData',
+      status: 'status',
+      expDate: 'expDate',
+    }]
+      /* API.getState().credentials */,
+    assets: [{
+      id: 1,
+      assetType: 'fungibleToken',
+      assetImagePath: '../images/logos/logo-l16PublicTestnet.png',
+      tokenName: 'LYXt',
+      amount: 2,
+      tokenStandard: 'Native',
+    }, {
+      id: 1,
+      assetType: 'NFT',
+      assetImagePath: '../images/icons/icon-sunflower.png',
+      tokenName: 'Sunflower',
+      tokenProvider: 'Sunflower Land Collection',
+      amount: 969,
+      tokenStandard: 'ERC-1155',
+    }],
     profiles: API.getState().profiles,
     currentProfile: null,
     request: API.getNextRequest(),
@@ -87,6 +112,7 @@ export default new Vuex.Store({
     state: (state) => state,
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
+    assets: (state) => state.assets,
     currentCred: (state) => state.currentCred,
     profiles: (state) => {
       return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');

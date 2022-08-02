@@ -3,10 +3,10 @@
     class="credentials list-storage pt-1"
     style="overflow-y: auto; height: 208px;"
   >
-    <v-row>
+    <v-row v-if="NFTAssets.length > 0">
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
-        v-for="asset in fungibleTokenAssets"
+        v-for="asset in NFTAssets"
         :key="asset.id"
         cols="12"
         class="py-0 px-1 mt-1 mb-2 card"
@@ -14,9 +14,10 @@
         <Asset
           :image="asset.assetImagePath"
           :title="asset.tokenName"
-          :subtitle="asset.amount"
+          :subtitle="asset.tokenProvider"
           :chip="asset.tokenStandard"
-          :amount="null"
+          :amount="asset.amount"
+          :tokenStandard="asset.tokenStandard"
         >
           <template #menu>
             <v-list>
@@ -113,7 +114,7 @@
                       :href="storeWeb3Link"
                       @click.stop
                     >
-                      Import custom token
+                      Import an NFT
                     </a>
                   </v-col>
                   <v-col cols="12" class="py-0">
@@ -124,6 +125,25 @@
             </v-col>
           </v-row>
         </v-container>
+      </v-col>
+    </v-row>
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden;">
+      <v-col cols="12" class="px-15 py-9">
+        <p class="SECUNDARY-LINKS mb-5">
+          Seems like you don’t have
+          <strong>NFTs</strong>
+          <br />
+          in your wallet yet.
+        </p>
+        <a
+          class="links"
+          target="_blank"
+          color="#01a3b0"
+          href="https://www.wallid.io/"
+          @click.stop
+        >
+          Import an NFT
+        </a>
       </v-col>
     </v-row>
   </v-container>
@@ -138,16 +158,16 @@ import { mapGetters } from 'vuex'
 const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/'
 
 export default {
-  name: 'FungibleTokens',
+  name: 'NFTs',
   components: {
     StoredProfileImg,
     Asset,
   },
   computed: {
     ...mapGetters(['assets']),
-    fungibleTokenAssets: function () {
+    NFTAssets: function () {
       return this.assets.filter(function (el) {
-        return el.assetType === 'fungibleToken'
+        return el.assetType === 'NFT'
       })
     },
   },
