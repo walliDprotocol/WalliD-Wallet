@@ -465,7 +465,7 @@
   .FIELD-TEXT {
     font-family: Montserrat;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500 !important;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.5;
@@ -486,7 +486,6 @@
     &--bold {
       font-weight: 600;
     }
-    white-space: nowrap;
   }
   .normal-text {
     font-family: Montserrat;

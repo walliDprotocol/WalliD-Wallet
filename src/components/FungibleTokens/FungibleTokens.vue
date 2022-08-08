@@ -20,12 +20,12 @@
         >
           <template #menu>
             <v-list>
-              <v-list-item v-if="!asset.tokenName">
+              <v-list-item>
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
                   @click="viewCred(asset)"
                 >
-                  {{ $t('credentials.menuCredential[0]') }}
+                  View activity
                 </v-list-item-title>
               </v-list-item>
 
@@ -37,7 +37,7 @@
                   class="SECUNDARY-LINKS text-left"
                   @click="proofPage(asset)"
                 >
-                  {{ $t('credentials.menuCredential[1]') }}
+                  Check on-chain
                 </v-list-item-title>
               </v-list-item>
 
@@ -47,7 +47,7 @@
               >
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
                   <a :href="downloadURL(asset)" target="_blank">
-                    {{ $t('credentials.menuCredential[2]') }}
+                    Share Proof-of-Ownership
                   </a>
                 </v-list-item-title>
               </v-list-item>
@@ -56,7 +56,7 @@
                   class="SECUNDARY-LINKS text-left"
                   @click="deleteCred(asset)"
                 >
-                  {{ $t('credentials.menuCredential[3]') }}
+                  Send
                 </v-list-item-title>
               </v-list-item>
               <v-list-item v-if="asset.tokenName == 'ENS'">
@@ -147,7 +147,7 @@ export default {
     ...mapGetters(['assets']),
     fungibleTokenAssets: function () {
       return this.assets.filter(function (el) {
-        return el.assetType === 'fungibleToken'
+        return el.assetType === 'Fungible Token'
       })
     },
   },

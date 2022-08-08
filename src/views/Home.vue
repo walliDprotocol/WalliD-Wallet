@@ -52,10 +52,6 @@
           </v-tab-item>
         </v-tabs-items>
       </v-col>
-      <DeleteConfirmationModal
-        v-if="showDeleteConfirmation"
-        @close="close()"
-      ></DeleteConfirmationModal>
     </v-row>
   </v-container>
 </template>

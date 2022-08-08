@@ -4,102 +4,60 @@
     style="overflow-y: auto; height: 208px;"
   >
     <v-row class="pl-4 py-4">
-      <div class="id-chip">
+      <div
+        class="id-chip"
+        :class="{ selected: idAssetFilter === 'Legacy ID' }"
+        @click="idAssetFilter = 'Legacy ID'"
+      >
         Legacy IDs
       </div>
-      <div class="id-chip">
+      <div
+        class="id-chip"
+        :class="{ selected: idAssetFilter === 'Web2 ID' }"
+        @click="idAssetFilter = 'Web2 ID'"
+      >
         Web2 IDs
       </div>
-      <div class="id-chip">
+      <div
+        class="id-chip"
+        :class="{ selected: idAssetFilter === 'Web3 ID' }"
+        @click="idAssetFilter = 'Web3 ID'"
+      >
         Web3 IDs
       </div>
     </v-row>
     <v-row>
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
-        v-for="asset in fungibleTokenAssets"
+        v-for="asset in idAssets"
         :key="asset.id"
         cols="12"
         class="py-0 px-1 mt-1 mb-2 card"
       >
         <Asset
           :image="asset.assetImagePath"
-          :title="asset.tokenName"
-          :subtitle="asset.amount"
-          :chip="asset.tokenStandard"
+          :title="assetTitle(asset)"
+          :subtitle="assetSubtitle(asset)"
+          :chip="assetChip(asset)"
           :amount="null"
         >
           <template #menu>
             <v-list>
-              <v-list-item v-if="!asset.tokenName">
+              <v-list-item>
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
                   @click="viewCred(asset)"
                 >
-                  {{ $t('credentials.menuCredential[0]') }}
+                  Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="asset.status != 'active' ? '' : ''"
-              >
+              <v-list-item :class="asset.status != 'active' ? '' : ''">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
                   @click="proofPage(asset)"
                 >
-                  {{ $t('credentials.menuCredential[1]') }}
-                </v-list-item-title>
-              </v-list-item>
-
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="!downloadURL(asset) ? 'disabled' : ''"
-              >
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a :href="downloadURL(asset)" target="_blank">
-                    {{ $t('credentials.menuCredential[2]') }}
-                  </a>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
-                >
-                  {{ $t('credentials.menuCredential[3]') }}
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'ENS'">
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a
-                    class="SECUNDARY-LINKS"
-                    target="_blank"
-                    color="#01a3b0"
-                    :href="
-                      'https://etherscan.io/enslookup-search?search=' +
-                      asset.username
-                    "
-                    @click.stop
-                  >
-                    {{ $t('credentials.menuENS[0]') }}
-                  </a>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
-                >
-                  {{ $t('credentials.menuMetaMask[0]') }}
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
-                >
-                  {{ $t('credentials.menuMetaMask[1]') }}
+                  Delete
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -156,9 +114,10 @@ export default {
   },
   computed: {
     ...mapGetters(['assets']),
-    fungibleTokenAssets: function () {
+    idAssets: function () {
+      var filter = this.idAssetFilter
       return this.assets.filter(function (el) {
-        return el.assetType === 'fungibleToken'
+        return el.assetType === filter
       })
     },
   },
@@ -235,10 +194,38 @@ export default {
         return false
       }
     },
+    assetTitle(asset) {
+      if (this.idAssetFilter === 'Legacy ID') {
+        return asset.idName
+      } else if (this.idAssetFilter === 'Web2 ID') {
+        return asset.socialmedia
+      } else {
+        return asset.titleField
+      }
+    },
+    assetSubtitle(asset) {
+      if (this.idAssetFilter === 'Legacy ID') {
+        return asset.date
+      } else if (this.idAssetFilter === 'Web2 ID') {
+        return asset.username
+      } else {
+        return asset.subtitleField
+      }
+    },
+    assetChip(asset) {
+      if (this.idAssetFilter === 'Legacy ID') {
+        return asset.validity
+      } else if (this.idAssetFilter === 'Web2 ID') {
+        return
+      } else {
+        return asset.validity
+      }
+    },
   },
   data() {
     return {
       storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
+      idAssetFilter: 'Legacy ID',
     }
   },
 }
@@ -366,5 +353,12 @@ export default {
   border: solid 1px #e5e5ec;
   background-color: #fff;
   margin-right: 12px;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #dbedef;
+  border: solid 1px #009fb1;
+  color: #009fb1;
 }
 </style>

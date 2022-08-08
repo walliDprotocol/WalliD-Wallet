@@ -21,46 +21,31 @@
         >
           <template #menu>
             <v-list>
-              <v-list-item v-if="!asset.tokenName">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="viewCred(asset)"
-                >
-                  {{ $t('credentials.menuCredential[0]') }}
-                </v-list-item-title>
-              </v-list-item>
-
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="asset.status != 'active' ? '' : ''"
-              >
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
-                >
-                  {{ $t('credentials.menuCredential[1]') }}
-                </v-list-item-title>
-              </v-list-item>
-
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="!downloadURL(asset) ? 'disabled' : ''"
-              >
+              <v-list-item>
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a :href="downloadURL(asset)" target="_blank">
-                    {{ $t('credentials.menuCredential[2]') }}
+                  View activity
+                </v-list-item-title>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
+                  Check on-chain
+                </v-list-item-title>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
+                  <a :href="'downloadURL(asset)'" target="_blank">
+                    Check on OpenSea
                   </a>
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="asset.tokenName">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
-                >
-                  {{ $t('credentials.menuCredential[3]') }}
+              <v-list-item>
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
+                  Send
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'ENS'">
+              <v-list-item>
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
                   <a
                     class="SECUNDARY-LINKS"
@@ -72,29 +57,22 @@
                     "
                     @click.stop
                   >
-                    {{ $t('credentials.menuENS[0]') }}
+                    Share Proof-of-Ownership
                   </a>
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
+              <v-list-item>
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
+                  @click="openDeleteAssetModal(asset)"
                 >
-                  {{ $t('credentials.menuMetaMask[0]') }}
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
-                >
-                  {{ $t('credentials.menuMetaMask[1]') }}
+                  Delete
                 </v-list-item-title>
               </v-list-item>
             </v-list>
           </template>
         </Asset>
+        <DeleteAssetModal v-if="showDeleteConfirmation" :asset="asset" />
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
@@ -152,19 +130,19 @@
 <script>
 import Asset from '../../components/Asset'
 import StoredProfileImg from '../../components/StoredProfileImg'
+import DeleteAssetModal from '../../modals/DeleteAssetModal'
 
 import { mapGetters } from 'vuex'
-
-const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/'
 
 export default {
   name: 'NFTs',
   components: {
     StoredProfileImg,
     Asset,
+    DeleteAssetModal,
   },
   computed: {
-    ...mapGetters(['assets']),
+    ...mapGetters(['assets', 'showDeleteConfirmation']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
         return el.assetType === 'NFT'
@@ -172,77 +150,9 @@ export default {
     },
   },
   methods: {
-    getName(credential) {
-      if (this.isNFT(credential)) {
-        return (
-          credential.userData.user_data['PROJECT'] +
-          '#' +
-          (credential.userData.user_data['TOKEN ID'].length > 10
-            ? this.reducedString(credential.userData.user_data['TOKEN ID'])
-            : credential.userData.user_data['TOKEN ID'])
-        )
-      }
-
-      return credential.credName || credential.assetName
-    },
-    getCredentialName(credential) {
-      return credential.caName || credential.username
-    },
-    getImage(card) {
-      if (card?.userData?.frontend_props?.currentLayout === 'Badge') {
-        return card.userData?.imgArray?.[0]
-      }
-      return (
-        card.userData?.credential_img ||
-        card.userData?.frontend_props?.preview ||
-        card.photoURL
-      )
-    },
-    downloadURL(card) {
-      // if (
-      //   this.connected &&
-      //   new RegExp(WALLID_DOMAINS.join('|')).test(this.connected.url)
-      //   //  && !card.userData.pdf_url // Required for old users < 14/4/2021 ?
-      // ) {
-      if (this.isNFT(card)) {
-        return card && card.userData && card.userData.imgArray[0]
-      }
-      return PDF_URL + card.id
-      // }
-      // return card.userData.pdf_url;
-    },
-    viewCred(card) {
-      console.log('List', this.credentials)
-      console.log('List', card)
-      this.$store.commit('setCurrentCred', card)
-      this.$router.push({ name: 'Credential' })
-    },
-    deleteCred(card) {
+    openDeleteAssetModal(asset) {
+      this.$store.commit('setCurrentCred', asset)
       this.$store.commit('showDeleteConfirmation', true)
-
-      this.$store.commit('setCurrentCred', card)
-    },
-    proofPage(card) {
-      this.$store.commit('setCurrentCred', card)
-
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW' })
-      // this.$router.push({ name: 'Proof' });
-    },
-
-    isValid(_expDate) {
-      if (_expDate) {
-        var parts = _expDate.split(' ')
-        var expDate = new Date(parts[2], parts[1] - 1, parts[0])
-        let currDate = new Date()
-        var millisecondsPerDay = 1000 * 60 * 60 * 24
-        var millisBetween = currDate.getTime() - expDate.getTime()
-        var days = millisBetween / millisecondsPerDay
-        console.log(Math.floor(days))
-        // Round down.
-        return Math.floor(days) <= 0
-      } else {
-        return false
-      }
     },
   },
   data() {

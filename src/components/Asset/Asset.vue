@@ -13,25 +13,28 @@
         <v-container class="">
           <v-row>
             <v-col cols="12" class="pt-0 pb-2">
-              <p class="sub-title-fields sub-title-fields--bold">
+              <p
+                class="sub-title-fields sub-title-fields--bold"
+                style="white-space: nowrap;"
+              >
                 {{ title }}
               </p>
               <div class="d-flex">
-                <p class="sub-title-fields mr-1" style="font-weight: 500;">
+                <p class="sub-title-fields mr-1" style="white-space: nowrap;">
                   {{ subtitle | truncate(20, '...') }}
                 </p>
                 <div
                   class="validity"
                   style="background-color: #d9fbed;"
-                  v-if="chip == 'active'"
+                  v-if="(chip === 'VALID')"
                 >
                   <valid />
-                  <p class="FIELD-TEXT">
+                  <p class="FIELD-TEXT" style="color: #00e284;">
                     {{ chip }}
                   </p>
                 </div>
                 <div
-                  v-else-if="chip == 'pending_approval'"
+                  v-else-if="chip === 'pending_approval'"
                   class="validity pending"
                   style="background-color: #dbedef;"
                 >
@@ -41,7 +44,7 @@
                   </p>
                 </div>
                 <div
-                  v-else-if="chip == 'unactive'"
+                  v-else-if="chip === 'unactive'"
                   class="validity"
                   style="background-color: #fce7e7;"
                 >
@@ -50,7 +53,11 @@
                     {{ chip }}
                   </p>
                 </div>
-                <div v-else class="validity" style="background-color: #dbedef;">
+                <div
+                  v-else-if="chip"
+                  class="validity"
+                  style="background-color: #dbedef;"
+                >
                   <p class="FIELD-TEXT chip">
                     {{ chip }}
                   </p>
@@ -61,7 +68,6 @@
         </v-container>
       </v-col>
       <v-col cols="2" class="pl-1 pr-0 pb-0">
-        <!-- menu do asset passar como slot para o Asset Component dentro de cada tab (fungible tokens, nfts, ids..) -->
         <v-menu bottom left class="dot-menu" content-class="dot-menu">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -85,6 +91,8 @@
 <script>
 import IconDotMenu from '../../images/icon-dot-menu.vue'
 import StoredProfileImg from '../../components/StoredProfileImg'
+import invalid from '../../images/invalid.vue'
+import valid from '../../images/valid.vue'
 
 import { mapGetters } from 'vuex'
 
@@ -93,6 +101,8 @@ export default {
   components: {
     IconDotMenu,
     StoredProfileImg,
+    valid,
+    invalid,
   },
   computed: {
     ...mapGetters(['credentials']),
