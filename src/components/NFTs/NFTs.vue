@@ -22,7 +22,10 @@
           <template #menu>
             <v-list>
               <v-list-item>
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
+                <v-list-item-title
+                  class="SECUNDARY-LINKS text-left"
+                  @click="openViewActivityModal(asset)"
+                >
                   View activity
                 </v-list-item-title>
               </v-list-item>
@@ -73,6 +76,7 @@
           </template>
         </Asset>
         <DeleteAssetModal v-if="showDeleteConfirmation" :asset="asset" />
+        <ViewActivityModal v-if="showViewActivityModal" />
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
@@ -131,6 +135,7 @@
 import Asset from '../../components/Asset'
 import StoredProfileImg from '../../components/StoredProfileImg'
 import DeleteAssetModal from '../../modals/DeleteAssetModal'
+import ViewActivityModal from '../../modals/ViewActivityModal'
 
 import { mapGetters } from 'vuex'
 
@@ -140,9 +145,14 @@ export default {
     StoredProfileImg,
     Asset,
     DeleteAssetModal,
+    ViewActivityModal,
   },
   computed: {
-    ...mapGetters(['assets', 'showDeleteConfirmation']),
+    ...mapGetters([
+      'assets',
+      'showDeleteConfirmation',
+      'showViewActivityModal',
+    ]),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
         return el.assetType === 'NFT'
@@ -153,6 +163,10 @@ export default {
     openDeleteAssetModal(asset) {
       this.$store.commit('setCurrentCred', asset)
       this.$store.commit('showDeleteConfirmation', true)
+    },
+    openViewActivityModal(asset) {
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showViewActivityModal', true)
     },
   },
   data() {

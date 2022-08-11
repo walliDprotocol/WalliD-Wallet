@@ -119,13 +119,17 @@ export default new Vuex.Store({
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
-    currentCred: null,
+    currentCred: '',
     currentCard: null,
     showDeleteConfirmation: false,
+    showViewActivityModal: false,
+    showQueueTransactionModal: false,
     currentTab: 0,
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
+    showViewActivityModal: (state) => state.showViewActivityModal,
+    showQueueTransactionModal: (state) => state.showQueueTransactionModal,
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
@@ -879,6 +883,12 @@ export default new Vuex.Store({
   mutations: {
     showDeleteConfirmation(state, value) {
       state.showDeleteConfirmation = value;
+    },
+    showViewActivityModal(state, value) {
+      state.showViewActivityModal = value;
+    },
+    showQueueTransactionModal(state, value) {
+      state.showQueueTransactionModal = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;

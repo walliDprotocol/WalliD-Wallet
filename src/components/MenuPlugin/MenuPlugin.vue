@@ -1,100 +1,113 @@
 <template>
-  <v-navigation-drawer
-    :value="showMenu"
-    @input="close"
-    app
-    right
-    temporary
-    width="324"
-    class="menu-plugin"
-  >
-    <template v-slot:prepend>
-      <v-list-item two-line>
-        <v-list-item-avatar>
-          <jazz-icon
-            :address="walletAddress"
-            :id="'menu'"
-            :size="32"
-            :margin="2"
-          />
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title class="T1" style="margin-bottom: 7px;">
-            {{ domainENS || $t('menu.title') }}
-          </v-list-item-title>
-          <v-list-item-subtitle class="subtitle">
-            {{ address | truncate(12, '...') }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
-    <v-divider></v-divider>
-    <v-list>
-      <v-list-item @click="goRoute(DETAILS)">
-        <v-list-item-icon>
-          <IconWallet />
-        </v-list-item-icon>
+  <div>
+    <v-navigation-drawer
+      :value="showMenu"
+      @input="close"
+      app
+      right
+      temporary
+      width="324"
+      class="menu-plugin"
+    >
+      <template v-slot:prepend>
+        <v-list-item two-line>
+          <v-list-item-avatar>
+            <jazz-icon
+              :address="walletAddress"
+              :id="'menu'"
+              :size="32"
+              :margin="2"
+            />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title class="T1" style="margin-bottom: 7px;">
+              {{ domainENS || $t('menu.title') }}
+            </v-list-item-title>
+            <v-list-item-subtitle class="subtitle">
+              {{ address | truncate(12, '...') }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item @click="goRoute(DETAILS)">
+          <v-list-item-icon>
+            <IconWallet />
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.details') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('menu.details') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-list-item @click="goRoute(SITES)">
-        <v-list-item-icon>
-          <IconSites />
-        </v-list-item-icon>
+        <v-list-item @click="openViewActivityModal()">
+          <v-list-item-icon>
+            <IconActivity />
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.sites') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Activity</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-list-item @click="goRoute(WALLET_CONNECT)">
-        <v-list-item-icon>
-          <IconWalletConnect />
-        </v-list-item-icon>
+        <v-list-item @click="goRoute(SITES)">
+          <v-list-item-icon>
+            <IconSites />
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>WalletConnect</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('menu.sites') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-divider class="my-2"></v-divider>
+        <v-list-item @click="goRoute(WALLET_CONNECT)">
+          <v-list-item-icon>
+            <IconWalletConnect />
+          </v-list-item-icon>
 
-      <v-list-item @click="goRoute(SETTINGS)">
-        <v-list-item-icon>
-          <IconSettings />
-        </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>WalletConnect</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.settings') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+        <v-divider class="my-2"></v-divider>
 
-      <v-list-item @click="goRoute(ABOUT)">
-        <v-list-item-icon>
-          <IconAbout />
-        </v-list-item-icon>
+        <v-list-item @click="goRoute(SETTINGS)">
+          <v-list-item-icon>
+            <IconSettings />
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.about') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('menu.settings') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-list-item @click="lock">
-        <v-list-item-icon>
-          <IconLock />
-        </v-list-item-icon>
+        <v-list-item @click="goRoute(ABOUT)">
+          <v-list-item-icon>
+            <IconAbout />
+          </v-list-item-icon>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ $t('menu.lock') }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('menu.about') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-divider class="mt-2"></v-divider>
-    </v-list>
-  </v-navigation-drawer>
+        <v-list-item @click="lock">
+          <v-list-item-icon>
+            <IconLock />
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ $t('menu.lock') }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider class="mt-2"></v-divider>
+      </v-list>
+    </v-navigation-drawer>
+    <ViewActivityModal v-if="showViewActivityModal" />
+  </div>
 </template>
 
 <script>
@@ -104,6 +117,8 @@ import IconSettings from '../../images/icon-settings-unselected.vue'
 import IconAbout from '../../images/icon-about-unselected.vue'
 import IconLock from '../../images/icon-logout-unselected.vue'
 import IconWalletConnect from '../../images/icons/icon-walletconnect.vue'
+import IconActivity from '../../images/icon-activity.vue'
+import ViewActivityModal from '../../modals/ViewActivityModal'
 
 import { LOCK_WALLET } from '../../store/actions'
 import {
@@ -124,11 +139,14 @@ export default {
     IconAbout,
     IconLock,
     IconWalletConnect,
+    IconActivity,
+    ViewActivityModal,
   },
   computed: {
     ...mapState({
       walletAddress: 'address',
       domainENS: 'domainENS',
+      showViewActivityModal: 'showViewActivityModal',
     }),
   },
   created() {
@@ -186,6 +204,10 @@ export default {
       //   .catch((e) => {
       //     console.error(e);
       //   });
+    },
+    openViewActivityModal() {
+      this.$store.commit('setCurrentCred', null)
+      this.$store.commit('showViewActivityModal', true)
     },
   },
   data() {
