@@ -49,19 +49,11 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a
-                    class="SECUNDARY-LINKS"
-                    target="_blank"
-                    color="#01a3b0"
-                    :href="
-                      'https://etherscan.io/enslookup-search?search=' +
-                      asset.username
-                    "
-                    @click.stop
-                  >
-                    Share Proof-of-Ownership
-                  </a>
+                <v-list-item-title
+                  class="SECUNDARY-LINKS text-left"
+                  @click="shareProfile(asset)"
+                >
+                  Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
@@ -173,6 +165,11 @@ export default {
     },
     openImportAssetModal() {
       this.$store.commit('showImportAssetModal', true)
+    },
+    shareProfile(asset) {
+      this.$store.commit('currentCred', asset)
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
     },
   },
   data() {
