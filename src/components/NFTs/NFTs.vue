@@ -44,7 +44,10 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item>
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
+                <v-list-item-title
+                  class="SECUNDARY-LINKS text-left"
+                  @click="openSendAssetModal(asset)"
+                >
                   Send
                 </v-list-item-title>
               </v-list-item>
@@ -69,6 +72,7 @@
         </Asset>
         <DeleteAssetModal v-if="showDeleteConfirmation" :asset="asset" />
         <ViewActivityModal v-if="showViewActivityModal" />
+        <SendAssetModal v-if="showSendAssetModal" />
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
@@ -128,6 +132,7 @@ import StoredProfileImg from '../../components/StoredProfileImg'
 import DeleteAssetModal from '../../modals/DeleteAssetModal'
 import ViewActivityModal from '../../modals/ViewActivityModal'
 import ImportAssetModal from '../../modals/ImportAssetModal'
+import SendAssetModal from '../../modals/SendAssetModal'
 
 import { mapGetters } from 'vuex'
 
@@ -139,6 +144,7 @@ export default {
     DeleteAssetModal,
     ViewActivityModal,
     ImportAssetModal,
+    SendAssetModal,
   },
   computed: {
     ...mapGetters([
@@ -146,6 +152,7 @@ export default {
       'showDeleteConfirmation',
       'showViewActivityModal',
       'showImportAssetModal',
+      'showSendAssetModal',
       'currentCred',
     ]),
     NFTAssets: function () {
@@ -170,6 +177,10 @@ export default {
       this.$store.commit('currentCred', asset)
 
       this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
+    },
+    openSendAssetModal(asset) {
+      this.$store.commit('currentCred', asset)
+      this.$store.commit('showSendAssetModal', true)
     },
   },
   data() {

@@ -38,6 +38,68 @@
               </div>
             </v-col>
             <v-col
+              v-for="asset in assets"
+              :key="asset.id"
+              cols="12"
+              class="py-0 list-profiles"
+            >
+              <v-container class="py-0 wrapper">
+                <v-row>
+                  <v-col cols="2" class="py-1 pl-0">
+                    <StoredProfileImg
+                      class="mt-1"
+                      :size="30"
+                      :src="asset.assetImagePath"
+                    />
+                  </v-col>
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                    <v-container class="">
+                      <v-row>
+                        <v-col cols="12" class="py-0">
+                          <p
+                            class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
+                          >
+                            {{ asset.tokenName }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12" class="py-0">
+                          <p
+                            v-if="asset.tokenStandard !== 'Native'"
+                            class="sub-title-fields text-left"
+                          >
+                            {{ asset.tokenProvider }}
+                          </p>
+                          <div v-else class="d-flex align-center">
+                            <p
+                              class="sub-title-fields text-left"
+                              v-if="showBalance"
+                            >
+                              {{ asset.amount }}
+                            </p>
+                            <p class="sub-title-fields text-left" v-else>
+                              Lukso
+                            </p>
+                            <p style="font-size: 13px;">Show Balance</p>
+                            <v-container class="px-0" fluid>
+                              <v-switch v-model="switch1"></v-switch>
+                            </v-container>
+                          </div>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-col>
+                  <v-col cols="2" class="py-1 pr-0">
+                    <v-checkbox
+                      v-model="selectedProfiles[profile.id]"
+                      @change="checkSelectedProfiles()"
+                      :hide-details="true"
+                      color="#009fb1"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-col
               v-for="profile in profiles"
               :key="profile.id"
               cols="12"
@@ -277,6 +339,7 @@ export default {
       'profiles',
       // 'identities',
       'credentials',
+      'assets',
     ]),
     ...mapState({
       walletAddress: 'address',

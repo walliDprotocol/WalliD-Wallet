@@ -125,6 +125,7 @@ export default new Vuex.Store({
     showViewActivityModal: false,
     showQueueTransactionModal: false,
     showImportAssetModal: false,
+    showSendAssetModal: false,
     currentTab: 0,
   },
   getters: {
@@ -132,6 +133,7 @@ export default new Vuex.Store({
     showViewActivityModal: (state) => state.showViewActivityModal,
     showQueueTransactionModal: (state) => state.showQueueTransactionModal,
     showImportAssetModal: (state) => state.showImportAssetModal,
+    showSendAssetModal: (state) => state.showSendAssetModal,
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
@@ -894,6 +896,9 @@ export default new Vuex.Store({
     },
     showImportAssetModal(state, value) {
       state.showImportAssetModal = value;
+    },
+    showSendAssetModal(state, value) {
+      state.showSendAssetModal = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;
