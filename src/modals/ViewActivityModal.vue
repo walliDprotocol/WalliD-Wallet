@@ -7,11 +7,11 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
-            <!--             {{
+            {{
               currentCred
                 ? 'View activity / ' + currentCred.tokenName
                 : 'Activity'
-            }} -->
+            }}
           </h2>
         </div>
       </v-col>
@@ -215,22 +215,21 @@ export default {
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
-    queue: function () {
-      return this.operations.filter(function (operation) {
+    queue() {
+      return this.operations.filter((operation) => {
         return operation.status === 'Pending' || operation.status === 'Queued'
       })
     },
-    history: function () {
-      return this.operations.filter(function (operation) {
+    history() {
+      return this.operations.filter((operation) => {
         return operation.status !== 'Pending' && operation.status !== 'Queued'
       })
     },
-    operations: function () {
-      var asset = this.currentCred
-      return this.unfilteredOperations.filter(function (operation) {
+    operations() {
+      return this.unfilteredOperations.filter((operation) => {
         return this.currentCred
           ? operation.tokenName === this.currentCred.tokenName
-          : operation.tokeName //true
+          : true
       })
     },
     close() {

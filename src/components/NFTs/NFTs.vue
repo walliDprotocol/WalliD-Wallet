@@ -80,7 +80,11 @@
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container class="py-0 px-3">
+        <v-container
+          class="py-0 px-3"
+          @click="openImportAssetModal()"
+          style="cursor: pointer;"
+        >
           <v-row>
             <v-col cols="2">
               <StoredProfileImg :size="38" :name="'AddProfile'" />
@@ -89,15 +93,9 @@
               <v-container class="py-0">
                 <v-row>
                   <v-col cols="12" class="py-0 pr-0">
-                    <a
-                      class="MAIN-LINKS links"
-                      target="_blank"
-                      color="#01a3b0"
-                      :href="storeWeb3Link"
-                      @click.stop
-                    >
+                    <div class="MAIN-LINKS links" color="#01a3b0">
                       Import an NFT
-                    </a>
+                    </div>
                   </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields"></p>
@@ -107,6 +105,7 @@
             </v-col>
           </v-row>
         </v-container>
+        <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" />
       </v-col>
     </v-row>
     <v-row v-else style="background: white; height: 196px; overflow-y: hidden;">
@@ -136,6 +135,7 @@ import Asset from '../../components/Asset'
 import StoredProfileImg from '../../components/StoredProfileImg'
 import DeleteAssetModal from '../../modals/DeleteAssetModal'
 import ViewActivityModal from '../../modals/ViewActivityModal'
+import ImportAssetModal from '../../modals/ImportAssetModal'
 
 import { mapGetters } from 'vuex'
 
@@ -146,12 +146,15 @@ export default {
     Asset,
     DeleteAssetModal,
     ViewActivityModal,
+    ImportAssetModal,
   },
   computed: {
     ...mapGetters([
       'assets',
       'showDeleteConfirmation',
       'showViewActivityModal',
+      'showImportAssetModal',
+      'currentCred',
     ]),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
@@ -167,6 +170,9 @@ export default {
     openViewActivityModal(asset) {
       this.$store.commit('setCurrentCred', asset)
       this.$store.commit('showViewActivityModal', true)
+    },
+    openImportAssetModal() {
+      this.$store.commit('showImportAssetModal', true)
     },
   },
   data() {

@@ -124,12 +124,14 @@ export default new Vuex.Store({
     showDeleteConfirmation: false,
     showViewActivityModal: false,
     showQueueTransactionModal: false,
+    showImportAssetModal: false,
     currentTab: 0,
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
     showViewActivityModal: (state) => state.showViewActivityModal,
     showQueueTransactionModal: (state) => state.showQueueTransactionModal,
+    showImportAssetModal: (state) => state.showImportAssetModal,
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
@@ -889,6 +891,9 @@ export default new Vuex.Store({
     },
     showQueueTransactionModal(state, value) {
       state.showQueueTransactionModal = value;
+    },
+    showImportAssetModal(state, value) {
+      state.showImportAssetModal = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;
