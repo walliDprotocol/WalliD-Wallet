@@ -139,6 +139,16 @@ export default class Vault {
     return this._getData(5);
   }
 
+  // Returns serialized NetworksController
+  getNetworks() {
+    return this._getData(6);
+  }
+
+  // Returns serialized LuksoController
+  getLukso() {
+    return this._getData(7);
+  }
+
   // Updates vault with @conns
   putConnections(conns, password) {
     console.log('putConnections', conns);
@@ -161,6 +171,17 @@ export default class Vault {
   putProfiles(profiles, password) {
     console.log('putProfiles');
     return Promise.resolve(this._putData(5, profiles, password));
+  }
+
+  // Updates vault with @networks
+  putNetworks(networks, password) {
+    console.log('putNetworks');
+    return Promise.resolve(this._putData(6, networks, password));
+  }
+  // Updates vault with @networks
+  putLukso(lukso, password) {
+    console.log('putLukso', lukso);
+    return Promise.resolve(this._putData(7, lukso, password));
   }
 
   isUnlocked() {

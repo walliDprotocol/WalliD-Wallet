@@ -230,6 +230,9 @@ export default new Vuex.Store({
       commit('updateCredentials', API.getState().credentials);
       commit('updateProfiles', API.getState().profiles);
 
+      dispatch('networks/updateNetworks', { root: true });
+      dispatch('lukso/updateLuskoStore', { root: true });
+
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
     },

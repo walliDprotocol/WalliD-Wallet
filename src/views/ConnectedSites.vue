@@ -165,8 +165,10 @@ export default {
     console.log(this.$route);
     console.log(this.toEditSite);
 
-    var toEditSite = this.$el.querySelector(`#toEditSite`);
-    toEditSite.scrollIntoView();
+    if (this.toEditSite) {
+      var toEditSite = this.$el.querySelector(`#toEditSite`);
+      toEditSite.scrollIntoView();
+    }
   },
   methods: {
     async changePermissionLevel(url, level) {

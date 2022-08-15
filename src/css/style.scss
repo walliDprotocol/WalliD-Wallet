@@ -204,7 +204,12 @@
   .connected-site {
     border-color: var(--turquoise-green) !important;
   }
+  .v-overlay.v-overlay--active{
+    z-index: 5 !important;
+  }
   .v-overlay__scrim {
+    margin-right: 324px;
+    width: unset;
     margin-top: 74px !important;
     background-color: var(--black) !important;
   }

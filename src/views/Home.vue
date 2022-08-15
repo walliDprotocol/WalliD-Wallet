@@ -21,6 +21,9 @@
         </p>
 
         <WalletAddress :address="walletAddress" />
+        <v-btn text class="advance-btn" @click="$router.push('/LuksoTestpage')">
+          Lukso Testpage
+        </v-btn>
       </v-col>
       <v-col class="tabs pa-0 pt-1" cols="12">
         <v-tabs :show-arrows="false" fixed-tabs v-model="tab">

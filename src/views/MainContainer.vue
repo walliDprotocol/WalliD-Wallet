@@ -17,6 +17,8 @@
              ../images/logos/logo-wallid@3x.png 3x"
       />
       <v-spacer />
+      <network-dropdown v-if="walletAddress"> </network-dropdown>
+
       <div
         v-if="address"
         @click.stop="showMenu = !showMenu"
@@ -45,6 +47,7 @@
 
 <script>
 import MenuPlugin from '../components/MenuPlugin';
+import NetworkDropdown from '../components/NetworkDropdown';
 import { mapGetters, mapState } from 'vuex';
 
 import { UPDATE_CONNECTED } from '../store/actions';
@@ -52,6 +55,7 @@ import { UPDATE_CONNECTED } from '../store/actions';
 export default {
   components: {
     MenuPlugin,
+    NetworkDropdown,
   },
   props: ['hideAppHeader'],
   computed: {
@@ -85,6 +89,7 @@ export default {
         { id: 'en', name: 'English' },
       ],
       showMenu: false,
+      showDropdown: false,
     };
   },
   mounted() {

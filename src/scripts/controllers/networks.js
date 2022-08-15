@@ -5,14 +5,36 @@ const NetworksChainId = {
   rinkeby: '4',
   polygon: '137',
   mumbai: '80001',
-  localhost: '',
+  luksol16: '2828',
+  // localhost: '',
 };
 
+const NetworksName = {
+  mainnet: 'Ethereum Mainnet',
+  rinkeby: 'Rinkeby Test Network',
+  polygon: 'Polygon Mainnet',
+  mumbai: 'Mumbai Testnet',
+  luksol16: 'L16 Public Testnet',
+  // localhost: '',
+};
+
+// enum of default rpc urls
 const NetworksChainRpc = {
   mainnet: 'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2',
   rinkeby: 'https://rinkeby.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2',
   polygon: 'https://rpc-mainnet.matic.network',
   mumbai: 'https://rpc-mumbai.matic.today',
+  luksol16: 'https://rpc.l16.lukso.network',
+  localhost: '',
+};
+
+// enum of default rpc urls
+const NetworksTicker = {
+  mainnet: 'ETH',
+  rinkeby: 'ETH',
+  polygon: 'MATIC',
+  mumbai: 'MATIC',
+  luksol16: 'LYXt',
   localhost: '',
 };
 /**
@@ -40,7 +62,8 @@ const defaultNetworkArray = (() => {
     a.push({
       chainId: NetworksChainId[chain],
       rpcTarget: NetworksChainRpc[chain],
-      nickname: chain,
+      ticker: NetworksTicker[chain],
+      nickname: NetworksName[chain],
       isCustomNetwork: false,
     })
   );
@@ -55,20 +78,21 @@ const defaultNetworkArray = (() => {
  * @property provider - RPC URL and network name provider settings
  */
 
-export default class NetworkController {
+export default class NetworksController {
   #networks; //array containing the networks
   #provider;
   #currentChainId;
 
-  constructor(networks = defaultNetworkArray) {
-    this.#networks = networks;
+  constructor(currentChainId = 1, networks = defaultNetworkArray) {
+    this.#networks = defaultNetworkArray;
+    this.#currentChainId = currentChainId;
     Object.keys(NetworksChainId).forEach((chain) =>
       console.log('chain:', chain)
     );
-    console.log('rinkeby:', NetworksChainId);
+    console.log('networks:', networks);
+    console.log('currentChainId:', currentChainId);
 
     this.updateProvider();
-    console.log(networks);
   }
 
   serialize() {
@@ -76,7 +100,7 @@ export default class NetworkController {
       return JSON.stringify([]);
     }
 
-    return JSON.stringify(this.#networks);
+    return JSON.stringify([this.#currentChainId, ...this.#networks]);
   }
 
   static deserialize(_nets) {
@@ -85,10 +109,10 @@ export default class NetworkController {
       (!Array.isArray(_nets) && typeof _nets != 'string') ||
       _nets.length == 0
     ) {
-      return new networksController();
+      return new NetworksController();
     }
     let nets = JSON.parse(_nets);
-    return new networksController(nets);
+    return new NetworksController(...nets);
   }
 
   // private
@@ -105,6 +129,7 @@ export default class NetworkController {
       chainId !== NetworksChainId.rinkeby &&
       chainId !== NetworksChainId.polygon &&
       chainId !== NetworksChainId.mumbai &&
+      chainId !== NetworksChainId.lukso &&
       chainId !== NetworksChainId.localhost
     );
   }
@@ -126,9 +151,12 @@ export default class NetworkController {
       let currentNetwork = this.#networks.find((n) => n.chainId == chainId);
 
       if (!currentNetwork) {
-        return reject(`ERR_NETWORK_IN_LIST`);
+        return reject(`ERR_NETWORK_NOT_IN_LIST`);
       }
       this.#currentChainId = chainId;
+
+      this.updateProvider(currentNetwork.rpcTarget);
+
       return resolve(currentNetwork);
     });
   }
@@ -145,6 +173,18 @@ export default class NetworkController {
     });
   }
 
+  currentNetwork() {
+    let currentNetwork = this.#networks.find(
+      (n) => n.chainId == this.#currentChainId
+    );
+
+    return currentNetwork;
+  }
+
+  async getBalance(address) {
+    return await this.#provider.getBalance(address);
+  }
+
   //test provider
   async lookupNetwork() {
     const { chainId, error } = await this.#provider.getNetwork();
@@ -152,14 +192,20 @@ export default class NetworkController {
     return chainId;
   }
 
-  addConnected(url, icon, name, level, options) {
+  addCustomNetwork(rpcTarget, chainId, ticker, nickname) {
     return new Promise((resolve, reject) => {
-      if (level < 1 || level > 3) return reject('ERR_INV_ACCESS_LEVEL');
-      if (this.#networks.findIndex((c) => c.url == url) != -1) {
-        return reject(`ERR_CONN_ALREADY_EXISTS`);
+      if (this.#networks.findIndex((c) => c.chainId == chainId) != -1) {
+        return reject(`ERR_NETWORK_ALREADY_EXISTS`);
       }
-      console.log(options);
-      this.#networks.push({ url, icon, name, level, ...options });
+
+      console.log(arguments);
+      this.#networks.push({
+        rpcTarget,
+        chainId,
+        ticker,
+        nickname: nickname || ticker,
+        isCustomNetwork: true,
+      });
       return resolve();
     });
   }
@@ -204,12 +250,11 @@ export default class NetworkController {
   }
 
   getConnectionAccessLevel(url) {
-    return Promise.resolve(
-      this.#networks.findIndex((c) => c.url == url)
-    ).then((index) =>
-      index == -1
-        ? Promise.resolve(-1)
-        : Promise.resolve(this.#networks[index].level)
+    return Promise.resolve(this.#networks.findIndex((c) => c.url == url)).then(
+      (index) =>
+        index == -1
+          ? Promise.resolve(-1)
+          : Promise.resolve(this.#networks[index].level)
     );
   }
 }

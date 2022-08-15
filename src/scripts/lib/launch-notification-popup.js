@@ -1,6 +1,6 @@
 import extension from 'extensionizer';
 
-export default function(currentRequests) {
+export default function (currentRequests) {
   return new Promise((resolve) => {
     var width = 416;
     var height = 660;

@@ -54,6 +54,10 @@ export default class WalletController {
     return '0x' + this.#wallet.getAddress().toString('hex');
   }
 
+  getPrivateKey() {
+    return this.#wallet.getPrivateKey().toString('hex');
+  }
+
   // tx is an instance of 'ethereumjs-transaction' class
   signEthereumTransaction(tx) {
     const privateKey = this.#wallet.getPrivateKey();

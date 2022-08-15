@@ -1,5 +1,5 @@
 <template>
-  <v-app class="plugin popup" style="margin-top: 12px">
+  <v-app class="plugin popup">
     <v-container fluid class="router-views pa-0">
       <router-view :hideAppHeader="hideAppHeader"></router-view>
     </v-container>
@@ -33,7 +33,7 @@ export default {
     this.$store.commit('appendgetDomain', this.getDomain);
 
     let browserLang = navigator.language.substring(0, 2);
-    var check = this.langs.filter(function(elm) {
+    var check = this.langs.filter(function (elm) {
       if (elm.id == browserLang) {
         return elm.id; // returns length = 1 (object exists in array)
       }
@@ -51,6 +51,7 @@ export default {
 body {
   overflow: hidden;
   width: 400px;
+  height: 600px;
 }
 
 #app.plugin {

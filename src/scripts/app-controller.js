@@ -20,13 +20,13 @@ import walletConnectController from './controllers/walletConnectController';
 
 import { ethers } from 'ethers';
 import { setProvider } from './lib/eth-utils';
-import extension from 'extensionizer';
 
 // Load new controllers for v2
 
 import extension from 'extensionizer';
+import LuksoController from './controllers/lukso';
 
-const provider = new ethers.providers.JsonRpcProvider(
+const ethereumProvider = new ethers.providers.JsonRpcProvider(
   'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2'
 );
 
@@ -57,13 +57,11 @@ export default class AppController {
 
     this.#store.updateState({ walletConnect });
 
-    const network = new NetworksController();
+    // const network = new NetworksController();
 
-    console.log(network.lookupNetwork());
-    console.log(network.setCurrentChainId(1));
-    console.log(network.getCurrentNetworkRpcTarget());
-
-    network.updateProvider();
+    // console.log(network.lookupNetwork());
+    // console.log(network.setCurrentChainId(1));
+    // console.log(network.getCurrentNetworkRpcTarget());
   }
 
   //=============================================================================
@@ -218,6 +216,8 @@ export default class AppController {
           ),
           profiles: ProfilesController.deserialize(vault.getProfiles()),
           configurations: new ConfigurationsController(),
+          networks: NetworksController.deserialize(vault.getNetworks()),
+          lukso: LuksoController.deserialize(vault.getLukso()),
           password,
         })
       )
@@ -243,11 +243,11 @@ export default class AppController {
 
   setENSData(address) {
     return Promise.resolve()
-      .then(() => provider.lookupAddress(address))
+      .then(() => ethereumProvider.lookupAddress(address))
       .then((domain) => {
         this.#store.updateState({ domainENS: domain });
         if (domain) {
-          return provider.getResolver(domain);
+          return ethereumProvider.getResolver(domain);
         }
         return;
       })
@@ -554,9 +554,8 @@ export default class AppController {
         assetData.forEach((asset) => promises.push(this.importAsset(asset)));
         return Promise.all(promises);
       }
-      const listController = this.#store.getState()[
-        assetData?.pluginController
-      ];
+      const listController =
+        this.#store.getState()[assetData?.pluginController];
       if (!listController)
         return Promise.reject(
           'NOT_IMPLEMENTED: ' + assetData?.pluginController
@@ -614,10 +613,11 @@ export default class AppController {
    * @param {string} auth_token - WalliD authorization token
    */
   extractIdentityData_v1(auth_token) {
-    return Promise.resolve(
-      WalliD.extractIdentity(auth_token)
-    ).then(({ ok, status, body }) =>
-      ok && status != 202 ? Promise.resolve(body.data) : Promise.reject(status)
+    return Promise.resolve(WalliD.extractIdentity(auth_token)).then(
+      ({ ok, status, body }) =>
+        ok && status != 202
+          ? Promise.resolve(body.data)
+          : Promise.reject(status)
     );
   }
 
@@ -921,6 +921,162 @@ export default class AppController {
   }
 
   //=============================================================================
+  // NETWORK RELATED METHODS
+  //=============================================================================
+
+  changeRpcTarget({ chainId }) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    console.log('chainId', chainId);
+    const networks = this.#store.getState().networks;
+    console.log(networks);
+    return Promise.resolve(networks.setCurrentChainId(chainId))
+      .then((currentNetwork) => {
+        vault.putNetworks(
+          networks.serialize(),
+          this.#store.getState().password
+        );
+        return currentNetwork;
+      })
+      .catch((err) => {
+        Promise.reject(err);
+      });
+  }
+
+  getBalance(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    console.log('address', address);
+    const networks = this.#store.getState().networks;
+    console.log(networks);
+    return Promise.resolve(networks.getBalance(address)).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+
+  //=============================================================================
+  // LUKSO RELATED METHODS
+  //=============================================================================
+
+  createUniversalProfile(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log(lukso);
+    return Promise.resolve(lukso.createUniversalProfile(address))
+      .then((deployedContracts) => {
+        const UPAddress = deployedContracts.LSP0ERC725Account.address;
+        const KMAddress = deployedContracts.LSP6KeyManager.address;
+        lukso.setUniversalProfileAddress(UPAddress);
+        lukso.setKeyManagerAddress(KMAddress);
+        return deployedContracts;
+      })
+      .then((deployedContracts) => {
+        vault.putLukso(lukso.serialize(), this.#store.getState().password);
+        return deployedContracts;
+      })
+      .catch((err) => {
+        Promise.reject(err);
+      });
+  }
+
+  setUniversalProfileAddress(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    return Promise.resolve(lukso.setUniversalProfileAddress(address)).catch(
+      (err) => {
+        Promise.reject(err);
+      }
+    );
+  }
+
+  fetchProfile() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    const address = lukso.getUniversalProfileAddress();
+    console.log('getUniversalProfileAddress: ', address);
+
+    return Promise.resolve(lukso.fetchProfile(address)).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+  fetchVaults() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    const address = lukso.getUniversalProfileAddress();
+    console.log('fetchVaults: ', address);
+
+    return Promise.resolve(lukso.fetchVaults(address)).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+  setVaultAddressUP(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('setVaultAddressUP: ', address);
+
+    return Promise.resolve(lukso.setVaultAddressUP(address)).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+
+  mintLSP7Tokens() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('mintLSP7Tokens: ');
+
+    return Promise.resolve(lukso.mintLSP7Tokens()).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+
+  transferLSP7Tokens() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('transferLSP7Tokens: ');
+
+    return Promise.resolve(lukso.transferLSP7Tokens()).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+  createVault() {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('createVault: ');
+
+    return Promise.resolve(lukso.createVault()).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+
+  //=============================================================================
   // EXPOSED TO THE UI SUBSYSTEM
   //=============================================================================
 
@@ -940,6 +1096,10 @@ export default class AppController {
     const domainENS = this.#store.getState().domainENS;
     const avatarENS = this.#store.getState().avatarENS;
 
+    const networks = this.#store.getState().networks;
+
+    const lukso = this.#store.getState().lukso;
+
     return {
       initialized: !vault.isEmpty(),
       unlocked: vault.isUnlocked(),
@@ -953,6 +1113,14 @@ export default class AppController {
       profiles: vault.isUnlocked() ? profiles.get() : null,
       mnemonic: vault.isUnlocked() ? () => vault.getMnemonic() : null,
       key: vault.isUnlocked() ? () => vault.getWallet() : null,
+
+      // networks
+      networkList: vault.isUnlocked() ? networks.getAllNetworks() : null,
+      currentNetwork: vault.isUnlocked() ? networks.currentNetwork() : null,
+
+      // lukso
+      UPAddress: vault.isUnlocked() ? lukso.getUniversalProfileAddress() : null,
+      KMAddress: vault.isUnlocked() ? lukso.getKeyManagerAddress() : null,
     };
   }
 
@@ -1010,6 +1178,19 @@ export default class AppController {
 
       // New methods for v.1.2
       getNextRequestPop: this.getNextRequestPop.bind(this),
+
+      // New methods related to networks changes/lukso build up
+      changeRpcTarget: this.changeRpcTarget.bind(this),
+      createUniversalProfile: this.createUniversalProfile.bind(this),
+      getBalance: this.getBalance.bind(this),
+      setUniversalProfileAddress: this.setUniversalProfileAddress.bind(this),
+      fetchProfile: this.fetchProfile.bind(this),
+      fetchVaults: this.fetchVaults.bind(this),
+      mintLSP7Tokens: this.mintLSP7Tokens.bind(this),
+      transferLSP7Tokens: this.transferLSP7Tokens.bind(this),
+      createVault: this.createVault.bind(this),
+      setVaultAddressUP: this.setVaultAddressUP.bind(this),
+      //
     };
   }
 
@@ -1071,7 +1252,7 @@ export default class AppController {
    */
   requestAPI(method, params = [], origin) {
     console.log('requestAPI');
-    const requestHandler = async function(details) {
+    const requestHandler = async function (details) {
       let promise = {};
       let currentRequests;
       console.log('request method: ', method);
@@ -1144,7 +1325,7 @@ export default class AppController {
               type: method,
               data: params,
               level: details.level,
-              callback: function(err, result) {
+              callback: function (err, result) {
                 if (err) return reject(err);
                 else return resolve(result);
               },
@@ -1169,7 +1350,7 @@ export default class AppController {
   }
 
   OldrequestAPI(method, params = [], origin) {
-    const requestHandler = function(details) {
+    const requestHandler = function (details) {
       let promise = {};
 
       if (details.args && params.length < details.args) {
@@ -1182,7 +1363,7 @@ export default class AppController {
             type: method,
             data: params,
             level: details.level,
-            callback: function(err, result) {
+            callback: function (err, result) {
               if (err) return reject(err);
               else return resolve(result);
             },

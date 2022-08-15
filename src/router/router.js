@@ -21,6 +21,8 @@ import WALLET_CONNECT_VIEW from '../views/WalletConnect';
 import SHARE_PROFILE_VIEW from '../views/ShareProfile';
 import SOCIAL_PROFILE_VIEW from '../views/SocialProfile';
 
+import LuksoTestpageView from '../views/LuksoTestpage';
+
 import Proof from '../views/Proof';
 
 import store from '../store';
@@ -29,7 +31,12 @@ import mixinPlugin from '../scripts/util';
 import SeedPhrase from '../components/RevealSeedPhrase';
 import PrivKey from '../components/RevealPrivateKey';
 
-import { SHARE_PROFILE, SOCIAL_PROFILE, WALLET_CONNECT } from './routes';
+import {
+  SHARE_PROFILE,
+  SOCIAL_PROFILE,
+  WALLET_CONNECT,
+  LuksoTestpage,
+} from './routes';
 
 const debug = mixinPlugin.methods.debug;
 Vue.use(Router);
@@ -146,6 +153,12 @@ let router = new Router({
           path: '/proof',
           name: 'Proof',
           component: Proof,
+          params: true,
+        },
+        {
+          path: LuksoTestpage,
+          name: 'LuksoTestpage',
+          component: LuksoTestpageView,
           params: true,
         },
       ],
