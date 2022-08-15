@@ -18,7 +18,7 @@
         <WalletAddress :address="walletAddress" />
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
-        <div class="home-icons">
+        <div class="home-icons" @click="openSendAssetModal">
           <IconSend />
           <p class="mt-2">Send</p>
         </div>
@@ -53,6 +53,7 @@
         </v-tabs-items>
       </v-col>
     </v-row>
+    <SendAssetModal v-if="showSendAssetModal" />
   </v-container>
 </template>
 
@@ -64,6 +65,7 @@ import NFTs from '../components/NFTs'
 import IDs from '../components/IDs'
 import IconSend from '../images/icons/icon-send.vue'
 import IconProve from '../images/icons/icon-prove.vue'
+import SendAssetModal from '../modals/SendAssetModal.vue'
 
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal'
 
@@ -79,6 +81,7 @@ export default {
     DeleteConfirmationModal,
     IconSend,
     IconProve,
+    SendAssetModal,
   },
   computed: {
     ...mapGetters([
@@ -87,6 +90,7 @@ export default {
       'credentials',
       'profiles',
       'showDeleteConfirmation',
+      'showSendAssetModal',
     ]),
     ...mapState({
       walletAddress: 'address',
@@ -121,6 +125,9 @@ export default {
   methods: {
     close() {
       this.$store.commit('showDeleteConfirmation', false)
+    },
+    openSendAssetModal() {
+      this.$store.commit('showSendAssetModal', true)
     },
   },
   data() {
@@ -164,5 +171,6 @@ export default {
   font-size: 14px;
   font-weight: 500;
   margin-inline: 21px;
+  cursor: pointer;
 }
 </style>

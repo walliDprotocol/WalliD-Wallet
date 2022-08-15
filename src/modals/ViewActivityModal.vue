@@ -233,6 +233,7 @@ export default {
       })
     },
     close() {
+      this.$store.commit('setCurrentCred', null)
       this.$store.commit('showViewActivityModal', false)
     },
   },

@@ -72,7 +72,7 @@
         </Asset>
         <DeleteAssetModal v-if="showDeleteConfirmation" :asset="asset" />
         <ViewActivityModal v-if="showViewActivityModal" />
-        <SendAssetModal v-if="showSendAssetModal" />
+        <SendAssetModal v-if="showSendAssetModal" :asset="asset" />
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
@@ -179,7 +179,7 @@ export default {
       this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
     },
     openSendAssetModal(asset) {
-      this.$store.commit('currentCred', asset)
+      this.$store.commit('setCurrentCred', asset)
       this.$store.commit('showSendAssetModal', true)
     },
   },

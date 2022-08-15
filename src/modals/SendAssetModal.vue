@@ -7,20 +7,87 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
-            {{ 'Send' + (currentCred ? currentCred.tokenName : '') }}
+            {{ 'Send ' + (currentCred ? currentCred.tokenName : '') }}
           </h2>
         </div>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" class="pr-0 mr-0 align-center">
+      <v-col
+        v-if="(step > 0 && !currentCred) || currentCred"
+        cols="12"
+        class="d-flex mb-3 py-3"
+        style="background-color: #f7f7f7;"
+      >
+        <v-col cols="auto" class="pa-0 d-flex align-center">
+          <v-img
+            height="50"
+            max-width="50"
+            contain
+            :src="currentCred ? currentCred.assetImagePath : ''"
+          />
+        </v-col>
+        <v-col
+          cols="auto"
+          class="grow pa-0 ml-3 d-flex flex-column justify-center"
+        >
+          <div class="d-flex justify-space-between">
+            <p class="sub-title-fields sub-title-fields--bold">
+              {{ (currentCred ? currentCred.tokenName : '') }}
+            </p>
+          </div>
+          <div class="d-flex align-center justify-space-between">
+            <p class="sub-title-fields d-flex">
+              {{ (currentCred.assetType === "Fungible Token" ? 'Balance: ' : 'Amount: ') }}
+              {{ (currentCred ? currentCred.amount : '') }}
+            </p>
+          </div>
+        </v-col>
+      </v-col>
+      <v-col v-if="step === 2" cols="12" class="d-flex align-center py-3">
+        <div class="mx-3">
+          <jazz-icon
+            :address="walletAddress"
+            :id="'home'"
+            :size="40"
+            :margin="4"
+          />
+        </div>
+        <div class="mr-3" style="font-size: 13px; font-weight: 500;">
+          Account 1
+        </div>
+        <div class="mx-3">
+          <v-img
+            max-width="20"
+            max-height="20"
+            src="../images/icons/icon-transfer@3x.png"
+          ></v-img>
+        </div>
+        <div class="mx-3">
+          <jazz-icon
+            :address="walletAddress"
+            :id="'home'"
+            :size="40"
+            :margin="4"
+            class="my-3"
+          />
+        </div>
+        <div style="font-size: 13px; font-weight: 500;">
+          {{ recipientAddress | truncate(8, '...') }}
+        </div>
+      </v-col>
+      <v-col
+        v-if="step === 0 && !currentCred"
+        cols="12"
+        class="py-0 mr-0 align-center"
+      >
         <p class="sub-title-fields text-left mb-3">
           Asset
         </p>
         <v-select
           class="pa-0 mb-6"
-          :items="[1, 2]"
-          v-model="idt"
+          :items="networkAssets"
+          v-model="selectedAsset"
           color="#009fb1"
           outlined
           dense
@@ -28,7 +95,8 @@
           :menu-props="{
             maxHeight: 304,
           }"
-          hide-details
+          hide-details="auto"
+          placeholder="Select and asset to send"
         >
           <template
             v-slot:selection="{
@@ -36,34 +104,171 @@
             }"
           >
             <div class="d-flex simple-text">
+              <v-img contain width="20" :src="item.assetImagePath"></v-img>
+
               <p class="d-block mb-0 ml-3">
-                {{ item }}
+                {{ item.tokenName }}
+              </p>
+            </div>
+          </template>
+          <template
+            v-slot:item="{
+              item,
+            }"
+          >
+            <div class="d-flex simple-text">
+              <v-img contain width="20" :src="item.assetImagePath"></v-img>
+
+              <p class="d-block mb-0 ml-3">
+                {{ item.tokenName }}
               </p>
             </div>
           </template>
         </v-select>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" class="py-0">
         <p class="sub-title-fields text-left mb-3">
           To
         </p>
         <v-text-field
           dense
           outlined
+          :disabled="step > 0"
           hide-details
           class="pa-0 mb-6"
+          placeholder="Public address (0x)"
+          :append-icon="
+            isValidAddress ? 'icon-successfully' : 'icon-not-successful'
+          "
+          v-model="recipientAddress"
         ></v-text-field>
       </v-col>
+      <v-col
+        v-if="step === 1"
+        cols="12"
+        class="py-0"
+        style="position: relative;"
+      >
+        <p class="sub-title-fields text-left mb-3">
+          Amount
+        </p>
+        <v-text-field
+          dense
+          outlined
+          hide-details
+          class="pa-0 mb-6"
+          placeholder="Public address (0x)"
+          clear-icon="mdi-close-circle"
+          clearable
+          :append-icon="
+            isValidAddress ? 'icon-successfully' : 'icon-not-successful'
+          "
+          :rules="TokenAmountRule"
+        ></v-text-field>
+        <div
+          style="
+            position: absolute;
+            bottom: 32px;
+            right: 90px;
+            font-size: 15px;
+            font-weight: 500;
+          "
+        >
+          LYXt
+        </div>
+        <div
+          style="
+            position: absolute;
+            bottom: 30px;
+            right: 25px;
+            border: 1px solid #009fb1;
+            color: #009fb1;
+            border-radius: 3px;
+            font-size: 13px;
+            padding: 2px 10px;
+            cursor: pointer;
+          "
+          @click="setMaxAmount"
+        >
+          Max
+        </div>
+      </v-col>
+      <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
+        <div class="d-flex justify-space-between">
+          <p style="font-size: 15px; font-weight: 600;">Estimated gas fees</p>
+          <EditPriorityModal></EditPriorityModal>
+        </div>
+        <div class="d-flex flex-column">
+          <div
+            class="mt-3"
+            style="font-size: 13px; text-align: right; font-weight: 500;"
+          >
+            0.0007986
+          </div>
+          <div
+            class="mt-3"
+            style="font-size: 13px; text-align: right; font-weight: 500;"
+          >
+            <strong>0.000797 LYXt</strong>
+          </div>
+          <div
+            class="mt-3"
+            style="font-size: 13px; text-align: right; font-weight: 500;"
+          >
+            Max fee: 0.00083974 LYXt
+          </div>
+        </div>
+      </v-col>
+      <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
+        <hr />
+      </v-col>
+      <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
+        <div class="d-flex justify-space-between">
+          <p style="font-size: 15px; font-weight: 600; font-weight: 500;">
+            Total
+          </p>
+          <p style="font-size: 13px; font-weight: 500;">
+            0.00079802
+          </p>
+        </div>
+        <div
+          class="mt-3"
+          style="font-size: 13px; text-align: right; font-weight: 500;"
+        >
+          <strong>0.00079802 LYXt</strong>
+        </div>
+        <div class="d-flex justify-space-between mt-3">
+          <p style="font-size: 13px; font-weight: 500;">Amount + gas fee</p>
+          <p style="font-size: 13px; font-weight: 500;">
+            Max amount: 0.0008409 LYXt
+          </p>
+        </div>
+      </v-col>
+      <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
+        <hr />
+      </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="step < 2">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="close()" class="cancel-btn">
           Cancel
         </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="validate" class="advance-btn">
-          Import
+        <v-btn text @click="nextStep" class="advance-btn">
+          Next
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col cols="6" class="pt-1">
+        <v-btn text @click="close()" class="cancel-btn">
+          Reject
+        </v-btn>
+      </v-col>
+      <v-col cols="6" class="pt-1">
+        <v-btn text @click="nextStep" class="advance-btn">
+          Confirm
         </v-btn>
       </v-col>
     </v-row>
@@ -74,26 +279,55 @@
 import WalletAddress from '../components/WalletAddress'
 import WalletState from '../components/WalletState'
 import ArrowBack from '../images/icon-arrow-back.vue'
+import EditPriorityModal from './EditPriorityModal.vue'
 
 import { mapGetters, mapState } from 'vuex'
 
 export default {
+  props: ['asset'],
   components: {
     WalletAddress,
     WalletState,
     ArrowBack,
+    EditPriorityModal,
   },
-  created() {},
-  mounted() {},
+  methods: {
+    isSufficientAmount() {
+      return true
+    },
+  },
   computed: {
-    ...mapGetters(['address', 'showSendAssetModal', 'currentCred']),
+    ...mapGetters(['address', 'showSendAssetModal', 'currentCred', 'assets']),
     ...mapState({
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
     close() {
+      this.$store.commit('setCurrentCred', null)
       this.$store.commit('showSendAssetModal', false)
     },
+    networkAssets() {
+      return this.assets.filter((asset) => {
+        return asset.assetType === 'NFT' && asset.assetType === 'Fungible Token'
+      })
+    },
+    nextStep() {
+      //if ((valid address && this.step === 0) || (valid amount && step === 1)) this.step++
+    },
+    setMaxAmount() {
+      //get amount of currentCred token or selectedToken and set to that amount
+    },
+  },
+  data() {
+    return {
+      step: 1,
+      isValidAddress: true,
+      selectedAsset: null,
+      recipientAddress: '',
+      TokenAmountRule: [
+        (v) => this.isSufficientAmount(v) === true || 'Insufficient funds',
+      ],
+    }
   },
 }
 </script>
