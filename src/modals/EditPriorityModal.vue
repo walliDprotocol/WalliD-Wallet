@@ -87,7 +87,10 @@
               <v-radio value="radio-3"></v-radio>
             </v-radio-group>
           </v-container>
-          <div class="d-flex flex-row align-center justify-center mt-6">
+          <div
+            class="d-flex flex-row align-center justify-center mt-6"
+            :style="{ marginBottom: !showGasLimit ? '30px' : '' }"
+          >
             <p style="color: #009fb1; font-size: 13px; font-weight: 500;">
               Advanced options
             </p>
@@ -157,10 +160,16 @@
             outlined
           ></v-text-field>
         </v-col>
-        <v-col class="pa-0" v-if="showGasLimit">
-          <v-btn depressed class="advance-btn">Save</v-btn>
+        <v-col class="pa-0">
+          <v-btn depressed class="advance-btn" @click="openViewActivityModal()">
+            Save
+          </v-btn>
         </v-col>
       </v-row>
+      <ViewActivityModal
+        v-if="showViewActivityModal"
+        style="z-index: 99 !important;"
+      />
     </v-container>
   </v-dialog>
 </template>
@@ -168,14 +177,22 @@
 <script>
 import IconArrowDropdown from '../images/icon-arrow-dropdown-blue.vue'
 
+import { mapGetters } from 'vuex'
+
 export default {
   components: {
     IconArrowDropdown,
   },
   computed: {
+    ...mapGetters([]),
     isCancel: function () {
       console.log(this.transactionOption === 'Cancel')
       return this.transactionOption === 'Cancel'
+    },
+    openViewActivityModal() {
+      this.$store.commit('showViewActivityModal', true)
+      this.$store.commit('showSendAssetModal', false)
+      this.dialog = false
     },
   },
   data() {

@@ -68,6 +68,10 @@
       <v-container fluid class="router-views pa-0">
         <!-- If using vue-router -->
         <router-view></router-view>
+        <DeleteAssetModal v-if="showDeleteConfirmation" />
+        <ViewActivityModal v-if="showViewActivityModal" />
+        <ImportAssetModal v-if="showImportAssetModal" />
+        <SendAssetModal v-if="showSendAssetModal" />
       </v-container>
     </v-main>
   </div>
@@ -81,15 +85,32 @@ import { mapGetters, mapState } from 'vuex'
 import { UPDATE_CONNECTED } from '../store/actions'
 import IconArrowDropdown from '../images/icon-arrow-dropdown.vue'
 
+import DeleteAssetModal from '../modals/DeleteAssetModal'
+import ViewActivityModal from '../modals/ViewActivityModal'
+import ImportAssetModal from '../modals/ImportAssetModal'
+import SendAssetModal from '../modals/SendAssetModal'
+
 export default {
   components: {
     MenuPlugin,
     IconArrowDropdown,
     MenuNetworks,
+    DeleteAssetModal,
+    ViewActivityModal,
+    ImportAssetModal,
+    SendAssetModal,
   },
   props: ['hideAppHeader'],
   computed: {
-    ...mapGetters(['address', 'unlocked', 'connections']),
+    ...mapGetters([
+      'address',
+      'unlocked',
+      'connections',
+      'showDeleteConfirmation',
+      'showViewActivityModal',
+      'showImportAssetModal',
+      'showSendAssetModal',
+    ]),
     ...mapState({
       walletAddress: 'address',
     }),

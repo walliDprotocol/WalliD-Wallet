@@ -70,11 +70,7 @@
             </v-list>
           </template>
         </Asset>
-        <DeleteAssetModal v-if="showDeleteConfirmation" :asset="asset" />
-        <ViewActivityModal v-if="showViewActivityModal" />
-        <SendAssetModal v-if="showSendAssetModal" :asset="asset" />
       </v-col>
-      <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
         <v-container
           class="py-0 px-3"
@@ -129,10 +125,6 @@
 <script>
 import Asset from '../../components/Asset'
 import StoredProfileImg from '../../components/StoredProfileImg'
-import DeleteAssetModal from '../../modals/DeleteAssetModal'
-import ViewActivityModal from '../../modals/ViewActivityModal'
-import ImportAssetModal from '../../modals/ImportAssetModal'
-import SendAssetModal from '../../modals/SendAssetModal'
 
 import { mapGetters } from 'vuex'
 
@@ -141,20 +133,9 @@ export default {
   components: {
     StoredProfileImg,
     Asset,
-    DeleteAssetModal,
-    ViewActivityModal,
-    ImportAssetModal,
-    SendAssetModal,
   },
   computed: {
-    ...mapGetters([
-      'assets',
-      'showDeleteConfirmation',
-      'showViewActivityModal',
-      'showImportAssetModal',
-      'showSendAssetModal',
-      'currentCred',
-    ]),
+    ...mapGetters(['assets', 'currentCred']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
         return el.assetType === 'NFT'
@@ -173,14 +154,14 @@ export default {
     openImportAssetModal() {
       this.$store.commit('showImportAssetModal', true)
     },
-    shareProfile(asset) {
-      this.$store.commit('currentCred', asset)
-
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
-    },
     openSendAssetModal(asset) {
       this.$store.commit('setCurrentCred', asset)
       this.$store.commit('showSendAssetModal', true)
+    },
+    shareProfile(asset) {
+      this.$store.commit('setCurrentCred', asset)
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
     },
   },
   data() {

@@ -38,7 +38,7 @@
           </div>
           <div class="d-flex align-center justify-space-between">
             <p class="sub-title-fields d-flex">
-              {{ (currentCred.assetType === "Fungible Token" ? 'Balance: ' : 'Amount: ') }}
+              {{ amountPrefix }}
               {{ (currentCred ? currentCred.amount : '') }}
             </p>
           </div>
@@ -126,7 +126,7 @@
           </template>
         </v-select>
       </v-col>
-      <v-col cols="12" class="py-0">
+      <v-col cols="12" class="py-0" style="position: relative;">
         <p class="sub-title-fields text-left mb-3">
           To
         </p>
@@ -137,11 +137,22 @@
           hide-details
           class="pa-0 mb-6"
           placeholder="Public address (0x)"
-          :append-icon="
-            isValidAddress ? 'icon-successfully' : 'icon-not-successful'
-          "
           v-model="recipientAddress"
         ></v-text-field>
+        <v-img
+          max-width="18"
+          contain
+          src="../images/icons/close-icon@3x.png"
+          style="position: absolute; bottom: 34px; right: 25px;"
+          @click="deleteRecipientAddress"
+        ></v-img>
+        <v-img
+          v-if="isValidAddress"
+          src="../images/icons/icon-sucessfully@3x.png"
+          max-width="18"
+          contain
+          style="position: absolute; bottom: 34px; right: 50px;"
+        ></v-img>
       </v-col>
       <v-col
         v-if="step === 1"
@@ -196,7 +207,7 @@
       <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
         <div class="d-flex justify-space-between">
           <p style="font-size: 15px; font-weight: 600;">Estimated gas fees</p>
-          <EditPriorityModal></EditPriorityModal>
+          <EditPriorityModal />
         </div>
         <div class="d-flex flex-column">
           <div
@@ -267,7 +278,7 @@
         </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="nextStep" class="advance-btn">
+        <v-btn text @click="openViewActivityModal()" class="advance-btn">
           Confirm
         </v-btn>
       </v-col>
@@ -284,7 +295,6 @@ import EditPriorityModal from './EditPriorityModal.vue'
 import { mapGetters, mapState } from 'vuex'
 
 export default {
-  props: ['asset'],
   components: {
     WalletAddress,
     WalletState,
@@ -297,7 +307,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['address', 'showSendAssetModal', 'currentCred', 'assets']),
+    ...mapGetters(['address', 'showSendAssetModal', , 'currentCred', 'assets']),
     ...mapState({
       walletAddress: 'address',
       domainENS: 'domainENS',
@@ -306,21 +316,34 @@ export default {
       this.$store.commit('setCurrentCred', null)
       this.$store.commit('showSendAssetModal', false)
     },
+    openViewActivityModal() {
+      this.$store.commit('showViewActivityModal', true)
+      this.$store.commit('showSendAssetModal', false)
+    },
     networkAssets() {
       return this.assets.filter((asset) => {
         return asset.assetType === 'NFT' && asset.assetType === 'Fungible Token'
       })
     },
-    nextStep() {
+    amountPrefix() {
+      if (this.currentCred)
+        return this.currentCred.assetType === 'Fungible Token'
+          ? 'Balance: '
+          : 'Amount: '
+    },
+    deleteRecipientAddress() {
+      return (this.recipientAddress = '')
+    },
+    nextStep: () => {
       //if ((valid address && this.step === 0) || (valid amount && step === 1)) this.step++
     },
-    setMaxAmount() {
+    setMaxAmount: () => {
       //get amount of currentCred token or selectedToken and set to that amount
     },
   },
   data() {
     return {
-      step: 1,
+      step: 2,
       isValidAddress: true,
       selectedAsset: null,
       recipientAddress: '',

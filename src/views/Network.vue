@@ -48,6 +48,7 @@
           hide-details
           class="pa-0 mb-6"
           placeholder="Universal_profile_name"
+          :rules="UsernameRules"
         ></v-text-field>
       </v-col>
       <v-col cols="6">
@@ -159,7 +160,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      UsernameRules: [(v) => !!v || 'Please enter an username'],
+    }
   },
 }
 </script>

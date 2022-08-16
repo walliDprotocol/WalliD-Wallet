@@ -27,7 +27,6 @@
       </div>
     </v-row>
     <v-row>
-      <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
         v-for="asset in idAssets"
         :key="asset.id"
@@ -46,7 +45,7 @@
               <v-list-item>
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="viewCred(asset)"
+                  @click="shareProfile(asset)"
                 >
                   Share Proof-of-Ownership
                 </v-list-item-title>
@@ -55,11 +54,16 @@
               <v-list-item :class="asset.status != 'active' ? '' : ''">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
+                  @click="openDeleteAssetModal(asset)"
                 >
                   Delete
                 </v-list-item-title>
               </v-list-item>
+              <DeleteAssetModal
+                v-if="showDeleteConfirmation"
+                :asset="asset"
+                style="z-index: 99 !important;"
+              />
             </v-list>
           </template>
         </Asset>
@@ -101,6 +105,7 @@
 <script>
 import Asset from '../../components/Asset'
 import StoredProfileImg from '../../components/StoredProfileImg'
+import DeleteAssetModal from '../../modals/DeleteAssetModal'
 
 import { mapGetters } from 'vuex'
 
@@ -111,9 +116,10 @@ export default {
   components: {
     StoredProfileImg,
     Asset,
+    DeleteAssetModal,
   },
   computed: {
-    ...mapGetters(['assets']),
+    ...mapGetters(['assets', 'showDeleteConfirmation']),
     idAssets: function () {
       var filter = this.idAssetFilter
       return this.assets.filter(function (el) {
@@ -122,6 +128,10 @@ export default {
     },
   },
   methods: {
+    openDeleteAssetModal(asset) {
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showDeleteConfirmation', true)
+    },
     getName(credential) {
       if (this.isNFT(credential)) {
         return (
@@ -166,6 +176,11 @@ export default {
       console.log('List', card)
       this.$store.commit('setCurrentCred', card)
       this.$router.push({ name: 'Credential' })
+    },
+    shareProfile(asset) {
+      this.$store.commit('currentCred', asset)
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
     },
     deleteCred(card) {
       this.$store.commit('showDeleteConfirmation', true)

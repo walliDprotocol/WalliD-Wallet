@@ -23,7 +23,7 @@
               <v-list-item>
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="viewCred(asset)"
+                  @click="openViewActivityModal(asset)"
                 >
                   View activity
                 </v-list-item-title>
@@ -59,36 +59,12 @@
                   Send
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'ENS'">
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a
-                    class="SECUNDARY-LINKS"
-                    target="_blank"
-                    color="#01a3b0"
-                    :href="
-                      'https://etherscan.io/enslookup-search?search=' +
-                      asset.username
-                    "
-                    @click.stop
-                  >
-                    {{ $t('credentials.menuENS[0]') }}
-                  </a>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
+              <v-list-item v-if="asset.tokenStandard !== 'Native'">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
+                  @click="openDeleteAssetModal(asset)"
                 >
-                  {{ $t('credentials.menuMetaMask[0]') }}
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="asset.tokenName == 'MetaMask'">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
-                >
-                  {{ $t('credentials.menuMetaMask[1]') }}
+                  Delete
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -223,6 +199,14 @@ export default {
       } else {
         return false
       }
+    },
+    openDeleteAssetModal(asset) {
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showDeleteConfirmation', true)
+    },
+    openViewActivityModal(asset) {
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showViewActivityModal', true)
     },
   },
   data() {

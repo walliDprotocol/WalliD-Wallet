@@ -7,18 +7,20 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
-            {{ 'Import ' + (asset === 'NFT' ? 'NFT' : 'custom Token') }}
+            {{ 'Import ' + (assetType === 'NFT' ? 'NFT' : 'custom Token') }}
           </h2>
         </div>
       </v-col>
       <v-col cols="12" class="py-0">
         <v-form ref="form" v-model="valid" lazy-validation>
           <p class="sub-title-fields text-left mb-3">
-            {{ asset === 'NFT' ? 'Token standard' : 'Token Contract Address' }}
+            {{
+              assetType === 'NFT' ? 'Token standard' : 'Token Contract Address'
+            }}
           </p>
           <v-select
             class="pa-0 mb-6"
-            v-if="asset === 'NFT'"
+            v-if="assetType === 'NFT'"
             :items="tokenStandards"
             v-model="idt"
             color="#009fb1"
@@ -52,7 +54,9 @@
             class="pa-0 mb-6"
           ></v-text-field>
           <p class="sub-title-fields text-left mb-3">
-            {{ asset === 'NFT' ? 'Smart contract address' : 'Token Symbol' }}
+            {{
+              assetType === 'NFT' ? 'Smart contract address' : 'Token Symbol'
+            }}
           </p>
           <v-text-field
             dense
@@ -60,7 +64,7 @@
             :rules="SmartContractRules"
             hide-details="auto"
             class="pa-0 mb-6"
-            v-if="asset === 'NFT'"
+            v-if="assetType === 'NFT'"
           ></v-text-field>
           <v-text-field
             dense
@@ -71,7 +75,7 @@
             v-else
           ></v-text-field>
           <p class="sub-title-fields text-left mb-3">
-            {{ asset === 'NFT' ? '#ID' : 'Token Decimal' }}
+            {{ assetType === 'NFT' ? '#ID' : 'Token Decimal' }}
           </p>
           <v-text-field
             dense
@@ -79,7 +83,7 @@
             :rules="IDRules"
             hide-details="auto"
             class="pa-0 mb-6"
-            v-if="asset === 'NFT'"
+            v-if="assetType === 'NFT'"
           ></v-text-field>
           <v-text-field
             dense
@@ -119,7 +123,6 @@ import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
 import { isValidAddress } from '../../dist/scripts/background.bundle'
 
 export default {
-  props: ['asset'],
   components: {
     WalletAddress,
     WalletState,
@@ -132,20 +135,6 @@ export default {
       profile: 'currentProfile',
       card: 'currentCard',
     }),
-    assetTitle() {
-      if (
-        this.asset.assetType === 'Fungible Token' ||
-        this.asset.assetType === 'NFT'
-      ) {
-        return this.asset.tokenName
-      } else if (this.asset.assetType === 'Legacy ID') {
-        return this.asset.idName
-      } else if (this.asset.assetType === 'Web2 ID') {
-        return this.asset.socialmedia
-      } else if (this.asset.assetType === 'Web3 ID') {
-        return this.asset.titleField
-      }
-    },
   },
   data() {
     return {
@@ -182,6 +171,9 @@ export default {
   methods: {
     close() {
       this.$store.commit('showImportAssetModal', false)
+    },
+    assetType() {
+      if (currentCred) return currentCred.assetType
     },
     validate() {
       this.$refs.form.validate()

@@ -7,7 +7,7 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1 text-left">
-            {{ 'Delete ' + asset.assetType }}
+            {{ 'Delete ' + assetTitle }}
           </h2>
         </div>
       </v-col>
@@ -42,7 +42,6 @@ import { mapGetters } from 'vuex'
 import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
 
 export default {
-  props: ['asset'],
   components: {
     WalletAddress,
     WalletState,
@@ -50,23 +49,19 @@ export default {
     IDCard,
   },
   computed: {
-    ...mapGetters({
-      credential: 'currentCred',
-      profile: 'currentProfile',
-      card: 'currentCard',
-    }),
+    ...mapGetters(['currentCred']),
     assetTitle() {
       if (
-        this.asset.assetType === 'Fungible Token' ||
-        this.asset.assetType === 'NFT'
+        this.currentCred.assetType === 'Fungible Token' ||
+        this.currentCred.assetType === 'NFT'
       ) {
-        return this.asset.tokenName
-      } else if (this.asset.assetType === 'Legacy ID') {
-        return this.asset.idName
-      } else if (this.asset.assetType === 'Web2 ID') {
-        return this.asset.socialmedia
-      } else if (this.asset.assetType === 'Web3 ID') {
-        return this.asset.titleField
+        return this.currentCred.tokenName
+      } else if (this.currentCred.assetType === 'Legacy ID') {
+        return this.currentCred.idName
+      } else if (this.currentCred.assetType === 'Web2 ID') {
+        return this.currentCred.socialmedia
+      } else if (this.currentCred.assetType === 'Web3 ID') {
+        return this.currentCred.titleField
       }
     },
   },
