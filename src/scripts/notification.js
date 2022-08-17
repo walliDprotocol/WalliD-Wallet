@@ -53,7 +53,16 @@ Vue.filter('truncate', filter);
 Vue.mixin(mixinPlugin);
 
 new Vue({
-  vuetify: new Vuetify({}),
+  vuetify: new Vuetify({
+    themes: {
+      light: {
+        primary: '#009fb1',
+        secondary: '#009fb1',
+        accent: '#009fb1',
+        error: '#e95e5e',
+      },
+    },
+  }),
   el: '#app',
   router,
   i18n,

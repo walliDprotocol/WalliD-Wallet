@@ -15,6 +15,7 @@ import FAQs from '../views/FAQs';
 import Terms from '../views/Terms';
 import Card from '../views/Card';
 import Credential from '../views/Credential';
+import Network from '../views/Network';
 
 import WALLET_CONNECT_VIEW from '../views/WalletConnect';
 
@@ -156,10 +157,15 @@ let router = new Router({
           params: true,
         },
         {
+          path: '/network',
+          name: 'Network',
+          component: Network,
+          params: true,
+        },
+        {
           path: LuksoTestpage,
           name: 'LuksoTestpage',
           component: LuksoTestpageView,
-          params: true,
         },
       ],
     },

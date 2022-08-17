@@ -281,21 +281,21 @@ export default {
     lock: 'Sign Out',
   },
   home: {
-    title: 'MyWalliD',
+    title: 'Account 1',
     address: 'Your wallet address',
-    tabs: ['Citizen IDs', 'Online IDs ', 'Web3 IDs'],
+    tabs: ['Fungible tokens', 'NFTs ', 'IDs'],
   },
   // NEW TExT
   profiles: {
-    menu: ['Identity info', 'Share proof of identity', 'Delete identity'],
+    menu: ['Identity info', 'Share Proof-of-Ownership', 'Delete identity'],
     addNew: 'Add another social network',
     proof: {
       text:
-        "Choose the ID assets you'd like to embed in this proof-of-identity:",
+        "Choose the ID assets you'd like to embed in this Proof-of-Ownership:",
       text2:
-        'The link below contains the verifiable data that proves the ownership of this wallet address and Online IDs. Anyone who accesses it will be able to check the chain of trust behind it and verify it on blockchain.',
+        'The link below contains the Proof-of-Ownership of all the assets you selected. By sharing it, anyone accessing it will be able the confirm it as well.',
       address: 'WALLET ADDRESS ',
-      buttonGenProof: 'Generate proof of identity',
+      buttonGenProof: 'Generate Proof-of-Ownership',
     },
     identity: {
       viewProof: 'View cryptographic proof',
@@ -340,7 +340,7 @@ export default {
     urlError: 'This is not a valid profile page URL',
     text1:
       'The link below contains your credential data and the cryptographic proofs of issuance and ownership. Anyone who accesses it will be able to check the chain of trust supporting it and verify it on chain.',
-    link: 'Verifiable credential link:',
+    link: 'Proof-of-Ownership: ',
     button: 'Generate link',
   },
   cards: {

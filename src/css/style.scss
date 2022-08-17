@@ -470,12 +470,13 @@
   .FIELD-TEXT {
     font-family: Montserrat;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500 !important;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.5;
     letter-spacing: normal;
     color: var(--charcoal-grey);
+    white-space: nowrap;
   }
 
   .sub-title-fields {
@@ -512,6 +513,7 @@
     text-transform: none;
     color: var(--charcoal-grey);
     padding: 0 10px;
+    white-space: nowrap;
     &:hover {
       color: var(--teal-blue);
     }

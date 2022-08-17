@@ -9,28 +9,50 @@
     <div
       v-if="src"
       class="img-wrapper"
-      :style="{ width: size + 2 + 'px', height: size + 'px' }"
+      :style="{
+        width: size + 2 + 'px',
+        height: size + 'px',
+        position: 'relative',
+      }"
     >
       <v-img :src="src" contain :width="size" :height="size" />
+      <div
+        v-if="displayAmount"
+        style="
+          width: min-content;
+          height: 15px;
+          background-color: #009fb1;
+          position: absolute;
+          top: 0;
+          right: -5px;
+          border-radius: 7px;
+          color: white;
+          font-size: 10px;
+          font-weight: 500;
+          padding-inline: 5px;
+        "
+      >
+        {{ 'x' + amount }}
+      </div>
     </div>
   </v-container>
 </template>
 
 <script>
-import IconTwitter from '../../images/SocialNetworks/icon-twitter';
-import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin';
-import IconReddit from '../../images/SocialNetworks/icon-reddit';
-import IconGitHub from '../../images/SocialNetworks/icon-github';
-import IconDiscord from '../../images/SocialNetworks/icon-discord';
-import IconMetaMask from '../../images/SocialNetworks/icon-metamask';
+import IconTwitter from '../../images/SocialNetworks/icon-twitter'
+import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin'
+import IconReddit from '../../images/SocialNetworks/icon-reddit'
+import IconGitHub from '../../images/SocialNetworks/icon-github'
+import IconDiscord from '../../images/SocialNetworks/icon-discord'
+import IconMetaMask from '../../images/SocialNetworks/icon-metamask'
 
-import IconENS from '../../images/SocialNetworks/icon-ens';
+import IconENS from '../../images/SocialNetworks/icon-ens'
 
-import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
+import IconAddProfile from '../../images/SocialNetworks/icon-add-profile'
 
-import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt';
-import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt';
-import IconCMD_PT from '../../images/CitizenIDs/icon-cc-pt';
+import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt'
+import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt'
+import IconCMD_PT from '../../images/CitizenIDs/icon-cc-pt'
 
 export default {
   name: 'StoredProfileImg',
@@ -45,6 +67,14 @@ export default {
     },
     src: {
       type: String,
+    },
+    displayAmount: {
+      type: Boolean,
+      default: false,
+    },
+    amount: {
+      type: Number,
+      default: 0,
     },
   },
   components: {
@@ -63,15 +93,15 @@ export default {
   computed: {
     currentSocialImg() {
       // Remove UC_ from name to get the standard CMD logo
-      const _name = this.name.replace(/UC_/g, '');
-      return ('Icon' + _name).trim();
+      const _name = this.name.replace(/UC_/g, '')
+      return ('Icon' + _name).trim()
     },
   },
   methods: {},
   data() {
-    return {};
+    return {}
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

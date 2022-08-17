@@ -9,3 +9,4 @@ export const SHARE_PROFILE = '/ShareProfile';
 export const WALLET_CONNECT = '/WalletConnect';
 
 export const LuksoTestpage = '/LuksoTestpage';
+export const NETWORK = '/Network';

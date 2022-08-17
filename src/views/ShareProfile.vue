@@ -2,7 +2,7 @@
   <v-container class="profile-proof-view pa-5">
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow ">
+        <div class="back-arrow">
           <v-btn text @click="$router.go('-1')" class="back-btn">
             <ArrowBack />
           </v-btn>
@@ -38,6 +38,68 @@
               </div>
             </v-col>
             <v-col
+              v-for="asset in assets"
+              :key="asset.id"
+              cols="12"
+              class="py-0 list-profiles"
+            >
+              <v-container class="py-0 wrapper">
+                <v-row>
+                  <v-col cols="2" class="py-1 pl-0">
+                    <StoredProfileImg
+                      class="mt-1"
+                      :size="30"
+                      :src="asset.assetImagePath"
+                    />
+                  </v-col>
+                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                    <v-container class="">
+                      <v-row>
+                        <v-col cols="12" class="py-0">
+                          <p
+                            class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
+                          >
+                            {{ asset.tokenName }}
+                          </p>
+                        </v-col>
+                        <v-col cols="12" class="py-0">
+                          <p
+                            v-if="asset.tokenStandard !== 'Native'"
+                            class="sub-title-fields text-left"
+                          >
+                            {{ asset.tokenProvider }}
+                          </p>
+                          <div v-else class="d-flex align-center">
+                            <p
+                              class="sub-title-fields text-left"
+                              v-if="showBalance"
+                            >
+                              {{ asset.amount }}
+                            </p>
+                            <p class="sub-title-fields text-left" v-else>
+                              Lukso
+                            </p>
+                            <p style="font-size: 13px;">Show Balance</p>
+                            <v-container class="px-0" fluid>
+                              <v-switch v-model="switch1"></v-switch>
+                            </v-container>
+                          </div>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-col>
+                  <v-col cols="2" class="py-1 pr-0">
+                    <v-checkbox
+                      v-model="selectedProfiles[profile.id]"
+                      @change="checkSelectedProfiles()"
+                      :hide-details="true"
+                      color="#009fb1"
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-col
               v-for="profile in profiles"
               :key="profile.id"
               cols="12"
@@ -70,7 +132,7 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0 ">
+                  <v-col cols="2" class="py-1 pr-0">
                     <v-checkbox
                       v-model="selectedProfiles[profile.id]"
                       @change="checkSelectedProfiles()"
@@ -103,7 +165,7 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0 ">
+                  <v-col cols="2" class="py-1 pr-0">
                     <v-checkbox
                       v-model="selectedProfiles[identity.idt]"
                       @change="checkSelectedProfiles()"
@@ -136,7 +198,7 @@
                           <p class="sub-title-fields sub-title-fields--bold">
                             {{ getName(credential) }}
                           </p>
-                          <p class="sub-title-fields" style="font-weight:500">
+                          <p class="sub-title-fields" style="font-weight: 500;">
                             {{
                               getCredentialName(credential)
                                 | truncate(16, '...')
@@ -154,7 +216,7 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0 ">
+                  <v-col cols="2" class="py-1 pr-0">
                     <v-checkbox
                       v-model="selectedProfiles[credential.id]"
                       @change="checkSelectedProfiles()"
@@ -168,7 +230,7 @@
             <v-col v-if="false" cols="12" class="py-0 list-profiles">
               <v-container class="py-0 pt-1 wrapper">
                 <v-row>
-                  <v-col cols="2" class="py-1 pl-0 ">
+                  <v-col cols="2" class="py-1 pl-0">
                     <StoredProfileImg :size="30" :name="'AddProfile'" />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
@@ -211,7 +273,7 @@
         </h3>
       </v-col>
       <v-col cols="12 text-left">
-        <label class="sub-title-fields ">{{ $t('proof.link') }}</label>
+        <label class="sub-title-fields">{{ $t('proof.link') }}</label>
         <CopyPaste :input="linkProof">
           <div @click="copyToClip" class="password-wrapper" style="">
             <div class="password-input">
@@ -225,21 +287,21 @@
 </template>
 
 <script>
-import ArrowBack from '../images/icon-arrow-back.vue';
-import IconAlert from '../images/icon-warning-red.vue';
-import CopyHover from '../images/icon-copyclipboard-selected';
-import Copy from '../images/icon-copyclipboard-unselected';
+import ArrowBack from '../images/icon-arrow-back.vue'
+import IconAlert from '../images/icon-warning-red.vue'
+import CopyHover from '../images/icon-copyclipboard-selected'
+import Copy from '../images/icon-copyclipboard-unselected'
 
-import CopyPaste from '../components/CopyPaste';
+import CopyPaste from '../components/CopyPaste'
 
-import WalletAddress from '../components/WalletAddress';
+import WalletAddress from '../components/WalletAddress'
 
-import StoredProfileImg from '../components/StoredProfileImg';
+import StoredProfileImg from '../components/StoredProfileImg'
 
-import { mapGetters, mapState } from 'vuex';
-import { SHARE_PROFILE } from '../store/actions';
+import { mapGetters, mapState } from 'vuex'
+import { SHARE_PROFILE } from '../store/actions'
 
-const VERIFY_URL = 'https://verify.wallid.io/';
+const VERIFY_URL = 'https://verify.wallid.io/'
 
 export default {
   components: {
@@ -252,20 +314,21 @@ export default {
     CopyPaste,
   },
   beforeDestroy() {
-    this.$store.commit('currentProfile', null);
+    this.$store.commit('currentProfile', null)
+    this.$store.commit('currentCred', null)
   },
   created() {
-    console.log('currentProfile', this.currentProfile);
-    console.log('list credentials', this.credentials);
+    console.log('currentProfile', this.currentProfile)
+    console.log('list credentials', this.credentials)
 
     if (this.currentProfile) {
-      this.selectedProfiles[this.currentProfile.id] = true;
+      this.selectedProfiles[this.currentProfile.id] = true
     }
     if (this.currentCred) {
-      this.selectedProfiles[this.currentCred.id] = true;
+      this.selectedProfiles[this.currentCred.id] = true
     }
 
-    this.isDisabled = false;
+    this.isDisabled = false
   },
   mounted() {},
   computed: {
@@ -276,6 +339,7 @@ export default {
       'profiles',
       // 'identities',
       'credentials',
+      'assets',
     ]),
     ...mapState({
       walletAddress: 'address',
@@ -288,7 +352,7 @@ export default {
         card.userData?.credential_img ||
         card.userData?.frontend_props?.preview ||
         card.photoURL
-      );
+      )
     },
     getName(credential) {
       if (this.isNFT(credential)) {
@@ -298,96 +362,96 @@ export default {
           (credential.userData.user_data['TOKEN ID'].length > 10
             ? this.reducedString(credential.userData.user_data['TOKEN ID'])
             : credential.userData.user_data['TOKEN ID'])
-        );
+        )
       }
 
-      return credential.credName || credential.assetName;
+      return credential.credName || credential.assetName
     },
     getCredentialName(credential) {
-      return credential.caName || credential.username;
+      return credential.caName || credential.username
     },
     checkSelectedProfiles() {
       this.isDisabled = !Object.keys(this.selectedProfiles)
         .filter((el) => this.selectedProfiles[el])
-        .map((el) => this.selectedProfiles[el])[0];
+        .map((el) => this.selectedProfiles[el])[0]
 
-      console.log(this.isDisabled);
+      console.log(this.isDisabled)
     },
     copyToClip() {
       try {
-        this.copyToClipboard(this.linkProof);
-        this.show = true;
+        this.copyToClipboard(this.linkProof)
+        this.show = true
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     },
     copyToClipboard(text) {
       if (window.clipboardData && window.clipboardData.setData) {
         // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
-        return window.clipboardData.setData('Text', text);
+        return window.clipboardData.setData('Text', text)
       } else if (
         document.queryCommandSupported &&
         document.queryCommandSupported('copy')
       ) {
-        const textarea = document.createElement('textarea');
-        textarea.textContent = text;
-        textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in Microsoft Edge.
-        document.body.appendChild(textarea);
-        textarea.select();
+        const textarea = document.createElement('textarea')
+        textarea.textContent = text
+        textarea.style.position = 'fixed' // Prevent scrolling to bottom of page in Microsoft Edge.
+        document.body.appendChild(textarea)
+        textarea.select()
         try {
-          return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+          return document.execCommand('copy') // Security exception may be thrown by some browsers.
         } catch (ex) {
-          console.warn('Copy to clipboard failed.', ex);
-          return false;
+          console.warn('Copy to clipboard failed.', ex)
+          return false
         } finally {
-          document.body.removeChild(textarea);
+          document.body.removeChild(textarea)
         }
       }
     },
     delay() {
-      console.log('hover');
+      console.log('hover')
       setTimeout(() => {
-        this.show = false;
-        this.copy = false;
-      }, 300);
+        this.show = false
+        this.copy = false
+      }, 300)
     },
 
     generateProof() {
-      this.debug('generateProof', this.selectedProfiles);
-      this.isLoading = true;
+      this.debug('generateProof', this.selectedProfiles)
+      this.isLoading = true
 
       let social_data = this.profiles.filter(
-        ({ id }) => this.selectedProfiles[id]
-      );
+        ({ id }) => this.selectedProfiles[id],
+      )
 
       social_data = social_data.concat(
-        this.identities.filter(({ idt }) => this.selectedProfiles[idt])
-      );
+        this.identities.filter(({ idt }) => this.selectedProfiles[idt]),
+      )
 
       social_data = social_data.concat(
-        this.credentials.filter(({ id }) => this.selectedProfiles[id])
-      );
+        this.credentials.filter(({ id }) => this.selectedProfiles[id]),
+      )
 
       let body = {
         wa: this.address,
         social_data: social_data,
-      };
+      }
 
-      console.log(social_data);
+      console.log(social_data)
 
       this.$store
         .dispatch('socialIds/' + SHARE_PROFILE, body)
         .then((response) => {
-          console.log('Proof');
-          console.log(response);
-          this.linkProof = VERIFY_URL + response.data.data.share_id;
-          this.isLoading = false;
+          console.log('Proof')
+          console.log(response)
+          this.linkProof = VERIFY_URL + response.data.data.share_id
+          this.isLoading = false
         })
         .catch((err) => {
-          this.isLoading = false;
+          this.isLoading = false
 
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
   },
   data() {
@@ -411,9 +475,9 @@ export default {
       },
       // Delete this and add identities in getters
       identities: [],
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">

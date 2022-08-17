@@ -67,19 +67,75 @@ export default new Vuex.Store({
     connected: false,
     initialized: API.getState().initialized,
     identities: API.getState().identities,
-    credentials: API.getState().credentials,
+    credentials: [{
+      id: 1,
+      credName: 'credName',
+      caName: 'caName',
+      photoURL: 'photoURL',
+      userData: 'userData',
+      status: 'status',
+      expDate: 'expDate',
+    }]
+      /* API.getState().credentials */,
+    assets: [{
+      id: 1,
+      assetType: 'Fungible Token',
+      assetImagePath: '../images/logos/logo-l16PublicTestnet.png',
+      tokenName: 'LYXt',
+      amount: 2,
+      tokenStandard: 'Native',
+    }, {
+      id: 2,
+      assetType: 'NFT',
+      assetImagePath: '../images/icons/icon-sunflower.png',
+      tokenName: 'Sunflower',
+      tokenProvider: 'Sunflower Land Collection',
+      amount: 969,
+      tokenStandard: 'ERC-1155',
+    },
+    {
+      id: 3,
+      assetType: 'Legacy ID',
+      assetImagePath: '../images/icons/icon-portuguese-republic.png',
+      idName: 'Portuguese Citzen Card',
+      date: '2024-10-03',
+      validity: 'VALID',
+      },
+    {
+      id: 4,
+      assetType: 'Web2 ID',
+      assetImagePath: '../images/icons/icon-discord.png',
+      socialmedia: 'Discord',
+      username: 'Beatriz Pereira',
+    },
+    {
+      id: 5,
+      assetType: 'Web3 ID',
+      assetImagePath: '../images/logos/logo-wallid.png',
+      titleField: 'WalliD Credential',
+      subtitleField: 'Beta tester',
+      validity: 'VALID',
+    }],
     profiles: API.getState().profiles,
     currentProfile: null,
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
-    currentCred: null,
+    currentCred: '',
     currentCard: null,
     showDeleteConfirmation: false,
+    showViewActivityModal: false,
+    showQueueTransactionModal: false,
+    showImportAssetModal: false,
+    showSendAssetModal: false,
     currentTab: 0,
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,
+    showViewActivityModal: (state) => state.showViewActivityModal,
+    showQueueTransactionModal: (state) => state.showQueueTransactionModal,
+    showImportAssetModal: (state) => state.showImportAssetModal,
+    showSendAssetModal: (state) => state.showSendAssetModal,
     address: (state) => state.address,
     completedOnboarding: (state) => state.completedOnboarding,
     connections: (state) => state.connections,
@@ -89,6 +145,7 @@ export default new Vuex.Store({
     state: (state) => state,
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
+    assets: (state) => state.assets,
     currentCred: (state) => state.currentCred,
     profiles: (state) => {
       return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');
@@ -847,6 +904,18 @@ export default new Vuex.Store({
   mutations: {
     showDeleteConfirmation(state, value) {
       state.showDeleteConfirmation = value;
+    },
+    showViewActivityModal(state, value) {
+      state.showViewActivityModal = value;
+    },
+    showQueueTransactionModal(state, value) {
+      state.showQueueTransactionModal = value;
+    },
+    showImportAssetModal(state, value) {
+      state.showImportAssetModal = value;
+    },
+    showSendAssetModal(state, value) {
+      state.showSendAssetModal = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;
