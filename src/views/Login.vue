@@ -49,11 +49,19 @@
             {{ $t('login.button') }}
           </v-btn>
         </v-col>
-        <v-col cols="12" class=" text-left">
-          <p class="links mt-2 text-left" style="color: #373c43;">
+        <v-col cols="12" class="text-left">
+          <p class="links mt-2 text-left" style="color: #373c43">
             {{ $t('login.restore[0]') }}<br />
             <router-link to="/restore" class="links">
               {{ $t('login.restore[1]') }}
+            </router-link>
+          </p>
+        </v-col>
+        <v-col cols="12" class="text-left">
+          <p class="links mt-2 text-left" style="color: #373c43">
+            {{ 'import' }}<br />
+            <router-link to="/import" class="links">
+              {{ 'import' }}
             </router-link>
           </p>
         </v-col>

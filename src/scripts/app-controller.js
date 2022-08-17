@@ -171,6 +171,28 @@ export default class AppController {
   }
 
   /**
+   * Creates a new vault with @password, persisting it to local storage.
+   * Creates a new wallet from the provided @mnemonic.
+   * Overwrites any pre-existing data.
+   *
+   * @param {string} - mnemonic
+   * @param {string} - password
+   *
+   * @returns {Promise}
+   */
+  importFromPrivateKey(privateKey, password) {
+    console.log('importFromPrivateKey ');
+    const vault = this.#store.getState().vault;
+    return Promise.resolve(vault.initFromPrivateKey(privateKey, password))
+      .then(() => {
+        eventPipeIn('wallid_wallet_imported');
+      })
+      .catch((err) => {
+        return Promise.reject(err);
+      });
+  }
+
+  /**
    * Resets the vault and clears plugin's local storage.
    * This action is definitive. All plugin data is permanently lost.
    * Throws error if plugin is locked.
@@ -223,6 +245,12 @@ export default class AppController {
       )
       .then(() => {
         setProvider(this.#store.getState().configurations.getProvider());
+
+        const wallet = this.#store.getState().wallet;
+        const lukso = this.#store.getState().lukso;
+        let privateKey = wallet.getPrivateKey();
+        lukso.initEOA(privateKey);
+
         // initiate wallet connect
         return this.#store.getState().walletConnect.init();
       })
@@ -968,13 +996,47 @@ export default class AppController {
       return Promise.reject('ERR_PLUGIN_LOCKED');
     }
     const lukso = this.#store.getState().lukso;
+    const wallet = this.#store.getState().wallet;
+    let privateKey = wallet.getPrivateKey();
+
     console.log(lukso);
-    return Promise.resolve(lukso.createUniversalProfile(address))
+    return Promise.resolve(lukso.createUniversalProfile(address, privateKey))
       .then((deployedContracts) => {
         const UPAddress = deployedContracts.LSP0ERC725Account.address;
         const KMAddress = deployedContracts.LSP6KeyManager.address;
         lukso.setUniversalProfileAddress(UPAddress);
         lukso.setKeyManagerAddress(KMAddress);
+        return deployedContracts;
+      })
+      .then((deployedContracts) => {
+        vault.putLukso(lukso.serialize(), this.#store.getState().password);
+        return deployedContracts;
+      })
+      .catch((err) => {
+        Promise.reject(err);
+      });
+  }
+
+  importUniversalProfile(ownerAddress, UPAddressToImport) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    const wallet = this.#store.getState().wallet;
+    console.log(lukso);
+    return Promise.resolve(
+      lukso.checkOwnership(ownerAddress, UPAddressToImport)
+    )
+      .then((deployedContracts) => {
+        const UPAddress = deployedContracts.LSP0ERC725Account.address;
+        const KMAddress = deployedContracts.LSP6KeyManager.address;
+        lukso.setUniversalProfileAddress(UPAddress);
+        lukso.setKeyManagerAddress(KMAddress);
+
+        let privateKey = wallet.getPrivateKey();
+        lukso.initEOA(privateKey);
+
         return deployedContracts;
       })
       .then((deployedContracts) => {
@@ -1182,6 +1244,7 @@ export default class AppController {
       // New methods related to networks changes/lukso build up
       changeRpcTarget: this.changeRpcTarget.bind(this),
       createUniversalProfile: this.createUniversalProfile.bind(this),
+      importUniversalProfile: this.importUniversalProfile.bind(this),
       getBalance: this.getBalance.bind(this),
       setUniversalProfileAddress: this.setUniversalProfileAddress.bind(this),
       fetchProfile: this.fetchProfile.bind(this),
@@ -1190,6 +1253,7 @@ export default class AppController {
       transferLSP7Tokens: this.transferLSP7Tokens.bind(this),
       createVault: this.createVault.bind(this),
       setVaultAddressUP: this.setVaultAddressUP.bind(this),
+      importFromPrivateKey: this.importFromPrivateKey.bind(this),
       //
     };
   }

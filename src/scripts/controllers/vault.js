@@ -63,6 +63,40 @@ export default class Vault {
     );
   }
 
+  initFromPrivateKey(privateKey, password) {
+    console.log('initFromPrivateKey', privateKey, password);
+    if (typeof password != 'string') {
+      return Promise.reject("Vault password must be of type 'string'");
+    }
+
+    // if (!bip39.validateMnemonic(mnemonic)) {
+    //   return Promise.reject('Invalid mnemonic phrase');
+    // }
+
+    let mnemonic =
+      "This account was initialized from a private Key isn't possible to retrieve it's seedphrase";
+
+    return (
+      Promise.resolve(WalletController.initFromPrivateKey(privateKey))
+        .then((wallet) => Promise.resolve([wallet.serialize(), mnemonic, []]))
+        .then((data) => passworder.encrypt(password, data))
+        .then((vault) => {
+          this.#store.putLocal({ vault });
+          return vault;
+        })
+        .then((vault) =>
+          this.#store.putState({ vault, unlocked: false, empty: false })
+        )
+        //DEBUG LINE
+        .then(() =>
+          console.log(
+            'New vault created and persisted to local storage',
+            this.#store.getState().vault
+          )
+        )
+    );
+  }
+
   // Fully resets the vault. Clears local storage and reverts instance to initial state
   fullReset() {
     return Promise.resolve(this.#store.putState(InitState)).then(() =>

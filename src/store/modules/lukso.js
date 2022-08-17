@@ -44,6 +44,22 @@ const actions = {
     dispatch('updateLuskoStore');
     return deployedContracts;
   },
+  ['importUniversalProfile']: async (
+    { rootState, dispatch, state },
+    UPAddressToImport
+  ) => {
+    const deployedContracts = await API.importUniversalProfile(
+      rootState.address,
+      UPAddressToImport
+    );
+    console.log('deployedContracts: ', deployedContracts);
+
+    const myUPAddress = deployedContracts.LSP0ERC725Account.address;
+    console.log('my Universal Profile address: ', myUPAddress);
+
+    dispatch('updateLuskoStore');
+    return deployedContracts;
+  },
 
   ['mintLSP7Tokens']: async ({ rootState, dispatch, state }) => {
     const mintLSP7Tokens = await API.mintLSP7Tokens(rootState.address);
@@ -59,11 +75,24 @@ const actions = {
     dispatch('updateLuskoStore');
     return transferLSP7Tokens;
   },
+
+  ['createVaultOnUP']: async ({ rootState, dispatch, state }) => {
+    console.log('Action createVaultOnUP: ');
+
+    let newVaultAddress = await dispatch('createVault');
+    console.log('newVaultAddress: ', newVaultAddress);
+
+    let resultSetVaultUP = await dispatch('setVaultAddressUP', newVaultAddress);
+    console.log('resultSetVaultUP: ', resultSetVaultUP);
+
+    await dispatch('updateLuskoStore');
+    return newVaultAddress;
+  },
+
   ['createVault']: async ({ rootState, dispatch, state }) => {
     const createVault = await API.createVault(rootState.address);
     console.log('createVault: ', createVault);
 
-    dispatch('updateLuskoStore');
     return createVault;
   },
   ['setVaultAddressUP']: async (
@@ -73,7 +102,6 @@ const actions = {
     const setVaultAddressUP = await API.setVaultAddressUP(vaultAddress);
     console.log('setVaultAddressUP: ', setVaultAddressUP);
 
-    dispatch('updateLuskoStore');
     return setVaultAddressUP;
   },
   updateLuskoStore: ({ rootState, commit, state }) => {

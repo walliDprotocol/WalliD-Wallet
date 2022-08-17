@@ -3,32 +3,50 @@ const { ERC725 } = require('@erc725/erc725.js');
 const RPC_ENDPOINT = 'https://rpc.l16.lukso.network';
 const PRIVATE_KEY =
   '0x2b8170b52c7ddbdc7d48f0d0ee9cb39660f1a972775079cfe9e3f91529026293';
+
+// lukso private key
+// 0xa306f24e85b8fcc288eaa9c473377733899ad03f385dd94d0da98c8e16def4eb
+// profile
+// 0x1ca406412696d6330B6F7df5B354585177209498
+
 require('isomorphic-fetch');
 const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
 
 import Web3 from 'web3';
 const web3 = new Web3(RPC_ENDPOINT);
-const myEOA = web3.eth.accounts.wallet.add(PRIVATE_KEY);
+// const myEOA = web3.eth.accounts.wallet.add(PRIVATE_KEY);
 
 import { ethers } from 'ethers';
-import LSP9Vault from '@lukso/lsp-smart-contracts/artifacts/LSP9Vault.json';
-import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json';
+
+// Contracts
 import LSP0UniversalProfile from '@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json';
+import LSP1UniversalReceiverDelegateVaultContract from '@lukso/lsp-smart-contracts/artifacts/LSP1UniversalReceiverDelegateVault.json';
 import LSP6KeyManagerContract from '@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json';
-const LSP1UniversalReceiverDelegateVault = require('@lukso/lsp-smart-contracts/artifacts/LSP1UniversalReceiverDelegateVault.json');
+import LSP7MintableContract from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json';
+import LSP9VaultContract from '@lukso/lsp-smart-contracts/artifacts/LSP9Vault.json';
+
+// Schemas
+import LSP6KeyManagerSchema from '@erc725/erc725.js/schemas/LSP6KeyManager.json';
+import LSP10VaultSchema from '@erc725/erc725.js/schemas/LSP10ReceivedVaults.json';
+
 const constants = require('@lukso/lsp-smart-contracts/constants.js');
+
+// Data Keys
 const URD_DATA_KEY = constants.ERC725YKeys.LSP0.LSP1UniversalReceiverDelegate;
+const LSP10_DATA_KEY = 'LSP10Vaults[]';
 
 export default class LuksoController {
   #lspFactory;
   #UPAddress;
   #KMAddress;
+  #EOA;
 
-  constructor({ KMAddress, UPAddress }) {
+  constructor({ KMAddress, UPAddress, EOA }) {
     console.log('UPAddress', UPAddress);
 
     this.#UPAddress = UPAddress;
     this.#KMAddress = KMAddress;
+    this.#EOA = EOA;
 
     this.#lspFactory = new LSPFactory(RPC_ENDPOINT, {
       deployKey: PRIVATE_KEY, // priv_key for 0xfec13efcea97326cdfaa3331904fa7e11684460d
@@ -43,6 +61,7 @@ export default class LuksoController {
     return JSON.stringify({
       KMAddress: this.#KMAddress,
       UPAddress: this.#UPAddress,
+      EOA: this.#EOA,
     });
   }
 
@@ -69,7 +88,7 @@ export default class LuksoController {
 
   createUniversalProfile(address) {
     return this.#lspFactory.UniversalProfile.deploy({
-      controllerAddresses: [myEOA.address], // our EOA that will be controlling the UP
+      controllerAddresses: [this.#EOA.address], // our EOA that will be controlling the UP
       lsp3Profile: {
         name: 'My Universal Profile',
         description: 'My Cool Universal Profile',
@@ -83,7 +102,48 @@ export default class LuksoController {
       },
     });
   }
+  async checkOwnership(ownerAddress, UPAddressToImport) {
+    console.log('checkOwnership', ownerAddress, UPAddressToImport);
 
+    let AddressPermissionsArray = await this.getDataKey(
+      'AddressPermissions[]',
+      UPAddressToImport,
+      LSP6KeyManagerSchema
+    );
+
+    console.log(AddressPermissionsArray);
+    let isOwner = AddressPermissionsArray.value.find((a) => {
+      return ethers.utils.getAddress(ownerAddress) == a;
+    });
+
+    if (isOwner) {
+      const myUP = new web3.eth.Contract(
+        LSP0UniversalProfile.abi,
+        UPAddressToImport
+      );
+      const keyManagerAddress = await myUP.methods.owner().call();
+
+      console.log(
+        ethers.utils.getAddress(ownerAddress),
+        'km',
+        keyManagerAddress
+      );
+
+      return {
+        LSP0ERC725Account: { address: UPAddressToImport },
+        LSP6KeyManager: { address: keyManagerAddress },
+      };
+    }
+  }
+
+  initEOA(privateKey) {
+    const provider = new ethers.providers.JsonRpcProvider(RPC_ENDPOINT);
+
+    // const wallet =
+    // this.#EOA = new ethers.Wallet(privateKey, provider);
+    //
+    this.#EOA = web3.eth.accounts.wallet.add(privateKey);
+  }
   setUniversalProfileAddress(UPAddress) {
     this.#UPAddress = UPAddress;
   }
@@ -98,81 +158,30 @@ export default class LuksoController {
     return this.#KMAddress;
   }
 
-  fetchProfile(addressToFetch) {
-    // Import and Network Setup
-
-    // Our static variables
-
-    /*
-     * Fetch the @param's Universal Profile's
-     * LSP3 data
-     *
-     * @param address of Universal Profile
-     * @return string JSON or custom error
-     */
-    async function fetchProfileData(address, dataField) {
-      try {
-        console.log('erc725schema', erc725schema, address);
-        const profile = new ERC725(erc725schema, address, provider, config);
-        console.log('profile', profile);
-        return await profile.fetchData();
-      } catch (error) {
-        return console.log('This is not an ERC725 Contract', error);
-      }
-    }
-
-    // Debug
-    return fetchProfileData(addressToFetch).then((profileData) => {
-      console.log(JSON.stringify(profileData, undefined, 2));
-      return profileData;
-    });
+  async fetchProfile(addressToFetch) {
+    return await this.getDataKey('', addressToFetch);
   }
 
-  fetchVaults(addressToFetch) {
-    // Import and Network Setup
-
-    // Our static variables
-    const IPFS_GATEWAY = 'https://2eff.lukso.dev/ipfs/';
-
-    // Parameters for ERC725 Instance
-    const vaultSchema = require('@erc725/erc725.js/schemas/LSP10ReceivedVaults.json');
-    const config = { ipfsGateway: IPFS_GATEWAY };
-    const provider = new Web3.providers.HttpProvider(RPC_ENDPOINT);
-    /*
-     * Fetch the @param's Universal Profile's
-     * LSP3 data
-     *
-     * @param address of Universal Profile
-     * @return string JSON or custom error
-     */
-    async function fetchProfileData(address, dataField) {
-      try {
-        console.log('fetchVaults', vaultSchema, address);
-        const profile = new ERC725(vaultSchema, address, provider, config);
-        console.log('fetchVaults', profile);
-        return await profile.fetchData('LSP10Vaults[]');
-      } catch (error) {
-        return console.log('This is not an ERC725 Contract', error);
-      }
-    }
-
-    // Debug
-    return fetchProfileData(addressToFetch).then((profileData) => {
-      console.log(JSON.stringify(profileData, undefined, 2));
-      return profileData;
-    });
+  async fetchVaults(addressToFetch) {
+    return await this.getDataKey(
+      LSP10_DATA_KEY,
+      addressToFetch,
+      LSP10VaultSchema
+    );
   }
 
-  async getDataKey(dataKey, address) {
+  async getDataKey(dataKey, address, _schema) {
     // Parameters for ERC725 Instance
-    const erc725schema = require('@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json');
+    const schema =
+      _schema ||
+      require('@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json');
     const config = { ipfsGateway: IPFS_GATEWAY };
     const provider = new Web3.providers.HttpProvider(RPC_ENDPOINT);
     try {
-      const profile = new ERC725(erc725schema, address, provider, config);
+      const profile = new ERC725(schema, address, provider, config);
       return await profile.fetchData(dataKey);
     } catch (error) {
-      return console.log('This is not an ERC725 Contract');
+      return console.log('This is not an ERC725 Contract', error);
     }
   }
 
@@ -216,68 +225,53 @@ export default class LuksoController {
       keyManagerAddress
     );
   }
-  async deployingUniversalReceiverDelegate() {
-    // create an instance
-    // const provider = new ethers.providers.JsonRpcProvider(RPC_ENDPOINT);
 
-    // const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+  async contractFactory(contractJSON, args = []) {
+    console.log('Deploy contractJSON ', this.#EOA.address, contractJSON, args);
 
-    // const LSP1UniversalReceiverDelegateVaultFactory =
-    //   await new ethers.ContractFactory(
-    //     LSP1UniversalReceiverDelegateVault.abi,
-    //     LSP1UniversalReceiverDelegateVault.bytecode,
-    //     wallet
-    //   );
+    // const contractFactory = new ethers.ContractFactory(
+    //   contractJSON.abi,
+    //   contractJSON.bytecode,
+    //   this.#EOA
+    // );
 
-    // let contract = await LSP1UniversalReceiverDelegateVaultFactory.deploy();
-
-    // console.log('LSP1UniversalReceiverDelegateVaultFactory contract', contract);
-    // await contract.deployed();
-    // // deploy the universal receiver delegate Vault contract
-
-    // console.log('URD contract deployed', contract);
-
-    const myURDVault = new web3.eth.Contract(
-      LSP1UniversalReceiverDelegateVault.abi
-    );
-
-    // deploy the universal receiver delegate Vault contract
-    let result = await myURDVault
-      .deploy({
-        data: LSP1UniversalReceiverDelegateVault.bytecode,
-      })
-      .send({
-        from: myEOA.address,
-        gas: 5_000_000,
-        gasPrice: '1000000000',
-      });
-    return result._address;
-  }
-
-  async deployVault(UPaddress) {
-    console.log('Deploy Vault ', myEOA.address, UPaddress);
-
-    let myVault = new web3.eth.Contract(LSP9Vault.abi);
+    let contractFactory = new web3.eth.Contract(contractJSON.abi);
 
     // deploy the vault contract
-    let contract = await myVault
+    let contract = await contractFactory
       .deploy({
-        data: LSP9Vault.bytecode,
-        arguments: [UPaddress], // address of the UniversalProfile
+        data: contractJSON.bytecode,
+        arguments: args, // address of the UniversalProfile
       })
       .send({
-        from: myEOA.address,
+        from: this.#EOA.address,
         gas: 5_000_000,
         gasPrice: '1000000000',
       });
 
     return contract._address;
+
+    // let contract = await contractFactory.deploy(...args);
+    // await contract.deployed();
+
+    // console.log('Deployed: ', contract);
+
+    // return contract.address;
   }
+
+  async deployingUniversalReceiverDelegate() {
+    return this.contractFactory(LSP1UniversalReceiverDelegateVaultContract);
+  }
+
+  async deployVault(UPAddress) {
+    return this.contractFactory(LSP9VaultContract, [UPAddress]);
+  }
+
+  // tested
   async createVault() {
     // // create an instance
     // const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT));
     // const myEOA = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
-    // let myVault = new web3.eth.Contract(LSP9Vault.abi);
 
     // const myUniversalProfileAddress =
     // '0xD789d7E2Efe69302E94AA6F480bcD44D159f5a25'; // address of the UP
@@ -290,29 +284,23 @@ export default class LuksoController {
     );
 
     console.log('LSP9VaultFactory contract', vaultContractAddress);
-    // await vaultContract.deployed();
-    // console.log('LSP9VaultFactory contract deployed', vaultContract);
-    // console.log('LSP9VaultFactory contract owner', await vaultContract.owner());
 
     let vaultURDAddress = await this.deployingUniversalReceiverDelegate();
 
     console.log('vaultURDAddress contract', vaultURDAddress);
 
-    // const vaultInterface = new ethers.utils.Interface(LSP9Vault.abi);
+    // TESTING
+
+    // const vaultInterface = new ethers.utils.Interface(LSP9VaultContract.abi);
 
     // // create an instance of the UP
     // const UniversalProfileInterface = new ethers.utils.Interface(
     //   LSP0UniversalProfile.abi
     // );
 
-    // // const UniversalProfileContract = new ethers.Contract(
-    // //   this.#UPAddress,
-    // //   LSP0UniversalProfile.abi,
-    // //   wallet
-    // // );
-
     // // encode setData Payload on the Vault
     // console.log('values', URD_DATA_KEY, vaultURDAddress);
+
     // const setDataPayload = await vaultInterface.encodeFunctionData(
     //   'setData(bytes32,bytes)',
     //   [URD_DATA_KEY, vaultURDAddress]
@@ -324,7 +312,7 @@ export default class LuksoController {
     //   'execute',
     //   [
     //     0, // OPERATION CALL
-    //     vaultContract.address,
+    //     vaultContractAddress,
     //     0, // value to transfer
     //     setDataPayload,
     //   ]
@@ -334,20 +322,20 @@ export default class LuksoController {
     // const LSP6KeyManagerInstance = new ethers.Contract(
     //   this.#KMAddress,
     //   LSP6KeyManagerContract.abi,
-    //   wallet
+    //   this.#EOA
     // );
 
     // // execute the executePayload on the KM
-    // let result = await LSP6KeyManagerInstance.execute(executePayload, {
-    //   from: wallet.address,
-    //   gasLimit: 600_000,
-    // });
+    // let result = await LSP6KeyManagerInstance.execute(executePayload);
 
     // console.log('Result  ', result);
 
     // Vitor code
 
-    const myVault = new web3.eth.Contract(LSP9Vault.abi, vaultContractAddress);
+    const myVault = new web3.eth.Contract(
+      LSP9VaultContract.abi,
+      vaultContractAddress
+    );
 
     // create an instance of the UP
     const myUP = new web3.eth.Contract(
@@ -386,7 +374,7 @@ export default class LuksoController {
 
     // execute the executePayload on the KM
     let result = await myKM.methods.execute(executePayload).send({
-      from: myEOA.address,
+      from: this.#EOA.address,
       gasLimit: 6_000_000,
     });
 
@@ -398,6 +386,8 @@ export default class LuksoController {
   async setVaultAddressUP(vaultAddress) {
     console.log('setVaultAddressUP ');
 
+    const LSP9VaultInterfaceId = '0x8c1d44f6';
+
     // GET the current profile vaults
     let LSP10Vaults;
     try {
@@ -408,15 +398,13 @@ export default class LuksoController {
       console.log('err get data  ', ex);
       throw new Error('Error getting vault');
     }
-    // add new asset
+
+    // add new vault
     LSP10Vaults.value.push(vaultAddress);
 
     console.log('LSP10Vaults', LSP10Vaults, LSP10Vaults.value.length - 1);
 
     // https://docs.lukso.tech/standards/smart-contracts/interface-ids
-    const LSP9VaultInterfaceId = '0x8c1d44f6';
-
-    const vaultSchema = require('@erc725/erc725.js/schemas/LSP10ReceivedVaults.json');
 
     const encodedErc725Data = this.encodeData({
       data: [
@@ -430,7 +418,7 @@ export default class LuksoController {
           value: [LSP9VaultInterfaceId, LSP10Vaults.value.length - 1], // LSP7 interface ID + index position of asset
         },
       ],
-      schema: vaultSchema,
+      schema: LSP10VaultSchema,
       UPAddress: this.#UPAddress,
     });
     // SEND transaction
@@ -508,7 +496,7 @@ export default class LuksoController {
 
       // let receipt = await myKM.methods.execute(executePayload).send({
       let receipt = await myKM.methods.execute(setDataPayload).send({
-        from: myEOA.address,
+        from: this.#EOA.address,
         gasLimit: 6_000_000,
       });
       // await LSP6KeyManagerInstance.execute(executePayload, {

@@ -38,6 +38,7 @@ export default class WalletController {
   }
 
   static deserialize(_pk) {
+    console.log('deserialize', _pk);
     let pk = Buffer.from(_pk, 'hex');
     return new WalletController(Wallet.fromPrivateKey(pk));
   }
@@ -47,6 +48,19 @@ export default class WalletController {
     const root = hdwallet.derivePath(this.HDPath);
     const firstChild = root.deriveChild(0);
     return new WalletController(firstChild.getWallet());
+  }
+
+  static initFromPrivateKey(_pk) {
+    try {
+      let pk = _pk;
+      if (pk.startsWith('0x')) {
+        pk = pk.substring(2);
+      }
+
+      return this.deserialize(pk);
+    } catch (error) {
+      throw error;
+    }
   }
 
   // Returns
@@ -80,7 +94,7 @@ export default class WalletController {
     return Promise.resolve(recovered == this.getAddress());
   }
 
-  signERC191Message = function(target, data) {
+  signERC191Message = function (target, data) {
     return Promise.resolve(eth.getdCANonce(target))
       .then((nonce) =>
         eth.abiEncode(
@@ -113,7 +127,7 @@ export default class WalletController {
       });
   }
 
-  encryptData = function(data) {
+  encryptData = function (data) {
     const privKey = ethUtil.toBuffer(this.#wallet.getPrivateKey());
     const publicKey = ethSigUtil.getEncryptionPublicKey(privKey);
     const cipher = ethSigUtil.encrypt(

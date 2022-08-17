@@ -15,6 +15,18 @@
         <v-btn text class="advance-btn" @click="createUP()">
           {{ 'Create Universal Profile' }}
         </v-btn>
+        <v-text-field
+          v-model="UPAddressToImport"
+          solo
+          flat
+          class="password-input seed-phrase mt-1"
+          name="input-password-login"
+          hide-details
+        >
+        </v-text-field>
+        <v-btn text class="advance-btn" @click="importUP()">
+          {{ 'Import Universal Profile' }}
+        </v-btn>
       </v-col>
       <v-col cols="12" class="pt-2">
         <v-btn text class="advance-btn" @click="fetchProfile()">
@@ -23,17 +35,12 @@
         <v-btn text class="advance-btn" @click="fetchVaults()">
           {{ 'fetch vault' }}
         </v-btn>
-        <v-btn text class="advance-btn" @click="setVaultAddressUP()">
-          {{ 'fetch setVaultAddressUP' }}
+        <v-btn text class="advance-btn" @click="createVaultOnUP()">
+          {{ 'createVaultOnUP' }}
         </v-btn>
-        <v-btn text class="advance-btn" @click="mintLSP7Tokens()">
-          {{ 'mintLSP7Tokens' }}
-        </v-btn>
+        {{ newVaultAddress }}
         <v-btn text class="advance-btn" @click="transferLSP7Tokens()">
           {{ 'transferLSP7Tokens' }}
-        </v-btn>
-        <v-btn text class="advance-btn" @click="createVault()">
-          {{ 'createVault' }}
         </v-btn>
       </v-col>
       <v-col cols="12" class="pb-1 pt-2">
@@ -83,6 +90,14 @@ export default {
 
       console.log(deployedContract);
     },
+    async importUP() {
+      let deployedContract = await this.$store.dispatch(
+        'lukso/importUniversalProfile',
+        this.UPAddressToImport
+      );
+
+      console.log(deployedContract);
+    },
     async fetchProfile() {
       let fetchProfile = await this.$store.dispatch('lukso/fetchProfile');
 
@@ -95,38 +110,26 @@ export default {
       console.log(fetchVaults);
       this.vaults = fetchVaults;
     },
-    async setVaultAddressUP() {
-      let setVaultAddressUP = await this.$store.dispatch(
-        'lukso/setVaultAddressUP',
-        this.newVaultAddress
-      );
-
-      console.log(setVaultAddressUP);
-      this.setVaultAddressUP = setVaultAddressUP;
-    },
-    async mintLSP7Tokens() {
-      let mintLSP7Tokens = await this.$store.dispatch('lukso/mintLSP7Tokens');
-
-      console.log(mintLSP7Tokens);
-      // this.profile = mintLSP7Tokens;
-    },
     async transferLSP7Tokens() {
       let transferLSP7Tokens = await this.$store.dispatch(
         'lukso/transferLSP7Tokens'
       );
-
       console.log(transferLSP7Tokens);
       // this.profile = fetchProfile;
     },
-    async createVault() {
-      let createVault = await this.$store.dispatch('lukso/createVault');
-
-      console.log(createVault);
-      this.newVaultAddress = createVault;
+    async createVaultOnUP() {
+      let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP');
+      console.log(newVaultAddress);
+      this.newVaultAddress = newVaultAddress;
     },
   },
   data() {
-    return { profile: null, vaults: null };
+    return {
+      profile: null,
+      vaults: null,
+      UPAddressToImport: null,
+      newVaultAddress: null,
+    };
   },
 };
 </script>

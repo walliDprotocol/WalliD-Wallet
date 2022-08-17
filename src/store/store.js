@@ -7,6 +7,7 @@ import {
   LOCK_WALLET,
   CANCEL_REQUEST,
   CREATE_NEW_WALLET,
+  IMPORT_PRIVATE_KEY,
   UNLOCK_WALLET,
   AUTHORIZE_REQUEST,
   CONNECT,
@@ -162,7 +163,19 @@ export default new Vuex.Store({
           });
       });
     },
-
+    [IMPORT_PRIVATE_KEY]: ({ commit, dispatch }, { privateKey, password }) => {
+      console.log('Action IMPORT_PRIVATE_KEY');
+      return new Promise((resolve, reject) => {
+        API.importFromPrivateKey(privateKey, password)
+          .then((res) => {
+            dispatch(REFRESH_STATE);
+          })
+          .then(() => resolve(true))
+          .catch((e) => {
+            reject(e);
+          });
+      });
+    },
     [CREATE_NEW_WALLET]: ({ commit, dispatch }, { seed, password }) => {
       console.log('Action CREATE_NEW_WALLET');
       return new Promise((resolve, reject) => {
