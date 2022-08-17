@@ -18,6 +18,15 @@ const NetworksName = {
   // localhost: '',
 };
 
+const NetworksColors = {
+  mainnet: '#009fb1',
+  rinkeby: '#f79520',
+  polygon: '#8247e5',
+  mumbai: '#e95e5e',
+  luksol16: '#c787a1',
+  // localhost: '',
+};
+
 // enum of default rpc urls
 const NetworksChainRpc = {
   mainnet: 'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2',
@@ -63,7 +72,8 @@ const defaultNetworkArray = (() => {
       chainId: NetworksChainId[chain],
       rpcTarget: NetworksChainRpc[chain],
       ticker: NetworksTicker[chain],
-      nickname: NetworksName[chain],
+      name: NetworksName[chain],
+      color: NetworksColors[chain],
       isCustomNetwork: false,
     })
   );

@@ -11,7 +11,7 @@
     <template v-slot:prepend>
       <v-list-item two-line>
         <v-list-item-content>
-          <v-list-item-title class="T1" style="margin-bottom: 7px;">
+          <v-list-item-title class="T1" style="margin-bottom: 7px">
             Networks
           </v-list-item-title>
         </v-list-item-content>
@@ -20,7 +20,7 @@
     <v-divider></v-divider>
     <v-list>
       <v-list-item
-        v-for="n in network"
+        v-for="n in networksList"
         :key="n.name"
         @click="goRoute(NETWORK, n)"
         class="network"
@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import IconNetworkSelected from '../../images/icon-network-selected.vue'
+import IconNetworkSelected from '../../images/icon-network-selected.vue';
 
-import { LOCK_WALLET } from '../../store/actions'
-import { DETAILS, NETWORK } from '../../router/routes'
-import { mapState } from 'vuex'
+import { LOCK_WALLET } from '../../store/actions';
+import { DETAILS, NETWORK } from '../../router/routes';
+import { mapState } from 'vuex';
 
 export default {
   props: ['address', 'showNetworks'],
@@ -53,55 +53,55 @@ export default {
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
-    ...mapState('networks', ['currentNetwork', 'network']),
+    ...mapState('networks', ['currentNetwork', 'networksList']),
   },
   created() {
-    this.DETAILS = DETAILS
-    this.NETWORK = NETWORK
-    console.log('walletaddress', this.walletAddress)
+    this.DETAILS = DETAILS;
+    this.NETWORK = NETWORK;
+    console.log('walletaddress', this.walletAddress);
   },
   watch: {},
   mounted() {},
   methods: {
     close(input) {
       if (!input) {
-        this.$emit('close', !this.showNetworks)
+        this.$emit('close', !this.showNetworks);
       }
     },
 
     // se estiver ja na pagina fechar o menu
     goRoute(route, n) {
-      this.$store.commit('networks/currentNetwork', n)
+      this.$store.commit('networks/currentNetwork', n);
 
-      this.debug('Menu Option: ', route)
-      this.debug(this.$route.path)
-      this.debug(this.$route?.path == route)
-      this.$emit('close', !this.showNetworks)
+      this.debug('Menu Option: ', route);
+      this.debug(this.$route.path);
+      this.debug(this.$route?.path == route);
+      this.$emit('close', !this.showNetworks);
       if (this.$route.path != route) {
-        this.debug(this.showNetworks)
-        this.$router.push({ name: 'Network' })
+        this.debug(this.showNetworks);
+        this.$router.push({ name: 'Network' });
       }
     },
     details() {
-      this.debug('Detail Page')
-      this.$router.push('/details')
+      this.debug('Detail Page');
+      this.$router.push('/details');
     },
     sites() {
-      this.debug('sites Page')
-      this.$router.push('/sites')
+      this.debug('sites Page');
+      this.$router.push('/sites');
     },
     settings() {
-      this.debug('settings Page')
-      this.$router.push('/settings')
+      this.debug('settings Page');
+      this.$router.push('/settings');
     },
     about() {
-      this.debug('about Page')
-      this.$router.push('/about')
+      this.debug('about Page');
+      this.$router.push('/about');
     },
     lock() {
-      this.debug('lock wallet')
+      this.debug('lock wallet');
 
-      this.$store.dispatch(LOCK_WALLET)
+      this.$store.dispatch(LOCK_WALLET);
 
       // this.$API
       //   .lockApp()
@@ -112,9 +112,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {};
   },
-}
+};
 </script>
 
 <style lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="credentials list-storage pt-1"
-    style="overflow-y: auto; height: 208px;"
+    style="overflow-y: auto; height: 208px"
   >
     <v-row v-if="NFTAssets.length > 0">
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
@@ -75,7 +75,7 @@
         <v-container
           class="py-0 px-3"
           @click="openImportAssetModal()"
-          style="cursor: pointer;"
+          style="cursor: pointer"
         >
           <v-row>
             <v-col cols="2">
@@ -97,10 +97,10 @@
             </v-col>
           </v-row>
         </v-container>
-        <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" />
+        <!-- <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" /> -->
       </v-col>
     </v-row>
-    <v-row v-else style="background: white; height: 196px; overflow-y: hidden;">
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">
           Seems like you don’t have
@@ -123,10 +123,10 @@
 </template>
 
 <script>
-import Asset from '../../components/Asset'
-import StoredProfileImg from '../../components/StoredProfileImg'
+import Asset from '../../components/Asset';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'NFTs',
@@ -138,38 +138,38 @@ export default {
     ...mapGetters(['assets', 'currentCred']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
-        return el.assetType === 'NFT'
-      })
+        return el.assetType === 'NFT';
+      });
     },
   },
   methods: {
     openDeleteAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showDeleteConfirmation', true)
+      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('showDeleteConfirmation', true);
     },
     openViewActivityModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showViewActivityModal', true)
+      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('showViewActivityModal', true);
     },
     openImportAssetModal() {
-      this.$store.commit('showImportAssetModal', true)
+      this.$store.commit('showImportAssetModal', true);
     },
     openSendAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showSendAssetModal', true)
+      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('showSendAssetModal', true);
     },
     shareProfile(asset) {
-      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('setCurrentCred', asset);
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } });
     },
   },
   data() {
     return {
       storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

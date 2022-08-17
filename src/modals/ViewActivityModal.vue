@@ -18,7 +18,7 @@
     </v-row>
     <v-row v-if="queue.length > 0">
       <v-col cols="auto" class="pr-0 mr-0 d-flex align-center">
-        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap;">
+        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap">
           {{ 'Queue (' + queue.length + ')' }}
         </p>
       </v-col>
@@ -30,7 +30,7 @@
         v-for="operation in queue"
         :key="operation.id"
         class="d-flex mb-3"
-        style="background-color: #f7f7f7;"
+        style="background-color: #f7f7f7"
       >
         <v-col cols="auto" class="pa-0 d-flex align-center">
           <!-- missing dynamic network logo with dynamic network status image in absolute position -->
@@ -91,7 +91,7 @@
     </v-row>
     <v-row v-if="history.length > 0">
       <v-col cols="auto" class="pr-0 mr-0 d-flex align-center">
-        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap;">
+        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap">
           History
         </p>
       </v-col>
@@ -103,7 +103,7 @@
         v-for="operation in history"
         :key="operation.id"
         class="d-flex mb-3"
-        style="background-color: #f7f7f7;"
+        style="background-color: #f7f7f7"
       >
         <v-col cols="auto" class="pa-0 d-flex align-center">
           <!-- missing dynamic network logo with dynamic network status image in absolute position -->
@@ -188,12 +188,12 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress'
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
-import QueueTransactionModal from '../modals/QueueTransactionModal.vue'
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
+import QueueTransactionModal from '../modals/QueueTransactionModal.vue';
 
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -217,24 +217,24 @@ export default {
     }),
     queue() {
       return this.operations.filter((operation) => {
-        return operation.status === 'Pending' || operation.status === 'Queued'
-      })
+        return operation.status === 'Pending' || operation.status === 'Queued';
+      });
     },
     history() {
       return this.operations.filter((operation) => {
-        return operation.status !== 'Pending' && operation.status !== 'Queued'
-      })
+        return operation.status !== 'Pending' && operation.status !== 'Queued';
+      });
     },
     operations() {
       return this.unfilteredOperations.filter((operation) => {
         return this.currentCred
           ? operation.tokenName === this.currentCred.tokenName
-          : true
-      })
+          : true;
+      });
     },
     close() {
-      this.$store.commit('setCurrentCred', null)
-      this.$store.commit('showViewActivityModal', false)
+      this.$store.commit('setCurrentCred', null);
+      this.$store.commit('showViewActivityModal', false);
     },
   },
   data() {
@@ -253,7 +253,7 @@ export default {
           address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
         },
         {
-          id: 1,
+          id: 2,
           type: 'Send',
           tokenName: 'Sunflower',
           value: 420,
@@ -262,7 +262,7 @@ export default {
           address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
         },
         {
-          id: 1,
+          id: 3,
           type: 'Contract Interaction',
           tokenName: 'LYXt',
           value: -0.0000116,
@@ -271,7 +271,7 @@ export default {
           website: 'website.com',
         },
         {
-          id: 1,
+          id: 4,
           type: 'Mint',
           tokenName: 'Sunflower',
           value: 420,
@@ -280,9 +280,9 @@ export default {
           address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
         },
       ],
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">
