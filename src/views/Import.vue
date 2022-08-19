@@ -89,10 +89,25 @@
         </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
           <label class="sub-title-fields">
-            {{ $t('import.password[0]') }}
+            Your private key
           </label>
           <v-text-field
             v-model="password"
+            solo
+            @input="checkForm"
+            flat
+            class="password-input mt-1"
+            name="input-password-login"
+            type="password"
+            :error-messages="privateKeyError"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" class="text-left pb-1 pt-1">
+          <label class="sub-title-fields">
+            {{ $t('import.password[0]') }}
+          </label>
+          <v-text-field
+            v-model="privateKey"
             solo
             @input="checkForm"
             flat
@@ -118,7 +133,7 @@
             :error-messages="passwordMatchError"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" class="pl-0 py-2 ">
+        <v-col cols="12" class="pl-0 py-2">
           <v-checkbox
             v-model="termsWallet"
             required
@@ -155,8 +170,8 @@
     </v-row>
     <v-row v-else>
       <v-col cols="12" class="text-center mt-13 pt-14 pb-1">
-        <Sucessfully
-      /></v-col>
+        <Sucessfully />
+      </v-col>
       <v-col cols="12" class="pt-1">
         <h2 class="T1 mb-5 text-center">
           {{ $t('create.stepper[6].title') }}
@@ -175,11 +190,11 @@
 </template>
 
 <script>
-import ArrowBack from '../images/icon-arrow-back.vue';
-import EyeUnselected from '../images/icon-eye-unselected.vue';
-import EyeSelected from '../images/icon-eye-selected.vue';
-import Sucessfully from '../images/icon-sucessfully.vue';
-import { CREATE_NEW_WALLET } from '../store/actions';
+import ArrowBack from '../images/icon-arrow-back.vue'
+import EyeUnselected from '../images/icon-eye-unselected.vue'
+import EyeSelected from '../images/icon-eye-selected.vue'
+import Sucessfully from '../images/icon-sucessfully.vue'
+import { CREATE_NEW_WALLET } from '../store/actions'
 
 export default {
   components: {
@@ -195,7 +210,7 @@ export default {
         !this.password ||
         !this.passwordMatch ||
         !this.termsWallet
-      );
+      )
     },
   },
 
@@ -207,35 +222,37 @@ export default {
       password: '',
       passwordMatch: '',
       passwordError: '',
+      privateKey: '',
+      privateKeyError: '',
       passwordMatchError: '',
       errorSeedPhrase: false,
       seedPhraseErrorMessage: '',
       termsWallet: false,
-    };
+    }
   },
   mounted() {},
   methods: {
     goToLogin() {
-      this.$router.push('/login');
+      this.$router.push('/login')
     },
     validSeedPhrase() {
-      this.seedPhrase = this.seedPhrase.trim();
-      let valid = this.seedPhrase.split(' ').length == 12;
-      this.errorSeedPhrase = !valid;
+      this.seedPhrase = this.seedPhrase.trim()
+      let valid = this.seedPhrase.split(' ').length == 12
+      this.errorSeedPhrase = !valid
       this.seedPhraseErrorMessage = valid
         ? ''
-        : this.$t('restore.seedPhrase[3]');
+        : this.$t('restore.seedPhrase[3]')
       if (valid) {
-        this.scrollInto('import-form', 120);
+        this.scrollInto('import-form', 120)
       }
-      return valid;
+      return valid
     },
 
     show() {
-      this.showSeedPhrase = !this.showSeedPhrase;
+      this.showSeedPhrase = !this.showSeedPhrase
     },
     stepBack() {
-      this.$router.push('/home');
+      this.$router.push('/home')
     },
     restorePassword() {
       this.$store
@@ -244,37 +261,42 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.imported = true;
+          this.imported = true
         })
         .catch((e) => {
           if ((e = this.INVALID)) {
-            this.errorSeedPhrase = true;
-            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]');
+            this.errorSeedPhrase = true
+            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]')
           }
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
 
     checkForm() {
-      this.passwordError = '';
-      this.passwordMatchError = '';
+      this.passwordError = ''
+      this.passwordMatchError = ''
+      this.privateKeyError = ''
+
+      if (this.privateKey) {
+        //is not valid this.passwordKeyError = 'Private key not valid'
+      }
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = 'Password not long enough';
+        this.passwordError = 'Password not long enough'
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = 'Passwords don’t match';
+        this.passwordMatchError = 'Passwords don’t match'
       }
 
       if (this.passwordError || this.passwordMatchError) {
-        return;
+        return
       }
     },
 
     refreshState() {},
   },
-};
+}
 </script>
 
 <style lang="scss">

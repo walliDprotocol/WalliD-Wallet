@@ -114,6 +114,12 @@ export default new Vuex.Store({
       subtitleField: 'Beta tester',
       validity: 'VALID',
     }],
+    vaults: [
+      { name: 'Uni. Profile', address: '0x7079…dAa8' },
+      { name: 'Vault 1', address: '0x7179…dAa8' },
+      { name: 'Vault 2', address: '0x7279…dAa8' },
+    ],
+    currentVault: { name: 'Uni. Profile', address: '0x7079…dAa8' },
     profiles: API.getState().profiles,
     currentProfile: null,
     request: API.getNextRequest(),
@@ -144,6 +150,8 @@ export default new Vuex.Store({
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
     assets: (state) => state.assets,
+    vaults: (state) => state.vaults,
+    currentVault: (state) => state.currentVault,
     currentCred: (state) => state.currentCred,
     profiles: (state) => {
       return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');
@@ -899,6 +907,9 @@ export default new Vuex.Store({
     },
     showSendAssetModal(state, value) {
       state.showSendAssetModal = value;
+    },
+    changeCurrentVault(state, value) {
+      state.currentVault = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;

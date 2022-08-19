@@ -73,6 +73,17 @@
                   {{ $t('create.stepper[' + step + '].buttonImport') }}
                 </p>
               </div>
+              <div
+                class="flow-selector"
+                @mouseover="IconImport = 'IconImportHover'"
+                @mouseout="IconImport = 'IconImport'"
+                @click="$router.push('/import')"
+              >
+                <component :is="IconImport" class=""></component>
+                <p>
+                  Import using Private Key
+                </p>
+              </div>
             </v-col>
           </v-row>
         </v-container>
@@ -83,7 +94,7 @@
           ref="form"
           @submit.prevent="setPassword"
           lazy-validation
-          style="height:520px"
+          style="height: 520px;"
         >
           <v-container class="text-left">
             <v-row>
@@ -101,9 +112,9 @@
                 </h3>
               </v-col>
               <v-col cols="12" class="pt-0 pb-2">
-                <label class="sub-title-fields ">{{
-                  $t('create.stepper[' + step + '].password[0]')
-                }}</label>
+                <label class="sub-title-fields">
+                  {{ $t('create.stepper[' + step + '].password[0]') }}
+                </label>
                 <v-text-field
                   v-model="password"
                   class="password-input mt-1"
@@ -116,9 +127,9 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" class="pt-0 pb-1">
-                <label class="sub-title-fields ">{{
-                  $t('create.stepper[' + step + '].password[1]')
-                }}</label>
+                <label class="sub-title-fields">
+                  {{ $t('create.stepper[' + step + '].password[1]') }}
+                </label>
                 <v-text-field
                   v-model="passwordMatch"
                   class="password-input mt-1"
@@ -130,7 +141,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" class="pl-0 py-2 ">
+              <v-col cols="12" class="pl-0 py-2">
                 <v-checkbox
                   v-model="termsWallet"
                   required
@@ -184,12 +195,12 @@
             </v-col>
 
             <v-col cols="12" class="pt-2">
-              <label class="sub-title-fields "
-                >{{ $t('create.stepper[' + step + '].seed[0]') }}
+              <label class="sub-title-fields">
+                {{ $t('create.stepper[' + step + '].seed[0]') }}
                 <span v-show="!seedLocked">
                   {{ $t('create.stepper[' + step + '].seed[1]') }}
-                </span></label
-              >
+                </span>
+              </label>
 
               <div
                 v-show="seedLocked"
@@ -199,7 +210,7 @@
                 <v-col cols="12" class="pb-1 pt-12">
                   <Unlock />
                 </v-col>
-                <v-col cols="12" class="pt-1 ">
+                <v-col cols="12" class="pt-1">
                   {{ $t('create.stepper[' + step + '].seed[2]') }}
                 </v-col>
               </div>
@@ -213,10 +224,10 @@
                 {{ $t('create.stepper[' + step + '].seed[3]') }}
               </p>
             </v-col>
-            <v-col cols="12" class="pb-0" style="min-height:36px">
+            <v-col cols="12" class="pb-0" style="min-height: 36px;">
               <v-btn
                 text
-                class="links "
+                class="links"
                 v-show="seedLocked"
                 @click="setReminder"
               >
@@ -281,18 +292,18 @@
 </template>
 
 <script>
-import ArrowBack from '../images/icon-arrow-back.vue';
-import Unlock from '../images/icon-unlock.vue';
-import ConfirmSeed from '../components/ConfirmSeed';
-import Sucessfully from '../images/icon-sucessfully.vue';
+import ArrowBack from '../images/icon-arrow-back.vue'
+import Unlock from '../images/icon-unlock.vue'
+import ConfirmSeed from '../components/ConfirmSeed'
+import Sucessfully from '../images/icon-sucessfully.vue'
 
-import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from '../store/actions';
+import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from '../store/actions'
 
-import IconAdd from '../images/icons/icon-add-new-unselected';
-import IconImport from '../images/icons/icon-download';
-import IconAddHover from '../images/icons/icon-add-new-selected';
-import IconImportHover from '../images/icons/icon-download-selected';
-const { API } = chrome.extension.getBackgroundPage();
+import IconAdd from '../images/icons/icon-add-new-unselected'
+import IconImport from '../images/icons/icon-download'
+import IconAddHover from '../images/icons/icon-add-new-selected'
+import IconImportHover from '../images/icons/icon-download-selected'
+const { API } = chrome.extension.getBackgroundPage()
 
 export default {
   name: 'Create',
@@ -308,24 +319,24 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.termsWallet || !this.password || !this.passwordMatch;
+      return !this.termsWallet || !this.password || !this.passwordMatch
     },
   },
   methods: {
     getStarted() {
-      this.step += 1;
+      this.step += 1
     },
     stepBack() {
-      this.step -= 1;
+      this.step -= 1
     },
     startOnboarding() {
-      this.step += 1;
+      this.step += 1
     },
     setSeedPhrase() {
-      this.step += 1;
+      this.step += 1
     },
     setReminder() {
-      this.createWallet();
+      this.createWallet()
     },
     createWallet() {
       this.$store
@@ -334,26 +345,26 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.step = 6;
+          this.step = 6
         })
         .catch((e) => {
-          console.error(e);
-        });
+          console.error(e)
+        })
     },
     checkForm() {
-      this.passwordError = '';
-      this.passwordMatchError = '';
+      this.passwordError = ''
+      this.passwordMatchError = ''
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = this.$t('passwordErrors.lenght');
+        this.passwordError = this.$t('passwordErrors.lenght')
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = this.$t('passwordErrors.match');
+        this.passwordMatchError = this.$t('passwordErrors.match')
       }
 
       if (this.passwordError || this.passwordMatchError) {
-        return;
+        return
       }
     },
 
@@ -361,18 +372,18 @@ export default {
       this.$store
         .dispatch(GENERATE_NEW_SEED_PHRASE, this.password)
         .then((seed) => {
-          this.seedLocked = true;
-          this.seedPhrase = seed;
-          this.step += 1;
+          this.seedLocked = true
+          this.seedPhrase = seed
+          this.step += 1
         })
         .catch((e) => {
-          console.error(e);
-        });
+          console.error(e)
+        })
     },
 
     goToLogin() {
-      API.eventProxy('wallid_wallet_done');
-      this.$router.push('/login');
+      API.eventProxy('wallid_wallet_done')
+      this.$router.push('/login')
     },
   },
   data() {
@@ -388,9 +399,9 @@ export default {
       passwordMatchError: '',
       IconAdd: 'IconAdd',
       IconImport: 'IconImport',
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">
