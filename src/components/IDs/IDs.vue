@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="credentials list-storage pt-1"
+    class="credentials list-storage"
     style="overflow-y: auto; height: 208px"
   >
     <v-row class="pl-4 py-4">
@@ -112,10 +112,10 @@ export default {
     Asset,
   },
   computed: {
-    ...mapGetters(['assets', 'showDeleteConfirmation']),
+    ...mapGetters(['identities', 'showDeleteConfirmation']),
     idAssets: function () {
       var filter = this.idAssetFilter;
-      return this.assets.filter(function (el) {
+      return this.identities.filter(function (el) {
         return el.assetType === filter;
       });
     },

@@ -1,8 +1,7 @@
 <template>
   <v-container
-    class="social-profiles-list list-storage pt-1"
-    style="overflow-y: auto;
-    height: 203px;"
+    class="social-profiles-list list-storage"
+    style="overflow-y: auto; height: 203px"
   >
     <v-row v-if="profiles.length > 0">
       <v-col
@@ -104,12 +103,7 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-row
-      v-else
-      style="background: white;
-    height: 196px;
-    overflow-y: hidden;"
-    >
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">{{ $t('profiles.noids') }}</p>
         <a

@@ -145,9 +145,11 @@ const actions = {
       state.currentDisplayAddress,
       toAccountAddress,
       tokenAddress,
-      tokenId
+      tokenId,
+      state.isFromVault
     );
     console.log('transferLSP8Token: ', transferLSP8Token);
+    dispatch('getLuskoAssets');
 
     return transferLSP8Token;
   },

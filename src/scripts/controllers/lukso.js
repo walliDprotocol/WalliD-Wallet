@@ -680,7 +680,8 @@ export default class LuksoController {
     fromAccountAddress,
     toAccountAddress,
     assetAddress,
-    tokenId
+    tokenId,
+    isFromVault
   ) {
     console.log(
       '***** transferLSP8Token *****',
@@ -713,7 +714,20 @@ export default class LuksoController {
         .transfer(fromAccountAddress, toAccountAddress, tokenId, force, data)
         .encodeABI();
 
-      let result = await this.executePayload(dataPayload);
+      let result;
+      if (isFromVault) {
+        result = await this.executePayloadOnVault(
+          dataPayload,
+          tokenAddress,
+          fromAccountAddress
+        );
+      } else {
+        result = await this.executePayload(
+          dataPayload,
+          tokenAddress,
+          fromAccountAddress
+        );
+      }
 
       console.log('Result sendTokenFromVault  : ', result);
     } catch (error) {
@@ -792,7 +806,7 @@ export default class LuksoController {
   async getMetadata(assetAddress, ownerAddress, tokenId, assetType) {
     // FETCH Metadata with erc725js
     let LSP4DigitalAsset;
-    let balanceOf;
+    let balanceOf = 1;
     if (assetType.isLSP8) {
       LSP4DigitalAsset = await this.getDataKey(
         LSP8_DATA_KEY(tokenId),

@@ -1201,7 +1201,8 @@ export default class AppController {
     fromAccountAddress,
     toAccountAddress,
     tokenAddress,
-    tokenId
+    tokenId,
+    isFromVault
   ) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
@@ -1221,7 +1222,8 @@ export default class AppController {
         fromAccountAddress,
         toAccountAddress,
         tokenAddress,
-        tokenId
+        tokenId,
+        isFromVault
       )
     ).catch((err) => {
       Promise.reject(err);

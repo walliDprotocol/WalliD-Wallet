@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="credentials list-storage pt-1"
+    class="credentials list-storage"
     style="overflow-y: auto; height: 208px"
   >
     <v-row v-if="NFTAssets.length > 0">
@@ -13,11 +13,11 @@
       >
         <Asset
           :image="asset.assetImagePath"
-          :title="asset.tokenName"
-          :subtitle="asset.tokenProvider"
-          :chip="asset.tokenStandard"
+          :title="getAssetName(asset)"
+          :subtitle="asset.tokenSymbol"
+          :chip="getAssetType(asset.assetType)"
           :amount="asset.amount"
-          :tokenStandard="asset.tokenStandard"
+          :tokenStandard="asset.assetType"
         >
           <template #menu>
             <v-list>
@@ -143,6 +143,17 @@ export default {
     },
   },
   methods: {
+    getAssetName(asset) {
+      return (
+        asset.tokenName +
+        ' #' +
+        this.$options.filters.truncate(asset.tokenId, 12, '...')
+      );
+    },
+    getAssetType(assetType) {
+      if (assetType.isLSP8) return 'LSP8';
+      if (assetType.isLSP7) return 'LSP7';
+    },
     openDeleteAssetModal(asset) {
       this.$store.commit('setCurrentCred', asset);
       this.$store.commit('showDeleteConfirmation', true);

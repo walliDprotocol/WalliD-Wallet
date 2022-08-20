@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="credentials list-storage pt-1"
+    class="credentials list-storage"
     style="overflow-y: auto; height: 208px"
   >
     <v-row>
@@ -15,7 +15,7 @@
           :image="asset.assetImagePath"
           :title="asset.tokenName"
           :subtitle="asset.balanceOf"
-          :chip="asset.tokenStandard"
+          :chip="getAssetType(asset.assetType)"
           :amount="null"
         >
           <template #menu>
@@ -129,6 +129,10 @@ export default {
     },
   },
   methods: {
+    getAssetType(assetType) {
+      if (assetType.isLSP8) return 'LSP8';
+      if (assetType.isLSP7) return 'LSP7';
+    },
     getName(credential) {
       if (this.isNFT(credential)) {
         return (

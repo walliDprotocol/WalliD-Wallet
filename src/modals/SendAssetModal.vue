@@ -253,10 +253,12 @@
     </v-row>
     <v-row v-else>
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="close()" class="cancel-btn"> Reject </v-btn>
+        <v-btn text @click="step = step - 1" class="cancel-btn"> Reject </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="send()" class="advance-btn"> Confirm </v-btn>
+        <v-btn text @click="send()" :loading="isLoading" class="advance-btn">
+          Confirm
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -305,8 +307,10 @@ export default {
     },
 
     async send() {
+      this.isLoading = true;
+
       console.log(this.currentAsset);
-      if (this.currentAsset.isLsp7) {
+      if (this.currentAsset.assetType.isLSP7) {
         let transferLSP7Token = await this.$store.dispatch(
           'lukso/transferLSP7Token',
           {
@@ -316,17 +320,18 @@ export default {
           }
         );
         console.log('transferLSP7Token', transferLSP7Token);
-      } else if (this.currentAsset.isLsp8) {
+      } else if (this.currentAsset.assetType.isLSP8) {
         let transferLSP8Token = await this.$store.dispatch(
           'lukso/transferLSP8Token',
           {
             toAccountAddress: this.toAddress, // this.toAccountAddress,
             tokenAddress: this.currentAsset.assetAddress,
-            tokenId: this.tokenId,
+            tokenId: this.currentAsset.tokenId || this.tokenId,
           }
         );
         console.log('transferLSP8Token', transferLSP8Token);
       }
+      this.isLoading = false;
 
       this.openViewActivityModal();
     },
@@ -364,8 +369,9 @@ export default {
 
   data() {
     return {
-      tokenSymbol: 'LYXt',
+      isLoading: false,
       amount: '',
+      tokenId: '',
       step: 0,
       selectedAsset: null,
       toAddress: '',

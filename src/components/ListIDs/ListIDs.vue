@@ -1,8 +1,7 @@
 <template>
   <v-container
-    class="id-cards list-storage pt-1"
-    style="overflow-y: auto;
-    height: 208px;"
+    class="id-cards list-storage"
+    style="overflow-y: auto; height: 208px"
   >
     <v-row v-if="identities.length > 0">
       <v-col
@@ -16,7 +15,7 @@
             <v-col cols="2" class="pr-1">
               <StoredProfileImg :size="38" :name="card.idt" />
             </v-col>
-            <v-col cols="9" class="pl-5 pr-0 ">
+            <v-col cols="9" class="pl-5 pr-0">
               <p class="sub-title-fields sub-title-fields--bold">
                 {{ getIDTName(card.idt) }}
               </p>
@@ -25,7 +24,7 @@
                   <v-col cols="auto" class="px-1 py-2 pb-0">
                     <div
                       class="validity"
-                      style="background-color: #d9fbed;"
+                      style="background-color: #d9fbed"
                       v-if="isValid(card.expDate)"
                     >
                       <valid />
@@ -36,7 +35,7 @@
                     <div
                       v-else
                       class="validity pb-0"
-                      style="background-color: #fce7e7;"
+                      style="background-color: #fce7e7"
                     >
                       <invalid />
                       <p class="FIELD-TEXT">
@@ -45,7 +44,7 @@
                     </div>
                   </v-col>
                   <v-col cols="8" class="py-2 pr-0 pb-0">
-                    <p class="FIELD-TEXT" style="font-size:12px">
+                    <p class="FIELD-TEXT" style="font-size: 12px">
                       {{ $t('cards.validity[0]') }}
                       {{ card.expDate }}
                     </p>
@@ -132,12 +131,7 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-row
-      v-else
-      style="background: white;
-    height: 196px;
-    overflow-y: hidden;"
-    >
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">{{ $t('cards.noids') }}</p>
         <a

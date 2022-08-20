@@ -1,8 +1,7 @@
 <template>
   <v-container
-    class="credentials list-storage pt-1"
-    style="overflow-y: auto;
-    height: 208px;"
+    class="credentials list-storage"
+    style="overflow-y: auto; height: 208px"
   >
     <v-row v-if="credentials.length > 0">
       <v-col
@@ -26,14 +25,14 @@
                     <p class="sub-title-fields sub-title-fields--bold">
                       {{ getName(card) }}
                     </p>
-                    <p class="sub-title-fields" style="font-weight:500">
+                    <p class="sub-title-fields" style="font-weight: 500">
                       {{ getCredentialName(card) | truncate(16, '...') }}
                     </p>
                   </v-col>
-                  <v-col cols="5" class="pr-0 py-0" style="max-width:unset;">
+                  <v-col cols="5" class="pr-0 py-0" style="max-width: unset">
                     <div
                       class="validity"
-                      style="background-color: #d9fbed;"
+                      style="background-color: #d9fbed"
                       v-if="card.status == 'active'"
                     >
                       <valid />
@@ -44,7 +43,7 @@
                     <div
                       v-else-if="card.status == 'pending_approval'"
                       class="validity pending"
-                      style="background-color: #dbedef;"
+                      style="background-color: #dbedef"
                     >
                       <pending />
                       <p class="FIELD-TEXT">
@@ -54,7 +53,7 @@
                     <div
                       v-else-if="card.status"
                       class="validity"
-                      style="background-color: #fce7e7;"
+                      style="background-color: #fce7e7"
                     >
                       <invalid />
                       <p class="FIELD-TEXT">
@@ -134,12 +133,12 @@
                   <v-list-item v-if="card.assetName == 'ENS'">
                     <v-list-item-title class="SECUNDARY-LINKS text-left">
                       <a
-                        class="SECUNDARY-LINKS "
+                        class="SECUNDARY-LINKS"
                         target="_blank"
                         color="#01a3b0"
                         :href="
                           'https://etherscan.io/enslookup-search?search=' +
-                            card.username
+                          card.username
                         "
                         @click.stop
                       >
@@ -201,12 +200,7 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-row
-      v-else
-      style="background: white;
-    height: 196px;
-    overflow-y: hidden;"
-    >
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
       <v-col cols="12" class="px-15 py-9">
         <p class="SECUNDARY-LINKS mb-5">
           {{ $t('credentials.noCredentials') }}
