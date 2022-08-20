@@ -47,7 +47,7 @@ module.exports = {
     rules: [
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ['file-loader'],
+        loader: 'file-loader',
       },
       {
         test: /\.svg$/,
@@ -55,14 +55,16 @@ module.exports = {
       },
       {
         test: /\.vue$/,
+        // include: path.resolve(__dirname, 'src'),
         loader: 'vue-loader',
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ['vue-style-loader', 'css-loader'],
       },
       {
         test: /\.m?js$/,
+        include: path.resolve(__dirname, 'src'),
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
@@ -74,24 +76,16 @@ module.exports = {
       {
         test: /\.s(c|a)ss$/,
         use: [
-          //   "vue-style-loader",
-          'style-loader',
+          'vue-style-loader',
           'css-loader',
           {
             loader: 'sass-loader',
-            // Requires sass-loader@^7.0.0
-            // options: {
-            //   implementation: require("sass"),
-            //   fiber: require("fibers"),
-            //   indentedSyntax: false, // optional
-            // },
-            // Requires sass-loader@^8.0.0
+            // Requires >= sass-loader@^8.0.0
             options: {
               implementation: require('sass'),
-              // sassOptions: {
-              //   fiber: require('fibers'),
-              //   indentedSyntax: false, // optional
-              // },
+              sassOptions: {
+                // indentedSyntax: true, // optional
+              },
             },
           },
         ],
