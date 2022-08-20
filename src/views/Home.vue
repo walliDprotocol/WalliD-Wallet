@@ -10,79 +10,21 @@
           :margin="4"
         />
         <v-img
-          v-if="vaults.length > 1"
           contain
-          max-height="25"
-          src="../images/icons/icon-up-lukso-default@3x.png"
+          max-height="34"
+          src="../images/icons/icon-up-lukso-default.png"
           style="
             position: absolute;
-            bottom: 0;
+            top: 55px;
             left: 55%;
             transform: translateX(-50%);
           "
         ></v-img>
-        <div
-          v-if="vaults.length > 1"
-          @click="showVaultDropdown = !showVaultDropdown"
-          class="current-network"
-          style="
-            position: absolute;
-            top: 0px;
-            right: 20px;
-            cursor: pointer !important;
-            border: 1px solid #e5e5e5;
-          "
-        >
-          {{ currentVault.name }}
-          <IconArrowDropdown
-            :style="{
-              transform:
-                'rotate(' + (showVaultDropdown ? '180deg' : '0deg') + ')',
-              animation: 'transform 1s infinite linear',
-              width: '8px',
-              marginLeft: '6px',
-              animation: 'transform 1s linear',
-            }"
-          />
-        </div>
+
         <!-- Vault Dropdown -->
-        <div
-          v-if="showVaultDropdown"
-          style="
-            position: absolute;
-            top: 40px;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.11);
-            padding-block: 11px;
-          "
-          class="d-flex flex-column"
-        >
-          <div
-            v-for="vault in vaults"
-            :key="vault.address"
-            class="d-flex align-center px-5 py-3 vault-slot"
-            style="cursor: pointer"
-            @click="changeCurrentVault(vault)"
-          >
-            <IconNetworkSelected
-              :style="{
-                visibility:
-                  currentVault.name === vault.name ? 'visible' : 'hidden',
-              }"
-              class="mr-2"
-            />
-            <p class="vault-slot" style="font-size: 14px; font-weight: 600">
-              {{ vault.name }}&nbsp;
-            </p>
-            <p
-              class="vault-slot text-gray"
-              style="font-size: 14px; font-weight: 500"
-            >
-              {{ ('• ' + vault.address) | truncate(12, '...') }}
-            </p>
-          </div>
-        </div>
+        <VaultDropdown />
+
+        <!-- -->
       </v-col>
       <v-col cols="12" class="pt-4 px-14 pb-0">
         <h2 class="T1 text-center">
@@ -95,7 +37,6 @@
         <v-btn text class="advance-btn" @click="$router.push('/LuksoTestpage')">
           Lukso Testpage
         </v-btn>
-        <VaultDropdown />
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
         <div class="home-icons" @click="'';">
@@ -149,13 +90,12 @@ import WalletAddress from '../components/WalletAddress';
 import FungibleTokens from '../components/FungibleTokens';
 import NFTs from '../components/NFTs';
 import IDs from '../components/IDs';
+import VaultDropdown from '../components/VaultDropdown';
 import IconSend from '../images/icons/icon-send.vue';
 import IconProve from '../images/icons/icon-prove.vue';
 import IconCreateVault from '../images/icons/icon-createVault.vue';
 import IconVaultCreated from '../images/icons/icon-vaultCreated.vue';
 import SendAssetModal from '../modals/SendAssetModal.vue';
-import IconArrowDropdown from '../images/icon-arrow-dropdown.vue';
-import IconNetworkSelected from '../images/icon-network-selected.vue';
 
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 
@@ -175,8 +115,6 @@ export default {
     IconVaultCreated,
     SendAssetModal,
     VaultDropdown,
-    IconArrowDropdown,
-    IconNetworkSelected,
   },
   computed: {
     ...mapGetters([
@@ -235,16 +173,11 @@ export default {
     openSendAssetModal() {
       this.$store.commit('showSendAssetModal', true);
     },
-    changeCurrentVault(vault) {
-      this.$store.commit('changeCurrentVault', vault);
-      this.showVaultDropdown = false;
-    },
   },
   data() {
     return {
       iconSet: false,
       createVaultIconState: 'default',
-      showVaultDropdown: false,
     };
   },
 };
@@ -310,10 +243,5 @@ export default {
 
 .text-gray {
   color: #b8b9bb;
-}
-
-.vault-slot:hover {
-  color: #009fb1 !important;
-  background-color: #dbedef;
 }
 </style>

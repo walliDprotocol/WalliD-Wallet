@@ -184,11 +184,11 @@
                 text-align: left;
               "
             >
-              {{ recipientVaultSelected ? recipientVaultSelected.address : '' }}
+              {{ recipientVaultSelected.address | truncate(12) }}
             </p>
           </div>
           <v-img
-            v-if="isValidAddress"
+            v-if="isValidAddress()"
             src="../images/icons/icon-sucessfully@3x.png"
             max-width="18"
             contain
@@ -215,7 +215,7 @@
       </v-col>
       <v-col
         cols="12"
-        v-if="step === 0 && vaults.length > 1 && showVaults === false"
+        v-if="step === 0 && vaultList.length > 1 && showVaults === false"
       >
         <p
           style="
@@ -248,7 +248,7 @@
       </v-col>
       <v-col cols="12" v-if="showVaults" class="pa-0 mb-0">
         <v-col
-          v-for="vault in vaults"
+          v-for="vault in vaultList"
           cols="12"
           :key="vault.address"
           class="d-flex pt-3 pa-0 gray-bg flex-column"
@@ -261,7 +261,7 @@
                 {{ vault.name }}
               </p>
               <p class="sub-title-fields d-flex text-left">
-                {{ vault.address }}
+                {{ vault.address | truncate(12) }}
               </p>
             </div>
           </v-col>
@@ -432,6 +432,18 @@ export default {
     EditPriorityModal,
     IconCreateVault,
   },
+  async mounted() {
+    this.vaultList = [
+      {
+        name: 'Uni. Profile',
+        address: this.UPAddress,
+      },
+      ...(await this.$store.dispatch('lukso/fetchVaults')).value.reduce(
+        (a, v, i) => [...a, { name: 'Vault ' + i, address: v }],
+        []
+      ),
+    ];
+  },
   methods: {
     deleteRecipientAddress() {
       this.toAddress = '';
@@ -467,7 +479,8 @@ export default {
         let transferLSP7Token = await this.$store.dispatch(
           'lukso/transferLSP7Token',
           {
-            toAccountAddress: this.toAddress, // this.toAccountAddress,
+            toAccountAddress:
+              this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
             tokenAddress: this.currentAsset.assetAddress,
             amount: this.amount,
           }
@@ -477,7 +490,8 @@ export default {
         let transferLSP8Token = await this.$store.dispatch(
           'lukso/transferLSP8Token',
           {
-            toAccountAddress: this.toAddress, // this.toAccountAddress,
+            toAccountAddress:
+              this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
             tokenAddress: this.currentAsset.assetAddress,
             tokenId: this.currentAsset.tokenId || this.tokenId,
           }
@@ -495,19 +509,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'address',
-      'showSendAssetModal',
-      'assets',
-      'vaults',
-      'currentVault',
-    ]),
+    ...mapGetters(['address', 'showSendAssetModal', 'assets', 'currentVault']),
     ...mapState({
       currentAsset: 'currentAsset',
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
-
+    ...mapState('lukso', {
+      UPAddress: 'UPAddress',
+    }),
     networkAssets() {
       return this.assets.filter((asset) => {
         return (
@@ -534,11 +544,10 @@ export default {
       step: 0,
       selectedAsset: null,
       toAddress: '',
-
-      isValidAddress: true,
+      vaultList: [],
       selectedAsset: null,
       recipientAddress: '',
-      recipientVaultSelected: '',
+      recipientVaultSelected: {},
       showVaults: false,
       TokenAmountRule: [
         (v) => this.isSufficientAmount(v) === true || 'Insufficient funds',
