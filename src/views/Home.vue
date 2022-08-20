@@ -19,6 +19,7 @@
         <v-btn text class="advance-btn" @click="$router.push('/LuksoTestpage')">
           Lukso Testpage
         </v-btn>
+        <VaultDropdown />
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
         <div class="home-icons" @click="openSendAssetModal">
@@ -61,18 +62,19 @@
 </template>
 
 <script>
-import WalletState from '../components/WalletState'
-import WalletAddress from '../components/WalletAddress'
-import FungibleTokens from '../components/FungibleTokens'
-import NFTs from '../components/NFTs'
-import IDs from '../components/IDs'
-import IconSend from '../images/icons/icon-send.vue'
-import IconProve from '../images/icons/icon-prove.vue'
-import SendAssetModal from '../modals/SendAssetModal.vue'
+import WalletState from '../components/WalletState';
+import WalletAddress from '../components/WalletAddress';
+import FungibleTokens from '../components/FungibleTokens';
+import NFTs from '../components/NFTs';
+import IDs from '../components/IDs';
+import VaultDropdown from '../components/VaultDropdown';
+import IconSend from '../images/icons/icon-send.vue';
+import IconProve from '../images/icons/icon-prove.vue';
+import SendAssetModal from '../modals/SendAssetModal.vue';
 
-import DeleteConfirmationModal from '../modals/DeleteConfirmationModal'
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -85,6 +87,7 @@ export default {
     IconSend,
     IconProve,
     SendAssetModal,
+    VaultDropdown,
   },
   computed: {
     ...mapGetters([
@@ -101,10 +104,10 @@ export default {
     }),
     tab: {
       get() {
-        return this.$store.getters.currentTab
+        return this.$store.getters.currentTab;
       },
       set(value) {
-        this.$store.commit('currentTab', value)
+        this.$store.commit('currentTab', value);
       },
     },
   },
@@ -123,22 +126,22 @@ export default {
     //     break;
     // }
 
-    console.log(this.tab)
+    console.log(this.tab);
   },
   methods: {
     close() {
-      this.$store.commit('showDeleteConfirmation', false)
+      this.$store.commit('showDeleteConfirmation', false);
     },
     openSendAssetModal() {
-      this.$store.commit('showSendAssetModal', true)
+      this.$store.commit('showSendAssetModal', true);
     },
   },
   data() {
     return {
       iconSet: false,
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">

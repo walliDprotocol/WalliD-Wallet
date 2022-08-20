@@ -9,7 +9,7 @@ const state = () => ({
   UPAddress: API.getState().UPAddress,
   KMAddress: API.getState().KMAddress,
   // RENAME
-  currentDisplayAddress: '0x964D8aC207EF2B7Eda11Fdf1cc500B2F78364515',
+  currentDisplayAddress: API.getState().UPAddress,
   isFromVault: false,
   vaultsAddresses: [],
 });
@@ -19,6 +19,12 @@ const mutations = {
   },
   KMAddress(state, value) {
     state.KMAddress = value;
+  },
+  isFromVault(state, value) {
+    state.isFromVault = value;
+  },
+  currentDisplayAddress(state, value) {
+    state.currentDisplayAddress = value;
   },
 };
 const actions = {
@@ -198,6 +204,7 @@ const actions = {
 
   updateLuskoStore: ({ rootState, dispatch, commit, state }) => {
     commit('UPAddress', API.getState().UPAddress);
+    commit('currentDisplayAddress', API.getState().UPAddress);
     commit('KMAddress', API.getState().KMAddress);
     dispatch('getLuskoAssets');
   },
