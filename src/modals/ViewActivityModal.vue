@@ -204,6 +204,12 @@ export default {
   },
   created() {},
   mounted() {},
+  methods: {
+    close() {
+      this.$store.commit('setCurrentCred', null);
+      this.$store.commit('showViewActivityModal', false);
+    },
+  },
   computed: {
     ...mapGetters([
       'address',
@@ -231,10 +237,6 @@ export default {
           ? operation.tokenName === this.currentCred.tokenName
           : true;
       });
-    },
-    close() {
-      this.$store.commit('setCurrentCred', null);
-      this.$store.commit('showViewActivityModal', false);
     },
   },
   data() {

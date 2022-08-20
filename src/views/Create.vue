@@ -12,8 +12,6 @@
                 class="ma-auto"
                 contain
                 src="../images/logos/logo-wallid.png"
-                srcset="../images/logos/logo-wallid@2x.png 2x,
-             ../images/logos/logo-wallid@3x.png 3x"
               />
             </v-col>
             <v-col cols="12" class="pt-5 pb-8 px-14">
@@ -83,7 +81,7 @@
           ref="form"
           @submit.prevent="setPassword"
           lazy-validation
-          style="height:520px"
+          style="height: 520px"
         >
           <v-container class="text-left">
             <v-row>
@@ -101,7 +99,7 @@
                 </h3>
               </v-col>
               <v-col cols="12" class="pt-0 pb-2">
-                <label class="sub-title-fields ">{{
+                <label class="sub-title-fields">{{
                   $t('create.stepper[' + step + '].password[0]')
                 }}</label>
                 <v-text-field
@@ -116,7 +114,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" class="pt-0 pb-1">
-                <label class="sub-title-fields ">{{
+                <label class="sub-title-fields">{{
                   $t('create.stepper[' + step + '].password[1]')
                 }}</label>
                 <v-text-field
@@ -130,7 +128,7 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" class="pl-0 py-2 ">
+              <v-col cols="12" class="pl-0 py-2">
                 <v-checkbox
                   v-model="termsWallet"
                   required
@@ -184,7 +182,7 @@
             </v-col>
 
             <v-col cols="12" class="pt-2">
-              <label class="sub-title-fields "
+              <label class="sub-title-fields"
                 >{{ $t('create.stepper[' + step + '].seed[0]') }}
                 <span v-show="!seedLocked">
                   {{ $t('create.stepper[' + step + '].seed[1]') }}
@@ -199,7 +197,7 @@
                 <v-col cols="12" class="pb-1 pt-12">
                   <Unlock />
                 </v-col>
-                <v-col cols="12" class="pt-1 ">
+                <v-col cols="12" class="pt-1">
                   {{ $t('create.stepper[' + step + '].seed[2]') }}
                 </v-col>
               </div>
@@ -213,10 +211,10 @@
                 {{ $t('create.stepper[' + step + '].seed[3]') }}
               </p>
             </v-col>
-            <v-col cols="12" class="pb-0" style="min-height:36px">
+            <v-col cols="12" class="pb-0" style="min-height: 36px">
               <v-btn
                 text
-                class="links "
+                class="links"
                 v-show="seedLocked"
                 @click="setReminder"
               >
@@ -256,8 +254,6 @@
                 class="ma-auto"
                 contain
                 src="../images/img/img-success.png"
-                srcset="../images/img/img-success@2x.png 2x,
-             ../images/img/img-success@3x.png 3x"
               />
             </v-col>
             <v-col cols="12" class="">

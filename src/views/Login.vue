@@ -10,8 +10,6 @@
             class="ma-auto"
             contain
             src="../images/logos/logo-wallid.png"
-            srcset="../images/logos/logo-wallid@2x.png 2x,
-             ../images/logos/logo-wallid@3x.png 3x"
         /></v-col>
         <v-col cols="12" class="pb-6 px-14">
           <h2 class="T1 mb-2 text-center">

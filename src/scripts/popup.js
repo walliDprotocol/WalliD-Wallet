@@ -1,6 +1,4 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
 import Popup from '../Popup';
 import router from '../router';
 import i18n from './i18n';
@@ -11,10 +9,11 @@ import VueLogger from 'vuejs-logger';
 import mixinPlugin from '../scripts/util';
 import extension from 'extensionizer';
 
+import vuetify from '../plugins/vuetify'; // path to vuetify export
+
 extension.browserAction.setBadgeText({ text: null });
 
 Vue.component(VueQrcode.name, VueQrcode);
-Vue.use(Vuetify);
 
 //Set global is notification var
 // Vue.prototype.$notification = true;
@@ -44,7 +43,7 @@ const { eventEmitter } = extension.extension.getBackgroundPage();
 window.$eventEmitter = eventEmitter;
 Vue.prototype.$eventEmitter = eventEmitter;
 
-var filter = function(text, length, clamp = '...') {
+var filter = function (text, length, clamp = '...') {
   const content = text ? text.toString() : '';
 
   return content.length > length
@@ -59,16 +58,7 @@ Vue.filter('truncate', filter);
 Vue.mixin(mixinPlugin);
 
 new Vue({
-  vuetify: new Vuetify({theme: {
-    themes: {
-      light: {
-        primary: '#009fb1',
-        secondary: '#009fb1',
-        accent: '#009fb1',
-        error: '#e95e5e',
-      },
-    },
-  },}),
+  vuetify,
   el: '#app',
   router,
   i18n,

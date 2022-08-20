@@ -8,6 +8,10 @@ const { API } = extension.extension.getBackgroundPage();
 const state = () => ({
   UPAddress: API.getState().UPAddress,
   KMAddress: API.getState().KMAddress,
+  // RENAME
+  currentDisplayAddress: '0x964D8aC207EF2B7Eda11Fdf1cc500B2F78364515',
+  isFromVault: false,
+  vaultsAddresses: [],
 });
 const mutations = {
   UPAddress(state, value) {
@@ -18,6 +22,16 @@ const mutations = {
   },
 };
 const actions = {
+  ['changeCurrentDisplayAddress']: async (
+    { rootState, dispatch, commit, state },
+    { accountAddress }
+  ) => {
+    let isVault = state.vaultsAddresses.find((v) => v === accountAddress);
+
+    commit('isFromVault', isVault);
+    commit('currentDisplayAddress', accountAddress);
+    await dispatch('getLuskoAssets');
+  },
   ['fetchProfile']: async ({ rootState, dispatch, state }) => {
     const fetchProfile = await API.fetchProfile(rootState.address);
     console.log('fetchProfile: ', fetchProfile);
@@ -29,7 +43,6 @@ const actions = {
     const fetchVaults = await API.fetchVaults(rootState.address);
     console.log('fetchVaults: ', fetchVaults);
 
-    dispatch('updateLuskoStore');
     return fetchVaults;
   },
   ['createUniversalProfile']: async ({ rootState, dispatch, state }) => {
@@ -68,13 +81,6 @@ const actions = {
     dispatch('updateLuskoStore');
     return mintLSP7Tokens;
   },
-  ['transferLSP7Tokens']: async ({ rootState, dispatch, state }) => {
-    const transferLSP7Tokens = await API.transferLSP7Tokens(rootState.address);
-    console.log('transferLSP7Tokens: ', transferLSP7Tokens);
-
-    dispatch('updateLuskoStore');
-    return transferLSP7Tokens;
-  },
 
   ['createVaultOnUP']: async ({ rootState, dispatch, state }) => {
     console.log('Action createVaultOnUP: ');
@@ -104,9 +110,94 @@ const actions = {
 
     return setVaultAddressUP;
   },
-  updateLuskoStore: ({ rootState, commit, state }) => {
+
+  ['balanceOf']: async (
+    { rootState, dispatch, state },
+    { accountAddress, tokenAddress }
+  ) => {
+    const createVault = await API.balanceOf(accountAddress, tokenAddress);
+    console.log('createVault: ', createVault);
+
+    return createVault;
+  },
+  ['transferLSP7Token']: async (
+    { rootState, dispatch, state },
+    { fromAccountAddress, toAccountAddress, tokenAddress, amount, isFromVault }
+  ) => {
+    const transferLSP7Token = await API.transferLSP7Token(
+      state.currentDisplayAddress,
+      toAccountAddress,
+      tokenAddress,
+      amount,
+      state.isFromVault
+    );
+    console.log('transferLSP7Token: ', transferLSP7Token);
+
+    dispatch('getLuskoAssets');
+
+    return transferLSP7Token;
+  },
+  ['transferLSP8Token']: async (
+    { rootState, dispatch, state },
+    { fromAccountAddress, toAccountAddress, tokenAddress, tokenId }
+  ) => {
+    const transferLSP8Token = await API.transferLSP8Token(
+      state.currentDisplayAddress,
+      toAccountAddress,
+      tokenAddress,
+      tokenId
+    );
+    console.log('transferLSP8Token: ', transferLSP8Token);
+
+    return transferLSP8Token;
+  },
+  ['getMetadata']: async (
+    { rootState, dispatch, commit, state },
+    { assetAddress, ownerAddress, tokenId, assetType }
+  ) => {
+    const getMetadata = await API.getMetadata(
+      assetAddress,
+      ownerAddress,
+      tokenId,
+      assetType
+    );
+    console.log('getMetadata: ', getMetadata);
+
+    return getMetadata;
+  },
+  ['getLuskoAssets']: async ({ commit, dispatch, state }) => {
+    console.log('getLuskoAssets:');
+
+    // 1st get vaults
+    let vaultList = await dispatch('fetchVaults');
+    console.log('vaultList: ', vaultList);
+
+    const assetsList = await API.getAssetsOfAddress(
+      state.currentDisplayAddress
+    );
+    console.log('assetsList: ', assetsList);
+    const assetsMetadataList = [];
+    for (let i = 0; i < assetsList.length; i++) {
+      const element = assetsList[i];
+      console.log('element: ', element);
+
+      assetsMetadataList.push(
+        await dispatch('getMetadata', {
+          ...element,
+          ownerAddress: state.currentDisplayAddress,
+        })
+      );
+    }
+
+    commit('assets', assetsMetadataList, { root: true });
+
+    return assetsMetadataList;
+  },
+
+  updateLuskoStore: ({ rootState, dispatch, commit, state }) => {
     commit('UPAddress', API.getState().UPAddress);
     commit('KMAddress', API.getState().KMAddress);
+    dispatch('getLuskoAssets');
   },
 };
 

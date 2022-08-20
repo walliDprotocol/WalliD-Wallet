@@ -12,7 +12,6 @@
         {{ transactionOption }}
       </div>
     </template>
-
     <v-container>
       <v-row style="padding: 15px 20px 20px 20px">
         <v-col cols="12" class="d-flex align-center justify-space-between pa-0">
@@ -22,7 +21,7 @@
           <v-img
             max-width="18"
             contain
-            src="../images/icons/close-icon@3x.png"
+            src="../images/icons/close-icon.png"
             style="cursor: pointer"
             @click="dialog = false"
           ></v-img>
@@ -36,7 +35,7 @@
             height="50"
             max-width="50"
             contain
-            src="../images/logos/logo-l16PublicTestnet@2x.png"
+            :src="require('../images/logos/logo-l16PublicTestnet.png')"
           />
           <div class="d-flex mt-4" style="font-size: 15px; font-weight: 500">
             <p><strong>Max fee:&nbsp;</strong></p>

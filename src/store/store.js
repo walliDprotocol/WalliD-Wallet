@@ -67,57 +67,63 @@ export default new Vuex.Store({
     connected: false,
     initialized: API.getState().initialized,
     identities: API.getState().identities,
-    credentials: [{
-      id: 1,
-      credName: 'credName',
-      caName: 'caName',
-      photoURL: 'photoURL',
-      userData: 'userData',
-      status: 'status',
-      expDate: 'expDate',
-    }]
-      /* API.getState().credentials */,
-    assets: [{
-      id: 1,
-      assetType: 'Fungible Token',
-      assetImagePath: '../images/logos/logo-l16PublicTestnet.png',
-      tokenName: 'LYXt',
-      amount: 2,
-      tokenStandard: 'Native',
-    }, {
-      id: 2,
-      assetType: 'NFT',
-      assetImagePath: '../images/icons/icon-sunflower.png',
-      tokenName: 'Sunflower',
-      tokenProvider: 'Sunflower Land Collection',
-      amount: 969,
-      tokenStandard: 'ERC-1155',
-    },
-    {
-      id: 3,
-      assetType: 'Legacy ID',
-      assetImagePath: '../images/icons/icon-portuguese-republic.png',
-      idName: 'Portuguese Citzen Card',
-      date: '2024-10-03',
-      validity: 'VALID',
+    credentials: [
+      {
+        id: 1,
+        credName: 'credName',
+        caName: 'caName',
+        photoURL: 'photoURL',
+        userData: 'userData',
+        status: 'status',
+        expDate: 'expDate',
       },
-    {
-      id: 4,
-      assetType: 'Web2 ID',
-      assetImagePath: '../images/icons/icon-discord.png',
-      socialmedia: 'Discord',
-      username: 'Beatriz Pereira',
-    },
-    {
-      id: 5,
-      assetType: 'Web3 ID',
-      assetImagePath: '../images/logos/logo-wallid.png',
-      titleField: 'WalliD Credential',
-      subtitleField: 'Beta tester',
-      validity: 'VALID',
-    }],
+    ],
+    /* API.getState().credentials */
+    assets: [
+      {
+        id: 1,
+        assetType: 'Fungible Token',
+        assetImagePath: '../images/logos/logo-l16PublicTestnet.png',
+        tokenName: 'LYXt',
+        amount: 2,
+        tokenStandard: 'Native',
+      },
+      {
+        id: 2,
+        assetType: 'NFT',
+        assetImagePath: '../images/icons/icon-sunflower.png',
+        tokenName: 'Sunflower',
+        tokenProvider: 'Sunflower Land Collection',
+        amount: 969,
+        tokenStandard: 'ERC-1155',
+      },
+      {
+        id: 3,
+        assetType: 'Legacy ID',
+        assetImagePath: '../images/icons/icon-portuguese-republic.png',
+        idName: 'Portuguese Citzen Card',
+        date: '2024-10-03',
+        validity: 'VALID',
+      },
+      {
+        id: 4,
+        assetType: 'Web2 ID',
+        assetImagePath: '../images/icons/icon-discord.png',
+        socialmedia: 'Discord',
+        username: 'Beatriz Pereira',
+      },
+      {
+        id: 5,
+        assetType: 'Web3 ID',
+        assetImagePath: '../images/logos/logo-wallid.png',
+        titleField: 'WalliD Credential',
+        subtitleField: 'Beta tester',
+        validity: 'VALID',
+      },
+    ],
     profiles: API.getState().profiles,
     currentProfile: null,
+    currentAsset: null,
     request: API.getNextRequest(),
     debug: null,
     unlocked: API.getState().unlocked,
@@ -926,6 +932,9 @@ export default new Vuex.Store({
     setCurrentCred(state, value) {
       state.currentCred = value;
     },
+    setCurrentAsset(state, value) {
+      state.currentAsset = value;
+    },
     updateProfiles(state, value) {
       state.profiles = value;
     },
@@ -971,6 +980,9 @@ export default new Vuex.Store({
     },
     avatarENS(state, value) {
       state.avatarENS = value;
+    },
+    assets(state, value) {
+      state.assets = value;
     },
   },
 });

@@ -86,9 +86,9 @@ const mixinPlugin = {
         // });
       });
     },
-    checksumAddress(address) {
-      const checksummed = address ? toChecksumAddress(address) : '';
-      return checksummed;
+    validateAddress(address) {
+      const isValid = address ? toChecksumAddress(address) : false;
+      return { address: address, isValid };
     },
     getDomain(url) {
       var prefix = /^https?:\/\//i;

@@ -16,8 +16,8 @@ const state = () => ({
   //   localhostNet: { name: 'Localhost Net', color: '#373c43' },
   // },
   previousNetwork: {},
-  currentNetwork: { name: 'Ethereum Mainnet', color: '#009fb1' },
-  // currentNetwork: API.getState().currentNetwork,
+  // currentNetwork: { name: 'Ethereum Mainnet', color: '#009fb1' },
+  currentNetwork: API.getState().currentNetwork,
 });
 const mutations = {
   currentNetwork: (state, value) => {
@@ -43,11 +43,31 @@ const actions = {
       resolve(API.changeRpcTarget(network));
     }).then(() => dispatch('updateNetworks'));
   },
+  ['getNetworkAssets']: ({ rootState, dispatch, state }) => {
+    return new Promise((resolve, reject) => {
+      console.debug('Action getNetworkAssets');
+      const network = state.currentNetwork;
+      console.debug('network: ', network);
 
-  updateNetworks: async ({ rootState, commit, state }) => {
+      switch (network.chainId) {
+        case '2828':
+          dispatch('lukso/getLuskoAssets', null, { root: true });
+          break;
+
+        default:
+          reject(new Error('Not implemented yet'));
+          break;
+      }
+    });
+  },
+
+  updateNetworks: async ({ rootState, commit, dispatch }) => {
     commit('currentNetwork', API.getState().currentNetwork);
-    commit('networksList', API.getState().networksList);
+    commit('networksList', API.getState().networkList);
     commit('balance', await API.getBalance(rootState.address));
+
+    // get assets of network
+    dispatch('getNetworkAssets');
   },
 };
 

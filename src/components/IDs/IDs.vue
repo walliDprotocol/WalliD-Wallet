@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="credentials list-storage pt-1"
-    style="overflow-y: auto; height: 208px;"
+    style="overflow-y: auto; height: 208px"
   >
     <v-row class="pl-4 py-4">
       <div
@@ -59,11 +59,6 @@
                   Delete
                 </v-list-item-title>
               </v-list-item>
-              <DeleteAssetModal
-                v-if="showDeleteConfirmation"
-                :asset="asset"
-                style="z-index: 99 !important;"
-              />
             </v-list>
           </template>
         </Asset>
@@ -103,34 +98,32 @@
 </template>
 
 <script>
-import Asset from '../../components/Asset'
-import StoredProfileImg from '../../components/StoredProfileImg'
-import DeleteAssetModal from '../../modals/DeleteAssetModal'
+import Asset from '../../components/Asset';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/'
+const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 
 export default {
   name: 'IDs',
   components: {
     StoredProfileImg,
     Asset,
-    DeleteAssetModal,
   },
   computed: {
     ...mapGetters(['assets', 'showDeleteConfirmation']),
     idAssets: function () {
-      var filter = this.idAssetFilter
+      var filter = this.idAssetFilter;
       return this.assets.filter(function (el) {
-        return el.assetType === filter
-      })
+        return el.assetType === filter;
+      });
     },
   },
   methods: {
     openDeleteAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showDeleteConfirmation', true)
+      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('showDeleteConfirmation', true);
     },
     getName(credential) {
       if (this.isNFT(credential)) {
@@ -140,23 +133,23 @@ export default {
           (credential.userData.user_data['TOKEN ID'].length > 10
             ? this.reducedString(credential.userData.user_data['TOKEN ID'])
             : credential.userData.user_data['TOKEN ID'])
-        )
+        );
       }
 
-      return credential.credName || credential.assetName
+      return credential.credName || credential.assetName;
     },
     getCredentialName(credential) {
-      return credential.caName || credential.username
+      return credential.caName || credential.username;
     },
     getImage(card) {
       if (card?.userData?.frontend_props?.currentLayout === 'Badge') {
-        return card.userData?.imgArray?.[0]
+        return card.userData?.imgArray?.[0];
       }
       return (
         card.userData?.credential_img ||
         card.userData?.frontend_props?.preview ||
         card.photoURL
-      )
+      );
     },
     downloadURL(card) {
       // if (
@@ -165,75 +158,75 @@ export default {
       //   //  && !card.userData.pdf_url // Required for old users < 14/4/2021 ?
       // ) {
       if (this.isNFT(card)) {
-        return card && card.userData && card.userData.imgArray[0]
+        return card && card.userData && card.userData.imgArray[0];
       }
-      return PDF_URL + card.id
+      return PDF_URL + card.id;
       // }
       // return card.userData.pdf_url;
     },
     viewCred(card) {
-      console.log('List', this.credentials)
-      console.log('List', card)
-      this.$store.commit('setCurrentCred', card)
-      this.$router.push({ name: 'Credential' })
+      console.log('List', this.credentials);
+      console.log('List', card);
+      this.$store.commit('setCurrentCred', card);
+      this.$router.push({ name: 'Credential' });
     },
     shareProfile(asset) {
-      this.$store.commit('currentCred', asset)
+      this.$store.commit('currentCred', asset);
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } });
     },
     deleteCred(card) {
-      this.$store.commit('showDeleteConfirmation', true)
+      this.$store.commit('showDeleteConfirmation', true);
 
-      this.$store.commit('setCurrentCred', card)
+      this.$store.commit('setCurrentCred', card);
     },
     proofPage(card) {
-      this.$store.commit('setCurrentCred', card)
+      this.$store.commit('setCurrentCred', card);
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW' })
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
       // this.$router.push({ name: 'Proof' });
     },
 
     isValid(_expDate) {
       if (_expDate) {
-        var parts = _expDate.split(' ')
-        var expDate = new Date(parts[2], parts[1] - 1, parts[0])
-        let currDate = new Date()
-        var millisecondsPerDay = 1000 * 60 * 60 * 24
-        var millisBetween = currDate.getTime() - expDate.getTime()
-        var days = millisBetween / millisecondsPerDay
-        console.log(Math.floor(days))
+        var parts = _expDate.split(' ');
+        var expDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        let currDate = new Date();
+        var millisecondsPerDay = 1000 * 60 * 60 * 24;
+        var millisBetween = currDate.getTime() - expDate.getTime();
+        var days = millisBetween / millisecondsPerDay;
+        console.log(Math.floor(days));
         // Round down.
-        return Math.floor(days) <= 0
+        return Math.floor(days) <= 0;
       } else {
-        return false
+        return false;
       }
     },
     assetTitle(asset) {
       if (this.idAssetFilter === 'Legacy ID') {
-        return asset.idName
+        return asset.idName;
       } else if (this.idAssetFilter === 'Web2 ID') {
-        return asset.socialmedia
+        return asset.socialmedia;
       } else {
-        return asset.titleField
+        return asset.titleField;
       }
     },
     assetSubtitle(asset) {
       if (this.idAssetFilter === 'Legacy ID') {
-        return asset.date
+        return asset.date;
       } else if (this.idAssetFilter === 'Web2 ID') {
-        return asset.username
+        return asset.username;
       } else {
-        return asset.subtitleField
+        return asset.subtitleField;
       }
     },
     assetChip(asset) {
       if (this.idAssetFilter === 'Legacy ID') {
-        return asset.validity
+        return asset.validity;
       } else if (this.idAssetFilter === 'Web2 ID') {
-        return
+        return;
       } else {
-        return asset.validity
+        return asset.validity;
       }
     },
   },
@@ -241,9 +234,9 @@ export default {
     return {
       storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
       idAssetFilter: 'Legacy ID',
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

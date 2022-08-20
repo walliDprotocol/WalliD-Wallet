@@ -18,9 +18,7 @@
       </v-col>
 
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="close()" class="cancel-btn">
-          Cancel
-        </v-btn>
+        <v-btn text @click="close()" class="cancel-btn"> Cancel </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
         <v-btn text @click="confirmDelete()" class="advance-btn">
@@ -32,14 +30,14 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress'
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import IDCard from '../components/IDCard'
+import IDCard from '../components/IDCard';
 
-import { mapGetters } from 'vuex'
-import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
+import { mapGetters, mapState } from 'vuex';
+import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
 
 export default {
   components: {
@@ -50,18 +48,16 @@ export default {
   },
   computed: {
     ...mapGetters(['currentCred']),
+    ...mapState(['currentAsset']),
     assetTitle() {
-      if (
-        this.currentCred.assetType === 'Fungible Token' ||
-        this.currentCred.assetType === 'NFT'
-      ) {
-        return this.currentCred.tokenName
+      if (this.currentAsset) {
+        return this.currentAsset.tokenName;
       } else if (this.currentCred.assetType === 'Legacy ID') {
-        return this.currentCred.idName
+        return this.currentCred.idName;
       } else if (this.currentCred.assetType === 'Web2 ID') {
-        return this.currentCred.socialmedia
+        return this.currentCred.socialmedia;
       } else if (this.currentCred.assetType === 'Web3 ID') {
-        return this.currentCred.titleField
+        return this.currentCred.titleField;
       }
     },
   },
@@ -72,35 +68,36 @@ export default {
           .dispatch(DELETE_CRED, this.credential.id)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       } else if (this.profile) {
-        console.log(this.profile)
+        console.log(this.profile);
         this.$store
           .dispatch(DELETE_PROFILE, this.profile.id)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       } else if (this.card) {
-        console.log(this.card)
+        console.log(this.card);
         this.$store
           .dispatch(DELETE_CARD, this.card.idt)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       }
     },
     close() {
-      this.$store.commit('currentProfile', null)
-      this.$store.commit('setCurrentCred', null)
-      this.$store.commit('setCurrentCard', null)
+      this.$store.commit('currentProfile', null);
+      this.$store.commit('setCurrentCred', null);
+      this.$store.commit('setCurrentCard', null);
+      this.$store.commit('setCurrentAsset', null);
 
-      this.$store.commit('showDeleteConfirmation', false)
+      this.$store.commit('showDeleteConfirmation', false);
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

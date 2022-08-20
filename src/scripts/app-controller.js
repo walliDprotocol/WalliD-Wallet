@@ -1087,6 +1087,17 @@ export default class AppController {
       Promise.reject(err);
     });
   }
+  getAssetsOfAddress(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+
+    return Promise.resolve(lukso.getAssetsOfAddress(address)).catch((err) => {
+      Promise.reject(err);
+    });
+  }
   setVaultAddressUP(address) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
@@ -1113,18 +1124,6 @@ export default class AppController {
     });
   }
 
-  transferLSP7Tokens() {
-    const vault = this.#store.getState().vault;
-    if (!vault.isUnlocked()) {
-      return Promise.reject('ERR_PLUGIN_LOCKED');
-    }
-    const lukso = this.#store.getState().lukso;
-    console.log('transferLSP7Tokens: ');
-
-    return Promise.resolve(lukso.transferLSP7Tokens()).catch((err) => {
-      Promise.reject(err);
-    });
-  }
   createVault() {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
@@ -1134,6 +1133,97 @@ export default class AppController {
     console.log('createVault: ');
 
     return Promise.resolve(lukso.createVault()).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+
+  balanceOf(accountAddress, tokenAddress) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('balanceOf: ', accountAddress, tokenAddress);
+
+    return Promise.resolve(lukso.balanceOf(accountAddress, tokenAddress)).catch(
+      (err) => {
+        Promise.reject(err);
+      }
+    );
+  }
+  getMetadata(assetAddress, ownerAddress, tokenId, assetType) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log('getMetadata: ', assetAddress);
+
+    return Promise.resolve(
+      lukso.getMetadata(assetAddress, ownerAddress, tokenId, assetType)
+    ).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+  transferLSP7Token(
+    fromAccountAddress,
+    toAccountAddress,
+    tokenAddress,
+    amount,
+    isFromVault
+  ) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log(
+      'transferLSP7Token: ',
+      fromAccountAddress,
+      toAccountAddress,
+      tokenAddress,
+      amount
+    );
+
+    return Promise.resolve(
+      lukso.transferLSP7Token(
+        fromAccountAddress,
+        toAccountAddress,
+        tokenAddress,
+        amount,
+        isFromVault
+      )
+    ).catch((err) => {
+      Promise.reject(err);
+    });
+  }
+  transferLSP8Token(
+    fromAccountAddress,
+    toAccountAddress,
+    tokenAddress,
+    tokenId
+  ) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+    console.log(
+      'transferLSP8Token: ',
+      fromAccountAddress,
+      toAccountAddress,
+      tokenAddress,
+      tokenId
+    );
+
+    return Promise.resolve(
+      lukso.transferLSP8Token(
+        fromAccountAddress,
+        toAccountAddress,
+        tokenAddress,
+        tokenId
+      )
+    ).catch((err) => {
       Promise.reject(err);
     });
   }
@@ -1250,10 +1340,14 @@ export default class AppController {
       fetchProfile: this.fetchProfile.bind(this),
       fetchVaults: this.fetchVaults.bind(this),
       mintLSP7Tokens: this.mintLSP7Tokens.bind(this),
-      transferLSP7Tokens: this.transferLSP7Tokens.bind(this),
       createVault: this.createVault.bind(this),
       setVaultAddressUP: this.setVaultAddressUP.bind(this),
       importFromPrivateKey: this.importFromPrivateKey.bind(this),
+      balanceOf: this.balanceOf.bind(this),
+      transferLSP7Token: this.transferLSP7Token.bind(this),
+      transferLSP8Token: this.transferLSP8Token.bind(this),
+      getMetadata: this.getMetadata.bind(this),
+      getAssetsOfAddress: this.getAssetsOfAddress.bind(this),
       //
     };
   }

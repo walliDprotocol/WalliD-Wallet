@@ -138,7 +138,7 @@ export default {
     ...mapGetters(['assets', 'currentCred']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
-        return el.assetType === 'NFT';
+        return el.assetType.isLSP8;
       });
     },
   },
@@ -155,7 +155,7 @@ export default {
       this.$store.commit('showImportAssetModal', true);
     },
     openSendAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('setCurrentAsset', asset);
       this.$store.commit('showSendAssetModal', true);
     },
     shareProfile(asset) {

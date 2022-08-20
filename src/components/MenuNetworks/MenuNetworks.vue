@@ -22,7 +22,7 @@
       <v-list-item
         v-for="n in networksList"
         :key="n.name"
-        @click="goRoute(NETWORK, n)"
+        @click="changeRpcTarget(n)"
         class="network"
       >
         <IconNetworkSelected
@@ -53,6 +53,10 @@ export default {
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
+    ...mapState('lukso', {
+      UPAddress: 'UPAddress',
+      KMAddress: 'KMAddress',
+    }),
     ...mapState('networks', ['currentNetwork', 'networksList']),
   },
   created() {
@@ -68,10 +72,27 @@ export default {
         this.$emit('close', !this.showNetworks);
       }
     },
+    async changeRpcTarget({ rpcTarget, chainId, ticker, name }) {
+      this.debug(`changeRpcTarget: ${rpcTarget} ${chainId} ${ticker} ${name}`);
 
+      try {
+        let result = await this.$store.dispatch('networks/changeRpcTarget', {
+          rpcTarget,
+          chainId,
+          ticker,
+          name,
+        });
+
+        console.log(result);
+        // check if already has profile
+        if (!this.UPAddress) this.goRoute(NETWORK);
+      } catch (error) {
+        this.debug('Had a problem changing networks!', error);
+      }
+    },
     // se estiver ja na pagina fechar o menu
-    goRoute(route, n) {
-      this.$store.commit('networks/currentNetwork', n);
+    goRoute(route) {
+      // this.$store.commit('networks/currentNetwork', n);
 
       this.debug('Menu Option: ', route);
       this.debug(this.$route.path);

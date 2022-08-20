@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="credentials list-storage pt-1"
-    style="overflow-y: auto; height: 208px;"
+    style="overflow-y: auto; height: 208px"
   >
     <v-row>
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
@@ -14,7 +14,7 @@
         <Asset
           :image="asset.assetImagePath"
           :title="asset.tokenName"
-          :subtitle="asset.amount"
+          :subtitle="asset.balanceOf"
           :chip="asset.tokenStandard"
           :amount="null"
         >
@@ -54,7 +54,7 @@
               <v-list-item v-if="asset.tokenName">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
-                  @click="deleteCred(asset)"
+                  @click="openSendAssetModal(asset)"
                 >
                   Send
                 </v-list-item-title>
@@ -106,12 +106,12 @@
 </template>
 
 <script>
-import Asset from '../../components/Asset'
-import StoredProfileImg from '../../components/StoredProfileImg'
+import Asset from '../../components/Asset';
+import StoredProfileImg from '../../components/StoredProfileImg';
 
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/'
+const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 
 export default {
   name: 'FungibleTokens',
@@ -121,10 +121,11 @@ export default {
   },
   computed: {
     ...mapGetters(['assets']),
-    fungibleTokenAssets: function () {
-      return this.assets.filter(function (el) {
-        return el.assetType === 'Fungible Token'
-      })
+    fungibleTokenAssets() {
+      console.log('assets', this.assets);
+      return this.assets.filter((el) => {
+        return el.assetType.isLSP7;
+      });
     },
   },
   methods: {
@@ -136,23 +137,23 @@ export default {
           (credential.userData.user_data['TOKEN ID'].length > 10
             ? this.reducedString(credential.userData.user_data['TOKEN ID'])
             : credential.userData.user_data['TOKEN ID'])
-        )
+        );
       }
 
-      return credential.credName || credential.assetName
+      return credential.credName || credential.assetName;
     },
     getCredentialName(credential) {
-      return credential.caName || credential.username
+      return credential.caName || credential.username;
     },
     getImage(card) {
       if (card?.userData?.frontend_props?.currentLayout === 'Badge') {
-        return card.userData?.imgArray?.[0]
+        return card.userData?.imgArray?.[0];
       }
       return (
         card.userData?.credential_img ||
         card.userData?.frontend_props?.preview ||
         card.photoURL
-      )
+      );
     },
     downloadURL(card) {
       // if (
@@ -161,60 +162,64 @@ export default {
       //   //  && !card.userData.pdf_url // Required for old users < 14/4/2021 ?
       // ) {
       if (this.isNFT(card)) {
-        return card && card.userData && card.userData.imgArray[0]
+        return card && card.userData && card.userData.imgArray[0];
       }
-      return PDF_URL + card.id
+      return PDF_URL + card.id;
       // }
       // return card.userData.pdf_url;
     },
     viewCred(card) {
-      console.log('List', this.credentials)
-      console.log('List', card)
-      this.$store.commit('setCurrentCred', card)
-      this.$router.push({ name: 'Credential' })
+      console.log('List', this.credentials);
+      console.log('List', card);
+      this.$store.commit('setCurrentCred', card);
+      this.$router.push({ name: 'Credential' });
     },
     deleteCred(card) {
-      this.$store.commit('showDeleteConfirmation', true)
+      this.$store.commit('showDeleteConfirmation', true);
 
-      this.$store.commit('setCurrentCred', card)
+      this.$store.commit('setCurrentCred', card);
     },
     proofPage(card) {
-      this.$store.commit('setCurrentCred', card)
+      this.$store.commit('setCurrentCred', card);
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW' })
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
       // this.$router.push({ name: 'Proof' });
     },
 
     isValid(_expDate) {
       if (_expDate) {
-        var parts = _expDate.split(' ')
-        var expDate = new Date(parts[2], parts[1] - 1, parts[0])
-        let currDate = new Date()
-        var millisecondsPerDay = 1000 * 60 * 60 * 24
-        var millisBetween = currDate.getTime() - expDate.getTime()
-        var days = millisBetween / millisecondsPerDay
-        console.log(Math.floor(days))
+        var parts = _expDate.split(' ');
+        var expDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        let currDate = new Date();
+        var millisecondsPerDay = 1000 * 60 * 60 * 24;
+        var millisBetween = currDate.getTime() - expDate.getTime();
+        var days = millisBetween / millisecondsPerDay;
+        console.log(Math.floor(days));
         // Round down.
-        return Math.floor(days) <= 0
+        return Math.floor(days) <= 0;
       } else {
-        return false
+        return false;
       }
     },
+    openSendAssetModal(asset) {
+      this.$store.commit('setCurrentAsset', asset);
+      this.$store.commit('showSendAssetModal', true);
+    },
     openDeleteAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showDeleteConfirmation', true)
+      this.$store.commit('setCurrentAsset', asset);
+      this.$store.commit('showDeleteConfirmation', true);
     },
     openViewActivityModal(asset) {
-      this.$store.commit('setCurrentCred', asset)
-      this.$store.commit('showViewActivityModal', true)
+      this.$store.commit('setCurrentAsset', asset);
+      this.$store.commit('showViewActivityModal', true);
     },
   },
   data() {
     return {
       storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

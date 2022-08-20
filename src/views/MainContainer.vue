@@ -20,8 +20,6 @@
         max-width="50"
         contain
         src="../images/logos/logo-wallid.png"
-        srcset="../images/logos/logo-wallid@2x.png 2x,
-             ../images/logos/logo-wallid@3x.png 3x"
       />
       <v-spacer />
       <!-- Networks -->
@@ -144,6 +142,8 @@ export default {
   },
   mounted() {
     this.debug('MOUNTED', this.hideAppHeader);
+
+    if (this.unlocked) this.$store.dispatch('networks/getNetworkAssets');
   },
 
   methods: {

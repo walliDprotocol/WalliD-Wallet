@@ -38,9 +38,29 @@
         <v-btn text class="advance-btn" @click="createVaultOnUP()">
           {{ 'createVaultOnUP' }}
         </v-btn>
+        <h6>New vault address</h6>
         {{ newVaultAddress }}
-        <v-btn text class="advance-btn" @click="transferLSP7Tokens()">
-          {{ 'transferLSP7Tokens' }}
+        <v-text-field
+          v-model="accountAddress"
+          solo
+          flat
+          class="password-input seed-phrase mt-1"
+          name="input-password-login"
+          hide-details
+        >
+        </v-text-field>
+        {{ balanceOfResult }}
+        <v-btn text class="advance-btn" @click="balanceOf()">
+          {{ 'get balanceOf' }}
+        </v-btn>
+        <v-btn text class="advance-btn" @click="transferLSP7Token()">
+          {{ 'transferLSP7Token' }}
+        </v-btn>
+        <v-btn text class="advance-btn" @click="transferLSP8Token()">
+          {{ 'transferLSP8Token' }}
+        </v-btn>
+        <v-btn text class="advance-btn" @click="getMetadata()">
+          {{ 'getMetadata' }}
         </v-btn>
       </v-col>
       <v-col cols="12" class="pb-1 pt-2">
@@ -108,19 +128,57 @@ export default {
       let fetchVaults = await this.$store.dispatch('lukso/fetchVaults');
 
       console.log(fetchVaults);
-      this.vaults = fetchVaults;
-    },
-    async transferLSP7Tokens() {
-      let transferLSP7Tokens = await this.$store.dispatch(
-        'lukso/transferLSP7Tokens'
-      );
-      console.log(transferLSP7Tokens);
-      // this.profile = fetchProfile;
+      this.profile = [fetchVaults];
     },
     async createVaultOnUP() {
       let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP');
       console.log(newVaultAddress);
       this.newVaultAddress = newVaultAddress;
+    },
+
+    async balanceOf() {
+      let balanceOf = await this.$store.dispatch('lukso/balanceOf', {
+        accountAddress: this.accountAddress,
+        tokenAddress: '0xDb08A40A6Df54035984c50cC7F17ea8C03865c08',
+      });
+      console.log('balanceOf', balanceOf);
+      this.balanceOfResult = balanceOf;
+    },
+
+    async transferLSP7Token() {
+      let transferLSP7Token = await this.$store.dispatch(
+        'lukso/transferLSP7Token',
+        {
+          fromAccountAddress: '0x77fBE8872E7566555f6346ae467c937ecB89888e', //this.fromAccountAddress,
+          toAccountAddress: '0x56292D173a5E31E3DCa0387c96Af4531ceC3E6cA', // this.toAccountAddress,
+          tokenAddress: '0xEc1291846BdccB9cc2bD6b3c6bD82C924426457f',
+          amount: '0.1',
+          isFromVault: true,
+        }
+      );
+      console.log('transferLSP7Token', transferLSP7Token);
+      // this.balanceOfResult = balanceOf;
+    },
+
+    async transferLSP8Token() {
+      let transferLSP8Token = await this.$store.dispatch(
+        'lukso/transferLSP8Token',
+        {
+          fromAccountAddress: '0xb2d3fa293b1E652D00338d1518DDe5bA3c868d47', //this.fromAccountAddress,
+          toAccountAddress: '0x7b0e9c6e1873402797eE693e9F810143cc956F8E', // this.toAccountAddress,
+          tokenAddress: '0xF8085ec8633BBF60F54557e2D336a0c53089F59C',
+          tokenId: '1',
+        }
+      );
+      console.log('transferLSP8Token', transferLSP8Token);
+      // this.balanceOfResult = balanceOf;
+    },
+    async getMetadata() {
+      let getMetadata = await this.$store.dispatch('lukso/getMetadata', {
+        assetAddress: '0xF8085ec8633BBF60F54557e2D336a0c53089F59C',
+      });
+      console.log('getMetadata', getMetadata);
+      // this.balanceOfResult = balanceOf;
     },
   },
   data() {
@@ -129,6 +187,8 @@ export default {
       vaults: null,
       UPAddressToImport: null,
       newVaultAddress: null,
+      balanceOfResult: null,
+      accountAddress: null,
     };
   },
 };

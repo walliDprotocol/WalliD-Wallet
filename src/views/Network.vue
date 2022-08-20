@@ -7,9 +7,7 @@
         contain
         src="../images/logos/logo-wallid.png"
       />
-      <h1 class="T2 ml-5">
-        Create Universal Profile
-      </h1>
+      <h1 class="T2 ml-5">Create Universal Profile</h1>
 
       <div class="arrow-down-header"></div>
     </v-app-bar>
@@ -35,13 +33,11 @@
           height="50"
           max-width="50"
           contain
-          src="../images/logos/icon-up-lukso-default@3x.png"
+          src="../images/logos/icon-up-lukso-default.png"
         />
       </v-col>
       <v-col cols="12" class="py-0">
-        <p class="sub-title-fields text-left mb-3">
-          Username
-        </p>
+        <p class="sub-title-fields text-left mb-3">Username</p>
         <v-text-field
           dense
           outlined
@@ -52,9 +48,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="6">
-        <v-btn text @click="close()" class="cancel-btn">
-          Cancel
-        </v-btn>
+        <v-btn text @click="close()" class="cancel-btn"> Cancel </v-btn>
       </v-col>
       <v-col cols="6">
         <v-btn text @click="confirmDelete()" class="advance-btn">
@@ -66,14 +60,14 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress'
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
+import WalletAddress from '../components/WalletAddress';
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import IDCard from '../components/IDCard'
+import IDCard from '../components/IDCard';
 
-import { mapGetters, mapState } from 'vuex'
-import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
+import { mapGetters, mapState } from 'vuex';
+import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
 
 export default {
   components: {
@@ -91,36 +85,36 @@ export default {
     ...mapState('networks', ['currentNetwork', 'network']),
     name() {
       if (this.credential) {
-        return this.credential.credName || this.credential.assetName
+        return this.credential.credName || this.credential.assetName;
       } else if (this.profile) {
-        return this.profile.socialName
+        return this.profile.socialName;
       } else if (this.card) {
-        return this.card.idtName
+        return this.card.idtName;
       } else {
-        return null
+        return null;
       }
     },
     type() {
       if (this.credential?.assetName) {
-        return this.$t('modals.delete.web3Id')
+        return this.$t('modals.delete.web3Id');
       } else if (this.credential) {
-        return this.$t('modals.delete.credential')
+        return this.$t('modals.delete.credential');
       } else if (this.profile) {
-        return this.$t('modals.delete.profile')
+        return this.$t('modals.delete.profile');
       } else if (this.card) {
-        return this.$t('modals.delete.card')
+        return this.$t('modals.delete.card');
       } else {
-        return null
+        return null;
       }
     },
   },
   created() {
     if (this.credential) {
-      console.log(this.credential)
+      console.log(this.credential);
     } else if (this.profile) {
-      console.log(this.profile)
+      console.log(this.profile);
     } else if (this.card) {
-      console.log(this.card)
+      console.log(this.card);
     }
   },
   mounted() {},
@@ -131,40 +125,40 @@ export default {
           .dispatch(DELETE_CRED, this.credential.id)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       } else if (this.profile) {
-        console.log(this.profile)
+        console.log(this.profile);
         this.$store
           .dispatch(DELETE_PROFILE, this.profile.id)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       } else if (this.card) {
-        console.log(this.card)
+        console.log(this.card);
         this.$store
           .dispatch(DELETE_CARD, this.card.idt)
           .then(() => this.close())
           .catch((e) => {
-            console.error(e)
-          })
+            console.error(e);
+          });
       }
     },
     close() {
-      this.$store.commit('currentProfile', null)
-      this.$store.commit('setCurrentCred', null)
-      this.$store.commit('setCurrentCard', null)
+      this.$store.commit('currentProfile', null);
+      this.$store.commit('setCurrentCred', null);
+      this.$store.commit('setCurrentCard', null);
 
-      this.$emit('close')
+      this.$emit('close');
     },
   },
   data() {
     return {
       UsernameRules: [(v) => !!v || 'Please enter an username'],
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">

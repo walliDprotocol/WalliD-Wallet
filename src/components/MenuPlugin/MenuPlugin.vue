@@ -20,7 +20,7 @@
             />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="T1" style="margin-bottom: 7px;">
+            <v-list-item-title class="T1" style="margin-bottom: 7px">
               {{ domainENS || $t('menu.title') }}
             </v-list-item-title>
             <v-list-item-subtitle class="subtitle">
@@ -106,29 +106,29 @@
         <v-divider class="mt-2"></v-divider>
       </v-list>
     </v-navigation-drawer>
-    <ViewActivityModal v-if="showViewActivityModal" />
+    <!-- <ViewActivityModal v-if="showViewActivityModal" /> -->
   </div>
 </template>
 
 <script>
-import IconWallet from '../../images/icon-wallet-unselected.vue'
-import IconSites from '../../images/icon-connect-unselected.vue'
-import IconSettings from '../../images/icon-settings-unselected.vue'
-import IconAbout from '../../images/icon-about-unselected.vue'
-import IconLock from '../../images/icon-logout-unselected.vue'
-import IconWalletConnect from '../../images/icons/icon-walletconnect.vue'
-import IconActivity from '../../images/icon-activity.vue'
-import ViewActivityModal from '../../modals/ViewActivityModal'
+import IconWallet from '../../images/icon-wallet-unselected.vue';
+import IconSites from '../../images/icon-connect-unselected.vue';
+import IconSettings from '../../images/icon-settings-unselected.vue';
+import IconAbout from '../../images/icon-about-unselected.vue';
+import IconLock from '../../images/icon-logout-unselected.vue';
+import IconWalletConnect from '../../images/icons/icon-walletconnect.vue';
+import IconActivity from '../../images/icon-activity.vue';
+// import ViewActivityModal from '../../modals/ViewActivityModal'
 
-import { LOCK_WALLET } from '../../store/actions'
+import { LOCK_WALLET } from '../../store/actions';
 import {
   DETAILS,
   SITES,
   SETTINGS,
   ABOUT,
   WALLET_CONNECT,
-} from '../../router/routes'
-import { mapState } from 'vuex'
+} from '../../router/routes';
+import { mapState } from 'vuex';
 
 export default {
   props: ['address', 'showMenu'],
@@ -140,7 +140,7 @@ export default {
     IconLock,
     IconWalletConnect,
     IconActivity,
-    ViewActivityModal,
+    // ViewActivityModal,
   },
   computed: {
     ...mapState({
@@ -150,53 +150,53 @@ export default {
     }),
   },
   created() {
-    this.DETAILS = DETAILS
-    this.SITES = SITES
-    this.SETTINGS = SETTINGS
-    this.ABOUT = ABOUT
-    this.WALLET_CONNECT = WALLET_CONNECT
-    console.log('walletaddress', this.walletAddress)
+    this.DETAILS = DETAILS;
+    this.SITES = SITES;
+    this.SETTINGS = SETTINGS;
+    this.ABOUT = ABOUT;
+    this.WALLET_CONNECT = WALLET_CONNECT;
+    console.log('walletaddress', this.walletAddress);
   },
   watch: {},
   mounted() {},
   methods: {
     close(input) {
       if (!input) {
-        this.$emit('close', !this.showMenu)
+        this.$emit('close', !this.showMenu);
       }
     },
 
     // se estiver ja na pagina fechar o menu
     goRoute(route) {
-      this.debug('Menu Option: ', route)
-      this.debug(this.$route.path)
-      this.debug(this.$route?.path == route)
-      this.$emit('close', !this.showMenu)
+      this.debug('Menu Option: ', route);
+      this.debug(this.$route.path);
+      this.debug(this.$route?.path == route);
+      this.$emit('close', !this.showMenu);
       if (this.$route.path != route) {
-        this.debug(this.showMenu)
-        this.$router.push(route)
+        this.debug(this.showMenu);
+        this.$router.push(route);
       }
     },
     details() {
-      this.debug('Detail Page')
-      this.$router.push('/details')
+      this.debug('Detail Page');
+      this.$router.push('/details');
     },
     sites() {
-      this.debug('sites Page')
-      this.$router.push('/sites')
+      this.debug('sites Page');
+      this.$router.push('/sites');
     },
     settings() {
-      this.debug('settings Page')
-      this.$router.push('/settings')
+      this.debug('settings Page');
+      this.$router.push('/settings');
     },
     about() {
-      this.debug('about Page')
-      this.$router.push('/about')
+      this.debug('about Page');
+      this.$router.push('/about');
     },
     lock() {
-      this.debug('lock wallet')
+      this.debug('lock wallet');
 
-      this.$store.dispatch(LOCK_WALLET)
+      this.$store.dispatch(LOCK_WALLET);
 
       // this.$API
       //   .lockApp()
@@ -206,14 +206,14 @@ export default {
       //   });
     },
     openViewActivityModal() {
-      this.$store.commit('setCurrentCred', null)
-      this.$store.commit('showViewActivityModal', true)
+      this.$store.commit('setCurrentCred', null);
+      this.$store.commit('showViewActivityModal', true);
     },
   },
   data() {
-    return {}
+    return {};
   },
-}
+};
 </script>
 
 <style lang="scss">
