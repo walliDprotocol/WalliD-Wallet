@@ -5,6 +5,7 @@ import Login from '../views/Login';
 import Create from '../views/Create';
 import Restore from '../views/Restore';
 import Import from '../views/Import';
+import ImportPK from '../views/ImportPK';
 import Details from '../views/Details';
 import Sites from '../views/ConnectedSites';
 import Settings from '../views/Settings';
@@ -21,7 +22,6 @@ import WALLET_CONNECT_VIEW from '../views/WalletConnect';
 
 import SHARE_PROFILE_VIEW from '../views/ShareProfile';
 import SOCIAL_PROFILE_VIEW from '../views/SocialProfile';
-
 import LuksoTestpageView from '../views/LuksoTestpage';
 
 import Proof from '../views/Proof';
@@ -80,6 +80,11 @@ let router = new Router({
           path: '/import',
           name: 'Import',
           component: Import,
+        },
+        {
+          path: '/importpk',
+          name: 'ImportPK',
+          component: ImportPK,
         },
         {
           path: '/details',
@@ -214,7 +219,8 @@ router.beforeEach((to, from, next) => {
     to.path == '/create' ||
     to.path == '/restore' ||
     to.path == '/sites' ||
-    to.path == '/import'
+    to.path == '/import' ||
+    to.path == '/importpk'
   ) {
     debug('Login/Create/Restore Path');
     return next();

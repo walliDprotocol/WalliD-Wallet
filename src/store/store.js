@@ -152,6 +152,8 @@ export default new Vuex.Store({
     identities: (state) => state.identities,
     credentials: (state) => state.credentials,
     assets: (state) => state.assets,
+    vaults: (state) => state.vaults,
+    currentVault: (state) => state.currentVault,
     currentCred: (state) => state.currentCred,
     profiles: (state) => {
       return (state.profiles || []).filter((p) => p.socialName != 'MyWalliD');
@@ -922,6 +924,9 @@ export default new Vuex.Store({
     },
     showSendAssetModal(state, value) {
       state.showSendAssetModal = value;
+    },
+    changeCurrentVault(state, value) {
+      state.currentVault = value;
     },
     currentProfile(state, value) {
       state.currentProfile = value;

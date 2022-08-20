@@ -12,95 +12,14 @@
             </h2>
           </div>
           <h2 class="sub-title-fields text-left">
-            {{ $t('import.subtitle') }}
+            Imported accounts will not be associated with your originally
+            created WalliD wallet account seedphrase.
           </h2>
         </v-col>
-
-        <v-col cols="12" class="text-left pb-1 pt-2">
-          <label class="sub-title-fields">
-            {{ $t('import.seedPhrase[0]') }}
-          </label>
-          <v-text-field
-            v-model="privateKey"
-            solo
-            flat
-            class="password-input seed-phrase mt-1"
-            :class="{
-              'error-seed-phrase': errorSeedPhrase,
-            }"
-            name="input-password-login"
-            :type="'password'"
-            hide-details
-          >
-          </v-text-field>
-          <v-text-field
-            v-model="seedPhrase"
-            solo
-            flat
-            @input="validSeedPhrase"
-            v-show="showSeedPhrase"
-            class="password-input seed-phrase mt-1"
-            :class="{
-              'error-seed-phrase': errorSeedPhrase,
-            }"
-            name="input-password-login"
-            :type="'password'"
-            hide-details
-          >
-            <template v-slot:append>
-              <v-tooltip content-class="seed-phrase-tooltip" bottom>
-                <template v-slot:activator="{ on }">
-                  <div v-on="on" @click="show">
-                    <EyeSelected v-show="!showSeedPhrase"></EyeSelected>
-                    <EyeUnselected v-show="showSeedPhrase"></EyeUnselected>
-                  </div>
-                </template>
-                <div class="arrow-seed-tooltip"></div>
-                <p v-show="showSeedPhrase">
-                  {{ $t('import.seedPhrase[1]') }}
-                </p>
-                <p v-show="!showSeedPhrase">
-                  {{ $t('import.seedPhrase[2]') }}
-                </p>
-              </v-tooltip>
-            </template>
-          </v-text-field>
-          <v-textarea
-            v-show="!showSeedPhrase"
-            @input="validSeedPhrase"
-            class="seed-phrase-revealed mt-1"
-            no-resize
-            rows="2"
-            hide-details
-            solo
-            :class="{
-              'error-seed-phrase': errorSeedPhrase,
-            }"
-            flat
-            v-model="seedPhrase"
-          >
-            <template v-slot:append>
-              <v-tooltip content-class="seed-phrase-tooltip" bottom>
-                <template v-slot:activator="{ on }">
-                  <div v-on="on" @click="show">
-                    <EyeSelected v-show="!showSeedPhrase"></EyeSelected>
-                    <EyeUnselected v-show="showSeedPhrase"></EyeUnselected>
-                  </div>
-                </template>
-                <div class="arrow-seed-tooltip"></div>
-                <p v-show="showSeedPhrase">
-                  {{ $t('import.seedPhrase[1]') }}
-                </p>
-                <p v-show="!showSeedPhrase">
-                  {{ $t('import.seedPhrase[2]') }}
-                </p>
-              </v-tooltip>
-            </template>
-          </v-textarea>
-          <p class="error--text mt-2">{{ seedPhraseErrorMessage }}</p>
-        </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
-          <label class="sub-title-fields"> Your private key </label>
+          <label class="sub-title-fields">
+            Your private key
+          </label>
           <v-text-field
             v-model="password"
             solo
@@ -175,15 +94,6 @@
           >
             {{ $t('import.button') }}
           </v-btn>
-          <v-btn
-            id="import-button"
-            text
-            :disabled="isDisabled"
-            @click="importFromPrivateKey"
-            class="advance-btn"
-          >
-            {{ 'importFromPrivateKey' }}
-          </v-btn>
         </v-col>
       </form>
     </v-row>
@@ -209,11 +119,11 @@
 </template>
 
 <script>
-import ArrowBack from '../images/icon-arrow-back.vue';
-import EyeUnselected from '../images/icon-eye-unselected.vue';
-import EyeSelected from '../images/icon-eye-selected.vue';
-import Sucessfully from '../images/icon-sucessfully.vue';
-import { CREATE_NEW_WALLET, IMPORT_PRIVATE_KEY } from '../store/actions';
+import ArrowBack from '../images/icon-arrow-back.vue'
+import EyeUnselected from '../images/icon-eye-unselected.vue'
+import EyeSelected from '../images/icon-eye-selected.vue'
+import Sucessfully from '../images/icon-sucessfully.vue'
+import { CREATE_NEW_WALLET } from '../store/actions'
 
 export default {
   components: {
@@ -225,12 +135,11 @@ export default {
   computed: {
     isDisabled() {
       return (
-        !this.privateKey ||
         this.errorSeedPhrase ||
         !this.password ||
         !this.passwordMatch ||
         !this.termsWallet
-      );
+      )
     },
   },
 
@@ -248,53 +157,32 @@ export default {
       errorSeedPhrase: false,
       seedPhraseErrorMessage: '',
       termsWallet: false,
-
-      privateKey: null,
-    };
+    }
   },
   mounted() {},
   methods: {
     goToLogin() {
-      this.$router.push('/login');
+      this.$router.push('/login')
     },
     validSeedPhrase() {
-      this.seedPhrase = this.seedPhrase.trim();
-      let valid = this.seedPhrase.split(' ').length == 12;
-      this.errorSeedPhrase = !valid;
+      this.seedPhrase = this.seedPhrase.trim()
+      let valid = this.seedPhrase.split(' ').length == 12
+      this.errorSeedPhrase = !valid
       this.seedPhraseErrorMessage = valid
         ? ''
-        : this.$t('restore.seedPhrase[3]');
+        : this.$t('restore.seedPhrase[3]')
       if (valid) {
-        this.scrollInto('import-form', 120);
+        this.scrollInto('import-form', 120)
       }
-      return valid;
+      return valid
     },
 
     show() {
-      this.showSeedPhrase = !this.showSeedPhrase;
+      this.showSeedPhrase = !this.showSeedPhrase
     },
     stepBack() {
-      this.$router.push('/home');
+      this.$router.push('/home')
     },
-
-    importFromPrivateKey() {
-      this.$store
-        .dispatch(IMPORT_PRIVATE_KEY, {
-          privateKey: this.privateKey,
-          password: this.password,
-        })
-        .then(() => {
-          this.imported = true;
-        })
-        .catch((e) => {
-          // if (e == this.INVALID) {
-          this.errorSeedPhrase = true;
-          this.seedPhraseErrorMessage = 'Invalid private key'; //this.$t('restore.seedPhrase[4]');
-          // }
-          console.error(e);
-        });
-    },
-
     restorePassword() {
       this.$store
         .dispatch(CREATE_NEW_WALLET, {
@@ -302,42 +190,42 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.imported = true;
+          this.imported = true
         })
         .catch((e) => {
-          if (e == this.INVALID) {
-            this.errorSeedPhrase = true;
-            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]');
+          if ((e = this.INVALID)) {
+            this.errorSeedPhrase = true
+            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]')
           }
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
 
     checkForm() {
-      this.passwordError = '';
-      this.passwordMatchError = '';
-      this.privateKeyError = '';
+      this.passwordError = ''
+      this.passwordMatchError = ''
+      this.privateKeyError = ''
 
       if (this.privateKey) {
         //is not valid this.passwordKeyError = 'Private key not valid'
       }
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = 'Password not long enough';
+        this.passwordError = 'Password not long enough'
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = 'Passwords don’t match';
+        this.passwordMatchError = 'Passwords don’t match'
       }
 
       if (this.passwordError || this.passwordMatchError) {
-        return;
+        return
       }
     },
 
     refreshState() {},
   },
-};
+}
 </script>
 
 <style lang="scss">

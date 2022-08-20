@@ -71,6 +71,15 @@
                   {{ $t('create.stepper[' + step + '].buttonImport') }}
                 </p>
               </div>
+              <div
+                class="flow-selector"
+                @mouseover="IconImport2 = 'IconImportHover'"
+                @mouseout="IconImport2 = 'IconImport'"
+                @click="$router.push('/importpk')"
+              >
+                <component :is="IconImport2" class=""></component>
+                <p>Import using Private Key</p>
+              </div>
             </v-col>
           </v-row>
         </v-container>
@@ -186,8 +195,8 @@
                 >{{ $t('create.stepper[' + step + '].seed[0]') }}
                 <span v-show="!seedLocked">
                   {{ $t('create.stepper[' + step + '].seed[1]') }}
-                </span></label
-              >
+                </span>
+              </label>
 
               <div
                 v-show="seedLocked"
@@ -386,6 +395,7 @@ export default {
       passwordMatchError: '',
       IconAdd: 'IconAdd',
       IconImport: 'IconImport',
+      IconImport2: 'IconImport',
     };
   },
 };
