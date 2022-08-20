@@ -1,39 +1,40 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Home from '../views/Home';
-import Login from '../views/Login';
-import Create from '../views/Create';
-import Restore from '../views/Restore';
-import Import from '../views/Import';
-import Details from '../views/Details';
-import Sites from '../views/ConnectedSites';
-import Settings from '../views/Settings';
-import About from '../views/About';
-import Request from '../views/Request';
-import MainContainer from '../views/MainContainer';
-import FAQs from '../views/FAQs';
-import Terms from '../views/Terms';
-import Card from '../views/Card';
-import Credential from '../views/Credential';
-import Network from '../views/Network';
+import Vue from 'vue'
+import Router from 'vue-router'
+import Home from '../views/Home'
+import Login from '../views/Login'
+import Create from '../views/Create'
+import Restore from '../views/Restore'
+import Import from '../views/Import'
+import ImportPK from '../views/ImportPK'
+import Details from '../views/Details'
+import Sites from '../views/ConnectedSites'
+import Settings from '../views/Settings'
+import About from '../views/About'
+import Request from '../views/Request'
+import MainContainer from '../views/MainContainer'
+import FAQs from '../views/FAQs'
+import Terms from '../views/Terms'
+import Card from '../views/Card'
+import Credential from '../views/Credential'
+import Network from '../views/Network'
 
-import WALLET_CONNECT_VIEW from '../views/WalletConnect';
+import WALLET_CONNECT_VIEW from '../views/WalletConnect'
 
-import SHARE_PROFILE_VIEW from '../views/ShareProfile';
-import SOCIAL_PROFILE_VIEW from '../views/SocialProfile';
+import SHARE_PROFILE_VIEW from '../views/ShareProfile'
+import SOCIAL_PROFILE_VIEW from '../views/SocialProfile'
 
-import Proof from '../views/Proof';
+import Proof from '../views/Proof'
 
-import store from '../store';
-import mixinPlugin from '../scripts/util';
+import store from '../store'
+import mixinPlugin from '../scripts/util'
 
-import SeedPhrase from '../components/RevealSeedPhrase';
-import PrivKey from '../components/RevealPrivateKey';
+import SeedPhrase from '../components/RevealSeedPhrase'
+import PrivKey from '../components/RevealPrivateKey'
 
-import { SHARE_PROFILE, SOCIAL_PROFILE, WALLET_CONNECT } from './routes';
+import { SHARE_PROFILE, SOCIAL_PROFILE, WALLET_CONNECT } from './routes'
 
-const debug = mixinPlugin.methods.debug;
-Vue.use(Router);
+const debug = mixinPlugin.methods.debug
+Vue.use(Router)
 
 let router = new Router({
   mode: 'history',
@@ -73,6 +74,11 @@ let router = new Router({
           path: '/import',
           name: 'Import',
           component: Import,
+        },
+        {
+          path: '/importpk',
+          name: 'ImportPK',
+          component: ImportPK,
         },
         {
           path: '/details',
@@ -149,7 +155,7 @@ let router = new Router({
           component: Proof,
           params: true,
         },
-                {
+        {
           path: '/network',
           name: 'Network',
           component: Network,
@@ -167,32 +173,32 @@ let router = new Router({
       },
     },
   ],
-});
+})
 router.beforeEach((to, from, next) => {
-  const isUnlocked = store.getters.unlocked;
-  const completedOnboarding = store.getters.completedOnboarding;
-  debug('completedOnboarding', completedOnboarding);
-  debug('toPath', to.path);
-  debug('fromPath', from.path);
+  const isUnlocked = store.getters.unlocked
+  const completedOnboarding = store.getters.completedOnboarding
+  debug('completedOnboarding', completedOnboarding)
+  debug('toPath', to.path)
+  debug('fromPath', from.path)
 
-  debug('isUnlocked', isUnlocked);
+  debug('isUnlocked', isUnlocked)
 
   if (to.path == '/popup.html' || to.path == '/home') {
-    const identities = store.getters.identities || [];
-    const credentials = store.getters.credentials || [];
-    const profiles = store.getters.profiles || [];
+    const identities = store.getters.identities || []
+    const credentials = store.getters.credentials || []
+    const profiles = store.getters.profiles || []
     switch (true) {
       case profiles.length > 0:
-        store.commit('currentTab', 'tab-2');
-        break;
+        store.commit('currentTab', 'tab-2')
+        break
       case identities.length > 0:
-        store.commit('currentTab', 'tab-1');
-        break;
+        store.commit('currentTab', 'tab-1')
+        break
       case credentials.length > 0:
-        store.commit('currentTab', 'tab-3');
-        break;
+        store.commit('currentTab', 'tab-3')
+        break
       default:
-        break;
+        break
     }
   }
 
@@ -202,32 +208,33 @@ router.beforeEach((to, from, next) => {
     to.path == '/create' ||
     to.path == '/restore' ||
     to.path == '/sites' ||
-    to.path == '/import'
+    to.path == '/import' ||
+    to.path == '/importpk'
   ) {
-    debug('Login/Create/Restore Path');
-    return next();
+    debug('Login/Create/Restore Path')
+    return next()
   }
 
   if (!isUnlocked && completedOnboarding && to.path !== '/login') {
-    return next('/login');
+    return next('/login')
   }
 
   if (!completedOnboarding && to.path !== '/create') {
-    return next('/create');
+    return next('/create')
   }
 
   if (to.path == '/' || to.path == '/popup.html') {
-    debug('Home Path');
-    return next({ path: '/home' });
+    debug('Home Path')
+    return next({ path: '/home' })
   }
   const isHandlingPermissionsRequest =
-    to.path == 'request' || store.getters.getRequest;
-  debug('Has Requests ', isHandlingPermissionsRequest);
+    to.path == 'request' || store.getters.getRequest
+  debug('Has Requests ', isHandlingPermissionsRequest)
   if (isHandlingPermissionsRequest && to.path !== '/request') {
-    next({ path: '/request', params: { hideAppHeader: true } });
+    next({ path: '/request', params: { hideAppHeader: true } })
   } else {
-    next();
+    next()
   }
-});
+})
 
-export default router;
+export default router

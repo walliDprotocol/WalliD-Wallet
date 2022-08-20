@@ -75,11 +75,11 @@
               </div>
               <div
                 class="flow-selector"
-                @mouseover="IconImport = 'IconImportHover'"
-                @mouseout="IconImport = 'IconImport'"
-                @click="$router.push('/import')"
+                @mouseover="IconImport2 = 'IconImportHover'"
+                @mouseout="IconImport2 = 'IconImport'"
+                @click="$router.push('/importpk')"
               >
-                <component :is="IconImport" class=""></component>
+                <component :is="IconImport2" class=""></component>
                 <p>
                   Import using Private Key
                 </p>
@@ -399,6 +399,7 @@ export default {
       passwordMatchError: '',
       IconAdd: 'IconAdd',
       IconImport: 'IconImport',
+      IconImport2: 'IconImport',
     }
   },
 }

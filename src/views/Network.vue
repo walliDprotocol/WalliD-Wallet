@@ -1,127 +1,139 @@
 <template>
-  <v-container class="text-left">
-    <v-row>
-      <v-col cols="12" class="pb-2">
-        <div class="back-arrow mb-6">
-          <v-btn text @click="$router.go('-1')" class="back-btn">
-            <ArrowBack />
-          </v-btn>
-          <h2 class="T1">
-            Lukso Universal Profile
-          </h2>
-        </div>
-        <h3 class="sub-title-fields">
-          You’ll need an Universal Profile to interact with Lukso network.
-          Create a new Universal Profile or import an existing using it’s
-          private key.
-        </h3>
-      </v-col>
-      <v-col cols="12" class="pt-7">
-        <div
-          class="flow-selector d-flex align-center justify-center pa-8"
-          style="
-            border: 1px solid #b8b9bb;
-            border-radius: 6px;
-            font-size: 15px;
-          "
-          @mouseover="IconAdd = 'IconAddHover'"
-          @mouseout="IconAdd = 'IconAdd'"
-          @click=";(buttonClicked = 'Create'), (showModal = true)"
+  <v-stepper class="stepper-create pa-2 mt-n2" v-model="step">
+    <v-stepper-items>
+      <v-stepper-content step="1">
+        <v-container class="text-left">
+          <v-row>
+            <v-col cols="12" class="pb-2">
+              <div class="back-arrow mb-6">
+                <v-btn text @click="$router.go('-1')" class="back-btn">
+                  <ArrowBack />
+                </v-btn>
+                <h2 class="T1">
+                  Lukso Universal Profile
+                </h2>
+              </div>
+              <h3 class="sub-title-fields">
+                You’ll need an Universal Profile to interact with Lukso network.
+                Create a new Universal Profile or import an existing using it’s
+                private key.
+              </h3>
+            </v-col>
+            <v-col cols="12" class="pt-7">
+              <!-- Remove on click, add again if user clicks 
+              outside plugin login and doesnt sign in  -->
+              <div
+                class="flow-selector"
+                @mouseover="IconAdd = 'IconAddHover'"
+                @mouseout="IconAdd = 'IconAdd'"
+                @click=";(step = 2), (path = 'create')"
+              >
+                <component :is="IconAdd" class=""></component>
+                <p>
+                  Create an Universal Profile
+                </p>
+              </div>
+              <div
+                class="flow-selector"
+                @mouseover="IconImport = 'IconImportHover'"
+                @mouseout="IconImport = 'IconImport'"
+                @click=";(step = 2), (path = 'import')"
+              >
+                <component :is="IconImport" class=""></component>
+                <p>
+                  Import an Universal Profile
+                </p>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <a
+                href="https://docs.lukso.tech/standards/universal-profile/introduction/"
+                target="_blank"
+                style="
+                  text-decoration: none;
+                  color: #009fb1;
+                  font-size: 12px;
+                  font-weight: 500;
+                "
+              >
+                Know more about Lukso’s Universal Profiles
+              </a>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <v-form
+          class="cmd-form"
+          ref="form"
+          @submit.prevent="setPassword"
+          lazy-validation
+          style="height: 520px;"
         >
-          <component :is="IconAdd" class=""></component>
-          <p>
-            Create an Universal Profile
-          </p>
-        </div>
-        <div
-          class="flow-selector d-flex align-center justify-center pa-8"
-          style="
-            border: 1px solid #b8b9bb;
-            border-radius: 6px;
-            font-size: 15px;
-          "
-          @mouseover="IconImport = 'IconImportHover'"
-          @mouseout="IconImport = 'IconImport'"
-          @click=";(buttonClicked = 'Import'), (showModal = true)"
-        >
-          <component :is="IconImport" class=""></component>
-          <p>
-            Import an existing Universal Profile
-          </p>
-        </div>
-      </v-col>
-      <v-col cols="12">
-        <a
-          style="
-            font-size: 12px;
-            font-weight: 500;
-            color: #009fb1;
-            text-decoration: none;
-          "
-          href="https://docs.lukso.tech/standards/universal-profile/introduction/"
-          target="_blank"
-        >
-          Know more about Lukso’s Universal Profiles
-        </a>
-      </v-col>
-    </v-row>
-    <v-form
-      v-if="showModal"
-      class="cmd-form"
-      ref="form"
-      @submit.prevent="setPassword"
-      lazy-validation
-      style="height: 520px; position: fixed; top: 0; bottom: 0;"
-    >
-      <v-container class="text-left">
-        <v-row>
-          <v-col cols="12" class="pb-2">
-            <div class="back-arrow mb-6">
-              <v-btn text @click="stepBack" class="back-btn">
-                <ArrowBack />
-              </v-btn>
-              <h2 class="T1">
-                {{ buttonClicked + ' an Universal Profile' }}
-              </h2>
-            </div>
-            <!--                 <h3 class="sub-title-fields">
-                  {{ buttonClicked === 'Create' ? 'Username' : 'Universal Profile Address' }}
-                </h3> -->
-          </v-col>
-          <v-col class="d-flex justify-center">
-            <v-img src="../images/icons/icon-up-lukso-default@3x.png"></v-img>
-          </v-col>
-          <v-col cols="12" class="pt-0 pb-2">
-            <label class="sub-title-fields">
-              {{
-                buttonClicked === 'Create'
-                  ? 'Username'
-                  : 'Universal Profile Address'
-              }}
-            </label>
-            <v-text-field
-              v-model="password"
-              class="password-input mt-1"
-              flat
-              solo
-              @input="checkForm"
-              :rules="universalProfileRules"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6" class="pt-1">
-            <v-btn text @click="close()" class="cancel-btn">
-              Cancel
-            </v-btn>
-          </v-col>
-          <v-col cols="6" class="pt-1">
-            <v-btn text @click="confirmDelete()" class="advance-btn">
-              {{ buttonClicked + ' Profile' }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-form>
-  </v-container>
+          <v-container class="text-left">
+            <v-row>
+              <v-col cols="12" class="pb-2">
+                <div class="back-arrow mb-6">
+                  <v-btn text @click="stepBack" class="back-btn">
+                    <ArrowBack />
+                  </v-btn>
+                  <h2 class="T1">
+                    {{
+                      (path === 'create' ? 'Create ' : 'Import ') +
+                      'an Universal Profile'
+                    }}
+                  </h2>
+                </div>
+              </v-col>
+              <v-col cols="12" class="d-flex align-center justify-center">
+                <v-img
+                  src="../images/logos/icon-up-lukso-default@2x.png"
+                  style="max-width: 64px;"
+                ></v-img>
+              </v-col>
+              <v-col cols="12" class="pt-0 pb-2">
+                <label class="sub-title-fields">
+                  {{
+                    path === 'create' ? 'Username' : 'Universal Profile Address'
+                  }}
+                </label>
+                <v-text-field
+                  v-model="password"
+                  class="password-input mt-1"
+                  flat
+                  solo
+                  @input="checkForm"
+                  :error-messages="validAddressError"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" class="pt-1">
+                <v-btn text @click="step = 1" class="cancel-btn">
+                  Cancel
+                </v-btn>
+              </v-col>
+              <v-col cols="6" class="pt-1">
+                <v-btn
+                  text
+                  @click="
+                    ''
+
+
+                  "
+                  class="advance-btn"
+                >
+                  {{ (path === 'create' ? 'Create ' : 'Import ') + 'Profile' }}
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-stepper-content>
+    </v-stepper-items>
+  </v-stepper>
 </template>
 
 <script>
@@ -185,38 +197,13 @@ export default {
         })
     },
     checkForm() {
-      this.passwordError = ''
-      this.passwordMatchError = ''
+      this.validAddressError = ''
 
-      if (this.password && this.password.length < 8) {
-        this.passwordError = this.$t('passwordErrors.lenght')
-      }
-
-      if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = this.$t('passwordErrors.match')
-      }
-
-      if (this.passwordError || this.passwordMatchError) {
+      if (this.path === 'import' /* && is valid address */) {
+        this.validAddressError = 'Please enter a valid address'
+      } else {
         return
       }
-    },
-
-    setPassword() {
-      this.$store
-        .dispatch(GENERATE_NEW_SEED_PHRASE, this.password)
-        .then((seed) => {
-          this.seedLocked = true
-          this.seedPhrase = seed
-          this.step += 1
-        })
-        .catch((e) => {
-          console.error(e)
-        })
-    },
-
-    goToLogin() {
-      API.eventProxy('wallid_wallet_done')
-      this.$router.push('/login')
     },
   },
   data() {
@@ -224,19 +211,11 @@ export default {
       step: 1, // 1
       termsWallet: false,
       seedLocked: true,
-      // Pass words as a string
-      seedPhrase: '',
-      password: '',
-      passwordMatch: '',
-      passwordError: '',
-      passwordMatchError: '',
+      validAddressError: '',
       IconAdd: 'IconAdd',
       IconImport: 'IconImport',
-      buttonClicked: '',
-      showModal: false,
-      universalProfileError: [
-        (value) => !!value || 'Please eneter a valid address',
-      ],
+      IconImport2: 'IconImport',
+      path: '',
     }
   },
 }

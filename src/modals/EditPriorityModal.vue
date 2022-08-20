@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" class="dialog">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn text class="advance-btn">
+      <v-btn text class="advance-btn" @click="dialog = true">
         Confirm
       </v-btn>
     </template>
@@ -20,11 +20,7 @@
             @click="dialog = false"
           ></v-img>
         </v-col>
-        <v-col
-          cols="12"
-          class="mt-6 pa-5 d-flex align-center flex-column"
-          style="background-color: #f7f7f7; border-radius: 3px;"
-        >
+        <v-col cols="12" class="mt-6 pa-5 d-flex align-center flex-column">
           <v-img v-if="success" contain src="../images/img/a-a.png" />
           <v-img
             v-else
@@ -34,7 +30,10 @@
           <p class="mt-1" style="font-size: 20px; font-weight: 800;">
             {{ success ? assetTitle + 'sent!' : 'Unable to send' }}
           </p>
-          <p class="mt-1" style="font-size: 16px; font-weight: 600;">
+          <p
+            class="mt-1"
+            style="font-size: 16px; font-weight: 600; max-width: 341px;"
+          >
             {{
               success
                 ? 'You’ve successfully sent ' +
@@ -59,17 +58,12 @@
 </template>
 
 <script>
-import IconArrowDropdown from '../images/icon-arrow-dropdown-blue.vue'
-
 import { mapGetters } from 'vuex'
 
 export default {
   props: ['success', 'recipientAddress'],
-  components: {
-    IconArrowDropdown,
-  },
   computed: {
-    ...mapGetters(['currentCred']),
+    ...mapGetters(['currentVault']),
     assetTitle() {
       if (
         this.currentCred.assetType === 'Fungible Token' ||
@@ -88,7 +82,8 @@ export default {
   data() {
     return {
       dialog: false,
-    },
-}
+      assetTitle: 'test',
+    }
+  },
 }
 </script>
