@@ -24,7 +24,7 @@
                 class="flow-selector"
                 @mouseover="IconAdd = 'IconAddHover'"
                 @mouseout="IconAdd = 'IconAdd'"
-                @click="(step = 2), (path = 'create');"
+                @click="(step = 2), (path = 'create')"
               >
                 <component :is="IconAdd" class=""></component>
                 <p>Create an Universal Profile</p>
@@ -33,7 +33,7 @@
                 class="flow-selector"
                 @mouseover="IconImport = 'IconImportHover'"
                 @mouseout="IconImport = 'IconImport'"
-                @click="(step = 2), (path = 'import');"
+                @click="(step = 2), (path = 'import')"
               >
                 <component :is="IconImport" class=""></component>
                 <p>Import an Universal Profile</p>
@@ -59,64 +59,59 @@
         </v-container>
       </v-stepper-content>
       <v-stepper-content step="2">
-        <v-form
-          class="cmd-form"
-          ref="form"
-          @submit.prevent="setPassword"
-          lazy-validation
-          style="height: 520px"
-        >
-          <v-container class="text-left">
-            <v-row>
-              <v-col cols="12" class="pb-2">
-                <div class="back-arrow mb-6">
-                  <v-btn text @click="stepBack" class="back-btn">
-                    <ArrowBack />
-                  </v-btn>
-                  <h2 class="T1">
-                    {{
-                      (path === 'create' ? 'Create ' : 'Import ') +
-                      'an Universal Profile'
-                    }}
-                  </h2>
-                </div>
-              </v-col>
-              <v-col cols="12" class="d-flex align-center justify-center">
-                <v-img
-                  src="../images/logos/icon-up-lukso-default@2x.png"
-                  style="max-width: 64px"
-                ></v-img>
-              </v-col>
-              <v-col cols="12" class="pt-0 pb-2">
-                <label class="sub-title-fields">
+        <v-container class="text-left">
+          <v-row>
+            <v-col cols="12" class="pb-2">
+              <div class="back-arrow mb-6">
+                <v-btn text @click="stepBack" class="back-btn">
+                  <ArrowBack />
+                </v-btn>
+                <h2 class="T1">
                   {{
-                    path === 'create' ? 'Username' : 'Universal Profile Address'
+                    (path === 'create' ? 'Create ' : 'Import ') +
+                    'an Universal Profile'
                   }}
-                </label>
-                <v-text-field
-                  v-model="password"
-                  class="password-input mt-1"
-                  flat
-                  solo
-                  @input="checkForm"
-                  :error-messages="validAddressError"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" class="pt-1">
-                <v-btn text @click="step = 1" class="cancel-btn">
-                  Cancel
-                </v-btn>
-              </v-col>
-              <v-col cols="6" class="pt-1">
-                <v-btn text @click="'';" class="advance-btn">
-                  {{ (path === 'create' ? 'Create ' : 'Import ') + 'Profile' }}
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-form>
+                </h2>
+              </div>
+            </v-col>
+            <v-col cols="12" class="d-flex align-center justify-center">
+              <v-img
+                src="../images/logos/icon-up-lukso-default@2x.png"
+                style="max-width: 64px"
+              ></v-img>
+            </v-col>
+            <v-col cols="12" class="pt-0 pb-2">
+              <label class="sub-title-fields">
+                {{
+                  path === 'create' ? 'Username' : 'Universal Profile Address'
+                }}
+              </label>
+              <v-text-field
+                v-model="username"
+                class="password-input mt-1"
+                flat
+                solo
+                @input="checkForm"
+                :error-messages="validAddressError"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6" class="pt-1">
+              <v-btn text @click="step = 1" class="cancel-btn"> Cancel </v-btn>
+            </v-col>
+            <v-col cols="6" class="pt-1">
+              <v-btn
+                :loading="isLoading"
+                text
+                @click="setupUniversalProfile"
+                class="advance-btn"
+              >
+                {{ (path === 'create' ? 'Create ' : 'Import ') + 'Profile' }}
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -158,6 +153,7 @@ export default {
       this.step += 1;
     },
     stepBack() {
+      this.username = null;
       this.step -= 1;
     },
     startOnboarding() {
@@ -169,23 +165,35 @@ export default {
     setReminder() {
       this.createWallet();
     },
-    createWallet() {
-      this.$store
-        .dispatch(CREATE_NEW_WALLET, {
-          seed: this.seedPhrase,
-          password: this.password,
-        })
-        .then(() => {
-          this.step = 6;
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+    async setupUniversalProfile() {
+      this.isLoading = true;
+      let myUPAddress;
+      this.validAddressError = '';
+      if (this.path === 'import') {
+        let { error, myUPAddress } = await this.$store.dispatch(
+          'lukso/importUniversalProfile',
+          this.username
+        );
+        console.log(error);
+        if (error) this.validAddressError = error;
+      } else {
+        myUPAddress = await this.$store.dispatch(
+          'lukso/createUniversalProfile',
+          { username: this.username }
+        );
+      }
+      if (myUPAddress) this.$router.go('-1');
+      console.log(myUPAddress);
+
+      this.isLoading = false;
     },
     checkForm() {
       this.validAddressError = '';
 
-      if (this.path === 'import' /* && is valid address */) {
+      if (
+        this.path === 'import' &&
+        !this.validateAddress(this.username).isValid
+      ) {
         this.validAddressError = 'Please enter a valid address';
       } else {
         return;
@@ -194,9 +202,10 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       step: 1, // 1
       termsWallet: false,
-      seedLocked: true,
+      username: '',
       validAddressError: '',
       IconAdd: 'IconAdd',
       IconImport: 'IconImport',
@@ -209,7 +218,7 @@ export default {
 
 <style lang="scss">
 .stepper-create {
-  box-shadow: none;
+  box-shadow: none !important;
   .flow-selector {
     padding: 24px;
     border-radius: 6px;

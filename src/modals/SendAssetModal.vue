@@ -101,7 +101,7 @@
           color="#009fb1"
           outlined
           dense
-          append-icon="x"
+          append-icon="mdi-chevron-down"
           :menu-props="{
             maxHeight: 304,
           }"
@@ -403,7 +403,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 import EditPriorityModal from './EditPriorityModal.vue';
@@ -414,7 +413,6 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     EditPriorityModal,

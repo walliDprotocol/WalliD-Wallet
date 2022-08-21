@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 
@@ -41,7 +40,6 @@ import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     IDCard,

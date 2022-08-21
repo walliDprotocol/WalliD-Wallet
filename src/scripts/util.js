@@ -1,4 +1,5 @@
 import { toChecksumAddress } from 'ethereumjs-util';
+import Web3 from 'web3';
 import { mapGetters } from 'vuex';
 import JazzIcon from '../components/JazzIcon';
 import { idtsNames } from './const';
@@ -87,8 +88,12 @@ const mixinPlugin = {
       });
     },
     validateAddress(address) {
-      const isValid = address ? toChecksumAddress(address) : false;
-      return { address: address, isValid };
+      try {
+        const isValid = Web3.utils.isAddress(address);
+        return { address: address, isValid };
+      } catch (error) {
+        return { address: error, isValid: false };
+      }
     },
     getDomain(url) {
       var prefix = /^https?:\/\//i;

@@ -73,7 +73,7 @@
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container class="py-0 px-3">
+        <v-container @click="openImportAssetModal()" class="py-0 px-3">
           <v-row>
             <v-col cols="2">
               <StoredProfileImg :size="38" :name="'AddProfile'" />
@@ -82,15 +82,7 @@
               <v-container class="py-0">
                 <v-row>
                   <v-col cols="12" class="py-0 pr-0">
-                    <a
-                      class="MAIN-LINKS links"
-                      target="_blank"
-                      color="#01a3b0"
-                      :href="storeWeb3Link"
-                      @click.stop
-                    >
-                      Import custom token
-                    </a>
+                    Import custom token
                   </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields"></p>
@@ -204,6 +196,9 @@ export default {
       } else {
         return false;
       }
+    },
+    openImportAssetModal() {
+      this.$store.commit('showImportAssetModal', true);
     },
     openSendAssetModal(asset) {
       this.$store.commit('setCurrentAsset', asset);

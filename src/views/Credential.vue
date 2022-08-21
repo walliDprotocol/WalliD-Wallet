@@ -46,7 +46,7 @@
         >
           <template v-slot:activator="{ on }">
             <div v-on="on">
-              <v-btn text @click="proofPage" class="advance-btn ">
+              <v-btn text @click="proofPage" class="advance-btn">
                 {{ $t('credentials.menuCredential[1]') }}
               </v-btn>
             </div>
@@ -67,7 +67,7 @@
           :class="{ disabled: !downloadURL }"
           :href="downloadURL"
           target="_blank"
-          style="text-decoration:none"
+          style="text-decoration: none"
         >
           <v-btn :disabled="!downloadURL" text class="advance-btn">
             {{ $t('credentials.menuCredential[2]') }}
@@ -79,7 +79,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 
@@ -98,7 +97,6 @@ const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     CustomCard,
@@ -124,7 +122,8 @@ export default {
     this.card = JSON.parse(JSON.stringify(this.currentCred));
     this.frontend_props = this.card?.userData?.frontend_props || {};
 
-    this.customTemplateName = this.card?.userData?.frontend_props?.customTemplateName;
+    this.customTemplateName =
+      this.card?.userData?.frontend_props?.customTemplateName;
 
     this.imgArray = [...(this.card.userData?.imgArray || [])];
 

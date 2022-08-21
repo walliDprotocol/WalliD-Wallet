@@ -12,6 +12,7 @@ const state = () => ({
   currentDisplayAddress: API.getState().UPAddress,
   isFromVault: false,
   vaultsAddresses: [],
+  profileUsername: null,
 });
 const mutations = {
   UPAddress(state, value) {
@@ -29,6 +30,9 @@ const mutations = {
   vaultsAddresses(state, value) {
     state.vaultsAddresses = value;
   },
+  profileUsername(state, value) {
+    state.profileUsername = value;
+  },
 };
 const actions = {
   ['changeCurrentDisplayAddress']: async (
@@ -45,20 +49,23 @@ const actions = {
     const fetchProfile = await API.fetchProfile(rootState.address);
     console.log('fetchProfile: ', fetchProfile);
 
-    dispatch('updateLuskoStore');
     return fetchProfile;
   },
   ['fetchVaults']: async ({ rootState, commit, state }) => {
     const fetchVaults = await API.fetchVaults(rootState.address);
     console.log('fetchVaults: ', fetchVaults);
 
-    commit('vaultsAddresses', fetchVaults.value);
+    commit('vaultsAddresses', fetchVaults?.value || []);
 
-    return fetchVaults.value;
+    return fetchVaults?.value || [];
   },
-  ['createUniversalProfile']: async ({ rootState, dispatch, state }) => {
+  ['createUniversalProfile']: async (
+    { rootState, dispatch, state },
+    { username }
+  ) => {
     const deployedContracts = await API.createUniversalProfile(
-      rootState.address
+      rootState.address,
+      { username }
     );
     console.log('deployedContracts: ', deployedContracts);
 
@@ -66,23 +73,29 @@ const actions = {
     console.log('my Universal Profile address: ', myUPAddress);
 
     dispatch('updateLuskoStore');
-    return deployedContracts;
+    return myUPAddress;
   },
   ['importUniversalProfile']: async (
     { rootState, dispatch, state },
     UPAddressToImport
   ) => {
-    const deployedContracts = await API.importUniversalProfile(
-      rootState.address,
-      UPAddressToImport
-    );
-    console.log('deployedContracts: ', deployedContracts);
+    try {
+      const deployedContracts = await API.importUniversalProfile(
+        rootState.address,
+        UPAddressToImport
+      ).catch((error) => {
+        throw error;
+      });
+      console.log('deployedContracts: ', deployedContracts);
 
-    const myUPAddress = deployedContracts.LSP0ERC725Account.address;
-    console.log('my Universal Profile address: ', myUPAddress);
+      const myUPAddress = deployedContracts.LSP0ERC725Account.address;
+      console.log('my Universal Profile address: ', myUPAddress);
 
-    dispatch('updateLuskoStore');
-    return deployedContracts;
+      dispatch('updateLuskoStore');
+      return { myUPAddress };
+    } catch (error) {
+      return { error };
+    }
   },
 
   ['mintLSP7Tokens']: async ({ rootState, dispatch, state }) => {
@@ -207,10 +220,20 @@ const actions = {
     return assetsMetadataList;
   },
 
-  updateLuskoStore: ({ rootState, dispatch, commit, state }) => {
+  updateLuskoStore: async ({ rootState, dispatch, commit, state }) => {
+    console.log('updateLuskoStore');
+
     commit('UPAddress', API.getState().UPAddress);
     commit('currentDisplayAddress', API.getState().UPAddress);
     commit('KMAddress', API.getState().KMAddress);
+    let profile = await dispatch('fetchProfile');
+    console.log(profile);
+
+    let profileUsername = profile?.[1]?.value?.LSP3Profile?.name;
+    console.log(profileUsername);
+
+    commit('profileUsername', profileUsername);
+
     dispatch('getLuskoAssets');
   },
 };

@@ -65,9 +65,9 @@
       </v-col>
       <v-col cols="12" class="pb-1 pt-2">
         UPAddress
-        <wallet-address class="" :forced-address="UPAddress" />
+        <WalletAddress class="" :walletAddress="UPAddress" />
         KMAddress
-        <wallet-address class="" :forced-address="KMAddress" />
+        <WalletAddress class="" :walletAddress="KMAddress" />
       </v-col>
       <v-col cols="12" class="pt-2 pb-1" v-for="key in profile" :key="key.key">
         {{ key.name }}
@@ -105,7 +105,8 @@ export default {
   methods: {
     async createUP() {
       let deployedContract = await this.$store.dispatch(
-        'lukso/createUniversalProfile'
+        'lukso/createUniversalProfile',
+        { username: 'Nuno' }
       );
 
       console.log(deployedContract);

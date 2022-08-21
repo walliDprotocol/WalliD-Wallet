@@ -23,9 +23,7 @@
       </v-col>
 
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="close()" class="cancel-btn">
-          Cancel
-        </v-btn>
+        <v-btn text @click="close()" class="cancel-btn"> Cancel </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
         <v-btn text @click="confirmDelete()" class="advance-btn">
@@ -37,7 +35,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 
@@ -48,7 +45,6 @@ import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     IDCard,

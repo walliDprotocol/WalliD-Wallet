@@ -21,19 +21,6 @@
             {{ $t('import.seedPhrase[0]') }}
           </label>
           <v-text-field
-            v-model="privateKey"
-            solo
-            flat
-            class="password-input seed-phrase mt-1"
-            :class="{
-              'error-seed-phrase': errorSeedPhrase,
-            }"
-            name="input-password-login"
-            :type="'password'"
-            hide-details
-          >
-          </v-text-field>
-          <v-text-field
             v-model="seedPhrase"
             solo
             flat
@@ -100,24 +87,11 @@
           <p class="error--text mt-2">{{ seedPhraseErrorMessage }}</p>
         </v-col>
         <v-col cols="12" class="text-left pb-1 pt-1">
-          <label class="sub-title-fields"> Your private key </label>
-          <v-text-field
-            v-model="password"
-            solo
-            @input="checkForm"
-            flat
-            class="password-input mt-1"
-            name="input-password-login"
-            type="password"
-            :error-messages="privateKeyError"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" class="text-left pb-1 pt-1">
           <label class="sub-title-fields">
             {{ $t('import.password[0]') }}
           </label>
           <v-text-field
-            v-model="privateKey"
+            v-model="password"
             solo
             @input="checkForm"
             flat
@@ -175,15 +149,6 @@
           >
             {{ $t('import.button') }}
           </v-btn>
-          <v-btn
-            id="import-button"
-            text
-            :disabled="isDisabled"
-            @click="importFromPrivateKey"
-            class="advance-btn"
-          >
-            {{ 'importFromPrivateKey' }}
-          </v-btn>
         </v-col>
       </form>
     </v-row>
@@ -213,7 +178,7 @@ import ArrowBack from '../images/icon-arrow-back.vue';
 import EyeUnselected from '../images/icon-eye-unselected.vue';
 import EyeSelected from '../images/icon-eye-selected.vue';
 import Sucessfully from '../images/icon-sucessfully.vue';
-import { CREATE_NEW_WALLET, IMPORT_PRIVATE_KEY } from '../store/actions';
+import { CREATE_NEW_WALLET } from '../store/actions';
 
 export default {
   components: {
@@ -225,7 +190,6 @@ export default {
   computed: {
     isDisabled() {
       return (
-        !this.privateKey ||
         this.errorSeedPhrase ||
         !this.password ||
         !this.passwordMatch ||
@@ -242,14 +206,10 @@ export default {
       password: '',
       passwordMatch: '',
       passwordError: '',
-      privateKey: '',
-      privateKeyError: '',
       passwordMatchError: '',
       errorSeedPhrase: false,
       seedPhraseErrorMessage: '',
       termsWallet: false,
-
-      privateKey: null,
     };
   },
   mounted() {},
@@ -275,24 +235,6 @@ export default {
     },
     stepBack() {
       this.$router.push('/home');
-    },
-
-    importFromPrivateKey() {
-      this.$store
-        .dispatch(IMPORT_PRIVATE_KEY, {
-          privateKey: this.privateKey,
-          password: this.password,
-        })
-        .then(() => {
-          this.imported = true;
-        })
-        .catch((e) => {
-          // if (e == this.INVALID) {
-          this.errorSeedPhrase = true;
-          this.seedPhraseErrorMessage = 'Invalid private key'; //this.$t('restore.seedPhrase[4]');
-          // }
-          console.error(e);
-        });
     },
 
     restorePassword() {

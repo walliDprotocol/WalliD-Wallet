@@ -3,7 +3,7 @@
     class="credentials list-storage"
     style="overflow-y: auto; height: 208px"
   >
-    <v-row v-if="NFTAssets.length > 0">
+    <v-row>
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
         v-for="asset in NFTAssets"
@@ -98,25 +98,6 @@
           </v-row>
         </v-container>
         <!-- <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" /> -->
-      </v-col>
-    </v-row>
-    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
-      <v-col cols="12" class="px-15 py-9">
-        <p class="SECUNDARY-LINKS mb-5">
-          Seems like you don’t have
-          <strong>NFTs</strong>
-          <br />
-          in your wallet yet.
-        </p>
-        <a
-          class="links"
-          target="_blank"
-          color="#01a3b0"
-          href="https://www.wallid.io/"
-          @click.stop
-        >
-          Import an NFT
-        </a>
       </v-col>
     </v-row>
   </v-container>

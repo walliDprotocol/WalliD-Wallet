@@ -26,18 +26,14 @@
             color="#009fb1"
             outlined
             dense
-            append-icon="x"
+            append-icon="mdi-chevron-down"
             :menu-props="{
               maxHeight: 304,
             }"
             :rules="TokenStandardRules"
             hide-details="auto"
           >
-            <template
-              v-slot:selection="{
-                item,
-              }"
-            >
+            <template v-slot:selection="{ item }">
               <div class="d-flex simple-text">
                 <p class="d-block mb-0 ml-3">
                   {{ item }}
@@ -95,14 +91,10 @@
           ></v-text-field>
           <v-row>
             <v-col cols="6" class="pt-1">
-              <v-btn text @click="close()" class="cancel-btn">
-                Cancel
-              </v-btn>
+              <v-btn text @click="close()" class="cancel-btn"> Cancel </v-btn>
             </v-col>
             <v-col cols="6" class="pt-1">
-              <v-btn text @click="validate" class="advance-btn">
-                Import
-              </v-btn>
+              <v-btn text @click="validate" class="advance-btn"> Import </v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -112,19 +104,17 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress'
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import IDCard from '../components/IDCard'
+import IDCard from '../components/IDCard';
 
-import { mapGetters } from 'vuex'
-import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
-import { isValidAddress } from '../../dist/scripts/background.bundle'
+import { mapGetters } from 'vuex';
+import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
+import { isValidAddress } from '../../dist/scripts/background.bundle';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     IDCard,
@@ -166,29 +156,29 @@ export default {
       ],
       IDRules: [(v) => !!v || 'Collectible ID required'],
       TokenDecimalRules: [(v) => !!v || 'Token decimal required'],
-    }
+    };
   },
   methods: {
     close() {
-      this.$store.commit('showImportAssetModal', false)
+      this.$store.commit('showImportAssetModal', false);
     },
     assetType() {
-      if (currentCred) return currentCred.assetType
+      if (currentCred) return currentCred.assetType;
     },
     validate() {
-      this.$refs.form.validate()
+      this.$refs.form.validate();
     },
     isValidContractAddress(v) {
-      return false
+      return false;
     },
     isValidCollectibleAddress(v) {
-      return false
+      return false;
     },
     isPersonalAddress(v) {
-      return true
+      return true;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

@@ -296,7 +296,7 @@ export default new Vuex.Store({
           });
       });
     },
-    [REFRESH_STATE]: ({ commit, dispatch }) => {
+    [REFRESH_STATE]: async ({ commit, dispatch, rootState }) => {
       console.log('Action REFRESH_STATE');
       commit('updateAddress', API.getState().address);
       commit('domainENS', API.getState().domainENS);
@@ -308,8 +308,10 @@ export default new Vuex.Store({
       commit('updateCredentials', API.getState().credentials);
       commit('updateProfiles', API.getState().profiles);
 
-      dispatch('networks/updateNetworks', { root: true });
-      dispatch('lukso/updateLuskoStore', { root: true });
+      await dispatch('networks/updateNetworks', { root: true });
+
+      if (rootState.networks?.currentNetwork?.chainId === '2828')
+        dispatch('lukso/updateLuskoStore', { root: true });
 
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )

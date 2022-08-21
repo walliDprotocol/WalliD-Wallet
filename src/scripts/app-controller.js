@@ -990,7 +990,7 @@ export default class AppController {
   // LUKSO RELATED METHODS
   //=============================================================================
 
-  createUniversalProfile(address) {
+  createUniversalProfile(address, profile) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
       return Promise.reject('ERR_PLUGIN_LOCKED');
@@ -1000,7 +1000,9 @@ export default class AppController {
     let privateKey = wallet.getPrivateKey();
 
     console.log(lukso);
-    return Promise.resolve(lukso.createUniversalProfile(address, privateKey))
+    return Promise.resolve(
+      lukso.createUniversalProfile(address, profile, privateKey)
+    )
       .then((deployedContracts) => {
         const UPAddress = deployedContracts.LSP0ERC725Account.address;
         const KMAddress = deployedContracts.LSP6KeyManager.address;
@@ -1028,7 +1030,9 @@ export default class AppController {
     return Promise.resolve(
       lukso.checkOwnership(ownerAddress, UPAddressToImport)
     )
-      .then((deployedContracts) => {
+      .then(({ deployedContracts, error }) => {
+        if (error) return Promise.reject(error);
+
         const UPAddress = deployedContracts.LSP0ERC725Account.address;
         const KMAddress = deployedContracts.LSP6KeyManager.address;
         lukso.setUniversalProfileAddress(UPAddress);
@@ -1044,7 +1048,7 @@ export default class AppController {
         return deployedContracts;
       })
       .catch((err) => {
-        Promise.reject(err);
+        return Promise.reject(err);
       });
   }
 

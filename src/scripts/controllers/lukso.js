@@ -113,24 +113,24 @@ export default class LuksoController {
     return ERC725Object.encodeData(data);
   }
 
-  createUniversalProfile(address) {
-    console.log('createUniversalProfile: ', address);
+  createUniversalProfile(address, { username }, privateKey) {
+    console.log('createUniversalProfile: ', address, username);
 
     let lspFactory = new LSPFactory(RPC_ENDPOINT, {
-      deployKey: PRIVATE_KEY, //PRIVATE_KEY, // priv_key for 0xfec13efcea97326cdfaa3331904fa7e11684460d
+      deployKey: privateKey, //PRIVATE_KEY, // priv_key for 0xfec13efcea97326cdfaa3331904fa7e11684460d
       chainId: 2828,
     });
 
     return lspFactory.UniversalProfile.deploy({
-      controllerAddresses: [address], // our EOA that will be controlling the UP
+      controllerAddresses: [this.#EOA.address], // our EOA that will be controlling the UP
       lsp3Profile: {
-        name: 'My Universal Profile',
-        description: 'My Cool Universal Profile',
+        name: username,
+        description: 'My Cool WalliD Universal Profile',
         tags: ['Public Profile'],
         links: [
           {
-            title: 'My Website',
-            url: 'https://my-website.com',
+            title: 'MyWalliD',
+            url: 'https://wallid.io',
           },
         ],
       },
@@ -146,6 +146,8 @@ export default class LuksoController {
     );
 
     console.log(AddressPermissionsArray);
+    if (!AddressPermissionsArray)
+      return { error: 'Your are not the owner of this profile' };
     let isOwner = AddressPermissionsArray.value.find((a) => {
       return ethers.utils.getAddress(ownerAddress) == a;
     });
@@ -164,8 +166,10 @@ export default class LuksoController {
       );
 
       return {
-        LSP0ERC725Account: { address: UPAddressToImport },
-        LSP6KeyManager: { address: keyManagerAddress },
+        deployedContracts: {
+          LSP0ERC725Account: { address: UPAddressToImport },
+          LSP6KeyManager: { address: keyManagerAddress },
+        },
       };
     }
   }
@@ -767,7 +771,7 @@ export default class LuksoController {
     let LSP5ReceivedAssets = await this.fetchLSP5(ownerAddress);
     const assetsList = [];
 
-    for (let i = 0; i < LSP5ReceivedAssets.value.length; i++) {
+    for (let i = 0; i < LSP5ReceivedAssets?.value?.length; i++) {
       const assetAddress = LSP5ReceivedAssets.value[i];
 
       const lsp8IdentifiableDigitalAssetContract = new web3.eth.Contract(

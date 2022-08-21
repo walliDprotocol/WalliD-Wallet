@@ -4,12 +4,13 @@
       <!-- Current Vault -->
       <v-col cols="12" style="position: relative">
         <jazz-icon
-          :address="walletAddress"
+          :address="isLukso ? currentDisplayAddress : walletAddress"
           :id="'home'"
           :size="58"
           :margin="4"
         />
         <v-img
+          v-if="isLukso"
           contain
           max-height="34"
           src="../images/icons/icon-up-lukso-default.png"
@@ -20,9 +21,8 @@
             transform: translateX(-50%);
           "
         ></v-img>
-
         <!-- Vault Dropdown -->
-        <VaultDropdown />
+        <VaultDropdown v-if="isLukso" />
 
         <!-- -->
       </v-col>
@@ -31,9 +31,13 @@
           {{ domainENS || $t('home.title') }}
         </h2>
       </v-col>
-      <v-col style="font-size: 16px; font-weight: 500"> FVeiga </v-col>
+      <v-col v-if="isLukso" style="font-size: 16px; font-weight: 500">
+        {{ profileUsername }}
+      </v-col>
       <v-col cols="12" class="px-14 pt-0">
-        <WalletAddress :address="walletAddress" />
+        <WalletAddress
+          :walletAddress="isLukso ? currentDisplayAddress : walletAddress"
+        />
         <v-btn
           v-if="false"
           text
@@ -45,6 +49,7 @@
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
         <div
+          v-if="isLukso"
           class="home-icons"
           @click="createVaultOnUP"
           :class="{ disabled: createVaultIconState !== 'default' }"
@@ -140,6 +145,9 @@ export default {
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
+    ...mapGetters('networks', ['currentNetwork', 'networksList', 'chainId']),
+    ...mapState('lukso', ['profileUsername', 'currentDisplayAddress']),
+
     tab: {
       get() {
         return this.$store.getters.currentTab;
@@ -156,6 +164,12 @@ export default {
       } else {
         return 'Create Vault';
       }
+    },
+    isLukso() {
+      return this.chainId === '2828';
+    },
+    getAddress() {
+      return this.isLukso ? this.currentDisplayAddress : this.walletAddress;
     },
   },
   mounted() {

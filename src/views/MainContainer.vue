@@ -143,7 +143,7 @@ export default {
   mounted() {
     this.debug('MOUNTED', this.hideAppHeader);
 
-    if (this.unlocked) this.$store.dispatch('networks/getNetworkAssets');
+    if (this.unlocked) this.$store.dispatch('REFRESH_STATE');
   },
 
   methods: {

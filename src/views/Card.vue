@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 
@@ -31,7 +30,6 @@ import { mapGetters } from 'vuex';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     IDCard,

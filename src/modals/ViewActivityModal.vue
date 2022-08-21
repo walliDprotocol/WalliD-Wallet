@@ -188,7 +188,6 @@
 </template>
 
 <script>
-import WalletAddress from '../components/WalletAddress';
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 import QueueTransactionModal from '../modals/QueueTransactionModal.vue';
@@ -197,7 +196,6 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
-    WalletAddress,
     WalletState,
     ArrowBack,
     QueueTransactionModal,

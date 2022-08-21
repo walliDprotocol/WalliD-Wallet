@@ -73,6 +73,7 @@ const actions = {
 
 const getters = {
   currentNetwork: (state) => state.currentNetwork,
+  chainId: (state) => state.currentNetwork.chainId,
   networksList: (state) => state.networksList,
 };
 

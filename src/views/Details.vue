@@ -28,7 +28,7 @@
         <WalletState :website="connected.url"> </WalletState>
       </v-col>
       <v-col cols="12" class="pb-1 pt-2">
-        <wallet-address class="" />
+        <WalletAddress :walletAddress="walletAddress" class="" />
       </v-col>
       <v-col cols="12" class="pt-2 pb-1">
         <qrcode
