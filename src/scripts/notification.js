@@ -37,7 +37,7 @@ const { API } = extension.extension.getBackgroundPage();
 window.$API = API;
 Vue.prototype.$API = API;
 
-var filter = function (text, length, clamp = '...') {
+var filter = function (text, length = 12, clamp = '...') {
   const content = text ? text.toString() : '';
 
   return content.length > length

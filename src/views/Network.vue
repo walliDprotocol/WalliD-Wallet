@@ -167,7 +167,6 @@ export default {
     },
     async setupUniversalProfile() {
       this.isLoading = true;
-      let myUPAddress;
       this.validAddressError = '';
       if (this.path === 'import') {
         let { error, myUPAddress } = await this.$store.dispatch(
@@ -176,14 +175,14 @@ export default {
         );
         console.log(error);
         if (error) this.validAddressError = error;
+        if (myUPAddress) this.$router.go('-1');
       } else {
-        myUPAddress = await this.$store.dispatch(
+        let { myUPAddress } = await this.$store.dispatch(
           'lukso/createUniversalProfile',
           { username: this.username }
         );
+        if (myUPAddress) this.$router.go('-1');
       }
-      if (myUPAddress) this.$router.go('-1');
-      console.log(myUPAddress);
 
       this.isLoading = false;
     },

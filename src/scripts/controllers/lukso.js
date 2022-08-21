@@ -722,13 +722,13 @@ export default class LuksoController {
       if (isFromVault) {
         result = await this.executePayloadOnVault(
           dataPayload,
-          tokenAddress,
+          assetAddress,
           fromAccountAddress
         );
       } else {
         result = await this.executePayload(
           dataPayload,
-          tokenAddress,
+          assetAddress,
           fromAccountAddress
         );
       }

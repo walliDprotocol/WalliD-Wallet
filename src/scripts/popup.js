@@ -43,7 +43,7 @@ const { eventEmitter } = extension.extension.getBackgroundPage();
 window.$eventEmitter = eventEmitter;
 Vue.prototype.$eventEmitter = eventEmitter;
 
-var filter = function (text, length, clamp = '...') {
+var filter = function (text, length = 12, clamp = '...') {
   const content = text ? text.toString() : '';
 
   return content.length > length

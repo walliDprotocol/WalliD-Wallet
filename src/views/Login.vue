@@ -58,7 +58,7 @@
         <v-col cols="12" class="text-left">
           <p class="links mt-2 text-left" style="color: #373c43">
             {{ 'import' }}<br />
-            <router-link to="/import" class="links">
+            <router-link to="/importpk" class="links">
               {{ 'import' }}
             </router-link>
           </p>

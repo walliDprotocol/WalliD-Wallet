@@ -295,10 +295,14 @@
           :rules="TokenAmountRule"
         >
           <template #append>
-            <div style="font-size: 15px; font-weight: 500">
+            <div
+              class="mr-6 mt-1"
+              style="font-size: 15px; font-weight: 500; line-height: 18px"
+            >
               {{ tokenSymbol }}
             </div>
             <div
+              class="mt-1"
               style="
                 border: 1px solid #009fb1;
                 color: #009fb1;
@@ -366,8 +370,10 @@
           </p>
         </div>
         <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 800">Amount + Gas fees</p>
-          <p style="font-size: 15px; font-weight: 800">
+          <p style="font-size: 15px; font-weight: 800; text-align: left">
+            Amount + Gas fees
+          </p>
+          <p style="font-size: 15px; font-weight: 800; text-align: right">
             {{ calculateAmount() }}
           </p>
         </div>
@@ -389,14 +395,18 @@
         <v-btn text @click="step = step - 1" class="cancel-btn"> Reject </v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="send()" :loading="isLoading" class="advance-btn">
+        <!-- <v-btn text @click="send()" :loading="isLoading" class="advance-btn">
           Confirm
-        </v-btn>
+        </v-btn> -->
 
-        <!-- <EditPriorityModal
-          :success="true"
-          :recipientAddress="recipientAddress"
-        /> -->
+        <SendTransactionStateModal
+          :disabled="!isSufficientAmount()"
+          :loading="isLoading"
+          :success="sendState"
+          :recipientAddress="toAddress"
+          :assetTitle="currentAsset.tokenName"
+          @click="send()"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -405,9 +415,11 @@
 <script>
 import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
-import EditPriorityModal from './EditPriorityModal.vue';
+import SendTransactionStateModal from './SendTransactionStateModal.vue';
 import IconCreateVault from '../images/icons/icon-createVault.vue';
 import Web3 from 'web3';
+
+import { ethers } from 'ethers';
 
 import { mapGetters, mapState } from 'vuex';
 
@@ -415,7 +427,7 @@ export default {
   components: {
     WalletState,
     ArrowBack,
-    EditPriorityModal,
+    SendTransactionStateModal,
     IconCreateVault,
   },
   async mounted() {},
@@ -439,6 +451,7 @@ export default {
           this.tokenSymbol +
           ' + ' +
           this.parseGasFee +
+          ' ' +
           this.currentNetwork.ticker
         );
       }
@@ -454,7 +467,10 @@ export default {
       );
     },
     isSufficientAmount() {
-      return this.amount <= this.currentAsset.balanceOf;
+      console.log(this.amount);
+      return ethers.utils
+        .parseUnits(this.amount.toString())
+        .lte(ethers.utils.parseUnits(this.currentAsset.balanceOf));
     },
     nextStep() {
       if (
@@ -502,9 +518,11 @@ export default {
         }
       } catch (err) {
         console.err(err);
+        this.sendState = 'error';
         // show unsuccess screen
       } finally {
         // show success screen
+        this.sendState = 'success';
 
         this.isLoading = false;
       }
@@ -545,15 +563,15 @@ export default {
           : 'Amount: ';
     },
     parseGasFee() {
-      return Web3.utils.fromWei(Web3.utils.toBN(this.baseGasFee).toString());
+      return ethers.utils.formatUnits(ethers.BigNumber.from(this.baseGasFee));
     },
   },
 
   data() {
     return {
       tokenType: '',
-      baseGasFee: 5000000,
-
+      baseGasFee: 5_000_000,
+      sendState: null,
       isLoading: false,
       amount: '',
       tokenId: '',

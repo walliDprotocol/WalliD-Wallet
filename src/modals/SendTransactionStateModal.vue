@@ -1,7 +1,16 @@
 <template>
-  <v-dialog v-model="dialog" class="dialog">
+  <v-dialog :value="success" class="dialog">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn text class="advance-btn" @click="dialog = true"> Confirm </v-btn>
+      <v-btn
+        :disabled="disabled"
+        :loading="loading"
+        text
+        v-bind="attrs"
+        class="advance-btn"
+        @click="$emit('click')"
+      >
+        Confirm
+      </v-btn>
     </template>
 
     <v-container>
@@ -15,7 +24,7 @@
             contain
             src="../images/icons/close-icon.png"
             style="cursor: pointer"
-            @click="dialog = false"
+            @click="close"
           ></v-img>
         </v-col>
         <v-col cols="12" class="mt-6 pa-5 d-flex align-center flex-column">
@@ -26,7 +35,7 @@
             src="../images/img/icon-not-sucessfully.png"
           ></v-img>
           <p class="mt-1" style="font-size: 20px; font-weight: 800">
-            {{ success ? assetTitle + 'sent!' : 'Unable to send' }}
+            {{ success ? assetTitle + ' sent!' : 'Unable to send' }}
           </p>
           <p
             class="mt-1"
@@ -36,8 +45,8 @@
               success
                 ? 'You’ve successfully sent ' +
                   assetTitle +
-                  'to ' +
-                  recipientAddress
+                  ' to ' +
+                  truncate(recipientAddress, 12)
                 : 'There was an error attempting to send ' +
                   assetTitle +
                   'to' +
@@ -46,7 +55,7 @@
           </p>
         </v-col>
         <v-col class="pa-0">
-          <v-btn depressed class="advance-btn" @click="openViewActivityModal()">
+          <v-btn depressed class="advance-btn" @click="close">
             {{ success ? 'Done' : 'Try again' }}
           </v-btn>
         </v-col>
@@ -59,28 +68,22 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['success', 'recipientAddress'],
+  props: ['success', 'recipientAddress', 'loading', 'assetTitle', 'disabled'],
   computed: {
     ...mapGetters(['currentVault']),
-    assetTitle() {
-      if (
-        this.currentCred.assetType === 'Fungible Token' ||
-        this.currentCred.assetType === 'NFT'
-      ) {
-        return this.currentCred.tokenName;
-      } else if (this.currentCred.assetType === 'Legacy ID') {
-        return this.currentCred.idName;
-      } else if (this.currentCred.assetType === 'Web2 ID') {
-        return this.currentCred.socialmedia;
-      } else if (this.currentCred.assetType === 'Web3 ID') {
-        return this.currentCred.titleField;
-      }
+  },
+  methods: {
+    truncate() {
+      return this.$options.filters.truncate(...arguments);
+    },
+    close() {
+      this.$store.commit('setCurrentAsset', null);
+      this.$store.commit('showSendAssetModal', false);
     },
   },
   data() {
     return {
       dialog: false,
-      assetTitle: 'test',
     };
   },
 };
