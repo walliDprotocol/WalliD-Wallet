@@ -71,8 +71,8 @@
         <div class="mx-3">
           <jazz-icon
             v-if="!recipientVaultSelected.name"
-            :address="walletAddress"
-            :id="'home'"
+            :address="toAddress"
+            :id="'send'"
             :size="40"
             :margin="4"
           />
@@ -115,6 +115,9 @@
               <p class="d-block mb-0 ml-3">
                 {{ item.tokenName }}
               </p>
+              <p class="d-block mb-0 ml-3">
+                {{ getAssetId(item) || item.balanceOf }}
+              </p>
             </div>
           </template>
           <template v-slot:item="{ item }">
@@ -124,12 +127,15 @@
               <p class="d-block mb-0 ml-3">
                 {{ item.tokenName }}
               </p>
+              <p class="d-block mb-0 ml-3">
+                {{ getAssetId(item) || item.balanceOf }}
+              </p>
             </div>
           </template>
         </v-select>
       </v-col>
       <v-col
-        v-if="!recipientVaultSelected.name"
+        v-if="!recipientVaultSelected.name && step < 2"
         cols="12"
         class="py-0"
         style="position: relative"
@@ -154,7 +160,9 @@
                 class="mt-1 mr-2"
               ></v-img>
               <v-img
-                max-width="18"
+                v-if="step == 0"
+                style="cursor: pointer"
+                max-width="12"
                 contain
                 src="../images/icons/close-icon@3x.png"
                 @click="deleteRecipientAddress"
@@ -164,7 +172,12 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col v-else cols="12" class="py-0" style="position: relative">
+      <v-col
+        v-else-if="step < 2"
+        cols="12"
+        class="py-0"
+        style="position: relative"
+      >
         <p class="sub-title-fields text-left mb-3">To</p>
         <div class="d-flex align-center py-1" style="background-color: #f7f7f7">
           <IconCreateVault style="max-width: 30px; margin-inline: 12px" />
@@ -432,6 +445,10 @@ export default {
   },
   async mounted() {},
   methods: {
+    getAssetId(asset) {
+      if (asset.tokenId)
+        return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...');
+    },
     calculateAmount() {
       if (this.tokenType === 'native') {
         return (
@@ -457,8 +474,10 @@ export default {
       }
     },
     deleteRecipientAddress() {
-      this.toAddress = '';
-      this.recipientVaultSelected = {};
+      if (this.step == 0) {
+        this.toAddress = '';
+        this.recipientVaultSelected = {};
+      }
     },
     isValidAddress() {
       return (
@@ -470,11 +489,17 @@ export default {
       console.log(this.amount);
       return ethers.utils
         .parseUnits(this.amount.toString())
-        .lte(ethers.utils.parseUnits(this.currentAsset.balanceOf));
+        .lte(ethers.utils.parseUnits(this.currentAsset.balanceOf.toString()));
     },
-    nextStep() {
+    async nextStep() {
+      console.log('selectedAsset', this.selectedAsset, this.step);
+      if (this.step == 0 && this.selectedAsset) {
+        this.$store.commit('setCurrentAsset', this.selectedAsset);
+      }
+      await this.$nextTick();
+
       if (
-        (this.isValidAddress() && this.step === 0) ||
+        (this.isValidAddress() && this.step === 0 && this.currentAsset) ||
         (this.amount && this.step === 1)
       )
         this.step++;
@@ -516,13 +541,13 @@ export default {
           );
           console.log('transferLSP8Token', transferLSP8Token);
         }
+        this.sendState = 'success';
       } catch (err) {
         console.err(err);
         this.sendState = 'error';
         // show unsuccess screen
       } finally {
         // show success screen
-        this.sendState = 'success';
 
         this.isLoading = false;
       }
@@ -590,6 +615,15 @@ export default {
 </script>
 
 <style lang="scss">
+.simple-text {
+  font-size: 13px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: var(--charcoal-grey);
+}
 *::-webkit-scrollbar {
   display: none !important; /* for Chrome, Safari, and Opera */
 }

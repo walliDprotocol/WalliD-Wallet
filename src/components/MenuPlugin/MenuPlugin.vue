@@ -41,7 +41,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="openViewActivityModal()">
+        <v-list-item v-if="false" @click="openViewActivityModal()">
           <v-list-item-icon>
             <IconActivity />
           </v-list-item-icon>

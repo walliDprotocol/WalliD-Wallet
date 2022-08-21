@@ -20,7 +20,7 @@
         >
           <template #menu>
             <v-list>
-              <v-list-item>
+              <v-list-item v-if="false">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
                   @click="openViewActivityModal(asset)"
