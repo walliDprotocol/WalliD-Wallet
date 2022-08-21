@@ -27,72 +27,9 @@
       </div>
     </v-row>
     <v-row>
-      <v-col
-        v-for="asset in idAssets"
-        :key="asset.id"
-        cols="12"
-        class="py-0 px-1 mt-1 mb-2 card"
-      >
-        <Asset
-          :image="asset.assetImagePath"
-          :title="assetTitle(asset)"
-          :subtitle="assetSubtitle(asset)"
-          :chip="assetChip(asset)"
-          :amount="null"
-        >
-          <template #menu>
-            <v-list>
-              <v-list-item>
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="shareProfile(asset)"
-                >
-                  Share Proof-of-Ownership
-                </v-list-item-title>
-              </v-list-item>
-
-              <v-list-item :class="asset.status != 'active' ? '' : ''">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="openDeleteAssetModal(asset)"
-                >
-                  Delete
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </template>
-        </Asset>
-      </v-col>
-      <!-- import token -->
-      <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container class="py-0 px-3">
-          <v-row>
-            <v-col cols="2">
-              <StoredProfileImg :size="38" :name="'AddProfile'" />
-            </v-col>
-            <v-col cols="8" class="pl-6 pr-0">
-              <v-container class="py-0">
-                <v-row>
-                  <v-col cols="12" class="py-0 pr-0">
-                    <a
-                      class="MAIN-LINKS links"
-                      target="_blank"
-                      color="#01a3b0"
-                      :href="storeWeb3Link"
-                      @click.stop
-                    >
-                      Import an ID
-                    </a>
-                  </v-col>
-                  <v-col cols="12" class="py-0">
-                    <p class="sub-title-fields"></p>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-col>
+      <ListOnlineIDs v-if="idAssetFilter === 'Web2 ID'" />
+      <ListIDs v-if="idAssetFilter === 'Legacy ID'" />
+      <ListCrendentials v-if="idAssetFilter === 'Web3 ID'" />
     </v-row>
   </v-container>
 </template>
@@ -100,6 +37,10 @@
 <script>
 import Asset from '../../components/Asset';
 import StoredProfileImg from '../../components/StoredProfileImg';
+
+import ListIDs from '../../components/ListIDs';
+import ListCrendentials from '../../components/ListCrendentials';
+import ListOnlineIDs from '../../components/ListOnlineIDs';
 
 import { mapGetters } from 'vuex';
 
@@ -110,6 +51,9 @@ export default {
   components: {
     StoredProfileImg,
     Asset,
+    ListIDs,
+    ListCrendentials,
+    ListOnlineIDs,
   },
   computed: {
     ...mapGetters(['identities', 'showDeleteConfirmation']),
