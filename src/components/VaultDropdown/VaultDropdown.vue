@@ -79,11 +79,11 @@ export default {
   },
   data() {
     return {
-      vaultList: [],
       showVaultDropdown: false,
     };
   },
   computed: {
+    ...mapGetters('lukso', ['vaultList']),
     ...mapState('lukso', {
       UPAddress: 'UPAddress',
       currentDisplayAddress: 'currentDisplayAddress',
@@ -95,18 +95,7 @@ export default {
       )?.name;
     },
   },
-  async mounted() {
-    this.vaultList = [
-      {
-        name: 'Uni. Profile',
-        address: this.UPAddress,
-      },
-      ...(await this.$store.dispatch('lukso/fetchVaults')).value.reduce(
-        (a, v, i) => [...a, { name: 'Vault ' + i, address: v }],
-        []
-      ),
-    ];
-  },
+  async mounted() {},
   methods: {
     changeDisplayAddress({ address }) {
       console.log(address);

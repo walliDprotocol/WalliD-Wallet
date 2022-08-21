@@ -53,11 +53,10 @@
             :size="40"
             :margin="4"
           />
-          <IconCreateVault v-else-if="currentVault.name !== 'Uni. Profile'" />
-          <v-img
-            v-else
-            src="../images/icons/icon-up-lukso-default@2x.png"
-          ></v-img>
+          <IconCreateVault
+            v-else-if="getCurrentDisplayAddressName !== 'Uni. Profile'"
+          />
+          <v-img v-else src="../images/icons/icon-up-lukso-default.png"></v-img>
         </div>
         <div class="mr-3" style="font-size: 13px; font-weight: 500">
           Account 1
@@ -71,13 +70,15 @@
         </div>
         <div class="mx-3">
           <jazz-icon
-            v-if="!recipientVaultSelected"
+            v-if="!recipientVaultSelected.name"
             :address="walletAddress"
             :id="'home'"
             :size="40"
             :margin="4"
           />
-          <IconCreateVault v-else-if="currentVault.name !== 'Uni. Profile'" />
+          <IconCreateVault
+            v-else-if="getCurrentDisplayAddressName !== 'Uni. Profile'"
+          />
           <v-img
             v-else
             src="../images/icons/icon-up-lukso-default@2x.png"
@@ -95,7 +96,7 @@
         <p class="sub-title-fields text-left mb-3">Asset</p>
         <v-select
           class="pa-0 mb-6"
-          :items="networkAssets"
+          :items="assets"
           v-model="selectedAsset"
           color="#009fb1"
           outlined
@@ -128,7 +129,7 @@
         </v-select>
       </v-col>
       <v-col
-        v-if="!recipientVaultSelected"
+        v-if="!recipientVaultSelected.name"
         cols="12"
         class="py-0"
         style="position: relative"
@@ -137,7 +138,7 @@
         <v-text-field
           dense
           outlined
-          :disabled="step > 0 || recipientVaultSelected"
+          :disabled="step > 0 || recipientVaultSelected.name"
           hide-details
           class="pa-0 mb-6"
           placeholder="Public address (0x)"
@@ -231,7 +232,7 @@
         </p>
       </v-col>
       <v-col
-        v-if="showVaults"
+        v-if="showVaults && step == 0"
         cols="auto"
         class="pr-0 mr-0 d-flex align-center"
       >
@@ -240,21 +241,25 @@
         </p>
       </v-col>
       <v-col
-        v-if="showVaults"
+        v-if="showVaults && step == 0"
         cols="auto"
         class="grow d-flex align-center pl-0"
       >
         <hr />
       </v-col>
-      <v-col cols="12" v-if="showVaults" class="pa-0 mb-0">
+      <v-col cols="12" v-if="showVaults && step == 0" class="pa-0 mb-0">
         <v-col
           v-for="vault in vaultList"
           cols="12"
           :key="vault.address"
           class="d-flex pt-3 pa-0 gray-bg flex-column"
-          @click="recipientVaultSelected = vault"
         >
-          <v-col cols="12" class="py-0 d-flex align-center">
+          <v-col
+            cols="12"
+            class="py-0 d-flex align-center vault-list-item"
+            :class="{ disabled: currentDisplayAddress === vault.address }"
+            @click="recipientVaultSelected = vault"
+          >
             <IconCreateVault class="mr-3" />
             <div class="d-flex flex-column">
               <p class="sub-title-fields sub-title-fields--bold text-left">
@@ -285,7 +290,7 @@
           clear-icon="mdi-close-circle"
           clearable
           :append-icon="
-            isValidAddress ? 'icon-successfully' : 'icon-not-successful'
+            isValidAddress() ? 'icon-successfully' : 'icon-not-successful'
           "
           :rules="TokenAmountRule"
         >
@@ -295,20 +300,6 @@
             </div>
             <div
               style="
-                position: absolute;
-                bottom: 32px;
-                right: 90px;
-                font-size: 15px;
-                font-weight: 500;
-              "
-            >
-              LYXt
-            </div>
-            <div
-              style="
-                position: absolute;
-                bottom: 30px;
-                right: 25px;
                 border: 1px solid #009fb1;
                 color: #009fb1;
                 border-radius: 3px;
@@ -361,29 +352,24 @@
           <p style="font-size: 15px; font-weight: 600; font-weight: 500">
             Total
           </p>
-          <p style="font-size: 13px; font-weight: 500">0.00079802</p>
-        </div>
-        <div
-          class="mt-3"
-          style="font-size: 13px; text-align: right; font-weight: 500"
-        >
-          <strong>0.00079802 LYXt</strong>
         </div>
         <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 13px; font-weight: 500">Amount + gas fee</p>
-          <p style="font-size: 13px; font-weight: 500">
-            Max amount: 0.0008409 LYXt
-          </p>
           <p style="font-size: 15px; font-weight: 600">Amount</p>
-          <p style="font-size: 15px; font-weight: 600">0.00000116 LYXt</p>
+          <p style="font-size: 15px; font-weight: 600">
+            {{ amount }} {{ ' ' + tokenSymbol }}
+          </p>
         </div>
         <div class="d-flex justify-space-between">
           <p style="font-size: 15px; font-weight: 600">Gas fees</p>
-          <p style="font-size: 15px; font-weight: 600">0.12012 LYXt</p>
+          <p style="font-size: 15px; font-weight: 600">
+            {{ parseGasFee }} {{ ' ' + currentNetwork.ticker }}
+          </p>
         </div>
         <div class="d-flex justify-space-between">
           <p style="font-size: 15px; font-weight: 800">Amount + Gas fees</p>
-          <p style="font-size: 15px; font-weight: 800">0,12012116 LYXt</p>
+          <p style="font-size: 15px; font-weight: 800">
+            {{ calculateAmount() }}
+          </p>
         </div>
       </v-col>
       <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
@@ -406,10 +392,11 @@
         <v-btn text @click="send()" :loading="isLoading" class="advance-btn">
           Confirm
         </v-btn>
-        <EditPriorityModal
+
+        <!-- <EditPriorityModal
           :success="true"
           :recipientAddress="recipientAddress"
-        />
+        /> -->
       </v-col>
     </v-row>
   </v-container>
@@ -421,6 +408,7 @@ import WalletState from '../components/WalletState';
 import ArrowBack from '../images/icon-arrow-back.vue';
 import EditPriorityModal from './EditPriorityModal.vue';
 import IconCreateVault from '../images/icons/icon-createVault.vue';
+import Web3 from 'web3';
 
 import { mapGetters, mapState } from 'vuex';
 
@@ -432,32 +420,47 @@ export default {
     EditPriorityModal,
     IconCreateVault,
   },
-  async mounted() {
-    this.vaultList = [
-      {
-        name: 'Uni. Profile',
-        address: this.UPAddress,
-      },
-      ...(await this.$store.dispatch('lukso/fetchVaults')).value.reduce(
-        (a, v, i) => [...a, { name: 'Vault ' + i, address: v }],
-        []
-      ),
-    ];
-  },
+  async mounted() {},
   methods: {
+    calculateAmount() {
+      if (this.tokenType === 'native') {
+        return (
+          Web3.utils.fromWei(
+            Web3.utils
+              .toBN(this.baseGasFee)
+              .add(Web3.utils.toBN(Web3.utils.toWei(this.amount)))
+              .toString()
+          ) +
+          ' ' +
+          this.currentNetwork.ticker
+        );
+      } else {
+        return (
+          this.amount +
+          ' ' +
+          this.tokenSymbol +
+          ' + ' +
+          this.parseGasFee +
+          this.currentNetwork.ticker
+        );
+      }
+    },
     deleteRecipientAddress() {
       this.toAddress = '';
+      this.recipientVaultSelected = {};
     },
     isValidAddress() {
-      return this.validateAddress(this.toAddress).isValid;
+      return (
+        this.validateAddress(this.toAddress).isValid ||
+        this.validateAddress(this.recipientVaultSelected.address).isValid
+      );
     },
     isSufficientAmount() {
       return this.amount <= this.currentAsset.balanceOf;
     },
     nextStep() {
-      console.log(this.validateAddress(this.toAddress));
       if (
-        (this.validateAddress(this.toAddress).isValid && this.step === 0) ||
+        (this.isValidAddress() && this.step === 0) ||
         (this.amount && this.step === 1)
       )
         this.step++;
@@ -472,35 +475,43 @@ export default {
     },
 
     async send() {
-      this.isLoading = true;
+      try {
+        this.isLoading = true;
 
-      console.log(this.currentAsset);
-      if (this.currentAsset.assetType.isLSP7) {
-        let transferLSP7Token = await this.$store.dispatch(
-          'lukso/transferLSP7Token',
-          {
-            toAccountAddress:
-              this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
-            tokenAddress: this.currentAsset.assetAddress,
-            amount: this.amount,
-          }
-        );
-        console.log('transferLSP7Token', transferLSP7Token);
-      } else if (this.currentAsset.assetType.isLSP8) {
-        let transferLSP8Token = await this.$store.dispatch(
-          'lukso/transferLSP8Token',
-          {
-            toAccountAddress:
-              this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
-            tokenAddress: this.currentAsset.assetAddress,
-            tokenId: this.currentAsset.tokenId || this.tokenId,
-          }
-        );
-        console.log('transferLSP8Token', transferLSP8Token);
+        console.log(this.currentAsset);
+        if (this.currentAsset.assetType.isLSP7) {
+          let transferLSP7Token = await this.$store.dispatch(
+            'lukso/transferLSP7Token',
+            {
+              toAccountAddress:
+                this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
+              tokenAddress: this.currentAsset.assetAddress,
+              amount: this.amount,
+            }
+          );
+          console.log('transferLSP7Token', transferLSP7Token);
+        } else if (this.currentAsset.assetType.isLSP8) {
+          let transferLSP8Token = await this.$store.dispatch(
+            'lukso/transferLSP8Token',
+            {
+              toAccountAddress:
+                this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
+              tokenAddress: this.currentAsset.assetAddress,
+              tokenId: this.currentAsset.tokenId || this.tokenId,
+            }
+          );
+          console.log('transferLSP8Token', transferLSP8Token);
+        }
+      } catch (err) {
+        console.err(err);
+        // show unsuccess screen
+      } finally {
+        // show success screen
+
+        this.isLoading = false;
       }
-      this.isLoading = false;
 
-      this.openViewActivityModal();
+      // this.openViewActivityModal();
     },
 
     openViewActivityModal() {
@@ -515,15 +526,16 @@ export default {
       walletAddress: 'address',
       domainENS: 'domainENS',
     }),
+    ...mapGetters('networks', ['currentNetwork']),
+    ...mapGetters('lukso', ['vaultList']),
     ...mapState('lukso', {
+      currentDisplayAddress: 'currentDisplayAddress',
       UPAddress: 'UPAddress',
     }),
-    networkAssets() {
-      return this.assets.filter((asset) => {
-        return (
-          asset.assetType === 'NFT' && asset.assetType === 'Fungible Token'
-        );
-      });
+    getCurrentDisplayAddressName() {
+      return this.vaultList.find(
+        (v) => v.address === this.currentDisplayAddress
+      )?.name;
     },
     tokenSymbol() {
       return this.currentAsset.tokenSymbol;
@@ -534,18 +546,22 @@ export default {
           ? 'Balance: '
           : 'Amount: ';
     },
+    parseGasFee() {
+      return Web3.utils.fromWei(Web3.utils.toBN(this.baseGasFee).toString());
+    },
   },
 
   data() {
     return {
+      tokenType: '',
+      baseGasFee: 5000000,
+
       isLoading: false,
       amount: '',
       tokenId: '',
       step: 0,
       selectedAsset: null,
       toAddress: '',
-      vaultList: [],
-      selectedAsset: null,
       recipientAddress: '',
       recipientVaultSelected: {},
       showVaults: false,
@@ -630,5 +646,9 @@ hr {
 
 .gray-bg:hover {
   background-color: #f7f7f7;
+}
+
+.vault-list-item.disabled {
+  pointer-events: none;
 }
 </style>

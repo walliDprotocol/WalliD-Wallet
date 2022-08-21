@@ -34,12 +34,21 @@
       <v-col style="font-size: 16px; font-weight: 500"> FVeiga </v-col>
       <v-col cols="12" class="px-14 pt-0">
         <WalletAddress :address="walletAddress" />
-        <v-btn text class="advance-btn" @click="$router.push('/LuksoTestpage')">
+        <v-btn
+          v-if="false"
+          text
+          class="advance-btn"
+          @click="$router.push('/LuksoTestpage')"
+        >
           Lukso Testpage
         </v-btn>
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
-        <div class="home-icons" @click="'';">
+        <div
+          class="home-icons"
+          @click="createVaultOnUP"
+          :class="{ disabled: createVaultIconState !== 'default' }"
+        >
           <IconCreateVault v-if="createVaultIconState === 'creating'" />
           <IconVaultCreated v-else-if="createVaultIconState === 'created'" />
           <IconCreateVault v-else />
@@ -167,6 +176,14 @@ export default {
     console.log(this.tab);
   },
   methods: {
+    async createVaultOnUP() {
+      this.createVaultIconState = 'creating';
+      let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP');
+      console.log(newVaultAddress);
+      this.createVaultIconState = 'created';
+
+      setTimeout(() => (this.createVaultIconState = 'default'), 3 * 1000);
+    },
     close() {
       this.$store.commit('showDeleteConfirmation', false);
     },
@@ -218,6 +235,9 @@ export default {
   margin-inline: 21px;
   cursor: pointer;
   position: relative;
+  &.disabled {
+    pointer-events: none;
+  }
 }
 
 .home-icons-text {

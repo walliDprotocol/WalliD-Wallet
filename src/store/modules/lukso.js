@@ -26,6 +26,9 @@ const mutations = {
   currentDisplayAddress(state, value) {
     state.currentDisplayAddress = value;
   },
+  vaultsAddresses(state, value) {
+    state.vaultsAddresses = value;
+  },
 };
 const actions = {
   ['changeCurrentDisplayAddress']: async (
@@ -45,11 +48,13 @@ const actions = {
     dispatch('updateLuskoStore');
     return fetchProfile;
   },
-  ['fetchVaults']: async ({ rootState, dispatch, state }) => {
+  ['fetchVaults']: async ({ rootState, commit, state }) => {
     const fetchVaults = await API.fetchVaults(rootState.address);
     console.log('fetchVaults: ', fetchVaults);
 
-    return fetchVaults;
+    commit('vaultsAddresses', fetchVaults.value);
+
+    return fetchVaults.value;
   },
   ['createUniversalProfile']: async ({ rootState, dispatch, state }) => {
     const deployedContracts = await API.createUniversalProfile(
@@ -210,7 +215,18 @@ const actions = {
   },
 };
 
-const getters = {};
+const getters = {
+  vaultList: (state) => [
+    {
+      name: 'Uni. Profile',
+      address: state.UPAddress,
+    },
+    ...state.vaultsAddresses.reduce(
+      (a, v, i) => [...a, { name: 'Vault ' + i, address: v }],
+      []
+    ),
+  ],
+};
 
 export default {
   namespaced: true,
