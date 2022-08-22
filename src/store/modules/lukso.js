@@ -189,7 +189,12 @@ const actions = {
     );
     console.log('getMetadata: ', getMetadata);
 
-    return { ...getMetadata, issued };
+    return {
+      ...getMetadata,
+      issued,
+      vaultAddress: state.isFromVault ? state.currentDisplayAddress : false,
+      UPAddress: state.UPAddress,
+    };
   },
   ['getLuskoAssets']: async ({ rootState, commit, dispatch, state }) => {
     console.log('getLuskoAssets:');
@@ -211,6 +216,7 @@ const actions = {
     console.log('assetsList: ', assetsList);
     const assetsMetadataList = [
       {
+        UPAddress: state.UPAddress,
         tokenName: 'LYXt Native token',
         tokenSymbol: 'LYXt',
         metadata: {},
@@ -230,7 +236,7 @@ const actions = {
         await dispatch('getMetadata', {
           ...element,
           ownerAddress: state.currentDisplayAddress,
-          issued: issuedAssetsList.find((i) => i == element.assetAddress),
+          issued: issuedAssetsList.some((i) => i == element.assetAddress),
         })
       );
     }
