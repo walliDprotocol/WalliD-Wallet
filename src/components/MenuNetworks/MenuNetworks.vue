@@ -84,8 +84,9 @@ export default {
         });
 
         console.log(result);
-        // check if already has profile
-        if (!this.UPAddress) this.goRoute(NETWORK);
+        // check if already has profile and is switching to lukso network
+        if (!this.UPAddress && chainId == '2828') this.goRoute(NETWORK);
+        else this.close();
       } catch (error) {
         this.debug('Had a problem changing networks!', error);
       }

@@ -15,7 +15,7 @@
     <v-row class="">
       <v-col cols="12" class="pt-1">
         <v-card class="info-profile pa-3">
-          <v-container class="pa-0 ">
+          <v-container class="pa-0">
             <v-row>
               <v-col cols="12" class="">
                 <jazz-icon
@@ -82,7 +82,7 @@
                           <IconArrowDropdown />
                         </template>
                         <v-expansion-panel-content class="px-0">
-                          <v-col cols="12" class=" px-2 py-2 post">
+                          <v-col cols="12" class="px-2 py-2 post">
                             <div class="text-left">
                               {{ currentProfile.profileData.post }}
                             </div>

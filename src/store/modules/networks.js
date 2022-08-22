@@ -24,9 +24,6 @@ const mutations = {
     state.previousNetwork = state.currentNetwork;
     state.currentNetwork = value;
   },
-  currentNetwork(state, value) {
-    state.currentNetwork = value;
-  },
   networksList(state, value) {
     state.networksList = value;
   },
@@ -64,7 +61,7 @@ const actions = {
   updateNetworks: async ({ rootState, commit, dispatch }) => {
     commit('currentNetwork', API.getState().currentNetwork);
     commit('networksList', API.getState().networkList);
-    commit('balance', await API.getBalance(rootState.address));
+    // commit('balance', await API.getBalance(rootState.address));
 
     // get assets of network
     dispatch('getNetworkAssets');

@@ -21,7 +21,7 @@
               </p>
               <div class="d-flex">
                 <p class="sub-title-fields mr-1" style="white-space: nowrap">
-                  {{ subtitle | truncate(20, '...') }}
+                  {{ subtitle | truncate(10, '...') }}
                 </p>
                 <div
                   class="validity"
@@ -62,6 +62,16 @@
                     {{ chip }}
                   </p>
                 </div>
+
+                <div
+                  v-if="issued"
+                  class="validity ml-2"
+                  style="background-color: #d9fbed"
+                >
+                  <p class="FIELD-TEXT" style="color: #00e284">
+                    {{ 'ISSUED' }}
+                  </p>
+                </div>
               </div>
             </v-col>
           </v-row>
@@ -97,7 +107,15 @@ import valid from '../../images/valid.vue';
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['image', 'title', 'subtitle', 'chip', 'amount', 'tokenStandard'],
+  props: [
+    'image',
+    'title',
+    'subtitle',
+    'chip',
+    'amount',
+    'tokenStandard',
+    'issued',
+  ],
   components: {
     IconDotMenu,
     StoredProfileImg,
@@ -219,6 +237,7 @@ export default {
       width: fit-content;
       padding: 1px;
       padding-right: 8px;
+      padding-left: 8px;
       display: flex;
       svg {
         margin: 6px;
@@ -227,7 +246,6 @@ export default {
   }
   .chip {
     color: #009fb1 !important;
-    padding-left: 8px !important;
     font-weight: 400 !important;
   }
 }

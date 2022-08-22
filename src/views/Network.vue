@@ -6,7 +6,7 @@
           <v-row>
             <v-col cols="12" class="pb-2">
               <div class="back-arrow mb-6">
-                <v-btn text @click="$router.go('-1')" class="back-btn">
+                <v-btn text @click="close" class="back-btn">
                   <ArrowBack />
                 </v-btn>
                 <h2 class="T1">Lukso Universal Profile</h2>
@@ -131,6 +131,8 @@ import IconAddHover from '../images/icons/icon-add-new-selected';
 import IconImportHover from '../images/icons/icon-download-selected';
 const { API } = chrome.extension.getBackgroundPage();
 
+import { mapState } from 'vuex';
+
 export default {
   name: 'Create',
   components: {
@@ -147,8 +149,16 @@ export default {
     isDisabled() {
       return !this.termsWallet || !this.password || !this.passwordMatch;
     },
+    ...mapState('networks', ['previousNetwork']),
   },
   methods: {
+    close() {
+      this.$store.dispatch('networks/changeRpcTarget', {
+        ...this.previousNetwork,
+      });
+
+      this.$router.go('-1');
+    },
     getStarted() {
       this.step += 1;
     },

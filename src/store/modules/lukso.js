@@ -1,6 +1,6 @@
 // Lukso specific store to use lukso libs and contracts
 
-// import { ethers } from 'ethers';
+import { ethers } from 'ethers';
 import extension from 'extensionizer';
 
 const { API } = extension.extension.getBackgroundPage();
@@ -191,18 +191,32 @@ const actions = {
 
     return getMetadata;
   },
-  ['getLuskoAssets']: async ({ commit, dispatch, state }) => {
+  ['getLuskoAssets']: async ({ rootState, commit, dispatch, state }) => {
     console.log('getLuskoAssets:');
 
     // 1st get vaults
     let vaultList = await dispatch('fetchVaults');
     console.log('vaultList: ', vaultList);
 
+    const networkBalance = await API.getBalance(rootState.address);
+
     const assetsList = await API.getAssetsOfAddress(
       state.currentDisplayAddress
     );
     console.log('assetsList: ', assetsList);
-    const assetsMetadataList = [];
+    const assetsMetadataList = [
+      {
+        tokenName: 'LYXt Native token',
+        tokenSymbol: 'LYXt',
+        metadata: {},
+        assetImagePath: '../../images/logos/logo-l16PublicTestnet.png',
+        balanceOf: ethers.utils.formatUnits(networkBalance),
+        assetType: {
+          native: true,
+        },
+        tokenId: null,
+      },
+    ];
     for (let i = 0; i < assetsList.length; i++) {
       const element = assetsList[i];
       console.log('element: ', element);
@@ -245,7 +259,7 @@ const getters = {
       address: state.UPAddress,
     },
     ...state.vaultsAddresses.reduce(
-      (a, v, i) => [...a, { name: 'Vault ' + i, address: v }],
+      (a, v, i) => [...a, { name: 'Vault ' + (i + 1), address: v }],
       []
     ),
   ],

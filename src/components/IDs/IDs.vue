@@ -283,17 +283,6 @@ export default {
       padding: 0 !important;
       min-width: 16px !important;
     }
-    .validity {
-      border-radius: 11px;
-      background-color: #d8d8d8;
-      width: fit-content;
-      padding: 1px;
-      padding-right: 8px;
-      display: flex;
-      svg {
-        margin: 6px;
-      }
-    }
   }
 }
 
