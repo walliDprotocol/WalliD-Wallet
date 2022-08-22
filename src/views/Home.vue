@@ -1,8 +1,8 @@
 <template>
   <v-container class="home pb-0" fill-height>
-    <v-row class="" style="position: relative">
+    <v-row class="" style="position: relative;">
       <!-- Current Vault -->
-      <v-col cols="12" style="position: relative">
+      <v-col cols="12" style="position: relative;">
         <jazz-icon
           :address="isLukso ? currentDisplayAddress : walletAddress"
           :id="'home'"
@@ -31,7 +31,7 @@
           {{ domainENS || $t('home.title') }}
         </h2>
       </v-col>
-      <v-col v-if="isLukso" style="font-size: 16px; font-weight: 500">
+      <v-col v-if="isLukso" style="font-size: 16px; font-weight: 500;">
         {{ profileUsername }}
       </v-col>
       <v-col cols="12" class="px-14 pt-0">
@@ -99,21 +99,21 @@
 </template>
 
 <script>
-import WalletState from '../components/WalletState';
-import WalletAddress from '../components/WalletAddress';
-import FungibleTokens from '../components/FungibleTokens';
-import NFTs from '../components/NFTs';
-import IDs from '../components/IDs';
-import VaultDropdown from '../components/VaultDropdown';
-import IconSend from '../images/icons/icon-send.vue';
-import IconProve from '../images/icons/icon-prove.vue';
-import IconCreateVault from '../images/icons/icon-createVault.vue';
-import IconVaultCreated from '../images/icons/icon-vaultCreated.vue';
-import SendAssetModal from '../modals/SendAssetModal.vue';
+import WalletState from '../components/WalletState'
+import WalletAddress from '../components/WalletAddress'
+import FungibleTokens from '../components/FungibleTokens'
+import NFTs from '../components/NFTs'
+import IDs from '../components/IDs'
+import VaultDropdown from '../components/VaultDropdown'
+import IconSend from '../images/icons/icon-send.vue'
+import IconProve from '../images/icons/icon-prove.vue'
+import IconCreateVault from '../images/icons/icon-createVault.vue'
+import IconVaultCreated from '../images/icons/icon-vaultCreated.vue'
+import SendAssetModal from '../modals/SendAssetModal.vue'
 
-import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal'
 
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   components: {
@@ -150,26 +150,26 @@ export default {
 
     tab: {
       get() {
-        return this.$store.getters.currentTab;
+        return this.$store.getters.currentTab
       },
       set(value) {
-        this.$store.commit('currentTab', value);
+        this.$store.commit('currentTab', value)
       },
     },
     createVaultLabelState() {
       if (this.createVaultIconState === 'creating') {
-        return 'Creating...';
+        return 'Creating...'
       } else if (this.createVaultIconState === 'created') {
-        return 'Created!';
+        return 'Created!'
       } else {
-        return 'Create Vault';
+        return 'Create Vault'
       }
     },
     isLukso() {
-      return this.chainId === '2828';
+      return this.chainId === '2828'
     },
     getAddress() {
-      return this.isLukso ? this.currentDisplayAddress : this.walletAddress;
+      return this.isLukso ? this.currentDisplayAddress : this.walletAddress
     },
   },
   mounted() {
@@ -187,31 +187,31 @@ export default {
     //     break;
     // }
 
-    console.log(this.tab);
+    console.log(this.tab)
   },
   methods: {
     async createVaultOnUP() {
-      this.createVaultIconState = 'creating';
-      let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP');
-      console.log(newVaultAddress);
-      this.createVaultIconState = 'created';
+      this.createVaultIconState = 'creating'
+      let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP')
+      console.log(newVaultAddress)
+      this.createVaultIconState = 'created'
 
-      setTimeout(() => (this.createVaultIconState = 'default'), 3 * 1000);
+      setTimeout(() => (this.createVaultIconState = 'default'), 3 * 1000)
     },
     close() {
-      this.$store.commit('showDeleteConfirmation', false);
+      this.$store.commit('showDeleteConfirmation', false)
     },
     openSendAssetModal() {
-      this.$store.commit('showSendAssetModal', true);
+      this.$store.commit('showSendAssetModal', true)
     },
   },
   data() {
     return {
       iconSet: false,
       createVaultIconState: 'default',
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">

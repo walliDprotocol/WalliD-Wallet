@@ -14,7 +14,7 @@
     </template>
 
     <v-container>
-      <v-row style="padding: 15px 20px 20px 20px">
+      <v-row style="padding: 15px 20px 20px 20px;">
         <v-col cols="12" class="d-flex align-center justify-space-between pa-0">
           <h2 class="T1">
             {{ success ? 'Successfully sent' : 'Trouble Sending' }}
@@ -23,7 +23,7 @@
             max-width="18"
             contain
             src="../images/icons/close-icon.png"
-            style="cursor: pointer"
+            style="cursor: pointer;"
             @click="close"
           ></v-img>
         </v-col>
@@ -34,12 +34,12 @@
             contain
             src="../images/img/icon-not-sucessfully.png"
           ></v-img>
-          <p class="mt-1" style="font-size: 20px; font-weight: 800">
+          <p class="mt-1" style="font-size: 20px; font-weight: 800;">
             {{ success ? assetTitle + ' sent!' : 'Unable to send' }}
           </p>
           <p
             class="mt-1"
-            style="font-size: 16px; font-weight: 600; max-width: 341px"
+            style="font-size: 16px; font-weight: 600; max-width: 341px;"
           >
             {{
               success
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 
 export default {
   props: ['success', 'recipientAddress', 'loading', 'assetTitle', 'disabled'],
@@ -74,17 +74,17 @@ export default {
   },
   methods: {
     truncate() {
-      return this.$options.filters.truncate(...arguments);
+      return this.$options.filters.truncate(...arguments)
     },
     close() {
-      this.$store.commit('setCurrentAsset', null);
-      this.$store.commit('showSendAssetModal', false);
+      this.$store.commit('setCurrentAsset', null)
+      this.$store.commit('showSendAssetModal', false)
     },
   },
   data() {
     return {
       dialog: false,
-    };
+    }
   },
-};
+}
 </script>

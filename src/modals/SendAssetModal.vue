@@ -322,13 +322,12 @@
         <p class="sub-title-fields text-left mb-3">Amount</p>
         <v-text-field
           v-model="amount"
+          :disabled="currentAsset.assetType.isLSP8"
           dense
           outlined
           hide-details
           class="pa-0 mb-6"
           placeholder="Amount"
-          clear-icon="mdi-close-circle"
-          clearable
           :append-icon="
             isValidAddress() ? 'icon-successfully' : 'icon-not-successful'
           "
@@ -626,14 +625,14 @@ export default {
       baseGasFee: 5_000_000,
       sendState: null,
       isLoading: false,
-      amount: '',
+      amount: 1,
       tokenId: '',
       step: 0,
-      selectedAsset: null,
       toAddress: '',
       recipientAddress: '',
       recipientVaultSelected: {},
       showVaults: false,
+      selectedAsset: null,
       TokenAmountRule: [
         (v) => this.isSufficientAmount(v) === true || 'Insufficient funds',
       ],

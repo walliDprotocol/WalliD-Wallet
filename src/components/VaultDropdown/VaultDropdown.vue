@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @mouseleave="showVaultDropdown = false">
     <div
       @click="showVaultDropdown = !showVaultDropdown"
       class="current-network"
@@ -27,7 +27,7 @@
       v-if="showVaultDropdown"
       style="
         position: absolute;
-        top: 48px;
+        top: 45px;
         right: 0;
         background-color: white;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.11);
@@ -40,7 +40,7 @@
         v-for="vault in vaultList"
         :key="vault.address"
         class="d-flex align-center px-5 py-3 vault-slot"
-        style="cursor: pointer"
+        style="cursor: pointer;"
         @click="changeDisplayAddress(vault)"
       >
         <IconNetworkSelected
@@ -52,12 +52,12 @@
           }"
           class="mr-2"
         />
-        <p class="vault-slot" style="font-size: 14px; font-weight: 600">
+        <p class="vault-slot" style="font-size: 14px; font-weight: 600;">
           {{ vault.name }}&nbsp;
         </p>
         <p
           class="vault-slot text-gray"
-          style="font-size: 14px; font-weight: 500"
+          style="font-size: 14px; font-weight: 500;"
         >
           {{ ('• ' + vault.address) | truncate(12, '...') }}
         </p>
@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import IconNetworkSelected from '../../images/icon-network-selected.vue';
-import IconArrowDropdown from '../../images/icon-arrow-dropdown.vue';
+import IconNetworkSelected from '../../images/icon-network-selected.vue'
+import IconArrowDropdown from '../../images/icon-arrow-dropdown.vue'
 
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   components: {
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       showVaultDropdown: false,
-    };
+    }
   },
   computed: {
     ...mapGetters('lukso', ['vaultList']),
@@ -91,21 +91,21 @@ export default {
 
     getCurrentDisplayAddressName() {
       return this.vaultList.find(
-        (v) => v.address === this.currentDisplayAddress
-      )?.name;
+        (v) => v.address === this.currentDisplayAddress,
+      )?.name
     },
   },
   async mounted() {},
   methods: {
     changeDisplayAddress({ address }) {
-      console.log(address);
+      console.log(address)
       this.$store.dispatch('lukso/changeCurrentDisplayAddress', {
         accountAddress: address,
-      });
-      this.showVaultDropdown = false;
+      })
+      this.showVaultDropdown = false
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
