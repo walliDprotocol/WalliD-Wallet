@@ -197,6 +197,10 @@ export default {
       this.createVaultIconState = 'created'
 
       setTimeout(() => (this.createVaultIconState = 'default'), 3 * 1000)
+
+      this.$store.dispatch('lukso/changeCurrentDisplayAddress', {
+        accountAddress: newVaultAddress,
+      })
     },
     close() {
       this.$store.commit('showDeleteConfirmation', false)
