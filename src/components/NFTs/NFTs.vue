@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="credentials list-storage"
-    style="overflow-y: auto; height: 208px"
+    style="overflow-y: auto; height: 208px;"
   >
     <v-row>
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
@@ -38,8 +38,8 @@
 
               <v-list-item v-if="false">
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a :href="'downloadURL(asset)'" target="_blank">
-                    Check on OpenSea
+                  <a :href="'openLuksoNftMarketplace(asset)'" target="_blank">
+                    Lukso NFT Marketplace
                   </a>
                 </v-list-item-title>
               </v-list-item>
@@ -75,7 +75,7 @@
         <v-container
           class="py-0 px-3"
           @click="openImportAssetModal()"
-          style="cursor: pointer"
+          style="cursor: pointer;"
         >
           <v-row>
             <v-col cols="2">
@@ -104,10 +104,10 @@
 </template>
 
 <script>
-import Asset from '../../components/Asset';
-import StoredProfileImg from '../../components/StoredProfileImg';
+import Asset from '../../components/Asset'
+import StoredProfileImg from '../../components/StoredProfileImg'
 
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'NFTs',
@@ -119,8 +119,8 @@ export default {
     ...mapGetters(['assets', 'currentCred']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
-        return el.assetType.isLSP8;
-      });
+        return el.assetType.isLSP8
+      })
     },
   },
   methods: {
@@ -129,39 +129,39 @@ export default {
         asset.tokenName +
         ' #' +
         this.$options.filters.truncate(asset.tokenId, 12, '...')
-      );
+      )
     },
     getAssetType(assetType) {
-      if (assetType.isLSP8) return 'LSP8';
-      if (assetType.isLSP7) return 'LSP7';
+      if (assetType.isLSP8) return 'LSP8'
+      if (assetType.isLSP7) return 'LSP7'
     },
     openDeleteAssetModal(asset) {
-      this.$store.commit('setCurrentCred', asset);
-      this.$store.commit('showDeleteConfirmation', true);
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showDeleteConfirmation', true)
     },
     openViewActivityModal(asset) {
-      this.$store.commit('setCurrentCred', asset);
-      this.$store.commit('showViewActivityModal', true);
+      this.$store.commit('setCurrentCred', asset)
+      this.$store.commit('showViewActivityModal', true)
     },
     openImportAssetModal() {
-      this.$store.commit('showImportAssetModal', true);
+      this.$store.commit('showImportAssetModal', true)
     },
     openSendAssetModal(asset) {
-      this.$store.commit('setCurrentAsset', asset);
-      this.$store.commit('showSendAssetModal', true);
+      this.$store.commit('setCurrentAsset', asset)
+      this.$store.commit('showSendAssetModal', true)
     },
     shareProfile(asset) {
-      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('setCurrentCred', asset)
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } });
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } })
     },
   },
   data() {
     return {
       storeWeb3Link: 'https://www.wallid.io/Setup/?flow=WEB3', // "https://www.wallid.io/Setup/selectedDocumentType='Web3'",
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
