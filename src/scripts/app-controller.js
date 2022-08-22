@@ -1102,6 +1102,19 @@ export default class AppController {
       Promise.reject(err);
     });
   }
+  getIssuedAssetsOfAddress(address) {
+    const vault = this.#store.getState().vault;
+    if (!vault.isUnlocked()) {
+      return Promise.reject('ERR_PLUGIN_LOCKED');
+    }
+    const lukso = this.#store.getState().lukso;
+
+    return Promise.resolve(lukso.getIssuedAssetsOfAddress(address)).catch(
+      (err) => {
+        Promise.reject(err);
+      }
+    );
+  }
   setVaultAddressUP(address) {
     const vault = this.#store.getState().vault;
     if (!vault.isUnlocked()) {
@@ -1354,6 +1367,7 @@ export default class AppController {
       transferLSP8Token: this.transferLSP8Token.bind(this),
       getMetadata: this.getMetadata.bind(this),
       getAssetsOfAddress: this.getAssetsOfAddress.bind(this),
+      getIssuedAssetsOfAddress: this.getIssuedAssetsOfAddress.bind(this),
       //
     };
   }

@@ -52,6 +52,7 @@ const INTERFACE_IDS = {
 const URD_DATA_KEY = constants.ERC725YKeys.LSP0.LSP1UniversalReceiverDelegate;
 const LSP10_DATA_KEY = 'LSP10Vaults[]';
 const LSP5_DATA_KEY = 'LSP5ReceivedAssets[]';
+const LSP12_DATA_KEY = 'LSP12IssuedAssets[]';
 const LSP8_DATA_KEY = (tokenId) => [
   'LSP4TokenName',
   'LSP4TokenSymbol',
@@ -205,6 +206,9 @@ export default class LuksoController {
 
   async fetchLSP5(addressToFetch) {
     return await this.getDataKey(LSP5_DATA_KEY, addressToFetch);
+  }
+  async fetchLSP12(addressToFetch) {
+    return await this.getDataKey(LSP12_DATA_KEY, addressToFetch);
   }
 
   async getDataKey(dataKey, address, _schema) {
@@ -766,6 +770,10 @@ export default class LuksoController {
 
     console.log('Result balanceOf  : ', balance);
     return balance;
+  }
+  async getIssuedAssetsOfAddress(ownerAddress) {
+    let LSP12IssuedAssets = await this.fetchLSP12(ownerAddress);
+    return LSP12IssuedAssets.value;
   }
   async getAssetsOfAddress(ownerAddress) {
     let LSP5ReceivedAssets = await this.fetchLSP5(ownerAddress);

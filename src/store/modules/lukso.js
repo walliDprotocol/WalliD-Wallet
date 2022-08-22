@@ -179,7 +179,7 @@ const actions = {
   },
   ['getMetadata']: async (
     { rootState, dispatch, commit, state },
-    { assetAddress, ownerAddress, tokenId, assetType }
+    { assetAddress, ownerAddress, tokenId, assetType, issued }
   ) => {
     const getMetadata = await API.getMetadata(
       assetAddress,
@@ -189,7 +189,7 @@ const actions = {
     );
     console.log('getMetadata: ', getMetadata);
 
-    return getMetadata;
+    return { ...getMetadata, issued };
   },
   ['getLuskoAssets']: async ({ rootState, commit, dispatch, state }) => {
     console.log('getLuskoAssets:');
@@ -199,6 +199,11 @@ const actions = {
     console.log('vaultList: ', vaultList);
 
     const networkBalance = await API.getBalance(rootState.address);
+
+    const issuedAssetsList = await API.getIssuedAssetsOfAddress(
+      state.currentDisplayAddress
+    );
+    console.log('issuedAssetsList: ', issuedAssetsList);
 
     const assetsList = await API.getAssetsOfAddress(
       state.currentDisplayAddress
@@ -225,6 +230,7 @@ const actions = {
         await dispatch('getMetadata', {
           ...element,
           ownerAddress: state.currentDisplayAddress,
+          issued: issuedAssetsList.find((i) => i == element.assetAddress),
         })
       );
     }

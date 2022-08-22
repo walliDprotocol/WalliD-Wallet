@@ -17,6 +17,7 @@
           :subtitle="asset.balanceOf"
           :chip="getAssetType(asset.assetType)"
           :amount="null"
+          :issued="asset.issued"
         >
           <template #menu>
             <v-list>
