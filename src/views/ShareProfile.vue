@@ -41,56 +41,66 @@
               v-for="asset in assets"
               :key="asset.id"
               cols="12"
-              class="py-0 list-profiles"
+              class="list-profiles"
             >
-              <v-container class="py-0 wrapper">
+              <v-container class="wrapper">
                 <v-row>
-                  <v-col cols="2" class="py-1 pl-0">
+                  <v-col cols="2" class="pb-1 pl-0">
                     <StoredProfileImg
-                      class="mt-1"
+                      class="mt-0"
                       :size="30"
                       :src="asset.assetImagePath"
                     />
                   </v-col>
-                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                  <v-col cols="8" class="pb-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
                           <p
                             class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
                           >
-                            {{ asset.tokenName }}
+                            {{ asset.tokenSymbol }}
                           </p>
                         </v-col>
                         <v-col cols="12" class="py-0">
                           <p
-                            v-if="asset.tokenStandard !== 'Native'"
+                            v-if="asset.assetType.isLSP8"
                             class="sub-title-fields text-left"
                           >
-                            {{ asset.tokenProvider }}
+                            {{ asset.tokenName }}
                           </p>
-                          <div v-else class="d-flex align-center">
+                          <div v-else class="d-flex align-center justify-end">
                             <p
                               class="sub-title-fields text-left"
-                              v-if="showBalance"
+                              v-if="asset.showBalance"
                             >
-                              {{ asset.amount }}
+                              {{ asset.balanceOf }}
                             </p>
-                            <p class="sub-title-fields text-left" v-else>
-                              Lukso
+                            <p class="d-flex mr-1" style="font-size: 13px">
+                              Show Balance
                             </p>
-                            <p style="font-size: 13px">Show Balance</p>
-                            <v-container class="px-0" fluid>
-                              <v-switch v-model="switch1"></v-switch>
-                            </v-container>
+                            <v-switch
+                              style="max-width: 40px"
+                              class="mt-0"
+                              hide-details
+                              dense
+                              v-model="asset.showBalance"
+                            ></v-switch>
                           </div>
                         </v-col>
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0">
+                  <v-col cols="2" class="pb-1 pr-0">
                     <v-checkbox
-                      v-model="selectedProfiles[profile.id]"
+                      class="mt-2"
+                      v-model="
+                        selectedProfiles[
+                          asset.tokenId ||
+                            asset.assetAddress ||
+                            asset.tokenSymbol
+                        ]
+                      "
                       @change="checkSelectedProfiles()"
                       :hide-details="true"
                       color="#009fb1"
@@ -312,14 +322,23 @@ export default {
   },
   beforeDestroy() {
     this.$store.commit('currentProfile', null);
-    this.$store.commit('currentCred', null);
+    this.$store.commit('setCurrentCred', null);
+    this.$store.commit('setCurrentAsset', null);
   },
   created() {
     console.log('currentProfile', this.currentProfile);
+    console.log('currentAsset', this.currentAsset);
     console.log('list credentials', this.credentials);
 
     if (this.currentProfile) {
       this.selectedProfiles[this.currentProfile.id] = true;
+    }
+    if (this.currentAsset) {
+      this.selectedProfiles[
+        this.currentAsset.tokenId ||
+          this.currentAsset.assetAddress ||
+          this.currentAsset.tokenSymbol
+      ] = true;
     }
     if (this.currentCred) {
       this.selectedProfiles[this.currentCred.id] = true;
@@ -334,12 +353,14 @@ export default {
       'currentProfile',
       'currentCred',
       'profiles',
-      // 'identities',
+      'identities',
+      'identities',
       'credentials',
       'assets',
     ]),
     ...mapState({
       walletAddress: 'address',
+      currentAsset: 'currentAsset',
     }),
   },
   methods: {
@@ -429,6 +450,17 @@ export default {
         this.credentials.filter(({ id }) => this.selectedProfiles[id])
       );
 
+      social_data = social_data.concat(
+        this.assets
+          .filter(
+            ({ tokenId, assetAddress, tokenSymbol }) =>
+              this.selectedProfiles[tokenId || assetAddress || tokenSymbol]
+          )
+          .map(({ showBalance, balanceOf, ...asset }) => {
+            if (showBalance) return { ...asset, balanceOf };
+            return asset;
+          })
+      );
       let body = {
         wa: this.address,
         social_data: social_data,
@@ -453,6 +485,7 @@ export default {
   },
   data() {
     return {
+      showBalance: true,
       selectedProfiles: {},
       isLoading: false,
       isDisabled: true,
@@ -471,7 +504,6 @@ export default {
         pt: 'Copiado!',
       },
       // Delete this and add identities in getters
-      identities: [],
     };
   },
 };

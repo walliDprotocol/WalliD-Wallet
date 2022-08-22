@@ -166,9 +166,9 @@ export default {
       this.$store.commit('showSendAssetModal', true);
     },
     shareProfile(asset) {
-      this.$store.commit('setCurrentCred', asset);
+      this.$store.commit('setCurrentAsset', asset);
 
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } });
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
     },
   },
   data() {

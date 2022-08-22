@@ -63,7 +63,7 @@
           <IconSend />
           <p class="mt-2 home-icons-text">Send</p>
         </div>
-        <div class="home-icons">
+        <div class="home-icons" @click="openShareProofPage">
           <IconProve />
           <p class="mt-2 home-icons-text">Prove</p>
         </div>
@@ -190,6 +190,9 @@ export default {
     console.log(this.tab);
   },
   methods: {
+    openShareProofPage() {
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
+    },
     async createVaultOnUP() {
       this.createVaultIconState = 'creating';
       let newVaultAddress = await this.$store.dispatch('lukso/createVaultOnUP');

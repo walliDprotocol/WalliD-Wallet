@@ -42,14 +42,12 @@
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="!downloadURL(asset) ? 'disabled' : ''"
-              >
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  <a :href="downloadURL(asset)" target="_blank">
-                    Share Proof-of-Ownership
-                  </a>
+              <v-list-item v-if="asset.tokenName">
+                <v-list-item-title
+                  class="SECUNDARY-LINKS text-left"
+                  @click="shareProfile(asset)"
+                >
+                  Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
               <v-list-item v-if="asset.tokenName">
@@ -138,6 +136,13 @@ export default {
   },
 
   methods: {
+    shareProfile(asset) {
+      console.log('asset', asset);
+
+      this.$store.commit('setCurrentAsset', asset);
+
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
+    },
     getAssetType(assetType) {
       if (assetType.isLSP8) return 'LSP8';
       if (assetType.isLSP7) return 'LSP7';
