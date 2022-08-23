@@ -14,7 +14,7 @@
 
         <!-- -->
       </v-col>
-      <v-col v-if="!isLukso" cols="12" class="pt-4 px-14 pb-0">
+      <v-col v-if="!isLukso" cols="12" class="px-14">
         <h2 class="T1 text-center">
           {{ domainENS || $t('home.title') }}
         </h2>
