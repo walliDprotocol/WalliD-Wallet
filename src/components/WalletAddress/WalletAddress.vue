@@ -2,22 +2,21 @@
   <v-tooltip content-class="wallet-tooltip" bottom>
     <template v-slot:activator="{ on }">
       <div
+        class="wallet-address"
         v-on="on"
         @click="copyToClip"
         @mouseover="copy = true"
         @mouseleave="delay()"
       >
-        <div class="wallet-address">
-          <p style="margin: 0 5px 0 5px !important">
-            {{ walletAddress | truncate(12, '...') }}
-          </p>
-          <input type="hidden" id="walletCopy" :value="walletAddress" />
-          <Copy v-if="!copy" style="max-width: 14px; margin-right: 9px"></Copy>
-          <CopyHover
-            v-else
-            style="max-width: 14px; margin-right: 9px"
-          ></CopyHover>
-        </div>
+        <p style="margin: 0 5px 0 5px !important">
+          {{ walletAddress | truncate(12, '...') }}
+        </p>
+        <input type="hidden" id="walletCopy" :value="walletAddress" />
+        <Copy v-if="!copy" style="max-width: 14px; margin-right: 9px"></Copy>
+        <CopyHover
+          v-else
+          style="max-width: 14px; margin-right: 9px"
+        ></CopyHover>
       </div>
     </template>
     <div class="arrow-seed-tooltip"></div>

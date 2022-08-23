@@ -57,8 +57,8 @@
                       <v-row>
                         <v-col cols="12" class="py-0">
                           <p
-                            class="sub-title-fields text-left text-uppercase"
                             v-if="asset.showBalance"
+                            class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
                           >
                             {{ asset.balanceOf | truncate(10) }}
                             {{ asset.tokenSymbol }}
@@ -67,12 +67,18 @@
                             v-else-if="
                               asset.assetType.isLSP7 || asset.assetType.native
                             "
-                            class="sub-title-fields text-left"
+                            class="sub-title-fields text-left sub-title-fields--bold"
                           >
                             {{ asset.tokenName }}
                           </p>
-                          <p v-else class="sub-title-fields text-left">
-                            {{ asset.tokenSymbol + ' #' + asset.tokenId }}
+                          <p
+                            v-else
+                            class="sub-title-fields sub-title-fields--bold text-left"
+                          >
+                            {{ asset.tokenSymbol }}
+                            {{
+                              (' #' + asset.tokenId) | truncate(16, '...', 6)
+                            }}
                           </p>
                         </v-col>
                         <v-col cols="12" class="py-0">
@@ -593,11 +599,11 @@ export default {
         border-top: solid 1px #eeeeee;
         .sub-title-fields {
           font-size: 12px !important;
-          font-weight: 600 !important;
+          font-weight: normal !important;
         }
         .sub-title-fields--bold {
           font-size: 12px !important;
-          font-weight: normal !important;
+          font-weight: 600 !important;
         }
         .MAIN-LINKS {
           font-size: 12px !important;

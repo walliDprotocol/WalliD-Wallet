@@ -51,7 +51,6 @@
             text
             :loading="createVaultIconState === 'creating'"
             rounded
-            :class="{ disabled: createVaultIconState !== 'default' }"
           >
             <IconCreateVault v-if="createVaultIconState === 'creating'" />
             <IconVaultCreated v-else-if="createVaultIconState === 'created'" />

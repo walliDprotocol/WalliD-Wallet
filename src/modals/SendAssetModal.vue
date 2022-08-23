@@ -17,7 +17,7 @@
         v-if="(step > 0 && !currentAsset) || currentAsset"
         cols="12"
         class="d-flex mb-3 py-3"
-        style="background-color: #f7f7f7;"
+        style="background-color: #f7f7f7"
       >
         <v-col cols="auto" class="pa-0 d-flex align-center">
           <v-img
@@ -63,7 +63,7 @@
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
 
-        <div class="mr-3" style="font-size: 13px; font-weight: 500;">
+        <div class="mr-3" style="font-size: 13px; font-weight: 500">
           {{ getCurrentDisplayAddressName }}
         </div>
         <div class="mx-3">
@@ -90,7 +90,7 @@
           />
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
-        <div style="font-size: 13px; font-weight: 500;">
+        <div style="font-size: 13px; font-weight: 500">
           {{ (recipientVaultSelected.name || toAddress) | truncate(8, '...') }}
         </div>
       </v-col>
@@ -144,7 +144,7 @@
         v-if="!recipientVaultSelected.name && step < 2"
         cols="12"
         class="py-0"
-        style="position: relative;"
+        style="position: relative"
       >
         <p class="sub-title-fields text-left mb-3">To</p>
         <v-text-field
@@ -167,7 +167,7 @@
               ></v-img>
               <v-img
                 v-if="step == 0"
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 max-width="12"
                 contain
                 src="../images/icons/close-icon@3x.png"
@@ -182,14 +182,11 @@
         v-else-if="step < 2"
         cols="12"
         class="py-0"
-        style="position: relative; margin-bottom: 18px;"
+        style="position: relative; margin-bottom: 18px"
       >
         <p class="sub-title-fields text-left mb-3">To</p>
-        <div
-          class="d-flex align-center py-1"
-          style="background-color: #f7f7f7;"
-        >
-          <IconCreateVault style="max-width: 30px; margin-inline: 12px;" />
+        <div class="d-flex align-center py-1" style="background-color: #f7f7f7">
+          <IconCreateVault style="max-width: 30px; margin-inline: 12px" />
           <div class="d-flex flex-column flex-grow">
             <p
               style="
@@ -258,7 +255,7 @@
         cols="auto"
         class="pr-0 mr-0 d-flex align-center"
       >
-        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap;">
+        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap">
           My Vaults
         </p>
       </v-col>
@@ -309,7 +306,7 @@
         v-if="step === 1"
         cols="12"
         class="py-0"
-        style="position: relative;"
+        style="position: relative"
       >
         <p class="sub-title-fields text-left mb-3">Amount</p>
         <v-text-field
@@ -328,7 +325,7 @@
           <template #append>
             <div
               class="mr-6 mt-1"
-              style="font-size: 15px; font-weight: 500; line-height: 18px;"
+              style="font-size: 15px; font-weight: 500; line-height: 18px"
             >
               {{ tokenSymbol }}
             </div>
@@ -355,25 +352,25 @@
         class="d-flex flex-column py-0"
       >
         <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 600;">Estimated gas fees</p>
+          <p style="font-size: 15px; font-weight: 600">Estimated gas fees</p>
           <EditPriorityModal />
         </div>
         <div class="d-flex flex-column">
           <div
             class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500;"
+            style="font-size: 13px; text-align: right; font-weight: 500"
           >
             0.0007986
           </div>
           <div
             class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500;"
+            style="font-size: 13px; text-align: right; font-weight: 500"
           >
             <strong>0.000797 LYXt</strong>
           </div>
           <div
             class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500;"
+            style="font-size: 13px; text-align: right; font-weight: 500"
           >
             Max fee: 0.00083974 LYXt
           </div>
@@ -384,14 +381,14 @@
       </v-col>
       <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
         <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 15px; font-weight: 500;">Amount</p>
-          <p style="font-size: 15px; font-weight: 500;">
+          <p style="font-size: 15px; font-weight: 500">Amount</p>
+          <p style="font-size: 15px; font-weight: 500">
             {{ amount }} {{ ' ' + tokenSymbol }}
           </p>
         </div>
         <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 15px; font-weight: 500;">Gas fees</p>
-          <p style="font-size: 15px; font-weight: 500;">
+          <p style="font-size: 15px; font-weight: 500">Gas fees</p>
+          <p style="font-size: 15px; font-weight: 500">
             {{ parseGasFee }} {{ ' ' + currentNetwork.ticker }}
           </p>
         </div>
@@ -407,7 +404,7 @@
           >
             Amount + gas fees
           </p>
-          <p style="font-size: 15px; font-weight: 600; text-align: right;">
+          <p style="font-size: 15px; font-weight: 600; text-align: right">
             {{ calculateAmount() }}
           </p>
         </div>
@@ -424,7 +421,7 @@
         <v-btn text @click="nextStep()" class="advance-btn">Next</v-btn>
       </v-col>
     </v-row>
-    <v-row v-else class="align-end" style="margin-top: 4.5rem;">
+    <v-row v-else class="align-end" style="margin-top: 4.5rem">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="step = step - 1" class="cancel-btn">Reject</v-btn>
       </v-col>
@@ -447,15 +444,15 @@
 </template>
 
 <script>
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
-import SendTransactionStateModal from './SendTransactionStateModal.vue'
-import IconCreateVault from '../images/icons/icon-createVault.vue'
-import Web3 from 'web3'
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
+import SendTransactionStateModal from './SendTransactionStateModal.vue';
+import IconCreateVault from '../images/icons/icon-createVault.vue';
+import Web3 from 'web3';
 
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
 
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -464,14 +461,16 @@ export default {
     SendTransactionStateModal,
     IconCreateVault,
   },
-  async mounted() {},
+  async mounted() {
+    if (this.currentAsset?.assetType?.isLSP8) this.setMaxAmount();
+  },
   methods: {
     isLukso() {
-      return this.chainId === '2828'
+      return this.chainId === '2828';
     },
     getAssetId(asset) {
       if (asset.tokenId)
-        return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...')
+        return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...');
     },
     calculateAmount() {
       if (this.tokenType === 'native') {
@@ -480,11 +479,11 @@ export default {
             Web3.utils
               .toBN(this.baseGasFee)
               .add(Web3.utils.toBN(Web3.utils.toWei(this.amount)))
-              .toString(),
+              .toString()
           ) +
           ' ' +
           this.currentNetwork.ticker
-        )
+        );
       } else {
         return (
           this.amount +
@@ -494,54 +493,54 @@ export default {
           this.parseGasFee +
           ' ' +
           this.currentNetwork.ticker
-        )
+        );
       }
     },
     deleteRecipientAddress() {
       if (this.step == 0) {
-        this.toAddress = ''
-        this.recipientVaultSelected = {}
+        this.toAddress = '';
+        this.recipientVaultSelected = {};
       }
     },
     isValidAddress() {
       return (
         this.validateAddress(this.toAddress).isValid ||
         this.validateAddress(this.recipientVaultSelected.address).isValid
-      )
+      );
     },
     isSufficientAmount() {
-      console.log(this.amount)
+      console.log(this.amount);
       return ethers.utils
         .parseUnits(this.amount.toString())
-        .lte(ethers.utils.parseUnits(this.currentAsset.balanceOf.toString()))
+        .lte(ethers.utils.parseUnits(this.currentAsset.balanceOf.toString()));
     },
     async nextStep() {
-      console.log('selectedAsset', this.selectedAsset, this.step)
+      console.log('selectedAsset', this.selectedAsset, this.step);
       if (this.step == 0 && this.selectedAsset) {
-        this.$store.commit('setCurrentAsset', this.selectedAsset)
+        this.$store.commit('setCurrentAsset', this.selectedAsset);
       }
-      await this.$nextTick()
+      await this.$nextTick();
 
       if (
         (this.isValidAddress() && this.step === 0 && this.currentAsset) ||
         (this.amount && this.step === 1)
       )
-        this.step++
+        this.step++;
     },
     setMaxAmount() {
       //get amount of currentAsset token or selectedToken and set to that amount
-      this.amount = this.currentAsset.balanceOf
+      this.amount = this.currentAsset.balanceOf;
     },
     close() {
-      this.$store.commit('setCurrentAsset', null)
-      this.$store.commit('showSendAssetModal', false)
+      this.$store.commit('setCurrentAsset', null);
+      this.$store.commit('showSendAssetModal', false);
     },
 
     async send() {
       try {
-        this.isLoading = true
+        this.isLoading = true;
 
-        console.log(this.currentAsset)
+        console.log(this.currentAsset);
         if (this.currentAsset.assetType.isLSP7) {
           let transferLSP7Token = await this.$store.dispatch(
             'lukso/transferLSP7Token',
@@ -550,9 +549,9 @@ export default {
                 this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
               tokenAddress: this.currentAsset.assetAddress,
               amount: this.amount,
-            },
-          )
-          console.log('transferLSP7Token', transferLSP7Token)
+            }
+          );
+          console.log('transferLSP7Token', transferLSP7Token);
         } else if (this.currentAsset.assetType.isLSP8) {
           let transferLSP8Token = await this.$store.dispatch(
             'lukso/transferLSP8Token',
@@ -561,27 +560,27 @@ export default {
                 this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
               tokenAddress: this.currentAsset.assetAddress,
               tokenId: this.currentAsset.tokenId || this.tokenId,
-            },
-          )
-          console.log('transferLSP8Token', transferLSP8Token)
+            }
+          );
+          console.log('transferLSP8Token', transferLSP8Token);
         }
-        this.sendState = 'success'
+        this.sendState = 'success';
       } catch (err) {
-        console.err(err)
-        this.sendState = 'error'
+        console.err(err);
+        this.sendState = 'error';
         // show unsuccess screen
       } finally {
         // show success screen
 
-        this.isLoading = false
+        this.isLoading = false;
       }
 
       // this.openViewActivityModal();
     },
 
     openViewActivityModal() {
-      this.$store.commit('showViewActivityModal', true)
-      this.$store.commit('showSendAssetModal', false)
+      this.$store.commit('showViewActivityModal', true);
+      this.$store.commit('showSendAssetModal', false);
     },
   },
   computed: {
@@ -599,29 +598,29 @@ export default {
     }),
     getCurrentDisplayAddressName() {
       return this.vaultList.find(
-        (v) => v.address === this.currentDisplayAddress,
-      )?.name
+        (v) => v.address === this.currentDisplayAddress
+      )?.name;
     },
     tokenSymbol() {
-      return this.currentAsset.tokenSymbol
+      return this.currentAsset.tokenSymbol;
     },
     amountPrefix() {
       if (this.currentAsset)
         return this.currentAsset.assetType.isLSP7 ||
           this.currentAsset.assetType.native
           ? 'Balance: '
-          : 'Amount: '
+          : 'Amount: ';
     },
     parseGasFee() {
-      return ethers.utils.formatUnits(ethers.BigNumber.from(this.baseGasFee))
+      return ethers.utils.formatUnits(ethers.BigNumber.from(this.baseGasFee));
     },
     dynamicButtonMargin() {
       if (!this.showVaults && this.step == 0) {
-        return '10.3rem'
+        return '10.3rem';
       } else if (this.step == 1) {
-        return '8rem'
+        return '8rem';
       } else {
-        return '1rem'
+        return '1rem';
       }
     },
   },
@@ -632,7 +631,7 @@ export default {
       baseGasFee: 5_000_000,
       sendState: null,
       isLoading: false,
-      amount: 1,
+      amount: '',
       tokenId: '',
       step: 0,
       toAddress: '',
@@ -643,9 +642,9 @@ export default {
       TokenAmountRule: [
         (v) => this.isSufficientAmount(v) === true || 'Insufficient funds',
       ],
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">
