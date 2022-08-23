@@ -32,7 +32,7 @@ const mutations = {
   },
 };
 const actions = {
-  ['changeRpcTarget']: ({ rootState, dispatch, state }, network) => {
+  ['changeRpcTarget']: ({ rootState, dispatch }, network) => {
     return new Promise((resolve, reject) => {
       console.debug('Action changeRpcTarget');
       console.debug('network: ', network);
@@ -40,7 +40,7 @@ const actions = {
       resolve(API.changeRpcTarget(network));
     }).then(() => dispatch('updateNetworks'));
   },
-  ['getNetworkAssets']: ({ rootState, dispatch, state }) => {
+  ['getNetworkAssets']: ({ commit, dispatch, state }) => {
     return new Promise((resolve, reject) => {
       console.debug('Action getNetworkAssets');
       const network = state.currentNetwork;
@@ -52,6 +52,7 @@ const actions = {
           break;
 
         default:
+          commit('assets', [], { root: true });
           reject(new Error('Not implemented yet'));
           break;
       }

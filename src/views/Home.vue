@@ -14,7 +14,7 @@
 
         <!-- -->
       </v-col>
-      <v-col cols="12" class="pt-4 px-14 pb-0">
+      <v-col v-if="!isLukso" cols="12" class="pt-4 px-14 pb-0">
         <h2 class="T1 text-center">
           {{ domainENS || $t('home.title') }}
         </h2>
@@ -36,22 +36,41 @@
         </v-btn>
       </v-col>
       <v-col cols="12" class="d-flex justify-center mb-5">
-        <div
-          v-if="isLukso"
-          class="home-icons"
-          @click="createVaultOnUP"
-          :class="{ disabled: createVaultIconState !== 'default' }"
-        >
-          <IconCreateVault v-if="createVaultIconState === 'creating'" />
-          <IconVaultCreated v-else-if="createVaultIconState === 'created'" />
-          <IconCreateVault v-else />
-          <p class="mt-2 home-icons-text">{{ createVaultLabelState }}</p>
+        <div class="">
+          <v-btn
+            v-if="isLukso"
+            class="home-icons pa-0"
+            @click="createVaultOnUP"
+            text
+            :loading="createVaultIconState === 'creating'"
+            rounded
+            :class="{ disabled: createVaultIconState !== 'default' }"
+          >
+            <IconCreateVault v-if="createVaultIconState === 'creating'" />
+            <IconVaultCreated v-else-if="createVaultIconState === 'created'" />
+            <IconCreateVault v-else />
+          </v-btn>
+          <p class="mt-1 home-icons-btn-label">{{ createVaultLabelState }}</p>
         </div>
-        <div class="home-icons" @click="openSendAssetModal">
+        <div
+          class="home-icons"
+          :class="{ disabled: assets.length == 0 }"
+          @click="openSendAssetModal"
+        >
           <IconSend />
           <p class="mt-2 home-icons-text">Send</p>
         </div>
-        <div class="home-icons" @click="openShareProofPage">
+        <div
+          class="home-icons"
+          :class="{
+            disabled:
+              assets.length === 0 &&
+              identities.length === 0 &&
+              credentials.length === 0 &&
+              profiles.length === 0,
+          }"
+          @click="openShareProofPage"
+        >
           <IconProve />
           <p class="mt-2 home-icons-text">Prove</p>
         </div>
@@ -132,6 +151,7 @@ export default {
     ...mapState({
       walletAddress: 'address',
       domainENS: 'domainENS',
+      assets: 'assets',
     }),
     ...mapGetters('networks', ['currentNetwork', 'networksList', 'chainId']),
     ...mapState('lukso', ['profileUsername', 'currentDisplayAddress']),
@@ -238,14 +258,27 @@ export default {
 .home-icons {
   display: flex;
   flex-direction: column;
-  color: #009fb1;
-  font-size: 14px;
-  font-weight: 500;
   margin-inline: 21px;
   cursor: pointer;
   position: relative;
+  min-width: unset !important;
+  width: 38px;
+  box-shadow: none !important;
+  height: 38px !important;
   &.disabled {
     pointer-events: none;
+    svg {
+      circle {
+        fill: var(--very-light-grey);
+      }
+    }
+    p {
+      color: var(--very-light-grey);
+    }
+  }
+  &.v-btn {
+    background-color: var(--teal-blue);
+    color: white !important;
   }
 }
 
@@ -255,6 +288,22 @@ export default {
   left: 50%;
   transform: translate(-50%, 120%);
   white-space: nowrap !important;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #009fb1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.home-icons-btn-label {
+  white-space: nowrap !important;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #009fb1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 .current-network {

@@ -10,7 +10,7 @@
         cols="12"
         class="py-0 px-1 mt-1 mb-2 card"
       >
-        <v-container class="py-0">
+        <v-container class="pt-4">
           <v-row>
             <v-col cols="2" class="pr-2 pb-0">
               <StoredProfileImg
@@ -171,7 +171,7 @@
         </v-container>
       </v-col>
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container class="py-0 px-3">
+        <v-container class="px-3 pt-4">
           <v-row>
             <v-col cols="2" class="">
               <StoredProfileImg :size="38" :name="'AddProfile'" />

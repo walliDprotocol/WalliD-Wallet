@@ -74,7 +74,7 @@
       </v-col>
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
         <v-container
-          class="py-0 px-3"
+          class="px-3 pt-4"
           @click="openImportAssetModal()"
           style="cursor: pointer;"
         >

@@ -41,14 +41,14 @@
               v-for="asset in assets"
               :key="asset.id"
               cols="12"
-              class="list-profiles"
+              class="list-profiles pb-0"
             >
               <v-container class="wrapper">
                 <v-row>
                   <v-col cols="2" class="pb-1 pl-0">
                     <StoredProfileImg
-                      class="mt-0"
-                      :size="30"
+                      class="mt-0 pt-0"
+                      :size="40"
                       :src="asset.assetImagePath"
                     />
                   </v-col>
@@ -57,9 +57,22 @@
                       <v-row>
                         <v-col cols="12" class="py-0">
                           <p
-                            class="sub-title-fields sub-title-fields--bold text-left text-uppercase"
+                            class="sub-title-fields text-left text-uppercase"
+                            v-if="asset.showBalance"
                           >
+                            {{ asset.balanceOf | truncate(10) }}
                             {{ asset.tokenSymbol }}
+                          </p>
+                          <p
+                            v-else-if="
+                              asset.assetType.isLSP7 || asset.assetType.native
+                            "
+                            class="sub-title-fields text-left"
+                          >
+                            {{ asset.tokenName }}
+                          </p>
+                          <p v-else class="sub-title-fields text-left">
+                            {{ asset.tokenSymbol + ' #' + asset.tokenId }}
                           </p>
                         </v-col>
                         <v-col cols="12" class="py-0">
@@ -69,21 +82,21 @@
                           >
                             {{ asset.tokenName }}
                           </p>
-                          <div v-else class="d-flex align-center justify-end">
+                          <div v-else class="d-flex align-center justify-start">
                             <p
-                              class="sub-title-fields text-left"
-                              v-if="asset.showBalance"
+                              v-if="!asset.assetType.isLSP8"
+                              class="d-flex mr-1"
+                              style="font-size: 11px"
                             >
-                              {{ asset.balanceOf }}
-                            </p>
-                            <p class="d-flex mr-1" style="font-size: 13px">
                               Show Balance
                             </p>
                             <v-switch
+                              v-if="!asset.assetType.isLSP8"
                               style="max-width: 40px"
-                              class="mt-0"
+                              class="mt-0 balance-switch"
                               hide-details
                               dense
+                              :ripple="false"
                               v-model="asset.showBalance"
                             ></v-switch>
                           </div>
@@ -94,6 +107,7 @@
                   <v-col cols="2" class="pb-1 pr-0">
                     <v-checkbox
                       class="mt-2"
+                      :ripple="false"
                       v-model="
                         selectedProfiles[
                           asset.tokenId ||
@@ -113,18 +127,18 @@
               v-for="profile in profiles"
               :key="profile.id"
               cols="12"
-              class="py-0 list-profiles"
+              class="list-profiles pb-0"
             >
-              <v-container class="py-0 wrapper">
+              <v-container class="wrapper">
                 <v-row>
-                  <v-col cols="2" class="py-1 pl-0">
+                  <v-col cols="2" class="pb-1 pl-0">
                     <StoredProfileImg
-                      class="mt-1"
-                      :size="30"
+                      class="mt-0 pt-0"
+                      :size="40"
                       :name="getSocialName(profile)"
                     />
                   </v-col>
-                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                  <v-col cols="8" class="pb-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
@@ -142,8 +156,10 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0">
+                  <v-col cols="2" class="pb-1 pr-0">
                     <v-checkbox
+                      class="mt-2"
+                      :ripple="false"
                       v-model="selectedProfiles[profile.id]"
                       @change="checkSelectedProfiles()"
                       :hide-details="true"
@@ -157,14 +173,18 @@
               v-for="identity in identities"
               :key="identity.id"
               cols="12"
-              class="py-0 list-profiles"
+              class="list-profiles pb-0"
             >
-              <v-container class="py-0 wrapper text-left">
+              <v-container class="wrapper text-left">
                 <v-row>
-                  <v-col cols="2" class="py-1 pl-0">
-                    <StoredProfileImg :size="38" :name="identity.idt" />
+                  <v-col cols="2" class="pb-1 pl-0">
+                    <StoredProfileImg
+                      class="mt-0 pt-0"
+                      :size="40"
+                      :name="identity.idt"
+                    />
                   </v-col>
-                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                  <v-col cols="8" class="pb-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
@@ -175,8 +195,10 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0">
+                  <v-col cols="2" class="pb-1 pr-0">
                     <v-checkbox
+                      class="mt-2"
+                      :ripple="false"
                       v-model="selectedProfiles[identity.idt]"
                       @change="checkSelectedProfiles()"
                       :hide-details="true"
@@ -190,18 +212,19 @@
               v-for="credential in credentials"
               :key="credential.id"
               cols="12"
-              class="py-0 list-profiles"
+              class="list-profiles pb-0"
             >
-              <v-container class="py-0 wrapper text-left">
+              <v-container class="wrapper text-left">
                 <v-row>
-                  <v-col cols="2" class="py-1 pl-0">
+                  <v-col cols="2" class="pb-1 pl-0">
                     <StoredProfileImg
-                      :size="30"
+                      class="mt-0 pt-0"
+                      :size="40"
                       :name="credential.assetName"
                       :src="getImage(credential)"
                     />
                   </v-col>
-                  <v-col cols="8" class="py-1 pr-0 pl-1">
+                  <v-col cols="8" class="pb-1 pr-0 pl-1">
                     <v-container class="">
                       <v-row>
                         <v-col cols="12" class="py-0">
@@ -226,8 +249,10 @@
                       </v-row>
                     </v-container>
                   </v-col>
-                  <v-col cols="2" class="py-1 pr-0">
+                  <v-col cols="2" class="pb-1 pr-0">
                     <v-checkbox
+                      class="mt-2"
+                      :ripple="false"
                       v-model="selectedProfiles[credential.id]"
                       @change="checkSelectedProfiles()"
                       :hide-details="true"
@@ -241,7 +266,7 @@
               <v-container class="py-0 pt-1 wrapper">
                 <v-row>
                   <v-col cols="2" class="py-1 pl-0">
-                    <StoredProfileImg :size="30" :name="'AddProfile'" />
+                    <StoredProfileImg :size="40" :name="'AddProfile'" />
                   </v-col>
                   <v-col cols="8" class="py-1 pr-0 pl-1">
                     <v-container class="py-1">
@@ -520,6 +545,20 @@ export default {
 }
 
 .profile-proof-view {
+  .balance-switch.v-input--switch {
+    .v-input--switch__track {
+      height: 10px;
+      width: 25px;
+    }
+    .v-input--switch__thumb {
+      height: 15px;
+      width: 15px;
+    }
+
+    &.v-input--is-dirty .v-input--switch__thumb {
+      transform: translate(15px);
+    }
+  }
   #walletCopy {
     cursor: pointer;
   }
@@ -542,14 +581,14 @@ export default {
     }
   }
   .v-card.form-card {
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: none !important;
     overflow: auto;
     max-height: 320px;
     border-radius: 14px;
 
     .list-profiles {
-      padding-left: 34px;
-      padding-right: 34px;
+      padding-left: 8px;
+      padding-right: 8px;
       .wrapper {
         border-top: solid 1px #eeeeee;
         .sub-title-fields {
@@ -557,7 +596,7 @@ export default {
           font-weight: 600 !important;
         }
         .sub-title-fields--bold {
-          font-size: 11px !important;
+          font-size: 12px !important;
           font-weight: normal !important;
         }
         .MAIN-LINKS {

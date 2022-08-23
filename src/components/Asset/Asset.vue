@@ -1,5 +1,5 @@
 <template>
-  <v-container class="">
+  <v-container class="pt-4">
     <v-row>
       <v-col cols="2" class="pr-2">
         <StoredProfileImg

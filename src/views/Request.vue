@@ -21,7 +21,7 @@
       <v-row
         v-show="!success"
         class="justify-space-around mt-3"
-        style="height: 500px;"
+        style="height: 500px"
       >
         <v-row
           v-if="requestType == 'wallid_connect'"
@@ -54,7 +54,7 @@
           class="pl-1 pt-4 ml-n16 text-center"
         >
           <StoredProfileImg
-            class="mt-n2 ml-n2"
+            class="mt-n2 ml-n2 pt-2"
             :size="58"
             :name="getAssetInfo[0]"
           />
@@ -75,7 +75,7 @@
             v-if="requestType === 'wallet_sign'"
             class="justify-space-around align-content-start"
           >
-            <v-col cols="8" class="" style="border-bottom: solid 1px #eeeeee;">
+            <v-col cols="8" class="" style="border-bottom: solid 1px #eeeeee">
               <h2 class="normal-text">
                 {{ $t('request.' + requestType + '.label[0]') }}
               </h2>
@@ -94,7 +94,7 @@
               </p>
               <p
                 class="SECUNDARY-LINKS text-left"
-                style="word-break: break-word;"
+                style="word-break: break-word"
               >
                 {{ signatureMessage }}
               </p>
@@ -114,7 +114,7 @@
             <v-col cols="7" class="">
               <div class="request-list-permissions text-center">
                 <p class="sub-title-fields text-center">
-                  <span style="font-size: 22px; line-height: 0;">&#8226;</span>
+                  <span style="font-size: 22px; line-height: 0">&#8226;</span>
                   {{ $t('request.' + requestType + '.description') }}
                 </p>
               </div>
@@ -133,7 +133,7 @@
             <v-col
               cols="6"
               class="d-flex pb-2 px-0"
-              style="border-bottom: solid 1px #eee;"
+              style="border-bottom: solid 1px #eee"
             >
               <p
                 class="SECUNDARY-LINKS text-left"
@@ -155,7 +155,7 @@
             <v-col
               cols="2"
               class="justify-end d-flex pb-2 px-0"
-              style="border-bottom: solid 1px #eee;"
+              style="border-bottom: solid 1px #eee"
             >
               <a
                 @click="editSitesConnectionLevel()"
@@ -207,7 +207,7 @@
           cols="10"
           class="px-4 py-0 direction-column"
         >
-          <p class="WARNING-NOTES-1 text-left" style="color: #b8b9bb;">
+          <p class="WARNING-NOTES-1 text-left" style="color: #b8b9bb">
             Only connect with sites you trust
           </p>
         </v-col>
@@ -269,13 +269,13 @@
 </template>
 
 <script>
-import WarningIcon from '../images/icon-warning-blue'
-import TooltipIcon from '../images/icons/icon-tooltip'
+import WarningIcon from '../images/icon-warning-blue';
+import TooltipIcon from '../images/icons/icon-tooltip';
 
-import BrokenLine from '../images/broken-line'
-import CheckSuccessIcon from '../images/icon-sucessfully'
-import WebSiteLogo from '../components/WebSiteLogo'
-import StoredProfileImg from '../components/StoredProfileImg'
+import BrokenLine from '../images/broken-line';
+import CheckSuccessIcon from '../images/icon-sucessfully';
+import WebSiteLogo from '../components/WebSiteLogo';
+import StoredProfileImg from '../components/StoredProfileImg';
 
 import {
   CANCEL_REQUEST,
@@ -287,8 +287,8 @@ import {
   UPDATE_CONNECTED,
   ADDRESS,
   REQUEST_POP,
-} from '../store/actions'
-import { mapGetters, mapState } from 'vuex'
+} from '../store/actions';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   components: {
@@ -305,28 +305,28 @@ export default {
       walletAddress: 'address',
     }),
     requestType() {
-      return this.request.type
+      return this.request.type;
     },
     requestData() {
-      return this.request.data
+      return this.request.data;
     },
     signatureMessage() {
-      return this.request.data?.join?.('; ')
+      return this.request.data?.join?.('; ');
     },
     getAssetInfo() {
       if (this.requestType === 'wallid_export_asset') {
-        return this.requestData?.[1].split?.(':')
+        return this.requestData?.[1].split?.(':');
 
         // MetaMask:0x11ef4f801a93ae06a00b13086d0066137f1937bd
       } else {
-        return null
+        return null;
       }
     },
     getCurrentLevel() {
-      console.log(this.currentLevel)
+      console.log(this.currentLevel);
       return (
         this.$t('request.wallid_connect.levels')[this.currentLevel - 1] || {}
-      )
+      );
     },
   },
   watch: {},
@@ -335,73 +335,73 @@ export default {
     /* this.requestsWatcher(); */
   },
   async created() {
-    this.debug('Address: ', this.address)
-    this.debug('Request: ', this.request)
-    this.debug('Request origin: ', this.request.origin)
+    this.debug('Address: ', this.address);
+    this.debug('Request: ', this.request);
+    this.debug('Request origin: ', this.request.origin);
 
     // this.type = this.request.type;
-    this.debug('Request type: ', this.requestType)
-    this.websiteData = this.getWebsiteInfo(this.request.origin)
+    this.debug('Request type: ', this.requestType);
+    this.websiteData = this.getWebsiteInfo(this.request.origin);
 
     // Get current access level to requesting webiste
     this.currentLevel = await this.$store.dispatch(GET_ACCESS_LEVEL, {
       url: this.request.origin,
-    })
-    console.log('currentLevel', this.currentLevel)
+    });
+    console.log('currentLevel', this.currentLevel);
 
     switch (this.requestType) {
       case 'wallet_sign':
       case 'wallet_sign_erc191':
       case 'wallet_ec_sign':
-        break
+        break;
       case 'wallid_open':
-        this.findCredential(this.request.data)
-        this.updateConnected(this.request.origin)
-        break
+        this.findCredential(this.request.data);
+        this.updateConnected(this.request.origin);
+        break;
       case 'wallid_connect':
         // Rework this: is this realy needed??
         let hasAccess = await this.$store.dispatch(ACCESS_LEVEL, {
           url: this.request.origin,
           level: this.request.level,
-        })
-        this.debug('hasAccess', hasAccess)
+        });
+        this.debug('hasAccess', hasAccess);
         if (hasAccess) {
-          await this.request.callback(null, 'ALREADY_CONNECTED')
-          let nextRequest = await this.$store.dispatch(REQUEST_POP, {})
-          console.log(nextRequest)
-          window.close()
+          await this.request.callback(null, 'ALREADY_CONNECTED');
+          let nextRequest = await this.$store.dispatch(REQUEST_POP, {});
+          console.log(nextRequest);
+          window.close();
         }
-        break
+        break;
       case 'wallid_disconnect':
-        console.error('Invalid Request Type')
-        break
+        console.error('Invalid Request Type');
+        break;
       case 'wallid_address':
       case 'wallid_import_sign':
       case 'wallid_import_cred':
       case 'wallid_token':
-        var params
+        var params;
         params = {
           origin: this.request.origin,
           icon: this.request.origin + '/favicon.ico',
           name: this.getDomain(this.request.origin),
-        }
+        };
         this.$store
           .dispatch(ACCESS_LEVEL, { url: this.request.origin, level: 1 })
           .then((hasAccess) => {
-            this.debug('hasAccess', hasAccess, params)
+            this.debug('hasAccess', hasAccess, params);
             if (!hasAccess) {
               this.$store.dispatch(CONNECT, { params }).then(() => {
-                this.debug('Connected')
-                this.authorizeRequest(0)
-              })
+                this.debug('Connected');
+                this.authorizeRequest(0);
+              });
             } else {
-              this.authorizeRequest(0)
+              this.authorizeRequest(0);
             }
-          })
-        break
+          });
+        break;
       default:
-        console.log('Invalid Request Type')
-        break
+        console.log('Invalid Request Type');
+        break;
     }
   },
   props: {
@@ -413,58 +413,58 @@ export default {
     // Pool every 2 seconds to see if current request has already been accepted
     requestsWatcher() {
       setInterval(() => {
-        this.$store.commit('updatePendingRequests')
+        this.$store.commit('updatePendingRequests');
 
         if (!this.$store.getters.getRequest) {
-          window.close()
+          window.close();
         }
-      }, 2 * 1000)
+      }, 2 * 1000);
     },
     editSitesConnectionLevel() {
       this.$router.push({
         name: 'sites',
         params: { toEditSite: this.websiteData.url },
-      })
+      });
     },
     updateConnected(site) {
       if (this.connections) {
         let connectedSite = this.connections.find((e) => {
-          return this.getDomain(e.url) == this.getDomain(site) ? e : ''
-        })
-        this.debug('connectedSite site: ', connectedSite)
+          return this.getDomain(e.url) == this.getDomain(site) ? e : '';
+        });
+        this.debug('connectedSite site: ', connectedSite);
         if (connectedSite) {
-          this.$store.commit('updateConnected', connectedSite)
+          this.$store.commit('updateConnected', connectedSite);
         }
       }
     },
     findCredential(id) {
-      console.log('findCredential', id)
+      console.log('findCredential', id);
       let cred = this.credentials.find((cred) => {
         if (cred.id == id) {
-          return cred
+          return cred;
         }
-      })
-      console.log('Credential', cred)
+      });
+      console.log('Credential', cred);
 
       if (cred) {
-        this.$store.commit('clearPendingRequests')
-        this.$store.commit('setCurrentCred', cred)
-        this.$router.push({ name: 'Credential' })
+        this.$store.commit('clearPendingRequests');
+        this.$store.commit('setCurrentCred', cred);
+        this.$router.push({ name: 'Credential' });
       } else {
-        this.authorizeRequest(0)
+        this.authorizeRequest(0);
       }
     },
     getWebsiteInfo(origin) {
-      let name = origin.split('//')[1].split('/')[0]
-      let icon = origin + '/favicon.ico'
-      return { name: name, icon: icon, url: origin }
+      let name = origin.split('//')[1].split('/')[0];
+      let icon = origin + '/favicon.ico';
+      return { name: name, icon: icon, url: origin };
     },
 
     authorizeRequest(time = 30) {
-      this.disableButtonRequest = true
+      this.disableButtonRequest = true;
 
       if (this.request.type == 'wallid_connect') {
-        this.request.data.level = this.permissionLevel
+        this.request.data.level = this.permissionLevel;
       }
       this.$store
         .dispatch(AUTHORIZE_REQUEST, {
@@ -482,14 +482,14 @@ export default {
             this.request.type != 'wallid_open'
           ) {
             setTimeout(() => {
-              this.$notification ? window.close() : this.$router.push('/home')
-            }, time * 100)
-            console.log('authorizeRequest res:', res)
+              this.$notification ? window.close() : this.$router.push('/home');
+            }, time * 100);
+            console.log('authorizeRequest res:', res);
           } else {
-            this.$router.push('/home')
+            this.$router.push('/home');
           }
         })
-        .catch((err) => console.error(err))
+        .catch((err) => console.error(err));
     },
     cancel() {
       this.$store
@@ -501,9 +501,9 @@ export default {
         })
         .then(() => {
           setTimeout(() => {
-            this.$notification ? window.close() : this.$router.push('/home')
-          }, 5 * 100)
-        })
+            this.$notification ? window.close() : this.$router.push('/home');
+          }, 5 * 100);
+        });
     },
   },
   data() {
@@ -514,9 +514,9 @@ export default {
       websiteData: { name: '', icon: '' },
       permissionLevel: 1,
       currentLevel: -1,
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss">

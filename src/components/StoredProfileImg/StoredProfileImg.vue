@@ -1,8 +1,8 @@
 <template>
-  <v-container class="social-img pa-0 pl-3 pt-2">
+  <v-container class="social-img pa-0 pl-3">
     <component
       v-if="!src"
-      class=""
+      class="d-block"
       v-bind:is="currentSocialImg"
       :style="{ width: size + 'px', height: size + 'px' }"
     ></component>
@@ -39,20 +39,20 @@
 </template>
 
 <script>
-import IconTwitter from '../../images/SocialNetworks/icon-twitter'
-import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin'
-import IconReddit from '../../images/SocialNetworks/icon-reddit'
-import IconGitHub from '../../images/SocialNetworks/icon-github'
-import IconDiscord from '../../images/SocialNetworks/icon-discord'
-import IconMetaMask from '../../images/SocialNetworks/icon-metamask'
+import IconTwitter from '../../images/SocialNetworks/icon-twitter';
+import IconLinkedIn from '../../images/SocialNetworks/icon-linkedin';
+import IconReddit from '../../images/SocialNetworks/icon-reddit';
+import IconGitHub from '../../images/SocialNetworks/icon-github';
+import IconDiscord from '../../images/SocialNetworks/icon-discord';
+import IconMetaMask from '../../images/SocialNetworks/icon-metamask';
 
-import IconENS from '../../images/SocialNetworks/icon-ens'
+import IconENS from '../../images/SocialNetworks/icon-ens';
 
-import IconAddProfile from '../../images/SocialNetworks/icon-add-profile'
+import IconAddProfile from '../../images/SocialNetworks/icon-add-profile';
 
-import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt'
-import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt'
-import IconCMD_PT from '../../images/CitizenIDs/icon-cc-pt'
+import IconCC_PT from '../../images/CitizenIDs/icon-cc-pt';
+import IconSHUFTI_CC_PT from '../../images/CitizenIDs/icon-cc-pt';
+import IconCMD_PT from '../../images/CitizenIDs/icon-cc-pt';
 
 export default {
   name: 'StoredProfileImg',
@@ -93,15 +93,15 @@ export default {
   computed: {
     currentSocialImg() {
       // Remove UC_ from name to get the standard CMD logo
-      const _name = this.name.replace(/UC_/g, '')
-      return ('Icon' + _name).trim()
+      const _name = this.name.replace(/UC_/g, '');
+      return ('Icon' + _name).trim();
     },
   },
   methods: {},
   data() {
-    return {}
+    return {};
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
