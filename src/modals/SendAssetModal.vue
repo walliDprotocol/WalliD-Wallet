@@ -44,7 +44,12 @@
           </div>
         </v-col>
       </v-col>
-      <v-col v-if="step === 2" cols="12" class="d-flex align-center py-3">
+      <v-col
+        v-if="step === 2"
+        cols="12"
+        class="d-flex align-center py-3"
+        style="background-color: #f7f7f7;"
+      >
         <div class="mr-3 d-flex align-center">
           <jazz-icon
             v-if="!recipientVaultSelected"
