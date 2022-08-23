@@ -421,7 +421,7 @@
         <v-btn text @click="nextStep()" class="advance-btn">Next</v-btn>
       </v-col>
     </v-row>
-    <v-row v-else class="align-end" style="margin-top: 5rem;">
+    <v-row v-else class="align-end" style="margin-top: 4.5rem;">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="step = step - 1" class="cancel-btn">Reject</v-btn>
       </v-col>
