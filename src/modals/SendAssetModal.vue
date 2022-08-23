@@ -383,28 +383,31 @@
         <hr />
       </v-col>
       <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
-        <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 600; font-weight: 500;">
-            Total
-          </p>
-        </div>
         <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 15px; font-weight: 600;">Amount</p>
-          <p style="font-size: 15px; font-weight: 600;">
+          <p style="font-size: 15px; font-weight: 500;">Amount</p>
+          <p style="font-size: 15px; font-weight: 500;">
             {{ amount }} {{ ' ' + tokenSymbol }}
           </p>
         </div>
-        <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 600;">Gas fees</p>
-          <p style="font-size: 15px; font-weight: 600;">
+        <div class="d-flex justify-space-between mt-3">
+          <p style="font-size: 15px; font-weight: 500;">Gas fees</p>
+          <p style="font-size: 15px; font-weight: 500;">
             {{ parseGasFee }} {{ ' ' + currentNetwork.ticker }}
           </p>
         </div>
-        <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 800; text-align: left;">
-            Amount + Gas fees
+        <div class="d-flex justify-space-between mt-3">
+          <p
+            style="
+              font-size: 15px;
+              font-weight: 600;
+              text-align: left;
+              white-space: nowrap;
+              margin-right: 2rem;
+            "
+          >
+            Amount + gas fees
           </p>
-          <p style="font-size: 15px; font-weight: 800; text-align: right;">
+          <p style="font-size: 15px; font-weight: 600; text-align: right;">
             {{ calculateAmount() }}
           </p>
         </div>
