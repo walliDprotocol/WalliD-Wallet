@@ -5,7 +5,7 @@
         <v-container class="text-left">
           <v-row>
             <v-col cols="12" class="pb-2">
-              <div class="back-arrow mb-6">
+              <div class="back-arrow mb-6 mt-3">
                 <v-btn text @click="close" class="back-btn">
                   <ArrowBack />
                 </v-btn>
@@ -24,7 +24,7 @@
                 class="flow-selector"
                 @mouseover="IconAdd = 'IconAddHover'"
                 @mouseout="IconAdd = 'IconAdd'"
-                @click="(step = 2), (path = 'create')"
+                @click=";(step = 2), (path = 'create')"
               >
                 <component :is="IconAdd" class=""></component>
                 <p>Create an Universal Profile</p>
@@ -33,7 +33,7 @@
                 class="flow-selector"
                 @mouseover="IconImport = 'IconImportHover'"
                 @mouseout="IconImport = 'IconImport'"
-                @click="(step = 2), (path = 'import')"
+                @click=";(step = 2), (path = 'import')"
               >
                 <component :is="IconImport" class=""></component>
                 <p>Import an Universal Profile</p>
@@ -62,7 +62,7 @@
         <v-container class="text-left">
           <v-row>
             <v-col cols="12" class="pb-2">
-              <div class="back-arrow mb-6">
+              <div class="back-arrow mb-6 mt-3">
                 <v-btn text @click="stepBack" class="back-btn">
                   <ArrowBack />
                 </v-btn>
@@ -77,7 +77,7 @@
             <v-col cols="12" class="d-flex align-center justify-center">
               <v-img
                 src="../images/logos/icon-up-lukso-default@2x.png"
-                style="max-width: 64px"
+                style="max-width: 64px;"
               ></v-img>
             </v-col>
             <v-col cols="12" class="pt-0 pb-2">
@@ -98,7 +98,7 @@
           </v-row>
           <v-row>
             <v-col cols="6" class="pt-1">
-              <v-btn text @click="step = 1" class="cancel-btn"> Cancel </v-btn>
+              <v-btn text @click="step = 1" class="cancel-btn">Cancel</v-btn>
             </v-col>
             <v-col cols="6" class="pt-1">
               <v-btn
@@ -118,20 +118,20 @@
 </template>
 
 <script>
-import ArrowBack from '../images/icon-arrow-back.vue';
-import Unlock from '../images/icon-unlock.vue';
-import ConfirmSeed from '../components/ConfirmSeed';
-import Sucessfully from '../images/icon-sucessfully.vue';
+import ArrowBack from '../images/icon-arrow-back.vue'
+import Unlock from '../images/icon-unlock.vue'
+import ConfirmSeed from '../components/ConfirmSeed'
+import Sucessfully from '../images/icon-sucessfully.vue'
 
-import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from '../store/actions';
+import { CREATE_NEW_WALLET, GENERATE_NEW_SEED_PHRASE } from '../store/actions'
 
-import IconAdd from '../images/icons/icon-add-new-unselected';
-import IconImport from '../images/icons/icon-download';
-import IconAddHover from '../images/icons/icon-add-new-selected';
-import IconImportHover from '../images/icons/icon-download-selected';
-const { API } = chrome.extension.getBackgroundPage();
+import IconAdd from '../images/icons/icon-add-new-unselected'
+import IconImport from '../images/icons/icon-download'
+import IconAddHover from '../images/icons/icon-add-new-selected'
+import IconImportHover from '../images/icons/icon-download-selected'
+const { API } = chrome.extension.getBackgroundPage()
 
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
 export default {
   name: 'Create',
@@ -147,7 +147,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.termsWallet || !this.password || !this.passwordMatch;
+      return !this.termsWallet || !this.password || !this.passwordMatch
     },
     ...mapState('networks', ['previousNetwork']),
   },
@@ -155,57 +155,59 @@ export default {
     close() {
       this.$store.dispatch('networks/changeRpcTarget', {
         ...this.previousNetwork,
-      });
+      })
 
-      this.$router.go('-1');
+      this.$router.go('-1')
     },
     getStarted() {
-      this.step += 1;
+      this.step += 1
     },
     stepBack() {
-      this.username = null;
-      this.step -= 1;
+      this.username = null
+      this.step -= 1
     },
     startOnboarding() {
-      this.step += 1;
+      this.step += 1
     },
     setSeedPhrase() {
-      this.step += 1;
+      this.step += 1
     },
     setReminder() {
-      this.createWallet();
+      this.createWallet()
     },
     async setupUniversalProfile() {
-      this.isLoading = true;
-      this.validAddressError = '';
+      this.isLoading = true
+      this.validAddressError = ''
       if (this.path === 'import') {
         let { error, myUPAddress } = await this.$store.dispatch(
           'lukso/importUniversalProfile',
-          this.username
-        );
-        console.log(error);
-        if (error) this.validAddressError = error;
-        if (myUPAddress) this.$router.go('-1');
+          this.username,
+        )
+        console.log(error)
+        if (error) this.validAddressError = error
+        if (myUPAddress) this.$router.go('-1')
       } else {
         let { myUPAddress } = await this.$store.dispatch(
           'lukso/createUniversalProfile',
-          { username: this.username }
-        );
-        if (myUPAddress) this.$router.go('-1');
+          {
+            username: this.username,
+          },
+        )
+        if (myUPAddress) this.$router.go('-1')
       }
 
-      this.isLoading = false;
+      this.isLoading = false
     },
     checkForm() {
-      this.validAddressError = '';
+      this.validAddressError = ''
 
       if (
         this.path === 'import' &&
         !this.validateAddress(this.username).isValid
       ) {
-        this.validAddressError = 'Please enter a valid address';
+        this.validAddressError = 'Please enter a valid address'
       } else {
-        return;
+        return
       }
     },
   },
@@ -220,9 +222,9 @@ export default {
       IconImport: 'IconImport',
       IconImport2: 'IconImport',
       path: '',
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss">
