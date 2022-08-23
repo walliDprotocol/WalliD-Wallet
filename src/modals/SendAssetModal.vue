@@ -2,7 +2,7 @@
   <v-container class="modal details-wallet">
     <v-row>
       <v-col cols="12" class="pt-1">
-        <div class="back-arrow mb-4">
+        <div class="back-arrow my-4">
           <v-btn text @click="close()" class="back-btn">
             <ArrowBack />
           </v-btn>
@@ -49,22 +49,17 @@
           <jazz-icon
             v-if="!recipientVaultSelected"
             :address="walletAddress"
-            :id="'home'"
+            :id="'first'"
             :size="40"
-            :margin="4"
+            :margin="0"
           />
-          <div
+          <jazz-icon
             v-else-if="getCurrentDisplayAddressName === 'Uni. Profile'"
-            class="mr-3"
-            style="width: 50px; height: 50px;"
-          >
-            <jazz-icon
-              :address="isLukso ? currentDisplayAddress : walletAddress"
-              :id="'home'"
-              :size="40"
-              :margin="4"
-            />
-          </div>
+            :address="isLukso ? currentDisplayAddress : walletAddress"
+            :id="'second'"
+            :size="40"
+            :margin="0"
+          />
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
 
@@ -82,22 +77,17 @@
           <jazz-icon
             v-if="!recipientVaultSelected.name"
             :address="toAddress"
-            :id="'send'"
+            :id="'third'"
             :size="40"
-            :margin="4"
+            :margin="0"
           />
-          <div
+          <jazz-icon
             v-else-if="recipientVaultSelected.name === 'Uni. Profile'"
-            class="mr-3"
-            style="width: 50px; height: 50px;"
-          >
-            <jazz-icon
-              :address="isLukso ? currentDisplayAddress : walletAddress"
-              :id="'home'"
-              :size="40"
-              :margin="4"
-            />
-          </div>
+            :address="isLukso ? currentDisplayAddress : walletAddress"
+            :id="'fourth'"
+            :size="40"
+            :margin="0"
+          />
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
         <div style="font-size: 13px; font-weight: 500;">
@@ -192,7 +182,7 @@
         v-else-if="step < 2"
         cols="12"
         class="py-0"
-        style="position: relative;"
+        style="position: relative; margin-bottom: 18px;"
       >
         <p class="sub-title-fields text-left mb-3">To</p>
         <div
@@ -292,16 +282,15 @@
             :class="{ disabled: currentDisplayAddress === vault.address }"
             @click="recipientVaultSelected = vault"
           >
-            <IconCreateVault
-              v-if="vault.name !== 'Uni. Profile'"
-              class="mr-3"
-            />
-            <div v-else class="mr-3" style="width: 40px; height: 40px;">
+            <div class="mr-3 d-flex align-center">
+              <IconCreateVault v-if="vault.name !== 'Uni. Profile'" />
               <jazz-icon
+                v-else
+                class="ma-0"
                 :address="isLukso ? currentDisplayAddress : walletAddress"
-                :id="'home'"
-                :size="40"
-                :margin="4"
+                :id="'fifth'"
+                :size="35"
+                :margin="0"
               />
             </div>
             <div class="d-flex flex-column">
@@ -424,7 +413,7 @@
         <hr />
       </v-col>
     </v-row>
-    <v-row v-if="step < 2">
+    <v-row v-if="step < 2" :style="{ marginTop: dynamicButtonMargin }">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="close()" class="cancel-btn">Cancel</v-btn>
       </v-col>
@@ -432,7 +421,7 @@
         <v-btn text @click="nextStep()" class="advance-btn">Next</v-btn>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row v-else class="align-end" style="margin-top: 5rem;">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="step = step - 1" class="cancel-btn">Reject</v-btn>
       </v-col>
@@ -622,6 +611,15 @@ export default {
     },
     parseGasFee() {
       return ethers.utils.formatUnits(ethers.BigNumber.from(this.baseGasFee))
+    },
+    dynamicButtonMargin() {
+      if (!this.showVaults && this.step == 0) {
+        return '10.3rem'
+      } else if (this.step == 1) {
+        return '8rem'
+      } else {
+        return '1rem'
+      }
     },
   },
 
