@@ -416,7 +416,7 @@
           :disabled="!isSufficientAmount()"
           :loading="isLoading"
           :success="sendState"
-          :recipientAddress="toAddress"
+          :recipientAddress="toAddress || recipientVaultSelected.address"
           :assetTitle="currentAsset.tokenName"
           @click="send()"
         />
