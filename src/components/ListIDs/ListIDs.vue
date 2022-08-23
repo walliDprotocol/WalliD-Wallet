@@ -245,6 +245,7 @@ export default {
       width: fit-content;
       padding: 1px;
       padding-right: 8px;
+      padding-left: 8px;
       display: flex;
       svg {
         margin: 6px;

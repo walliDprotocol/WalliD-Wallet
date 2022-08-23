@@ -67,18 +67,7 @@ export default new Vuex.Store({
     connected: false,
     initialized: API.getState().initialized,
     identities: API.getState().identities,
-    credentials: [
-      {
-        id: 1,
-        credName: 'credName',
-        caName: 'caName',
-        photoURL: 'photoURL',
-        userData: 'userData',
-        status: 'status',
-        expDate: 'expDate',
-      },
-    ],
-    /* API.getState().credentials */
+    credentials: API.getState().credentials,
     assets: [
       {
         id: 1,
@@ -134,7 +123,7 @@ export default new Vuex.Store({
     showQueueTransactionModal: false,
     showImportAssetModal: false,
     showSendAssetModal: false,
-    currentTab: 0,
+    currentTab: 'tab-2',
   },
   getters: {
     showDeleteConfirmation: (state) => state.showDeleteConfirmation,

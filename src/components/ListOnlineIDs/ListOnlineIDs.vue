@@ -211,17 +211,6 @@ export default {
       min-width: 36px !important;
       border-radius: 50%;
     }
-    .validity {
-      border-radius: 11px;
-      background-color: #d8d8d8;
-      width: fit-content;
-      padding: 1px;
-      padding-right: 8px;
-      display: flex;
-      svg {
-        margin: 6px;
-      }
-    }
     .dot-menu-button {
       padding: 1px;
       &:hover .v-btn__content {

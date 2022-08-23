@@ -3,7 +3,7 @@
     class="credentials list-storage"
     style="overflow-y: auto; height: 208px;"
   >
-    <v-row>
+    <v-row v-if="NFTAssets.length > 0">
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
         v-for="asset in NFTAssets"
@@ -18,6 +18,7 @@
           :chip="getAssetType(asset.assetType)"
           :amount="asset.amount"
           :tokenStandard="asset.assetType"
+          :issued="asset.issued"
         >
           <template #menu>
             <v-list>
@@ -59,7 +60,7 @@
                   Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item>
+              <v-list-item v-if="!isLukso">
                 <v-list-item-title
                   class="SECUNDARY-LINKS text-left"
                   @click="openDeleteAssetModal(asset)"
@@ -100,6 +101,15 @@
         <!-- <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" /> -->
       </v-col>
     </v-row>
+    <v-row v-else style="background: white; height: 196px; overflow-y: hidden;">
+      <v-col cols="12" class="px-15 py-9">
+        <p class="SECUNDARY-LINKS mb-5">
+          Seems like you don’t have
+          <strong>NFTs</strong>
+          in your wallet yet.
+        </p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -116,6 +126,8 @@ export default {
     Asset,
   },
   computed: {
+    ...mapGetters('networks', ['currentNetwork', 'networksList', 'chainId']),
+
     ...mapGetters(['assets', 'currentCred']),
     NFTAssets: function () {
       return this.assets.filter(function (el) {
@@ -263,17 +275,6 @@ export default {
     .back-btn {
       padding: 0 !important;
       min-width: 16px !important;
-    }
-    .validity {
-      border-radius: 11px;
-      background-color: #d8d8d8;
-      width: fit-content;
-      padding: 1px;
-      padding-right: 8px;
-      display: flex;
-      svg {
-        margin: 6px;
-      }
     }
   }
 }
