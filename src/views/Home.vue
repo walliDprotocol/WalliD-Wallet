@@ -9,18 +9,6 @@
           :size="58"
           :margin="4"
         />
-        <v-img
-          v-if="isLukso"
-          contain
-          max-height="34"
-          src="../images/icons/icon-up-lukso-default.png"
-          style="
-            position: absolute;
-            top: 55px;
-            left: 55%;
-            transform: translateX(-50%);
-          "
-        ></v-img>
         <!-- Vault Dropdown -->
         <VaultDropdown v-if="isLukso" />
 
@@ -191,7 +179,7 @@ export default {
   },
   methods: {
     openShareProofPage() {
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
+      this.$router.push({ name: 'SHARE_PROFILE_VIEW' })
     },
     async createVaultOnUP() {
       this.createVaultIconState = 'creating'

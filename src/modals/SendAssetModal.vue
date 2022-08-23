@@ -50,7 +50,7 @@
             v-if="!recipientVaultSelected"
             :address="walletAddress"
             :id="'home'"
-            :size="50"
+            :size="40"
             :margin="4"
           />
           <div
@@ -58,11 +58,12 @@
             class="mr-3"
             style="width: 50px; height: 50px;"
           >
-            <v-img
-              src="../images/icons/icon-up-lukso-default.png"
-              height="100%"
-              width="100%"
-            ></v-img>
+            <jazz-icon
+              :address="isLukso ? currentDisplayAddress : walletAddress"
+              :id="'home'"
+              :size="40"
+              :margin="4"
+            />
           </div>
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
@@ -82,7 +83,7 @@
             v-if="!recipientVaultSelected.name"
             :address="toAddress"
             :id="'send'"
-            :size="50"
+            :size="40"
             :margin="4"
           />
           <div
@@ -90,11 +91,12 @@
             class="mr-3"
             style="width: 50px; height: 50px;"
           >
-            <v-img
-              src="../images/icons/icon-up-lukso-default.png"
-              height="100%"
-              width="100%"
-            ></v-img>
+            <jazz-icon
+              :address="isLukso ? currentDisplayAddress : walletAddress"
+              :id="'home'"
+              :size="40"
+              :margin="4"
+            />
           </div>
           <IconCreateVault width="50px" height="50px" v-else />
         </div>
@@ -295,11 +297,12 @@
               class="mr-3"
             />
             <div v-else class="mr-3" style="width: 40px; height: 40px;">
-              <v-img
-                src="../images/icons/icon-up-lukso-default.png"
-                height="100%"
-                width="100%"
-              ></v-img>
+              <jazz-icon
+                :address="isLukso ? currentDisplayAddress : walletAddress"
+                :id="'home'"
+                :size="40"
+                :margin="4"
+              />
             </div>
             <div class="d-flex flex-column">
               <p class="sub-title-fields sub-title-fields--bold text-left">
@@ -471,6 +474,9 @@ export default {
   },
   async mounted() {},
   methods: {
+    isLukso() {
+      return this.chainId === '2828'
+    },
     getAssetId(asset) {
       if (asset.tokenId)
         return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...')
