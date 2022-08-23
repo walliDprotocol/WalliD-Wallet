@@ -18,10 +18,10 @@
     </template>
     <div class="arrow-seed-tooltip"></div>
     <div class="metamask-login">
-      <p v-if="show">
+      <p class="mb-0" v-if="show">
         {{ copyAfter[$i18n.locale] }}
       </p>
-      <p v-else>
+      <p class="mb-0" v-else>
         {{ copyBefore[$i18n.locale] }}
       </p>
     </div>

@@ -72,7 +72,7 @@
       </v-col>
       <!-- import token -->
       <v-col cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container @click="openImportAssetModal()" class="py-0 px-3">
+        <v-container @click="openImportAssetModal()" class="px-3 pt-4">
           <v-row>
             <v-col cols="2">
               <StoredProfileImg :size="38" :name="'AddProfile'" />

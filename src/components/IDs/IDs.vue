@@ -36,7 +36,6 @@
 
 <script>
 import Asset from '../../components/Asset';
-import StoredProfileImg from '../../components/StoredProfileImg';
 
 import ListIDs from '../../components/ListIDs';
 import ListCrendentials from '../../components/ListCrendentials';
@@ -49,7 +48,6 @@ const PDF_URL = 'https://mycredentials.wallid.io/ViewCredential/';
 export default {
   name: 'IDs',
   components: {
-    StoredProfileImg,
     Asset,
     ListIDs,
     ListCrendentials,
