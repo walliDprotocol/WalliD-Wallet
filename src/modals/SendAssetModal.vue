@@ -112,7 +112,7 @@
             maxHeight: 304,
           }"
           hide-details="auto"
-          placeholder="Select and asset to send"
+          placeholder="Select an asset to send"
         >
           <template v-slot:selection="{ item }">
             <div class="d-flex simple-text">
