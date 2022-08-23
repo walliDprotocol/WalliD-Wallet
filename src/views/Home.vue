@@ -2,11 +2,11 @@
   <v-container class="home pb-0" fill-height>
     <v-row class="" style="position: relative">
       <!-- Current Vault -->
-      <v-col cols="12" style="position: relative">
+      <v-col cols="12" class="pb-1" style="position: relative">
         <jazz-icon
           :address="isLukso ? currentDisplayAddress : walletAddress"
           :id="'home'"
-          :size="58"
+          :size="48"
           :margin="4"
         />
         <!-- Vault Dropdown -->
@@ -15,12 +15,14 @@
         <!-- -->
       </v-col>
       <v-col v-if="!isLukso" cols="12" class="px-14">
-        <h2 class="T1 text-center">
+        <h3 class="T1 text-center">
           {{ domainENS || $t('home.title') }}
-        </h2>
+        </h3>
       </v-col>
       <v-col v-if="isLukso" style="font-size: 16px; font-weight: 500">
-        {{ profileUsername }}
+        <h3 class="T1 text-center">
+          {{ profileUsername }}
+        </h3>
       </v-col>
       <v-col cols="12" class="px-14 pt-0">
         <WalletAddress

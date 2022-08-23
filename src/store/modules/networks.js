@@ -48,7 +48,7 @@ const actions = {
 
       switch (network.chainId) {
         case '2828':
-          dispatch('lukso/getLuskoAssets', null, { root: true });
+          dispatch('lukso/getLuksoAssets', null, { root: true });
           break;
 
         default:

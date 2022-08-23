@@ -43,7 +43,7 @@ const actions = {
 
     commit('isFromVault', isVault);
     commit('currentDisplayAddress', accountAddress);
-    await dispatch('getLuskoAssets');
+    await dispatch('getLuksoAssets');
   },
   ['fetchProfile']: async ({ rootState, dispatch, state }) => {
     const fetchProfile = await API.fetchProfile(rootState.address);
@@ -72,7 +72,7 @@ const actions = {
     const myUPAddress = deployedContracts.LSP0ERC725Account.address;
     console.log('my Universal Profile address: ', myUPAddress);
 
-    dispatch('updateLuskoStore');
+    dispatch('updateLuksoStore');
     return myUPAddress;
   },
   ['importUniversalProfile']: async (
@@ -91,7 +91,7 @@ const actions = {
       const myUPAddress = deployedContracts.LSP0ERC725Account.address;
       console.log('my Universal Profile address: ', myUPAddress);
 
-      dispatch('updateLuskoStore');
+      dispatch('updateLuksoStore');
       return { myUPAddress };
     } catch (error) {
       return { error };
@@ -102,7 +102,7 @@ const actions = {
     const mintLSP7Tokens = await API.mintLSP7Tokens(rootState.address);
     console.log('mintLSP7Tokens: ', mintLSP7Tokens);
 
-    dispatch('updateLuskoStore');
+    dispatch('updateLuksoStore');
     return mintLSP7Tokens;
   },
 
@@ -115,7 +115,7 @@ const actions = {
     let resultSetVaultUP = await dispatch('setVaultAddressUP', newVaultAddress);
     console.log('resultSetVaultUP: ', resultSetVaultUP);
 
-    await dispatch('updateLuskoStore');
+    await dispatch('updateLuksoStore');
     return newVaultAddress;
   },
 
@@ -157,7 +157,7 @@ const actions = {
     );
     console.log('transferLSP7Token: ', transferLSP7Token);
 
-    dispatch('getLuskoAssets');
+    dispatch('getLuksoAssets');
 
     return transferLSP7Token;
   },
@@ -173,7 +173,7 @@ const actions = {
       state.isFromVault
     );
     console.log('transferLSP8Token: ', transferLSP8Token);
-    dispatch('getLuskoAssets');
+    dispatch('getLuksoAssets');
 
     return transferLSP8Token;
   },
@@ -196,8 +196,8 @@ const actions = {
       UPAddress: state.UPAddress,
     };
   },
-  ['getLuskoAssets']: async ({ rootState, commit, dispatch, state }) => {
-    console.log('getLuskoAssets:');
+  ['getLuksoAssets']: async ({ rootState, commit, dispatch, state }) => {
+    console.log('getLuksoAssets:');
 
     // 1st get vaults
     let vaultList = await dispatch('fetchVaults');
@@ -246,8 +246,8 @@ const actions = {
     return assetsMetadataList;
   },
 
-  updateLuskoStore: async ({ rootState, dispatch, commit, state }) => {
-    console.log('updateLuskoStore');
+  updateLuksoStore: async ({ rootState, dispatch, commit, state }) => {
+    console.log('updateLuksoStore');
 
     commit('UPAddress', API.getState().UPAddress);
     commit('currentDisplayAddress', API.getState().UPAddress);
@@ -260,7 +260,7 @@ const actions = {
 
     commit('profileUsername', profileUsername);
 
-    dispatch('getLuskoAssets');
+    dispatch('getLuksoAssets');
   },
 };
 

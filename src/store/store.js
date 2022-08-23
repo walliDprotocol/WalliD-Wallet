@@ -300,7 +300,7 @@ export default new Vuex.Store({
       await dispatch('networks/updateNetworks', { root: true });
 
       if (rootState.networks?.currentNetwork?.chainId === '2828')
-        dispatch('lukso/updateLuskoStore', { root: true });
+        dispatch('lukso/updateLuksoStore', { root: true });
 
       dispatch(UPDATE_CONNECTED);
       // Add Refresh connection ( function on MainContainer.vue created() )
