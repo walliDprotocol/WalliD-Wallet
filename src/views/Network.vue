@@ -96,7 +96,7 @@
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row style="padding-top: 11rem;">
             <v-col cols="6" class="pt-1">
               <v-btn text @click="step = 1" class="cancel-btn">Cancel</v-btn>
             </v-col>
