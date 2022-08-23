@@ -46,9 +46,7 @@
                   <v-expansion-panel-header class="pa-0">
                     {{ $t('sites.details.title') }}
                     <template v-slot:actions>
-                      <v-icon color="#00acbc">
-                        $expand
-                      </v-icon>
+                      <v-icon color="#00acbc"> $expand </v-icon>
                     </template>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
@@ -76,9 +74,7 @@
                                 <TooltipIcon />
                               </div>
                             </template>
-                            <span>
-                              {{ l.tooltip }}
-                            </span>
+                            <p class="mb-0" v-html="l.tooltip"></p>
                           </v-tooltip>
                         </template>
                       </v-radio>
@@ -97,7 +93,7 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <div class="metamask-login">
-                  <p>{{ $t('sites.tooltip') }}</p>
+                  <p class="mb-0" v-html="$t('sites.tooltip')"></p>
                 </div>
               </v-tooltip>
             </v-list-item-action>
@@ -105,7 +101,7 @@
         </v-list>
       </v-col>
       <v-col v-show="connections.length == 0" cols="12" class="pt-2 pb-1 px-10">
-        <p class="sub-title-fields text-center mt-12 ">
+        <p class="sub-title-fields text-center mt-12">
           {{ $t('sites.noSites') }}
         </p>
       </v-col>
@@ -272,6 +268,9 @@ export default {
     }
     .levels-radio-group {
       font-size: 16px;
+      .v-input--radio-group__input {
+        padding-inline: 0;
+      }
     }
   }
 

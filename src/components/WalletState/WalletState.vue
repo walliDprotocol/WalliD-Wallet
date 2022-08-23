@@ -10,13 +10,13 @@
     </template>
     <div class="arrow-seed-tooltip"></div>
     <div class="metamask-login">
-      <p v-if="isConnected.status == 0">
-        {{ $t("state.locked[1]") }}
+      <p class="mb-0" v-if="isConnected.status == 0">
+        {{ $t('state.locked[1]') }}
       </p>
-      <p v-else-if="isConnected.status == 1">
-        {{ $t("state.connected[1]") }}
+      <p class="mb-0" v-else-if="isConnected.status == 1">
+        {{ $t('state.connected[1]') }}
       </p>
-      <p>
+      <p v-if="website">
         <b> {{ website }}</b>
       </p>
     </div>
@@ -27,7 +27,7 @@
 //isConnected is a computed property is defined in scripts/util.js
 
 export default {
-  props: ["website"],
+  props: ['website'],
 };
 </script>
 
@@ -39,7 +39,7 @@ export default {
   width: max-content;
   margin: auto;
 
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   font-size: 13px;
   font-weight: 500;
   font-stretch: normal;
