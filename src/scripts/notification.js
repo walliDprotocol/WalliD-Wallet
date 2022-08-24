@@ -37,16 +37,21 @@ const { API } = extension.extension.getBackgroundPage();
 window.$API = API;
 Vue.prototype.$API = API;
 
-var filter = function (text, length = 12, clamp = '...') {
+var filter = function (text = '', length, clamp = '...', lastChars = 4) {
   const content = text ? text.toString() : '';
 
-  return content.length > length
-    ? content.slice(0, length - 4) +
-        clamp +
-        content.slice(content.length - 4, content.length)
-    : content;
+  if (clamp === 'start') {
+    return content.length > length
+      ? content.slice(0, length - lastChars) + '...'
+      : content;
+  } else {
+    return content.length > length
+      ? content.slice(0, length - lastChars) +
+          clamp +
+          content.slice(content.length - lastChars, content.length)
+      : content;
+  }
 };
-
 Vue.filter('truncate', filter);
 
 Vue.mixin(mixinPlugin);

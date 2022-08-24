@@ -83,7 +83,7 @@
             <v-btn
               :ripple="false"
               width="36"
-              class="dot-menu-button mt-3"
+              class="dot-menu-button"
               icon
               v-bind="attrs"
               v-on="on"
