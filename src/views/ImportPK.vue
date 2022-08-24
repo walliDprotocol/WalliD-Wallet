@@ -1,5 +1,5 @@
 <template>
-  <v-container id="import-form" class="restore mt-n2 pa-2">
+  <v-container id="import-form" class="restore pa-2">
     <v-row v-if="!imported">
       <form @submit="restorePassword">
         <v-col cols="12">
@@ -132,12 +132,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return (
-        this.errorSeedPhrase ||
-        !this.password ||
-        !this.passwordMatch ||
-        !this.termsWallet
-      );
+      return this.errorSeedPhrase || !this.password || !this.passwordMatch;
     },
   },
 

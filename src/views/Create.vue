@@ -315,7 +315,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return !this.termsWallet || !this.password || !this.passwordMatch;
+      return !this.password || !this.passwordMatch;
     },
   },
   methods: {

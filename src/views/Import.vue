@@ -189,12 +189,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return (
-        this.errorSeedPhrase ||
-        !this.password ||
-        !this.passwordMatch ||
-        !this.termsWallet
-      );
+      return this.errorSeedPhrase || !this.password || !this.passwordMatch;
     },
   },
 
