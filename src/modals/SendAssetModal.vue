@@ -44,7 +44,12 @@
           </div>
         </v-col>
       </v-col>
-      <v-col v-if="step === 2" cols="12" class="d-flex align-center py-3">
+      <v-col
+        v-if="step === 2"
+        cols="12"
+        class="d-flex align-center py-3"
+        style="background-color: #f7f7f7;"
+      >
         <div class="mr-3 d-flex align-center">
           <jazz-icon
             v-if="!recipientVaultSelected"
@@ -112,7 +117,7 @@
             maxHeight: 304,
           }"
           hide-details="auto"
-          placeholder="Select and asset to send"
+          placeholder="Select an asset to send"
         >
           <template v-slot:selection="{ item }">
             <div class="d-flex simple-text">
