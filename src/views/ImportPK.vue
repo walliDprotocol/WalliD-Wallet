@@ -60,7 +60,7 @@
             :error-messages="passwordMatchError"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" class="pl-0 py-2">
+        <v-col v-if="false" cols="12" class="pl-0 py-2">
           <v-checkbox
             v-model="termsWallet"
             required
