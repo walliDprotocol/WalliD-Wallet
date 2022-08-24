@@ -12,13 +12,13 @@
       >
         <v-container class="pt-4">
           <v-row>
-            <v-col cols="2" class="pr-2 pb-0">
+            <v-col cols="2" class="pr-2 pb-1">
               <StoredProfileImg
                 :size="38"
                 :name="card.assetName"
                 :src="getImage(card)"
             /></v-col>
-            <v-col cols="8" class="pl-5 pb-0 pt-1">
+            <v-col cols="8" class="pl-5 pb-1 pt-1">
               <v-container class="">
                 <v-row>
                   <v-col cols="12" class="pt-0 pb-2">
@@ -73,7 +73,7 @@
                 </v-row>
               </v-container>
             </v-col>
-            <v-col cols="2" class="pl-1 pr-0 pb-0">
+            <v-col cols="2" class="pl-1 pr-0 py-1">
               <v-menu bottom left class="dot-menu" content-class="dot-menu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn

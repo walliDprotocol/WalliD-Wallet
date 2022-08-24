@@ -42,27 +42,21 @@
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item v-if="asset.tokenName">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="shareProfile(asset)"
-                >
+              <v-list-item v-if="asset.tokenName" @click="shareProfile(asset)">
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="asset.tokenName">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="openSendAssetModal(asset)"
-                >
+              <v-list-item
+                v-if="asset.tokenName && !asset.assetType.native"
+                @click="openSendAssetModal(asset)"
+              >
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Send
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="!isLukso">
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="openDeleteAssetModal(asset)"
-                >
+              <v-list-item v-if="!isLukso" @click="openDeleteAssetModal(asset)">
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Delete
                 </v-list-item-title>
               </v-list-item>

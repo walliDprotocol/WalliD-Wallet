@@ -44,19 +44,13 @@
                   </a>
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="openSendAssetModal(asset)"
-                >
+              <v-list-item @click="openSendAssetModal(asset)">
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Send
                 </v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="shareProfile(asset)"
-                >
+              <v-list-item @click="shareProfile(asset)">
+                <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Share Proof-of-Ownership
                 </v-list-item-title>
               </v-list-item>
