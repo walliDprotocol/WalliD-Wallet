@@ -27,6 +27,15 @@ const NetworksColors = {
   // localhost: '',
 };
 
+const NetworksBlockExplorer = {
+  mainnet: '',
+  rinkeby: '',
+  polygon: '',
+  mumbai: '',
+  luksol16: 'https://explorer.execution.l16.lukso.network/',
+  // localhost: '',
+};
+
 // enum of default rpc urls
 const NetworksChainRpc = {
   mainnet: 'https://mainnet.infura.io/v3/463ed0e7b23c41178adf46fd4fbbc7c2',
@@ -74,6 +83,7 @@ const defaultNetworkArray = (() => {
       ticker: NetworksTicker[chain],
       name: NetworksName[chain],
       color: NetworksColors[chain],
+      blockExplorer: NetworksBlockExplorer[chain],
       isCustomNetwork: false,
     })
   );

@@ -681,6 +681,7 @@ export default class LuksoController {
     }
 
     console.log('Result sendTokenFromVault  : ', result);
+    return result;
   }
 
   // https://github.com/lukso-network/example-dapp-lsps/blob/main/src/components/SendModalComponent.vue#L143
@@ -738,6 +739,7 @@ export default class LuksoController {
       }
 
       console.log('Result sendTokenFromVault  : ', result);
+      return result;
     } catch (error) {
       return console.log('Error transferring LSP8', error);
     }

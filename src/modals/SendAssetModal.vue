@@ -48,9 +48,9 @@
         v-if="step === 2"
         cols="12"
         class="d-flex align-center py-3"
-        style="background-color: #f7f7f7;"
+        style="background-color: #f7f7f7"
       >
-        <div class="mr-3 d-flex align-center">
+        <div class="mr-3 d-flex align-center justify-space-between">
           <jazz-icon
             v-if="!recipientVaultSelected"
             :address="walletAddress"
@@ -65,12 +65,13 @@
             :size="40"
             :margin="0"
           />
-          <IconCreateVault width="50px" height="50px" v-else />
+          <IconCreateVault width="40px" height="40px" v-else />
         </div>
-
         <div class="mr-3" style="font-size: 13px; font-weight: 500">
           {{ getCurrentDisplayAddressName }}
         </div>
+        <v-spacer />
+
         <div class="mx-3">
           <v-img
             width="18"
@@ -78,6 +79,7 @@
             src="../images/icons/icon-transfer.png"
           ></v-img>
         </div>
+        <v-spacer />
         <div class="mx-3 d-flex align-center">
           <jazz-icon
             v-if="!recipientVaultSelected.name"
@@ -93,7 +95,7 @@
             :size="40"
             :margin="0"
           />
-          <IconCreateVault width="50px" height="50px" v-else />
+          <IconCreateVault width="40px" height="40px" v-else />
         </div>
         <div style="font-size: 13px; font-weight: 500">
           {{ (recipientVaultSelected.name || toAddress) | truncate(8, '...') }}
@@ -273,7 +275,7 @@
       </v-col>
       <v-col cols="12" v-if="showVaults && step == 0" class="pa-0 mb-0">
         <v-col
-          v-for="vault in vaultList"
+          v-for="vault in filteredVaults"
           cols="12"
           :key="vault.address"
           class="d-flex pt-3 pa-0 gray-bg flex-column"
@@ -441,6 +443,7 @@
           :success="sendState"
           :recipientAddress="toAddress || recipientVaultSelected.address"
           :assetTitle="currentAsset.tokenName"
+          :txHash="txHash"
           @click="send()"
         />
       </v-col>
@@ -567,6 +570,7 @@ export default {
             }
           );
           console.log('transferLSP7Token', transferLSP7Token);
+          this.txHash = transferLSP7Token.transactionHash;
         } else if (this.currentAsset.assetType.isLSP8) {
           let transferLSP8Token = await this.$store.dispatch(
             'lukso/transferLSP8Token',
@@ -578,6 +582,7 @@ export default {
             }
           );
           console.log('transferLSP8Token', transferLSP8Token);
+          this.txHash = transferLSP8Token.transactionHash;
         }
         this.sendState = 'success';
       } catch (err) {
@@ -616,6 +621,11 @@ export default {
         return assetType.isLSP8 || assetType.isLSP7;
       });
     },
+    filteredVaults() {
+      return this.vaultList.filter(({ address }) => {
+        return address !== this.currentDisplayAddress;
+      });
+    },
     getCurrentDisplayAddressName() {
       return this.vaultList.find(
         (v) => v.address === this.currentDisplayAddress
@@ -647,6 +657,7 @@ export default {
 
   data() {
     return {
+      txHash: null,
       tokenType: '',
       baseGasFee: 5_000_000,
       sendState: null,

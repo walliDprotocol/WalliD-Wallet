@@ -53,7 +53,9 @@
                   recipientAddress
             }}
           </p>
-          <p class="MAIN-LINKS py-7">View transaction</p>
+          <a :href="getTxURL" target="_blank" class="MAIN-LINKS py-7"
+            >View transaction</a
+          >
         </v-col>
 
         <v-col class="pa-0">
@@ -70,9 +72,19 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['success', 'recipientAddress', 'loading', 'assetTitle', 'disabled'],
+  props: [
+    'success',
+    'recipientAddress',
+    'loading',
+    'assetTitle',
+    'disabled',
+    'txHash',
+  ],
   computed: {
-    ...mapGetters(['currentVault']),
+    ...mapGetters('networks', ['currentNetwork']),
+    getTxURL() {
+      return this.currentNetwork?.blockExplorer + 'tx/' + this.txHash;
+    },
   },
   methods: {
     truncate() {
