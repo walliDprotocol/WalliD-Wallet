@@ -102,7 +102,7 @@
         <p class="sub-title-fields text-left mb-3">Asset</p>
         <v-select
           class="pa-0 mb-6"
-          :items="assets"
+          :items="sendableAssets"
           v-model="selectedAsset"
           color="#009fb1"
           outlined
@@ -152,7 +152,7 @@
           outlined
           :disabled="step > 0 || recipientVaultSelected.name"
           hide-details
-          class="pa-0 mb-6"
+          class="wallet-text-field pa-0 mb-6"
           placeholder="Public address (0x)"
           v-model="toAddress"
         >
@@ -166,7 +166,7 @@
                 class="mt-1 mr-2"
               ></v-img>
               <v-img
-                v-if="step == 0"
+                v-if="step < 2"
                 style="cursor: pointer"
                 max-width="12"
                 contain
@@ -423,7 +423,7 @@
     </v-row>
     <v-row v-else class="align-end" style="margin-top: 4.5rem">
       <v-col cols="6" class="pt-1">
-        <v-btn text @click="step = step - 1" class="cancel-btn">Reject</v-btn>
+        <v-btn text @click="backStep()" class="cancel-btn">Reject</v-btn>
       </v-col>
       <v-col cols="6" class="pt-1">
         <!-- <v-btn text @click="send()" :loading="isLoading" class="advance-btn">
@@ -497,9 +497,10 @@ export default {
       }
     },
     deleteRecipientAddress() {
-      if (this.step == 0) {
+      if (this.step < 2) {
         this.toAddress = '';
         this.recipientVaultSelected = {};
+        this.step = 0;
       }
     },
     isValidAddress() {
@@ -521,11 +522,20 @@ export default {
       }
       await this.$nextTick();
 
+      if (this.isValidAddress() && this.currentAsset?.assetType?.isLSP8) {
+        this.step = 2;
+        return;
+      }
+
       if (
         (this.isValidAddress() && this.step === 0 && this.currentAsset) ||
         (this.amount && this.step === 1)
       )
         this.step++;
+    },
+    backStep() {
+      if (this.currentAsset?.assetType?.isLSP8) return (this.step = 0);
+      this.step--;
     },
     setMaxAmount() {
       //get amount of currentAsset token or selectedToken and set to that amount
@@ -596,6 +606,11 @@ export default {
       currentDisplayAddress: 'currentDisplayAddress',
       UPAddress: 'UPAddress',
     }),
+    sendableAssets() {
+      return this.assets.filter(({ assetType }) => {
+        return assetType.isLSP8 || assetType.isLSP7;
+      });
+    },
     getCurrentDisplayAddressName() {
       return this.vaultList.find(
         (v) => v.address === this.currentDisplayAddress
@@ -648,6 +663,17 @@ export default {
 </script>
 
 <style lang="scss">
+.wallet-text-field {
+  &.v-input--is-disabled {
+    .v-input__control {
+      background-color: #f7f7f7;
+    }
+    fieldset {
+      border-color: transparent !important;
+    }
+  }
+}
+
 .simple-text {
   font-size: 13px;
   font-weight: 500;
