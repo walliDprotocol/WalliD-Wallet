@@ -107,6 +107,12 @@ const RequestAPIMethods = {
     popup: true,
     level: 2,
   },
+  importFromPK: {
+    main_controller: true,
+    create: true,
+    level: 0,
+    executor: ['importFromPrivateKey'],
+  },
   generateSeedPhrase: {
     main_controller: true,
     create: true,

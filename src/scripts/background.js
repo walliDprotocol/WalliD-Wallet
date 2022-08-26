@@ -12,6 +12,7 @@ function connected(prt) {
   setPort(msgPort);
   msgPort.postMessage({ type: 'plugin:installed' });
   msgPort.onMessage.addListener(gotMessage);
+  // extension.runtime.onConnect.removeListener(connected);
 }
 
 // fires when content script sends a message
@@ -28,13 +29,13 @@ function gotMessage(msg) {
 
     extension.tabs.query({ url: forwarderURL + '/*' }, (tab) => {
       console.log('tab', tab);
-      extension.tabs.get(tab[0].id, function(tab) {
+      extension.tabs.get(tab[0].id, function (tab) {
         extension.tabs.highlight(
           {
             windowId: tab.windowId,
             tabs: tab.index,
           },
-          function() {}
+          function () {}
         );
       });
     });
@@ -62,7 +63,7 @@ const App = new AppController();
 window.API = App.getAPI();
 
 // Connects the external web connector to the App's RequestAPI
-extension.runtime.onMessage.addListener(function(
+extension.runtime.onMessage.addListener(function (
   request,
   sender,
   sendResponse
