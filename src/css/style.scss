@@ -519,6 +519,9 @@
     &:hover {
       color: var(--teal-blue);
     }
+    &.v-tab--active{
+      color: var(--teal-blue);
+    }
   }
 
   .MAIN-LINKS {
