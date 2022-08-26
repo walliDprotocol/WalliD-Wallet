@@ -95,8 +95,12 @@
         <!-- <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" /> -->
       </v-col>
     </v-row>
-    <v-row v-else style="background: white; height: 196px; overflow-y: hidden">
-      <v-col cols="12" class="px-15 py-9">
+    <v-row
+      v-else
+      class="px-4"
+      style="background: white; height: 196px; overflow-y: hidden"
+    >
+      <v-col cols="12" class="px-16 py-9">
         <p class="SECUNDARY-LINKS mb-5">
           Seems like you don’t have
           <strong>NFTs</strong>
