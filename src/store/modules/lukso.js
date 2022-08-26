@@ -73,7 +73,7 @@ const actions = {
     console.log('my Universal Profile address: ', myUPAddress);
 
     dispatch('updateLuksoStore');
-    return myUPAddress;
+    return { myUPAddress };
   },
   ['importUniversalProfile']: async (
     { rootState, dispatch, state },
