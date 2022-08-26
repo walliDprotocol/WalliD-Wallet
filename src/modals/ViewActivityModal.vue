@@ -1,7 +1,7 @@
 <template>
   <v-container class="modal details-wallet">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-4">
           <v-btn text @click="close()" class="back-btn">
             <ArrowBack />

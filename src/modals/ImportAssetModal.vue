@@ -1,7 +1,7 @@
 <template>
-  <v-container class="modal delete-modal pa-5">
+  <v-container class="modal delete-modal">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow my-3">
           <v-btn text @click="close()" class="back-btn">
             <ArrowBack />
@@ -104,14 +104,14 @@
 </template>
 
 <script>
-import WalletState from '../components/WalletState'
-import ArrowBack from '../images/icon-arrow-back.vue'
+import WalletState from '../components/WalletState';
+import ArrowBack from '../images/icon-arrow-back.vue';
 
-import IDCard from '../components/IDCard'
+import IDCard from '../components/IDCard';
 
-import { mapGetters } from 'vuex'
-import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions'
-import { isValidAddress } from '../../dist/scripts/background.bundle'
+import { mapGetters } from 'vuex';
+import { DELETE_CARD, DELETE_CRED, DELETE_PROFILE } from '../store/actions';
+import { isValidAddress } from '../../dist/scripts/background.bundle';
 
 export default {
   components: {
@@ -156,29 +156,29 @@ export default {
       ],
       IDRules: [(v) => !!v || 'Collectible ID required'],
       TokenDecimalRules: [(v) => !!v || 'Token decimal required'],
-    }
+    };
   },
   methods: {
     close() {
-      this.$store.commit('showImportAssetModal', false)
+      this.$store.commit('showImportAssetModal', false);
     },
     assetType() {
-      if (currentCred) return currentCred.assetType
+      if (currentCred) return currentCred.assetType;
     },
     validate() {
-      this.$refs.form.validate()
+      this.$refs.form.validate();
     },
     isValidContractAddress(v) {
-      return false
+      return false;
     },
     isValidCollectibleAddress(v) {
-      return false
+      return false;
     },
     isPersonalAddress(v) {
-      return true
+      return true;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

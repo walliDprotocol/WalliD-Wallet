@@ -1,7 +1,7 @@
 <template>
   <v-container class="settings">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
@@ -11,12 +11,12 @@
           </h2>
         </div>
       </v-col>
+      <v-divider class="full-divider"></v-divider>
     </v-row>
 
-    <v-divider class="full-divider"></v-divider>
     <v-row>
       <v-col v-if="false" cols="12" class="pt-5 text-left">
-        <h4 class="mb-2 ">
+        <h4 class="mb-2">
           {{ $t('settings.general.title') }}
         </h4>
 
@@ -43,7 +43,7 @@
         </v-select>
       </v-col>
       <v-col cols="12" class="pt-3 pb-1 text-left">
-        <h4 class=" mb-2 text-left">
+        <h4 class="mb-2 text-left">
           {{ $t('settings.privacy.title') }}
         </h4>
 
@@ -54,7 +54,7 @@
           tag="button"
           to="revealSeedPhrase"
           text
-          class=" v-btn advance-btn mt-2"
+          class="v-btn advance-btn mt-2"
         >
           {{ $t('settings.privacy.seed[1]') }}
         </router-link>
@@ -71,7 +71,7 @@
           tag="button"
           to="revealPrivKey"
           text
-          class=" v-btn advance-btn mt-2"
+          class="v-btn advance-btn mt-2"
         >
           {{ $t('settings.privacy.key[1]') }}
         </router-link>
@@ -106,6 +106,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.full-divider {
+  // max-width: unset;
+  width: 400px;
+  margin-left: 0;
+}
+</style>
 
 <style lang="scss">
 .locale-changer {
@@ -167,11 +175,6 @@ export default {
   }
 }
 
-.full-divider {
-  max-width: unset;
-  width: 400px;
-  margin-left: -20px;
-}
 .settings {
   h4 {
     font-size: 18px;

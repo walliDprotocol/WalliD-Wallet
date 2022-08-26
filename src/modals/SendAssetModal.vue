@@ -1,7 +1,7 @@
 <template>
   <v-container class="modal details-wallet">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow my-4">
           <v-btn text @click="close()" class="back-btn">
             <ArrowBack />
@@ -159,6 +159,7 @@
           outlined
           :disabled="step > 0 || recipientVaultSelected.name"
           hide-details
+          :spellcheck="false"
           class="wallet-text-field pa-0 mb-6"
           placeholder="Public address (0x)"
           v-model="toAddress"

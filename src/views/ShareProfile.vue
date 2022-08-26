@@ -1,7 +1,7 @@
 <template>
-  <v-container class="profile-proof-view pa-5">
+  <v-container class="profile-proof-view">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow">
           <v-btn text @click="$router.go('-1')" class="back-btn">
             <ArrowBack />
@@ -375,7 +375,7 @@ export default {
       this.selectedProfiles[this.currentCred.id] = true;
     }
 
-    this.isDisabled = false;
+    this.checkSelectedProfiles();
   },
   mounted() {},
   computed: {

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="card-view pa-5">
+  <v-container class="card-view">
     <v-row>
       <v-col cols="12" class="pt-1">
         <div class="back-arrow mb-3">

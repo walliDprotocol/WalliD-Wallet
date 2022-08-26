@@ -1,7 +1,7 @@
 <template>
-  <v-container class="proof-view pa-5">
+  <v-container class="proof-view">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-4">
           <v-btn text @click="$router.go('-1')" class="back-btn">
             <ArrowBack />
@@ -20,8 +20,8 @@
             {{ $t('proof.text') }}
           </h3>
         </v-col>
-        <v-col cols="12" class="pt-0  text-left">
-          <label class="sub-title-fields ">{{ $t('proof.url') }}</label>
+        <v-col cols="12" class="pt-0 text-left">
+          <label class="sub-title-fields">{{ $t('proof.url') }}</label>
           <v-text-field
             v-model="url"
             class="password-input mt-1"
@@ -48,7 +48,7 @@
             :isLoading="isLoading"
             @click="generateProof"
             :disabled="isDisabled"
-            class="advance-btn "
+            class="advance-btn"
           >
             {{ $t('proof.button') }}
           </v-btn>
@@ -62,7 +62,7 @@
         </h3>
       </v-col>
       <v-col cols="12 text-left">
-        <label class="sub-title-fields ">{{ $t('proof.link') }}</label>
+        <label class="sub-title-fields">{{ $t('proof.link') }}</label>
 
         <CopyPaste :input="linkProof">
           <div @click="copyToClip" class="password-wrapper" style="">
@@ -138,10 +138,10 @@ export default {
 
       var pattern = new RegExp(
         '^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+          '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+          '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+          '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+          '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
           '(\\#[-a-z\\d_]*)?$',
         'i'
       ); // fragment locator

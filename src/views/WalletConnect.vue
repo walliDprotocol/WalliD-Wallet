@@ -1,29 +1,25 @@
 <template>
-  <v-container class="wallet-connect pa-5">
+  <v-container class="wallet-connect">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-2">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />
           </v-btn>
-          <h2 class="T1">
-            WalletConnect
-          </h2>
+          <h2 class="T1">WalletConnect</h2>
         </div>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols="12" class=" text-left">
+      <v-col cols="12" class="text-left">
         <h4 class="mb-2 sub-title-fields">
           Paste bellow the QR code URL provided by WalletConnect and click
           “connect” to allow this dapp to view your public address. This is an
           important security step to protect your data.
         </h4>
 
-        <label class="normal-text">
-          QR code URL:
-        </label>
+        <label class="normal-text"> QR code URL: </label>
         <div class="wallet-connect">
           <v-text-field
             flat

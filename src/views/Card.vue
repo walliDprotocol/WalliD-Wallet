@@ -1,7 +1,7 @@
 <template>
-  <v-container class="card-view pa-5">
+  <v-container class="card-view">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-3">
           <v-btn text @click="$router.push('/home')" class="back-btn">
             <ArrowBack />

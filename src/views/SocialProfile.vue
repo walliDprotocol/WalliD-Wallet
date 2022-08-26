@@ -1,7 +1,7 @@
 <template>
-  <v-container class="profile-view pa-5 pr-4">
+  <v-container class="profile-view pr-4">
     <v-row>
-      <v-col cols="12" class="pt-1">
+      <v-col cols="12" class="">
         <div class="back-arrow mb-4">
           <v-btn text @click="$router.go('-1')" class="back-btn">
             <ArrowBack />

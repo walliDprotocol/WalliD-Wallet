@@ -1,5 +1,5 @@
 <template>
-  <v-container class="restore mt-n2">
+  <v-container class="restore">
     <form @submit="restorePassword">
       <v-row>
         <v-col cols="12" class="pb-1">
@@ -8,17 +8,17 @@
               <ArrowBack />
             </v-btn>
             <h2 class="T1">
-              {{ $t("restore.title") }}
+              {{ $t('restore.title') }}
             </h2>
           </div>
           <h2 class="sub-title-fields text-left">
-            {{ $t("restore.subtitle") }}
+            {{ $t('restore.subtitle') }}
           </h2>
         </v-col>
 
         <v-col cols="12" class="text-left pt-1 pb-0">
           <label class="sub-title-fields">
-            {{ $t("restore.seedPhrase[0]") }}
+            {{ $t('restore.seedPhrase[0]') }}
           </label>
 
           <v-text-field
@@ -45,10 +45,10 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("restore.seedPhrase[1]") }}
+                  {{ $t('restore.seedPhrase[1]') }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("restore.seedPhrase[2]") }}
+                  {{ $t('restore.seedPhrase[2]') }}
                 </p>
               </v-tooltip>
             </template>
@@ -75,21 +75,21 @@
                 </template>
                 <div class="arrow-seed-tooltip"></div>
                 <p v-show="showSeedPhrase">
-                  {{ $t("restore.seedPhrase[1]") }}
+                  {{ $t('restore.seedPhrase[1]') }}
                 </p>
                 <p v-show="!showSeedPhrase">
-                  {{ $t("restore.seedPhrase[2]") }}
+                  {{ $t('restore.seedPhrase[2]') }}
                 </p>
               </v-tooltip>
             </template>
           </v-textarea>
-          <p class="error--text mt-2" style="height:10px">
+          <p class="error--text mt-2" style="height: 10px">
             {{ seedPhraseErrorMessage }}
           </p>
         </v-col>
         <v-col cols="12" class="text-left pt-1 pb-0">
           <label class="sub-title-fields">
-            {{ $t("restore.password[0]") }}
+            {{ $t('restore.password[0]') }}
           </label>
           <v-text-field
             v-model="password"
@@ -106,7 +106,7 @@
 
         <v-col cols="12" class="text-left pb-0 pt-1">
           <label class="sub-title-fields">
-            {{ $t("restore.password[1]") }}
+            {{ $t('restore.password[1]') }}
           </label>
           <v-text-field
             v-model="passwordMatch"
@@ -126,7 +126,7 @@
             @click="restorePassword"
             class="advance-btn"
           >
-            {{ $t("restore.button") }}
+            {{ $t('restore.button') }}
           </v-btn>
         </v-col>
       </v-row>
@@ -148,11 +148,11 @@
 </template>
 
 <script>
-import * as bip39 from "bip39";
-import ArrowBack from "../images/icon-arrow-back.vue";
-import EyeUnselected from "../images/icon-eye-unselected.vue";
-import EyeSelected from "../images/icon-eye-selected.vue";
-import { CREATE_NEW_WALLET } from "../store/actions";
+import * as bip39 from 'bip39';
+import ArrowBack from '../images/icon-arrow-back.vue';
+import EyeUnselected from '../images/icon-eye-unselected.vue';
+import EyeSelected from '../images/icon-eye-selected.vue';
+import { CREATE_NEW_WALLET } from '../store/actions';
 export default {
   components: {
     ArrowBack,
@@ -168,11 +168,11 @@ export default {
   data() {
     return {
       showSeedPhrase: true,
-      seedPhrase: "",
-      password: "",
-      passwordMatch: "",
-      passwordError: "",
-      passwordMatchError: "",
+      seedPhrase: '',
+      password: '',
+      passwordMatch: '',
+      passwordError: '',
+      passwordMatchError: '',
       errorSeedPhrase: false,
       seedPhraseErrorMessage: null,
     };
@@ -181,18 +181,18 @@ export default {
   methods: {
     validSeedPhrase() {
       this.seedPhrase = this.seedPhrase.trim();
-      let valid = this.seedPhrase.split(" ").length == 12;
+      let valid = this.seedPhrase.split(' ').length == 12;
       this.errorSeedPhrase = !valid;
       this.seedPhraseErrorMessage = valid
-        ? ""
-        : this.$t("restore.seedPhrase[3]");
+        ? ''
+        : this.$t('restore.seedPhrase[3]');
       return valid;
     },
     show() {
       this.showSeedPhrase = !this.showSeedPhrase;
     },
     stepBack() {
-      this.$router.push("/home");
+      this.$router.push('/home');
     },
     restorePassword() {
       this.$store
@@ -201,28 +201,28 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push("/login");
+          this.$router.push('/login');
           // this.passwordError = true;
         })
         .catch((err) => {
           if ((err = this.INVALID)) {
             this.errorSeedPhrase = true;
-            this.seedPhraseErrorMessage = this.$t("restore.seedPhrase[4]");
+            this.seedPhraseErrorMessage = this.$t('restore.seedPhrase[4]');
           }
           console.error(err);
         });
     },
 
     checkForm() {
-      this.passwordError = "";
-      this.passwordMatchError = "";
+      this.passwordError = '';
+      this.passwordMatchError = '';
 
       if (this.password && this.password.length < 8) {
-        this.passwordError = "Password not long enough";
+        this.passwordError = 'Password not long enough';
       }
 
       if (this.passwordMatch && this.passwordMatch != this.password) {
-        this.passwordMatchError = "Passwords don’t match";
+        this.passwordMatchError = 'Passwords don’t match';
       }
 
       if (this.passwordError || this.passwordMatchError) {
