@@ -16,9 +16,9 @@
           {{ $t('sites.subtitle') }}
         </h3>
       </v-col>
-      <v-col v-show="connections.length != 0" cols="12" class="pt-2 pb-1 pr-0">
+      <v-col v-show="connections.length != 0" cols="12" class="pt-2 pb-1 px-0">
         <v-list class="sites-list">
-          <v-list-item class="pl-0" v-for="site in connections" :key="site.url">
+          <v-list-item class="" v-for="site in connections" :key="site.url">
             <v-list-item-avatar class="align-self-baseline">
               <v-img
                 contain
