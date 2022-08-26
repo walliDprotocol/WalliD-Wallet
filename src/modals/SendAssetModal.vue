@@ -1,5 +1,5 @@
 <template>
-  <v-container class="modal details-wallet">
+  <v-container class="modal send-asset">
     <v-row>
       <v-col cols="12" class="">
         <div class="back-arrow my-4">
@@ -7,421 +7,438 @@
             <ArrowBack />
           </v-btn>
           <h2 class="T1">
-            {{ 'Send ' + (currentAsset ? currentAsset.tokenName : '') }}
+            {{ 'Send ' + (currentAssetComputed.tokenName || '') }}
           </h2>
         </div>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col
-        v-if="(step > 0 && !currentAsset) || currentAsset"
-        cols="12"
-        class="d-flex mb-3 py-3"
-        style="background-color: #f7f7f7"
-      >
-        <v-col cols="auto" class="pa-0 d-flex align-center">
-          <v-img
-            height="50"
-            max-width="50"
-            contain
-            :src="currentAsset ? currentAsset.assetImagePath : ''"
-          />
-        </v-col>
+    <v-card class="form-card py-4">
+      <v-row>
         <v-col
-          cols="auto"
-          class="grow pa-0 ml-3 d-flex flex-column justify-center"
-        >
-          <div class="d-flex justify-space-between">
-            <p class="sub-title-fields sub-title-fields--bold">
-              {{ currentAsset ? currentAsset.tokenName : '' }}
-            </p>
-          </div>
-          <div class="d-flex align-center justify-space-between">
-            <p class="sub-title-fields d-flex">
-              {{ amountPrefix }}
-              {{ currentAsset ? currentAsset.balanceOf : '' }}
-            </p>
-          </div>
-        </v-col>
-      </v-col>
-      <v-col
-        v-if="step === 2"
-        cols="12"
-        class="d-flex align-center py-3"
-        style="background-color: #f7f7f7"
-      >
-        <div class="mr-3 d-flex align-center justify-space-between">
-          <jazz-icon
-            v-if="!recipientVaultSelected"
-            :address="walletAddress"
-            :id="'first'"
-            :size="40"
-            :margin="0"
-          />
-          <jazz-icon
-            v-else-if="getCurrentDisplayAddressName === 'Uni. Profile'"
-            :address="isLukso ? currentDisplayAddress : walletAddress"
-            :id="'second'"
-            :size="40"
-            :margin="0"
-          />
-          <IconCreateVault width="40px" height="40px" v-else />
-        </div>
-        <div class="mr-3" style="font-size: 13px; font-weight: 500">
-          {{ getCurrentDisplayAddressName }}
-        </div>
-        <v-spacer />
-
-        <div class="mx-3">
-          <v-img
-            width="18"
-            height="18"
-            src="../images/icons/icon-transfer.png"
-          ></v-img>
-        </div>
-        <v-spacer />
-        <div class="mx-3 d-flex align-center">
-          <jazz-icon
-            v-if="!recipientVaultSelected.name"
-            :address="toAddress"
-            :id="'third'"
-            :size="40"
-            :margin="0"
-          />
-          <jazz-icon
-            v-else-if="recipientVaultSelected.name === 'Uni. Profile'"
-            :address="isLukso ? currentDisplayAddress : walletAddress"
-            :id="'fourth'"
-            :size="40"
-            :margin="0"
-          />
-          <IconCreateVault width="40px" height="40px" v-else />
-        </div>
-        <div style="font-size: 13px; font-weight: 500">
-          {{ (recipientVaultSelected.name || toAddress) | truncate(8, '...') }}
-        </div>
-      </v-col>
-      <v-col
-        v-if="step === 0 && !currentAsset"
-        cols="12"
-        class="py-0 mr-0 align-center"
-      >
-        <p class="sub-title-fields text-left mb-3">Asset</p>
-        <v-select
-          class="pa-0 mb-6"
-          :items="sendableAssets"
-          v-model="selectedAsset"
-          color="#009fb1"
-          outlined
-          dense
-          append-icon="mdi-chevron-down"
-          :menu-props="{
-            maxHeight: 304,
-          }"
-          hide-details="auto"
-          placeholder="Select an asset to send"
-        >
-          <template v-slot:selection="{ item }">
-            <div class="d-flex simple-text">
-              <v-img contain width="20" :src="item.assetImagePath"></v-img>
-
-              <p class="d-block mb-0 ml-3">
-                {{ item.tokenName }}
-              </p>
-              <p class="d-block mb-0 ml-3">
-                {{ getAssetId(item) || item.balanceOf }}
-              </p>
-            </div>
-          </template>
-          <template v-slot:item="{ item }">
-            <div class="d-flex simple-text">
-              <v-img contain width="20" :src="item.assetImagePath"></v-img>
-
-              <p class="d-block mb-0 ml-3">
-                {{ item.tokenName }}
-              </p>
-              <p class="d-block mb-0 ml-3">
-                {{ getAssetId(item) || item.balanceOf }}
-              </p>
-            </div>
-          </template>
-        </v-select>
-      </v-col>
-      <v-col
-        v-if="!recipientVaultSelected.name && step < 2"
-        cols="12"
-        class="py-0"
-        style="position: relative"
-      >
-        <p class="sub-title-fields text-left mb-3">To</p>
-        <v-text-field
-          dense
-          outlined
-          :disabled="step > 0 || recipientVaultSelected.name"
-          hide-details
-          :spellcheck="false"
-          class="wallet-text-field pa-0 mb-6"
-          placeholder="Public address (0x)"
-          v-model="toAddress"
-        >
-          <template #append>
-            <div class="d-flex align-center">
-              <v-img
-                v-if="isValidAddress()"
-                src="../images/icons/icon-sucessfully@3x.png"
-                max-width="18"
-                contain
-                class="mt-1 mr-2"
-              ></v-img>
-              <v-img
-                v-if="step < 2"
-                style="cursor: pointer"
-                max-width="12"
-                contain
-                src="../images/icons/close-icon@3x.png"
-                @click="deleteRecipientAddress"
-                class="mt-1"
-              ></v-img>
-            </div>
-          </template>
-        </v-text-field>
-      </v-col>
-      <v-col
-        v-else-if="step < 2"
-        cols="12"
-        class="py-0"
-        style="position: relative; margin-bottom: 18px"
-      >
-        <p class="sub-title-fields text-left mb-3">To</p>
-        <div class="d-flex align-center py-1" style="background-color: #f7f7f7">
-          <IconCreateVault style="max-width: 30px; margin-inline: 12px" />
-          <div class="d-flex flex-column flex-grow">
-            <p
-              style="
-                font-size: 13px !important;
-                font-weight: 700 !important;
-                text-align: left;
-              "
-            >
-              {{ recipientVaultSelected ? recipientVaultSelected.name : '' }}
-            </p>
-            <p
-              style="
-                font-size: 13px !important;
-                font-weight: 500 !important;
-                text-align: left;
-              "
-            >
-              {{ recipientVaultSelected.address | truncate(12) }}
-            </p>
-          </div>
-          <v-img
-            v-if="isValidAddress()"
-            src="../images/icons/icon-sucessfully@3x.png"
-            max-width="18"
-            contain
-            style="
-              position: absolute;
-              top: 50%;
-              right: 0;
-              transform: translate(-285%, 50%);
-            "
-          ></v-img>
-          <v-img
-            max-width="18"
-            contain
-            src="../images/icons/close-icon@3x.png"
-            @click="deleteRecipientAddress"
-            style="
-              position: absolute;
-              top: 50%;
-              right: 0;
-              transform: translate(-150%, 50%);
-            "
-          ></v-img>
-        </div>
-      </v-col>
-      <v-col
-        cols="12"
-        v-if="step === 0 && vaultList.length > 1 && showVaults === false"
-      >
-        <p
-          style="
-            font-size: 14px;
-            font-weight: 500;
-            color: #009fb1;
-            cursor: pointer;
-            text-align: left;
-          "
-          @click="showVaults = true"
-        >
-          Transfer between my vaults
-        </p>
-      </v-col>
-      <v-col
-        v-if="showVaults && step == 0"
-        cols="auto"
-        class="pr-0 mr-0 d-flex align-center"
-      >
-        <p class="sub-title-fields text-left mr-3" style="white-space: nowrap">
-          My Vaults
-        </p>
-      </v-col>
-      <v-col
-        v-if="showVaults && step == 0"
-        cols="auto"
-        class="grow d-flex align-center pl-0"
-      >
-        <hr />
-      </v-col>
-      <v-col cols="12" v-if="showVaults && step == 0" class="pa-0 mb-0">
-        <v-col
-          v-for="vault in filteredVaults"
+          v-if="step > 0 || currentAssetComputed.tokenSymbol"
           cols="12"
-          :key="vault.address"
-          class="d-flex pt-3 pa-0 gray-bg flex-column"
+          class="d-flex mb-3 py-3"
+          style="background-color: #f7f7f7"
         >
+          <v-col cols="auto" class="pa-0 d-flex align-center">
+            <v-img
+              height="50"
+              max-width="50"
+              contain
+              :src="currentAssetComputed.assetImagePath"
+            />
+          </v-col>
           <v-col
-            cols="12"
-            class="py-0 d-flex align-center vault-list-item"
-            :class="{ disabled: currentDisplayAddress === vault.address }"
-            @click="recipientVaultSelected = vault"
+            cols="auto"
+            class="grow pa-0 ml-3 d-flex flex-column justify-center"
           >
-            <div class="mr-3 d-flex align-center">
-              <IconCreateVault v-if="vault.name !== 'Uni. Profile'" />
-              <jazz-icon
-                v-else
-                class="ma-0"
-                :address="isLukso ? currentDisplayAddress : walletAddress"
-                :id="'fifth'"
-                :size="35"
-                :margin="0"
-              />
-            </div>
-            <div class="d-flex flex-column">
-              <p class="sub-title-fields sub-title-fields--bold text-left">
-                {{ vault.name }}
+            <div class="d-flex justify-space-between">
+              <p class="sub-title-fields sub-title-fields--bold">
+                {{ currentAssetComputed.tokenName }}
               </p>
-              <p class="sub-title-fields d-flex text-left">
-                {{ vault.address | truncate(12) }}
+            </div>
+            <div class="d-flex align-center justify-space-between">
+              <p class="sub-title-fields d-flex">
+                {{ amountPrefix }}
+                {{ currentAssetComputed.balanceOf }}
               </p>
             </div>
           </v-col>
-          <v-col cols="12" class="py-0 pt-3"><hr /></v-col>
         </v-col>
-      </v-col>
-      <v-col
-        v-if="step === 1"
-        cols="12"
-        class="py-0"
-        style="position: relative"
-      >
-        <p class="sub-title-fields text-left mb-3">Amount</p>
-        <v-text-field
-          v-model="amount"
-          :disabled="currentAsset.assetType.isLSP8"
-          dense
-          outlined
-          hide-details
-          class="pa-0 mb-6"
-          placeholder="Amount"
-          :append-icon="
-            isValidAddress() ? 'icon-successfully' : 'icon-not-successful'
-          "
-          :rules="TokenAmountRule"
+        <v-col
+          v-if="step === 2"
+          cols="12"
+          class="d-flex align-center py-3"
+          style="background-color: #f7f7f7"
         >
-          <template #append>
-            <div
-              class="mr-6 mt-1"
-              style="font-size: 15px; font-weight: 500; line-height: 18px"
-            >
-              {{ tokenSymbol }}
+          <div class="mr-3 d-flex align-center justify-space-between">
+            <jazz-icon
+              v-if="!recipientVaultSelected"
+              :address="walletAddress"
+              :id="'first'"
+              :size="40"
+              :margin="0"
+            />
+            <jazz-icon
+              v-else-if="getCurrentDisplayAddressName === 'Uni. Profile'"
+              :address="isLukso ? currentDisplayAddress : walletAddress"
+              :id="'second'"
+              :size="40"
+              :margin="0"
+            />
+            <IconCreateVault v-else width="40px" height="40px" />
+          </div>
+          <div class="mr-3" style="font-size: 13px; font-weight: 500">
+            {{ getCurrentDisplayAddressName }}
+          </div>
+          <v-spacer />
+
+          <div class="mx-3">
+            <v-img
+              width="18"
+              height="18"
+              src="../images/icons/icon-transfer.png"
+            ></v-img>
+          </div>
+          <v-spacer />
+          <div class="mx-3 d-flex align-center">
+            <jazz-icon
+              v-if="!recipientVaultSelected.name"
+              :address="toAddress"
+              :id="'third'"
+              :size="40"
+              :margin="0"
+            />
+            <jazz-icon
+              v-else-if="recipientVaultSelected.name === 'Uni. Profile'"
+              :address="isLukso ? currentDisplayAddress : walletAddress"
+              :id="'fourth'"
+              :size="40"
+              :margin="0"
+            />
+            <IconCreateVault width="40px" height="40px" v-else />
+          </div>
+          <div style="font-size: 13px; font-weight: 500">
+            {{
+              (recipientVaultSelected.name || toAddress) | truncate(8, '...')
+            }}
+          </div>
+        </v-col>
+        <v-col
+          v-if="step === 0 && !currentAssetComputed.tokenSymbol"
+          cols="12"
+          class="py-0 mr-0 align-center"
+        >
+          <p class="sub-title-fields text-left mb-3">Asset</p>
+          <v-select
+            class="pa-0 mb-6"
+            :items="sendableAssets"
+            v-model="selectedAsset"
+            color="#009fb1"
+            outlined
+            dense
+            append-icon="mdi-chevron-down"
+            :menu-props="{
+              maxHeight: 304,
+            }"
+            hide-details="auto"
+            placeholder="Select an asset to send"
+          >
+            <template v-slot:selection="{ item }">
+              <div class="d-flex simple-text">
+                <v-img contain width="20" :src="item.assetImagePath"></v-img>
+
+                <p class="d-block mb-0 ml-3">
+                  {{ item.tokenName }}
+                </p>
+                <p class="d-block mb-0 ml-3">
+                  {{ getAssetId(item) || item.balanceOf }}
+                </p>
+              </div>
+            </template>
+            <template v-slot:item="{ item }">
+              <div class="d-flex simple-text">
+                <v-img contain width="20" :src="item.assetImagePath"></v-img>
+
+                <p class="d-block mb-0 ml-3">
+                  {{ item.tokenName }}
+                </p>
+                <p class="d-block mb-0 ml-3">
+                  {{ getAssetId(item) || item.balanceOf }}
+                </p>
+              </div>
+            </template>
+          </v-select>
+        </v-col>
+        <v-col
+          v-if="!recipientVaultSelected.name && step < 2"
+          cols="12"
+          class="py-0"
+          style="position: relative"
+        >
+          <p class="sub-title-fields text-left mb-3">To</p>
+          <v-text-field
+            dense
+            outlined
+            :disabled="step > 0 || recipientVaultSelected.name"
+            hide-details
+            :spellcheck="false"
+            class="wallet-text-field pa-0 mb-6"
+            placeholder="Public address (0x)"
+            v-model="toAddress"
+          >
+            <template #append>
+              <div class="d-flex align-center">
+                <v-img
+                  v-if="isValidAddress()"
+                  src="../images/icons/icon-sucessfully@3x.png"
+                  max-width="18"
+                  contain
+                  class="mt-1 mr-2"
+                ></v-img>
+                <v-img
+                  v-if="step < 2"
+                  style="cursor: pointer"
+                  max-width="12"
+                  contain
+                  src="../images/icons/close-icon@3x.png"
+                  @click="deleteRecipientAddress"
+                  class="mt-1"
+                ></v-img>
+              </div>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col
+          v-else-if="step < 2"
+          cols="12"
+          class="py-0"
+          style="position: relative; margin-bottom: 18px"
+        >
+          <p class="sub-title-fields text-left mb-3">To</p>
+          <div
+            class="d-flex align-center py-1"
+            style="background-color: #f7f7f7"
+          >
+            <IconCreateVault style="max-width: 30px; margin-inline: 12px" />
+            <div class="d-flex flex-column flex-grow">
+              <p
+                style="
+                  font-size: 13px !important;
+                  font-weight: 700 !important;
+                  text-align: left;
+                "
+              >
+                {{ recipientVaultSelected.name }}
+              </p>
+              <p
+                style="
+                  font-size: 13px !important;
+                  font-weight: 500 !important;
+                  text-align: left;
+                "
+              >
+                {{ recipientVaultSelected.address | truncate(12) }}
+              </p>
             </div>
-            <div
-              class="mt-1"
+            <v-img
+              v-if="isValidAddress()"
+              src="../images/icons/icon-sucessfully@3x.png"
+              max-width="18"
+              contain
               style="
-                border: 1px solid #009fb1;
-                color: #009fb1;
-                border-radius: 3px;
-                font-size: 13px;
-                padding: 2px 10px;
-                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translate(-285%, 50%);
               "
-              @click="setMaxAmount"
-            >
-              Max
-            </div>
-          </template>
-        </v-text-field>
-      </v-col>
-      <v-col
-        v-if="step === 2 && false"
-        cols="12"
-        class="d-flex flex-column py-0"
-      >
-        <div class="d-flex justify-space-between">
-          <p style="font-size: 15px; font-weight: 600">Estimated gas fees</p>
-          <EditPriorityModal />
-        </div>
-        <div class="d-flex flex-column">
-          <div
-            class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500"
-          >
-            0.0007986
+            ></v-img>
+            <v-img
+              max-width="18"
+              contain
+              src="../images/icons/close-icon@3x.png"
+              @click="deleteRecipientAddress"
+              style="
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translate(-150%, 50%);
+              "
+            ></v-img>
           </div>
-          <div
-            class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500"
-          >
-            <strong>0.000797 LYXt</strong>
-          </div>
-          <div
-            class="mt-3"
-            style="font-size: 13px; text-align: right; font-weight: 500"
-          >
-            Max fee: 0.00083974 LYXt
-          </div>
-        </div>
-      </v-col>
-      <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
-        <hr />
-      </v-col>
-      <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
-        <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 15px; font-weight: 500">Amount</p>
-          <p style="font-size: 15px; font-weight: 500">
-            {{ amount }} {{ ' ' + tokenSymbol }}
-          </p>
-        </div>
-        <div class="d-flex justify-space-between mt-3">
-          <p style="font-size: 15px; font-weight: 500">Gas fees</p>
-          <p style="font-size: 15px; font-weight: 500">
-            {{ parseGasFee }} {{ ' ' + currentNetwork.ticker }}
-          </p>
-        </div>
-        <div class="d-flex justify-space-between mt-3">
+        </v-col>
+        <v-col
+          cols="12"
+          v-if="step === 0 && vaultList.length > 1 && showVaults === false"
+        >
           <p
             style="
-              font-size: 15px;
-              font-weight: 600;
+              font-size: 14px;
+              font-weight: 500;
+              color: #009fb1;
+              cursor: pointer;
               text-align: left;
-              white-space: nowrap;
-              margin-right: 2rem;
             "
+            @click="showVaults = true"
           >
-            Amount + gas fees
+            Transfer between my vaults
           </p>
-          <p style="font-size: 15px; font-weight: 600; text-align: right">
-            {{ calculateAmount() }}
+        </v-col>
+        <v-col
+          v-if="showVaults && step == 0"
+          cols="auto"
+          class="pr-0 mr-0 d-flex align-center"
+        >
+          <p
+            class="sub-title-fields text-left mr-3"
+            style="white-space: nowrap"
+          >
+            My Vaults
           </p>
-        </div>
-      </v-col>
-      <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
-        <hr />
-      </v-col>
-    </v-row>
-    <v-row v-if="step < 2" :style="{ marginTop: dynamicButtonMargin }">
+        </v-col>
+        <v-col
+          v-if="showVaults && step == 0"
+          cols="auto"
+          class="grow d-flex align-center pl-0"
+        >
+          <hr />
+        </v-col>
+        <v-col cols="12" v-if="showVaults && step == 0" class="pa-0 mb-0">
+          <v-col
+            v-for="vault in filteredVaults"
+            cols="12"
+            :key="vault.address"
+            class="d-flex pt-3 pa-0 gray-bg flex-column"
+          >
+            <v-col
+              cols="12"
+              class="py-0 d-flex align-center vault-list-item"
+              :class="{ disabled: currentDisplayAddress === vault.address }"
+              @click="recipientVaultSelected = vault"
+            >
+              <div class="mr-3 d-flex align-center">
+                <IconCreateVault v-if="vault.name !== 'Uni. Profile'" />
+                <jazz-icon
+                  v-else
+                  class="ma-0"
+                  :address="isLukso ? currentDisplayAddress : walletAddress"
+                  :id="'fifth'"
+                  :size="35"
+                  :margin="0"
+                />
+              </div>
+              <div class="d-flex flex-column">
+                <p class="sub-title-fields sub-title-fields--bold text-left">
+                  {{ vault.name }}
+                </p>
+                <p class="sub-title-fields d-flex text-left">
+                  {{ vault.address | truncate(12) }}
+                </p>
+              </div>
+            </v-col>
+            <v-col cols="12" class="py-0 pt-3"><hr /></v-col>
+          </v-col>
+        </v-col>
+        <v-col
+          v-if="step === 1"
+          cols="12"
+          class="py-0"
+          style="position: relative"
+        >
+          <p class="sub-title-fields text-left mb-3">Amount</p>
+          <v-text-field
+            v-model="amount"
+            dense
+            outlined
+            hide-details
+            class="pa-0 mb-6"
+            placeholder="Amount"
+            :append-icon="
+              isValidAddress() ? 'icon-successfully' : 'icon-not-successful'
+            "
+            :rules="TokenAmountRule"
+          >
+            <template #append>
+              <div
+                class="mr-6 mt-1"
+                style="font-size: 15px; font-weight: 500; line-height: 18px"
+              >
+                {{ tokenSymbol }}
+              </div>
+              <div
+                class="mt-1"
+                style="
+                  border: 1px solid #009fb1;
+                  color: #009fb1;
+                  border-radius: 3px;
+                  font-size: 13px;
+                  padding: 2px 10px;
+                  cursor: pointer;
+                "
+                @click="setMaxAmount"
+              >
+                Max
+              </div>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col
+          v-if="step === 2 && false"
+          cols="12"
+          class="d-flex flex-column py-0"
+        >
+          <div class="d-flex justify-space-between">
+            <p style="font-size: 15px; font-weight: 600">Estimated gas fees</p>
+            <EditPriorityModal />
+          </div>
+          <div class="d-flex flex-column">
+            <div
+              class="mt-3"
+              style="font-size: 13px; text-align: right; font-weight: 500"
+            >
+              0.0007986
+            </div>
+            <div
+              class="mt-3"
+              style="font-size: 13px; text-align: right; font-weight: 500"
+            >
+              <strong>0.000797 LYXt</strong>
+            </div>
+            <div
+              class="mt-3"
+              style="font-size: 13px; text-align: right; font-weight: 500"
+            >
+              Max fee: 0.00083974 LYXt
+            </div>
+          </div>
+        </v-col>
+        <v-col
+          v-if="step === 2"
+          cols="12"
+          class="grow d-flex align-center pl-0"
+        >
+          <hr />
+        </v-col>
+        <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
+          <div class="d-flex justify-space-between mt-3">
+            <p style="font-size: 15px; font-weight: 500">Amount</p>
+            <p style="font-size: 15px; font-weight: 500">
+              {{ amount }} {{ ' ' + tokenSymbol }}
+            </p>
+          </div>
+          <div class="d-flex justify-space-between mt-3">
+            <p style="font-size: 15px; font-weight: 500">Gas fees</p>
+            <p style="font-size: 15px; font-weight: 500">
+              {{ parseGasFee }} {{ ' ' + currentNetwork.ticker }}
+            </p>
+          </div>
+          <div class="d-flex justify-space-between mt-3">
+            <p
+              style="
+                font-size: 15px;
+                font-weight: 600;
+                text-align: left;
+                white-space: nowrap;
+                margin-right: 2rem;
+              "
+            >
+              Amount + gas fees
+            </p>
+            <p style="font-size: 15px; font-weight: 600; text-align: right">
+              {{ calculateAmount() }}
+            </p>
+          </div>
+        </v-col>
+        <v-col
+          v-if="step === 2"
+          cols="12"
+          class="grow d-flex align-center pl-0"
+        >
+          <hr />
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-row v-if="step < 2" class="float">
       <v-col cols="6" class="pt-1">
         <v-btn text @click="close()" class="cancel-btn">Cancel</v-btn>
       </v-col>
@@ -443,7 +460,7 @@
           :loading="isLoading"
           :success="sendState"
           :recipientAddress="toAddress || recipientVaultSelected.address"
-          :assetTitle="currentAsset.tokenName"
+          :assetTitle="currentAssetComputed.tokenName"
           :txHash="txHash"
           @click="send()"
         />
@@ -617,6 +634,11 @@ export default {
       currentDisplayAddress: 'currentDisplayAddress',
       UPAddress: 'UPAddress',
     }),
+    currentAssetComputed() {
+      return this.currentAsset && Object.keys(this.currentAsset).length > 0
+        ? this.currentAsset
+        : {};
+    },
     sendableAssets() {
       return this.assets.filter(({ assetType }) => {
         return assetType.isLSP8 || assetType.isLSP7;
@@ -633,7 +655,7 @@ export default {
       )?.name;
     },
     tokenSymbol() {
-      return this.currentAsset.tokenSymbol;
+      return this.currentAsset?.tokenSymbol;
     },
     amountPrefix() {
       if (this.currentAsset)
@@ -644,15 +666,6 @@ export default {
     },
     parseGasFee() {
       return ethers.utils.formatUnits(ethers.BigNumber.from(this.baseGasFee));
-    },
-    dynamicButtonMargin() {
-      if (!this.showVaults && this.step == 0) {
-        return '10.3rem';
-      } else if (this.step == 1) {
-        return '8rem';
-      } else {
-        return '1rem';
-      }
     },
   },
 
@@ -700,9 +713,6 @@ export default {
   letter-spacing: normal;
   color: var(--charcoal-grey);
 }
-*::-webkit-scrollbar {
-  display: none !important; /* for Chrome, Safari, and Opera */
-}
 
 #metamask-logo-details {
   max-height: 83px;
@@ -714,18 +724,19 @@ export default {
   margin-top: -35px;
 }
 
-.details-wallet {
-  .darker-background.row {
-    margin: 0;
-    border-radius: 3px;
-    background-color: var(--white);
-    .wallet-state {
-      background: #efefef;
-    }
-    .wallet-address {
-      background-color: #ffffff;
-      padding: 10px;
-    }
+.send-asset {
+  overflow: hidden;
+  .row.float {
+    position: fixed !important;
+    bottom: 16px !important;
+    width: 100%;
+  }
+  .v-card.form-card {
+    box-shadow: none !important;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 380px;
+    width: 100%;
   }
 }
 

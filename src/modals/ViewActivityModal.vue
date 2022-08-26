@@ -286,10 +286,6 @@ export default {
 </script>
 
 <style lang="scss">
-*::-webkit-scrollbar {
-  display: none !important; /* for Chrome, Safari, and Opera */
-}
-
 #metamask-logo-details {
   max-height: 83px;
   max-width: 83px;
