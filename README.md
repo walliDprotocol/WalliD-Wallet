@@ -17,8 +17,6 @@ During the hackthon we implemented the features and methods that allow users to 
 - Send tokens across vaults
 
 ### /src/scripts:
-
-### /src/scripts:
 * **controllers:** contain a collection of controller modules built around clearly defined data entities. These modules are responsible for managing the plugin's multiple data entities and implementing all relevant features related to them.
 
 * **lib:** contains a collection of functional modules responsible for the implementation of features not specific to any controller. It contains miscelaneous utility functions meant to be imported and used by the main application instances, controllers or any other scripts like the content-script.  
