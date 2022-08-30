@@ -47,6 +47,7 @@ const URD_DATA_KEY = constants.ERC725YKeys.LSP0.LSP1UniversalReceiverDelegate;
 const LSP10_DATA_KEY = 'LSP10Vaults[]';
 const LSP5_DATA_KEY = 'LSP5ReceivedAssets[]';
 const LSP12_DATA_KEY = 'LSP12IssuedAssets[]';
+// LSP8 custom data key
 const LSP8_DATA_KEY = (tokenId) => [
   'LSP4TokenName',
   'LSP4TokenSymbol',
@@ -90,6 +91,13 @@ export default class LuksoController {
     return new LuksoController(luksoController);
   }
 
+  /**
+   * creates a UP for the current wallet
+   * @param {string} address - address of the owner
+   * @param {Object} profileData - the profile data to be set on the profile
+   * @param {string} privateKey - private key to deploy the UP
+   * @returns the deploy universal profile
+   */
   encodeData({ data, schema, UPAddress }) {
     const config = { ipfsGateway: IPFS_GATEWAY };
     const provider = new Web3.providers.HttpProvider(RPC_ENDPOINT);
@@ -99,10 +107,21 @@ export default class LuksoController {
     return ERC725Object.encodeData(data);
   }
 
+  /**
+   * adds the wallet private key to web3 module
+   * @param {string} privateKey - private key to use with web3
+   */
   initEOA(privateKey) {
     this.#EOA = web3.eth.accounts.wallet.add(privateKey);
   }
 
+  /**
+   * creates a UP for the current wallet
+   * @param {string} address - address of the owner
+   * @param {Object} profileData - the profile data to be set on the profile
+   * @param {string} privateKey - private key to deploy the UP
+   * @returns the deploy universal profile
+   */
   createUniversalProfile(address, { username }, privateKey) {
     console.log('createUniversalProfile: ', address, username);
 
@@ -126,6 +145,13 @@ export default class LuksoController {
       },
     });
   }
+
+  /**
+   * Checks if the given EOA address is the owner of the UP Address
+   * @param {string} ownerAddress - EOA address to check
+   * @param {string} UPAddressToImport - UP address to check
+   * @returns the key manager address and the UP address
+   */
   async checkOwnership(ownerAddress, UPAddressToImport) {
     console.log('checkOwnership', ownerAddress, UPAddressToImport);
 
@@ -156,35 +182,80 @@ export default class LuksoController {
     }
   }
 
+  /**
+   * sets Universal Profile Address
+   * @param {string} UPAddress - universal profile address
+   */
   setUniversalProfileAddress(UPAddress) {
     this.#UPAddress = UPAddress;
   }
+
+  /**
+   * sets Key Manager Address
+   * @param {string} KMAddress - key manager address
+   */
   setKeyManagerAddress(KMAddress) {
     this.#KMAddress = KMAddress;
   }
 
+  /**
+   * gets Universal Profile Address
+   * @returns the Universal Profile Address
+   */
   getUniversalProfileAddress() {
     return this.#UPAddress;
   }
+
+  /**
+   * gets Key Manager Address
+   * @returns the key manager address
+   */
   getKeyManagerAddress() {
     return this.#KMAddress;
   }
 
+  /**
+   * gets the given address profile data
+   * @param {string} addressToFetch - address of the ERC725 contract
+   * @returns the LSP0 data key
+   */
   async fetchProfile(addressToFetch) {
     return await this.getDataKey('', addressToFetch);
   }
 
+  /**
+   * =Ggets the given address vaults data
+   * @param {string} addressToFetch - address of the ERC725 contract
+   * @returns the LSP10 data key
+   */
   async fetchVaults(addressToFetch) {
     return await this.getDataKey(LSP10_DATA_KEY, addressToFetch, LSP10VaultSchema);
   }
 
+  /**
+   * Gets LSP5 - Received Assets from the given address
+   * @param {string} addressToFetch - address of the ERC725 contract
+   * @returns the LSP5 data key
+   */
   async fetchLSP5(addressToFetch) {
     return await this.getDataKey(LSP5_DATA_KEY, addressToFetch);
   }
+  /**
+   * Gets LSP12 - Issued Assets from the given address
+   * @param {string} addressToFetch - address of the ERC725 contract
+   * @returns the  LSP12 data key
+   */
   async fetchLSP12(addressToFetch) {
     return await this.getDataKey(LSP12_DATA_KEY, addressToFetch);
   }
 
+  /**
+   * Gets data key of the ERC752 address from the given schema
+   * @param {string} dataKey - dataKey to retrieve
+   * @param {string} address - address of the ERC725 contract
+   * @param {string} _schema - the schema to lookup
+   * @returns returns the data
+   */
   async getDataKey(dataKey, address, _schema) {
     // Parameters for ERC725 Instance
     const schema =
@@ -226,15 +297,27 @@ export default class LuksoController {
     return contract._address;
   }
 
+  /**
+   * Creates a new URD for the user wallet
+   * @returns the created contract
+   */
   async deployingUniversalReceiverDelegate() {
     return this.contractFactory(LSP1UniversalReceiverDelegateVaultContract);
   }
 
+  /**
+   * Creates a new vault contract with the given UPAddress being the owner
+   * @param {string} UPAddress - the UP address that will be the owner of the vault
+   * @returns the created contract
+   */
   async deployVault(UPAddress) {
     return this.contractFactory(LSP9VaultContract, [UPAddress]);
   }
 
-  // tested
+  /**
+   * Creates a vault on the user UP, setting up all the required contracts
+   * @returns the vault address that needs to be added to LSP10 next
+   */
   async createVault() {
     // deploy the vault contract
     let vaultContractAddress = await this.deployVault(
@@ -289,6 +372,11 @@ export default class LuksoController {
     return vaultContractAddress;
   }
 
+  /**
+   * Sets a vault address on the the UP by editing the UP LSP10 - Received Vaults
+   * @param {string} vaultAddress - the vault address to set
+   * @returns returns the transaction receipt
+   */
   async setVaultAddressUP(vaultAddress) {
     console.log('setVaultAddressUP ');
 
@@ -373,7 +461,13 @@ export default class LuksoController {
       return;
     }
   }
-  // execute a dataPayload on a Vault on UP w/Key Manager
+  /**
+   * Executes a dataPayload on a vault bythe UP with the Key Manager
+   * @param {string} dataPayload - the encoded data that will be executed
+   * @param {string} destinationAddress - the contract destination address
+   * @param {string} vaultAddress - the vault address
+   * @returns returns the transaction receipt
+   */
   async executePayloadOnVault(dataPayload, destinationAddress, vaultAddress) {
     console.log('dataPayload', dataPayload);
 
@@ -422,7 +516,14 @@ export default class LuksoController {
     console.log('executePayload receipt', receipt);
     return receipt;
   }
-  // execute a dataPayload on UP w/Key Manager
+
+  /**
+   * Executes a dataPayload on the UP with the Key Manager
+   * @param {string} dataPayload - the encoded data that will be executed
+   * @param {string} destinationAddress - the contract destination address
+   * @param {string} contractAddress - the UP address
+   * @returns returns the transaction receipt
+   */
   async executePayload(dataPayload, destinationAddress, contractAddress) {
     console.log('dataPayload', dataPayload);
 
@@ -459,6 +560,17 @@ export default class LuksoController {
     console.log('executePayload receipt', receipt);
     return receipt;
   }
+
+  /**
+   * Transfers a LSP7 token from a UP or a vault
+   * @param {string} fromAccountAddress - the address the token from, can be a vault address
+   * @param {string} toAccountAddress - the address the token to
+   * @param {string} assetAddress - the asset address
+   * @param {string} _amount - the amount to transfer
+   * @param {boolean} isFromVault - flag that determines if is from vault
+   * @returns returns the transaction receipt
+   * https://github.com/lukso-network/example-dapp-lsps/blob/main/src/components/SendModalComponent.vue#L143
+   */
   async transferLSP7Token(
     fromAccountAddress,
     toAccountAddress,
@@ -493,7 +605,16 @@ export default class LuksoController {
     return result;
   }
 
-  // https://github.com/lukso-network/example-dapp-lsps/blob/main/src/components/SendModalComponent.vue#L143
+  /**
+   * Transfers a LSP8 token from a UP or a vault
+   * @param {string} fromAccountAddress - the address the token from, can be a vault address
+   * @param {string} toAccountAddress - the address the token to
+   * @param {string} assetAddress - the asset address
+   * @param {string} tokenId - the token id
+   * @param {boolean} isFromVault - flag that determines if is from vault
+   * @returns returns the transaction receipt
+   * https://github.com/lukso-network/example-dapp-lsps/blob/main/src/components/SendModalComponent.vue#L143
+   */
   async transferLSP8Token(
     fromAccountAddress,
     toAccountAddress,

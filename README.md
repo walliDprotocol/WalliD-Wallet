@@ -57,7 +57,7 @@ The content-script provides a way for the plugin to interact with WebApps. The s
   
   - **fetchProfile:** gets the given address profile data
   
-  - **fetchVaults:** gets the given address vaults  data
+  - **fetchVaults:** gets the given address vaults data
   
   - **fetchLSP5:** gets LSP5 - Received Assets from the given address
   
@@ -69,7 +69,7 @@ The content-script provides a way for the plugin to interact with WebApps. The s
   
   - **deployingUniversalReceiverDelegate:** creates a new URD for the user wallet
   
-  - **deployVault:** creates a new vault whit the given UPAddress being the owner 
+  - **deployVault:** creates a new vault with the given UPAddress being the owner 
   
   - **createVault:** creates a vault on the user UP, setting up all the required contracts 
   
