@@ -1,33 +1,41 @@
-## WalliD Chrome Extension
+# About WalliD wallet
 
-The WalliD is a Chrome browser extension that enables users to interact with WalliD's protocol, platforms and APIs.
-The _src_ folder contains all the code that describes the plugin's behaviour and functionalities. More specifically, the _scripts_ folder contains all of the plugin's backend code.
-Detailed information about the _scripts_ folder can be found bellow.
+WalliD wallet is an aggregator of digital ID protocols and networks and allows users to create and manage an Ethereum wallet (address, public and private keys) through a javascript enabled browser extension. <br>
+It enables users' authentication on dApps or centralized Webapps and it provides a seamless experience to manage all kinds of digital IDs or non-finantial assets (decentralized and centralized) and allow for a self-sovereign storage of multiple wallet or Digital ID asset keys in the browser local memory, empowering users to provide a proof-of-ownership over all assets from those networks in dApps or centralized webapps.<br> 
+The `src` folder contains all the code that describes the plugin's behaviour and features. More specifically, the *scripts* folder contains all of the plugin's backend code. 
 
 ---
 
+## LUKSO buildup Hackathon 2022 implementation:
+
+During the hackthon we implemented the features and methods that allow users to have a native LUKSO experience, more specifically:
+
+- Connect to the L16 Public Network
+- Import Universal Profiles and assets from the network (LYX, LSP7 and LSP8 tokens)
+- Create Vaults
+- Send tokens to external addresses
+- Send tokens across vaults
+
 ### /src/scripts:
+* **controllers:** contain a collection of controller modules built around clearly defined data entities. These modules are responsible for managing the plugin's multiple data entities and implementing all relevant features related to them.
 
-- **controllers:** a collection of controller modules built around clearly defined data entities. These modules are responsible for managing the plugin's multiple data entities and implementing all relevant functionalities relating to them. More specific details bellow
+* **lib:** contains a collection of functional modules responsible for the implementation of features not specific to any controller. It contains miscelaneous utility functions meant to be imported and used by the main application instances, controllers or any other scripts like the content-script.  
+* **resources:** contain all resources not directly related to the plugin's configuration. Currently used to store the ABIs of the smart-contracts that the plugin interacts with.
 
-- **lib:** a collection of functional modules responsible for the implementation of functionalities not specific to any controller. It contains miscelaneous utility functions meant to be imported and used by the main application instance, controllers, or any other scripts like the content-script.
+* **app-controller.js:** contains the implementation of the AppController module which represents the main plugin instance running in the browser's background process. It provides all necessary methods to interact with the backend subsytem. It is responsible for managing the plugin's internal state and controller instances. 
+All controller modules are instanciated within the main AppController instance. Controller modules should not be accessed directly. Instead any interaction with the controllers should be done through wrapped functions provided by the main AppController instance. 
+This instance also provides a permissioned RequestAPI which exposes select controller features to WebApps. This allows applications to interact with the plugin's state and use its available features like, importing new assets or using cryptographic functions. The methods provided by the `RequestAPI` require apps to have certain access levels in order to access them. Applications can use a specific method to request a given access level, which will in turn present the users with a popup window enabling them to accept or decline the requested access level. 
+The AppController instance also exposes an internal API to the UI subsystem which goal is to provide the plugin's UI components with all the fueatures they might need in order to implement the various user flows within the plugin.
 
-- **resources:** contains all resources not directly related to the plugin's configuration. Currently used to store the ABIs of the smart-contracts that the plugin interacts with.
+* **background.js:** contains a specific Chrome extension ManifestV2 script (https://developer.chrome.com/docs/extensions/mv2/background_pages/).
+The background script is persistent, meaning it continuously runs in the browser's background process despite the plugin being in use or not. The main `AppController` instance runs inside the background script. The in-memory state of the application is maintained within the context of this script.
 
-- **app-controller.js:** contains the implementation of the AppController module which represents the main plugin instance running in the browser's background process. It provides all necessary methods to interact with the backend subsytem. It is responsible for managing the plugin's internal state and controller instances.
-  All controller modules are instanciated within the main AppController instance. Controller modules should not be accessed directly, instead any interaction with the controllers should be done through wrapped functions provided by the main AppController instance.
-  This instance also provides a permissioned RequestAPI which exposes select controller functionalities to web applications. This allows applications to interact with the plugin's state and use its available features like, importing new credentials or using cryptographic functions. The methods provided by the RequestAPI require apps to have certain access levels in order to access them. Applications can use a specific method to request a given access level, which will in turn present the user with a popup window enabling him to accept or decline the requested access level.
-  The AppController instance also exposes an internal API to the UI subsystem whose goal is to provide the plugin's UI components with all the functionalities they might need in order to implement the various user flows within the plugin.
-
-- **background.js:** specific Chrome extension ManifestV2 script (https://developer.chrome.com/docs/extensions/mv2/background_pages/).
-  The background script is persistent, meaning it continuously runs in the browser's background process despite the plugin being in use or not. The main AppController instance runs inside the background script. The in-memory state of the application is maintained within the context of this script.
-
-- **content-script.js:** a specific Chrome extension script (https://developer.chrome.com/docs/extensions/mv3/content_scripts/).
-  The content-script provides a way for the plugin to interface with web applications. The script is injected into web pages according to the whitelist defined in the _manifest.json_ file. In the context of the plugin, the content-script is used to inject code that allows web applications to interact with the plugin's RequestAPI and listen to relevant events emmited by the backend.
+* **content-script.js:** contains a specific Chrome extension script (https://developer.chrome.com/docs/extensions/mv3/content_scripts/).
+The content-script provides a way for the plugin to interact with WebApps. The script is injected into web pages according to the whitelist defined in the *manifest.json* file. In the context of the plugin, the content-script is used to inject code that allows web applications to interact with the plugin's RequestAPI and listen to relevant events emmited by the backend. 
 
 ### /src/scripts/lukso.js:
 
-  Main controller for Lukso ecosystem
+  Main controller for Lukso ecosystem:
 
   - **constructor:** the constructor of the lukso controller
   
@@ -85,6 +93,23 @@ Detailed information about the _scripts_ folder can be found bellow.
 
   - **getMetadata:** Gets the metadata from a given assetAddress and a ownerAddress, for LSP8 a tokenId is required as well
 ---
+
+## What was already built before the hacktahon:
+
+WalliD wallet is a product built by WalliD and most of the features that allowed for users to authenticate on dApps (through wallet connect) or centralized WebApps and to store centralized digital IDs (such as PKI-based IDs or Web2 accounts) or prove their ownership were already developed. More specifically:
+
+- Guilherme
+- 
+
+## What's next in our development pipeline:
+
+As part of our mission to build WalliD wallet as an aggregator of all EVM compatible networks and tailor-made for non-finantial assets from centralized and decentralized protocols and in order to enable all LUKSO and other EVM chains users to use it as their single wallet to navigate these networks and manage all kinds of assets, we will be working on the following until the end of 2022:
+
+- Web3 methods implemntation - to enable the interactuon with smart contracts
+- Multi-account management - to enable a customized ID protfolio associated to one or more addresses
+- Multi- key management - to enable a seamless management of different private keys and seed phrases, ensuring a seamless transition from Metamask or any other wallet into a single wallet manager (WalliD)
+- Integration with other digital ID protocols - such as PolygonID, Ceramic network, EBSI, Proof-of-humanity and others
+
 
 #### NOTE
 
