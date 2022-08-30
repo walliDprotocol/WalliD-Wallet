@@ -21,17 +21,9 @@
           style="background-color: #f7f7f7"
         >
           <v-col cols="auto" class="pa-0 d-flex align-center">
-            <v-img
-              height="50"
-              max-width="50"
-              contain
-              :src="currentAssetComputed.assetImagePath"
-            />
+            <v-img height="50" max-width="50" contain :src="currentAssetComputed.assetImagePath" />
           </v-col>
-          <v-col
-            cols="auto"
-            class="grow pa-0 ml-3 d-flex flex-column justify-center"
-          >
+          <v-col cols="auto" class="grow pa-0 ml-3 d-flex flex-column justify-center">
             <div class="d-flex justify-space-between">
               <p class="sub-title-fields sub-title-fields--bold">
                 {{ currentAssetComputed.tokenName }}
@@ -74,11 +66,7 @@
           <v-spacer />
 
           <div class="mx-3">
-            <v-img
-              width="18"
-              height="18"
-              src="../images/icons/icon-transfer.png"
-            ></v-img>
+            <v-img width="18" height="18" src="../images/icons/icon-transfer.png"></v-img>
           </div>
           <v-spacer />
           <div class="mx-3 d-flex align-center">
@@ -99,9 +87,7 @@
             <IconCreateVault width="40px" height="40px" v-else />
           </div>
           <div style="font-size: 13px; font-weight: 500">
-            {{
-              (recipientVaultSelected.name || toAddress) | truncate(8, '...')
-            }}
+            {{ (recipientVaultSelected.name || toAddress) | truncate(8, '...') }}
           </div>
         </v-col>
         <v-col
@@ -196,28 +182,13 @@
           style="position: relative; margin-bottom: 18px"
         >
           <p class="sub-title-fields text-left mb-3">To</p>
-          <div
-            class="d-flex align-center py-1"
-            style="background-color: #f7f7f7"
-          >
+          <div class="d-flex align-center py-1" style="background-color: #f7f7f7">
             <IconCreateVault style="max-width: 30px; margin-inline: 12px" />
             <div class="d-flex flex-column flex-grow">
-              <p
-                style="
-                  font-size: 13px !important;
-                  font-weight: 700 !important;
-                  text-align: left;
-                "
-              >
+              <p style="font-size: 13px !important; font-weight: 700 !important; text-align: left">
                 {{ recipientVaultSelected.name }}
               </p>
-              <p
-                style="
-                  font-size: 13px !important;
-                  font-weight: 500 !important;
-                  text-align: left;
-                "
-              >
+              <p style="font-size: 13px !important; font-weight: 500 !important; text-align: left">
                 {{ recipientVaultSelected.address | truncate(12) }}
               </p>
             </div>
@@ -226,31 +197,18 @@
               src="../images/icons/icon-sucessfully@3x.png"
               max-width="18"
               contain
-              style="
-                position: absolute;
-                top: 50%;
-                right: 0;
-                transform: translate(-285%, 50%);
-              "
+              style="position: absolute; top: 50%; right: 0; transform: translate(-285%, 50%)"
             ></v-img>
             <v-img
               max-width="18"
               contain
               src="../images/icons/close-icon@3x.png"
               @click="deleteRecipientAddress"
-              style="
-                position: absolute;
-                top: 50%;
-                right: 0;
-                transform: translate(-150%, 50%);
-              "
+              style="position: absolute; top: 50%; right: 0; transform: translate(-150%, 50%)"
             ></v-img>
           </div>
         </v-col>
-        <v-col
-          cols="12"
-          v-if="step === 0 && vaultList.length > 1 && showVaults === false"
-        >
+        <v-col cols="12" v-if="step === 0 && vaultList.length > 1 && showVaults === false">
           <p
             style="
               font-size: 14px;
@@ -264,23 +222,10 @@
             Transfer between my vaults
           </p>
         </v-col>
-        <v-col
-          v-if="showVaults && step == 0"
-          cols="auto"
-          class="pr-0 mr-0 d-flex align-center"
-        >
-          <p
-            class="sub-title-fields text-left mr-3"
-            style="white-space: nowrap"
-          >
-            My Vaults
-          </p>
+        <v-col v-if="showVaults && step == 0" cols="auto" class="pr-0 mr-0 d-flex align-center">
+          <p class="sub-title-fields text-left mr-3" style="white-space: nowrap">My Vaults</p>
         </v-col>
-        <v-col
-          v-if="showVaults && step == 0"
-          cols="auto"
-          class="grow d-flex align-center pl-0"
-        >
+        <v-col v-if="showVaults && step == 0" cols="auto" class="grow d-flex align-center pl-0">
           <hr />
         </v-col>
         <v-col cols="12" v-if="showVaults && step == 0" class="pa-0 mb-0">
@@ -319,12 +264,7 @@
             <v-col cols="12" class="py-0 pt-3"><hr /></v-col>
           </v-col>
         </v-col>
-        <v-col
-          v-if="step === 1"
-          cols="12"
-          class="py-0"
-          style="position: relative"
-        >
+        <v-col v-if="step === 1" cols="12" class="py-0" style="position: relative">
           <p class="sub-title-fields text-left mb-3">Amount</p>
           <v-text-field
             v-model="amount"
@@ -333,16 +273,11 @@
             hide-details
             class="pa-0 mb-6"
             placeholder="Amount"
-            :append-icon="
-              isValidAddress() ? 'icon-successfully' : 'icon-not-successful'
-            "
+            :append-icon="isValidAddress() ? 'icon-successfully' : 'icon-not-successful'"
             :rules="TokenAmountRule"
           >
             <template #append>
-              <div
-                class="mr-6 mt-1"
-                style="font-size: 15px; font-weight: 500; line-height: 18px"
-              >
+              <div class="mr-6 mt-1" style="font-size: 15px; font-weight: 500; line-height: 18px">
                 {{ tokenSymbol }}
               </div>
               <div
@@ -362,49 +297,30 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col
-          v-if="step === 2 && false"
-          cols="12"
-          class="d-flex flex-column py-0"
-        >
+        <v-col v-if="step === 2 && false" cols="12" class="d-flex flex-column py-0">
           <div class="d-flex justify-space-between">
             <p style="font-size: 15px; font-weight: 600">Estimated gas fees</p>
             <EditPriorityModal />
           </div>
           <div class="d-flex flex-column">
-            <div
-              class="mt-3"
-              style="font-size: 13px; text-align: right; font-weight: 500"
-            >
+            <div class="mt-3" style="font-size: 13px; text-align: right; font-weight: 500">
               0.0007986
             </div>
-            <div
-              class="mt-3"
-              style="font-size: 13px; text-align: right; font-weight: 500"
-            >
+            <div class="mt-3" style="font-size: 13px; text-align: right; font-weight: 500">
               <strong>0.000797 LYXt</strong>
             </div>
-            <div
-              class="mt-3"
-              style="font-size: 13px; text-align: right; font-weight: 500"
-            >
+            <div class="mt-3" style="font-size: 13px; text-align: right; font-weight: 500">
               Max fee: 0.00083974 LYXt
             </div>
           </div>
         </v-col>
-        <v-col
-          v-if="step === 2"
-          cols="12"
-          class="grow d-flex align-center pl-0"
-        >
+        <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
           <hr />
         </v-col>
         <v-col v-if="step === 2" cols="12" class="d-flex flex-column py-0">
           <div class="d-flex justify-space-between mt-3">
             <p style="font-size: 15px; font-weight: 500">Amount</p>
-            <p style="font-size: 15px; font-weight: 500">
-              {{ amount }} {{ ' ' + tokenSymbol }}
-            </p>
+            <p style="font-size: 15px; font-weight: 500">{{ amount }} {{ ' ' + tokenSymbol }}</p>
           </div>
           <div class="d-flex justify-space-between mt-3">
             <p style="font-size: 15px; font-weight: 500">Gas fees</p>
@@ -429,11 +345,7 @@
             </p>
           </div>
         </v-col>
-        <v-col
-          v-if="step === 2"
-          cols="12"
-          class="grow d-flex align-center pl-0"
-        >
+        <v-col v-if="step === 2" cols="12" class="grow d-flex align-center pl-0">
           <hr />
         </v-col>
       </v-row>
@@ -495,8 +407,7 @@ export default {
       return this.chainId === '2828';
     },
     getAssetId(asset) {
-      if (asset.tokenId)
-        return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...');
+      if (asset.tokenId) return ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...');
     },
     calculateAmount() {
       if (this.tokenType === 'native') {
@@ -548,7 +459,10 @@ export default {
       }
       await this.$nextTick();
 
+      console.log('currentAsset', this.currentAsset);
+
       if (this.isValidAddress() && this.currentAsset?.assetType?.isLSP8) {
+        this.setMaxAmount();
         this.step = 2;
         return;
       }
@@ -578,27 +492,19 @@ export default {
 
         console.log(this.currentAsset);
         if (this.currentAsset.assetType.isLSP7) {
-          let transferLSP7Token = await this.$store.dispatch(
-            'lukso/transferLSP7Token',
-            {
-              toAccountAddress:
-                this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
-              tokenAddress: this.currentAsset.assetAddress,
-              amount: this.amount,
-            }
-          );
+          let transferLSP7Token = await this.$store.dispatch('lukso/transferLSP7Token', {
+            toAccountAddress: this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
+            tokenAddress: this.currentAsset.assetAddress,
+            amount: this.amount,
+          });
           console.log('transferLSP7Token', transferLSP7Token);
           this.txHash = transferLSP7Token.transactionHash;
         } else if (this.currentAsset.assetType.isLSP8) {
-          let transferLSP8Token = await this.$store.dispatch(
-            'lukso/transferLSP8Token',
-            {
-              toAccountAddress:
-                this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
-              tokenAddress: this.currentAsset.assetAddress,
-              tokenId: this.currentAsset.tokenId || this.tokenId,
-            }
-          );
+          let transferLSP8Token = await this.$store.dispatch('lukso/transferLSP8Token', {
+            toAccountAddress: this.toAddress || this.recipientVaultSelected.address, // this.toAccountAddress,
+            tokenAddress: this.currentAsset.assetAddress,
+            tokenId: this.currentAsset.tokenId || this.tokenId,
+          });
           console.log('transferLSP8Token', transferLSP8Token);
           this.txHash = transferLSP8Token.transactionHash;
         }
@@ -650,17 +556,14 @@ export default {
       });
     },
     getCurrentDisplayAddressName() {
-      return this.vaultList.find(
-        (v) => v.address === this.currentDisplayAddress
-      )?.name;
+      return this.vaultList.find((v) => v.address === this.currentDisplayAddress)?.name;
     },
     tokenSymbol() {
       return this.currentAsset?.tokenSymbol;
     },
     amountPrefix() {
       if (this.currentAsset)
-        return this.currentAsset.assetType.isLSP7 ||
-          this.currentAsset.assetType.native
+        return this.currentAsset.assetType.isLSP7 || this.currentAsset.assetType.native
           ? 'Balance: '
           : 'Amount: ';
     },
@@ -684,9 +587,7 @@ export default {
       recipientVaultSelected: {},
       showVaults: false,
       selectedAsset: null,
-      TokenAmountRule: [
-        (v) => this.isSufficientAmount(v) === true || 'Insufficient funds',
-      ],
+      TokenAmountRule: [(v) => this.isSufficientAmount(v) === true || 'Insufficient funds'],
     };
   },
 };
@@ -701,6 +602,15 @@ export default {
     fieldset {
       border-color: transparent !important;
     }
+  }
+  input {
+    font-size: 13px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    // color: var(--charcoal-grey);
   }
 }
 
