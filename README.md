@@ -1,6 +1,6 @@
 # About WalliD wallet
 
-WalliD wallet is an aggregator of digital ID protocols and networks and allows users to create and manage an Ethereum wallet (address, public and private keys) through a javascript enabled browser extension. <br>
+WalliD wallet is an aggregator of digital ID protocols and networks and allows users to create and manage an Ethereum wallet (address, public and private keys) through a javascript enabled browser extension.
 It enables users' authentication on dApps or centralized Webapps and it provides a seamless experience to manage all kinds of digital IDs or non-finantial assets (decentralized and centralized) and allow for a self-sovereign storage of multiple wallet or Digital ID asset keys in the browser local memory, empowering users to provide a proof-of-ownership over all assets from those networks in dApps or centralized webapps.<br> 
 The `src` folder contains all the code that describes the plugin's behaviour and features. More specifically, the *scripts* folder contains all of the plugin's backend code. 
 
@@ -111,11 +111,18 @@ As part of our mission to build WalliD wallet as an aggregator of all EVM compat
 - Multi- key management - to enable a seamless management of different private keys and seed phrases, ensuring a seamless transition from Metamask or any other wallet into a single wallet manager (WalliD)
 - Integration with other digital ID protocols - such as PolygonID, Ceramic network, EBSI, Proof-of-humanity and others
 
-
-#### NOTE
+#### Note
 
 This extension is built using ManifestV2. Google has recently launched ManifestV3 which introduces a big shift to the extensions platform, notably the replacement of background pages for service workers.
 
-#### REQUIREMENTS
+#### Requirements
 
 - Node v16.13.2
+
+#### Team members
+
+- [Filipe Veiga](https://www.linkedin.com/in/fiveiga/) - filipe.veiga@wallid.io
+- [Vitor Viana](https://www.linkedin.com/in/vviana/) - vitor.viana@wallid.io
+- [Beatriz Pereira](https://www.linkedin.com/in/beatrizpereira215/) - beatriz.pereira@wallid.io
+- [Guilherme Arsénio](https://www.linkedin.com/in/guilherme-ars%C3%A9nio-4b6a1a148/) - guilherme.arsenio@wallid.io
+- [Nuno Feio](https://www.linkedin.com/in/nunofeio/) - nuno.feio@wallid.io
