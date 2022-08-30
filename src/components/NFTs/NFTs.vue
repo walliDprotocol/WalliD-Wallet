@@ -1,16 +1,8 @@
 <template>
-  <v-container
-    class="credentials list-storage"
-    style="overflow-y: auto; height: 208px"
-  >
+  <v-container class="credentials list-storage" style="overflow-y: auto; height: 208px">
     <v-row v-if="NFTAssets.length > 0">
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
-      <v-col
-        v-for="asset in NFTAssets"
-        :key="asset.id"
-        cols="12"
-        class="py-0 px-1 mt-1 mb-2 card"
-      >
+      <v-col v-for="asset in NFTAssets" :key="asset.id" cols="12" class="py-0 px-1 mt-1 mb-2 card">
         <Asset
           :image="asset.assetImagePath"
           :title="getAssetName(asset)"
@@ -31,7 +23,7 @@
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item>
+              <v-list-item @click="checkOnChain(asset)">
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
                   Check on-chain
                 </v-list-item-title>
@@ -45,9 +37,7 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="openSendAssetModal(asset)">
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  Send
-                </v-list-item-title>
+                <v-list-item-title class="SECUNDARY-LINKS text-left"> Send </v-list-item-title>
               </v-list-item>
               <v-list-item @click="shareProfile(asset)">
                 <v-list-item-title class="SECUNDARY-LINKS text-left">
@@ -67,11 +57,7 @@
         </Asset>
       </v-col>
       <v-col v-if="!isLukso" cols="12" class="py-0 px-1 mt-1 mb-2 card">
-        <v-container
-          class="px-3 pt-4"
-          @click="openImportAssetModal()"
-          style="cursor: pointer"
-        >
+        <v-container class="px-3 pt-4" @click="openImportAssetModal()" style="cursor: pointer">
           <v-row>
             <v-col cols="2">
               <StoredProfileImg :size="38" :name="'AddProfile'" />
@@ -80,9 +66,7 @@
               <v-container class="py-0">
                 <v-row>
                   <v-col cols="12" class="py-0 pr-0">
-                    <div class="MAIN-LINKS links" color="#01a3b0">
-                      Import an NFT
-                    </div>
+                    <div class="MAIN-LINKS links" color="#01a3b0">Import an NFT</div>
                   </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields"></p>
@@ -95,11 +79,7 @@
         <!-- <ImportAssetModal v-if="showImportAssetModal" :asset="'NFT'" /> -->
       </v-col>
     </v-row>
-    <v-row
-      v-else
-      class="px-4"
-      style="background: white; height: 196px; overflow-y: hidden"
-    >
+    <v-row v-else class="px-4" style="background: white; height: 196px; overflow-y: hidden">
       <v-col cols="12" class="px-16 py-9">
         <p class="SECUNDARY-LINKS mb-5">
           Seems like you don’t have
@@ -125,8 +105,10 @@ export default {
   },
   computed: {
     ...mapGetters('networks', ['currentNetwork', 'networksList', 'chainId']),
-
     ...mapGetters(['assets', 'currentCred']),
+    getChainURL() {
+      return this.currentNetwork?.blockExplorer + 'address/';
+    },
     NFTAssets: function () {
       return this.assets.filter(function (el) {
         return el.assetType.isLSP8;
@@ -138,11 +120,7 @@ export default {
   },
   methods: {
     getAssetName(asset) {
-      return (
-        asset.tokenName +
-        ' #' +
-        this.$options.filters.truncate(asset.tokenId, 12, '...')
-      );
+      return asset.tokenName + ' #' + this.$options.filters.truncate(asset.tokenId, 12, '...');
     },
     getAssetType(assetType) {
       if (assetType.isLSP8) return 'LSP8';
@@ -167,6 +145,9 @@ export default {
       this.$store.commit('setCurrentCred', asset);
 
       this.$router.push({ name: 'SHARE_PROFILE_VIEW', params: { asset } });
+    },
+    checkOnChain(card) {
+      window.open(this.getChainURL + card.assetAddress, '_blank');
     },
   },
   data() {

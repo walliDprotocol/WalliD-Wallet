@@ -1,8 +1,5 @@
 <template>
-  <v-container
-    class="credentials list-storage"
-    style="overflow-y: auto; height: 208px"
-  >
+  <v-container class="credentials list-storage" style="overflow-y: auto; height: 208px">
     <v-row v-if="fungibleTokenAssets.length > 0">
       <!-- TO DO: filter assets array by assetType (only fungibleTokens), make sure native token appears first-->
       <v-col
@@ -30,14 +27,8 @@
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item
-                v-if="asset.tokenName"
-                :class="asset.status != 'active' ? '' : ''"
-              >
-                <v-list-item-title
-                  class="SECUNDARY-LINKS text-left"
-                  @click="proofPage(asset)"
-                >
+              <v-list-item v-if="asset.tokenName" :class="asset.status != 'active' ? '' : ''">
+                <v-list-item-title class="SECUNDARY-LINKS text-left" @click="checkOnChain(asset)">
                   Check on-chain
                 </v-list-item-title>
               </v-list-item>
@@ -51,14 +42,10 @@
                 v-if="asset.tokenName && !asset.assetType.native"
                 @click="openSendAssetModal(asset)"
               >
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  Send
-                </v-list-item-title>
+                <v-list-item-title class="SECUNDARY-LINKS text-left"> Send </v-list-item-title>
               </v-list-item>
               <v-list-item v-if="!isLukso" @click="openDeleteAssetModal(asset)">
-                <v-list-item-title class="SECUNDARY-LINKS text-left">
-                  Delete
-                </v-list-item-title>
+                <v-list-item-title class="SECUNDARY-LINKS text-left"> Delete </v-list-item-title>
               </v-list-item>
             </v-list>
           </template>
@@ -74,9 +61,7 @@
             <v-col cols="8" class="pl-6 pr-0">
               <v-container class="py-0">
                 <v-row>
-                  <v-col cols="12" class="py-0 pr-0 MAIN-LINKS links">
-                    Import custom token
-                  </v-col>
+                  <v-col cols="12" class="py-0 pr-0 MAIN-LINKS links"> Import custom token </v-col>
                   <v-col cols="12" class="py-0">
                     <p class="sub-title-fields"></p>
                   </v-col>
@@ -115,8 +100,10 @@ export default {
   },
   computed: {
     ...mapGetters('networks', ['currentNetwork', 'networksList', 'chainId']),
-
     ...mapGetters(['assets']),
+    getChainURL() {
+      return this.currentNetwork?.blockExplorer + 'address/';
+    },
     fungibleTokenAssets() {
       console.log('assets', this.assets);
       return this.assets.filter((el) => {
@@ -162,9 +149,7 @@ export default {
         return card.userData?.imgArray?.[0];
       }
       return (
-        card.userData?.credential_img ||
-        card.userData?.frontend_props?.preview ||
-        card.photoURL
+        card.userData?.credential_img || card.userData?.frontend_props?.preview || card.photoURL
       );
     },
     downloadURL(card) {
@@ -191,11 +176,8 @@ export default {
 
       this.$store.commit('setCurrentCred', card);
     },
-    proofPage(card) {
-      this.$store.commit('setCurrentCred', card);
-
-      this.$router.push({ name: 'SHARE_PROFILE_VIEW' });
-      // this.$router.push({ name: 'Proof' });
+    checkOnChain(card) {
+      window.open(this.getChainURL + card.assetAddress, '_blank');
     },
 
     isValid(_expDate) {
