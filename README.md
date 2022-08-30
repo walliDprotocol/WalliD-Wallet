@@ -1,10 +1,24 @@
-## WalliD Chrome Extension
+#About WalliD wallet
 
-The WalliD is a Chrome browser extension that enables users to interact with WalliD's protocol, platforms and APIs.
+WalliD wallet is an aggregator of digital ID protocols and networks and allows users to create and manage an Ethereum wallet (address, public and private keys) through a javascript enabled browser extension. <br>
+It enables users' authentication on dApps or centralized Webapps and it provides a seamless experience to manage all kinds of digital IDs or non-finantial assets (decentralized and centralized) and allow for a self-sovereign storage of multiple wallet or Digital keys in the browser local memory, empowering users to provide a proof-of-ownership over all assets from those networks in dApps or centralized webapps.<br> 
+The *src* folder contains all the code that describes the plugin's behaviour and features. More specifically, the *scripts* folder contains all of the plugin's backend code. 
+
+WalliD is a Chrome browser extension that enables users to interact with WalliD's protocol, platforms and APIs.
 The _src_ folder contains all the code that describes the plugin's behaviour and functionalities. More specifically, the _scripts_ folder contains all of the plugin's backend code.
 Detailed information about the _scripts_ folder can be found bellow.
 
 ---
+
+##LUKSO buildup Hackathon 2022 implementation:
+
+During the network hackthon we implemented the features and methods that allow users to have a native LUKSO experience, more specifically:
+
+- Connect to the L16 Public Network
+- Import Universal Profiles and assets from the network (LYX, LSP7 and LSP9 tokens)
+- Create Vaults
+- Send tokens to external addresses
+- Send tokens across vaults
 
 ### /src/scripts:
 
@@ -85,6 +99,23 @@ Detailed information about the _scripts_ folder can be found bellow.
 
   - **getMetadata:** Gets the metadata from a given assetAddress and a ownerAddress, for LSP8 a tokenId is required as well
 ---
+
+##What was already built before the hacktahon:
+
+WalliD wallet is a product built by WalliD and most of the features that allowed for users to authenticate on dApps (through wallet connect) or centralized WebApps and to store centralized digital IDs (such as PKI-based IDs or Web2 accounts) or prove their ownership were already developed. More specifically:
+
+- Guilherme
+- 
+
+##What's next in our development pipeline:
+
+As part of our mission to build WalliD wallet as an aggregator of all EVM compatible networks and tailor-made for non-finantial assets from centralized and decentralized protocols and in order to enable all LUKSO and other EVM chains users to use it as their single wallet to navigate these networks and manage all kinds of assets, we will be working on the following until the end of 2022:
+
+- Web3 methods implemntation - to enable the interactuon with smart contracts
+- Multi-account management - to enable a customized ID protfolio associated to one or more addresses
+- Multi- key management - to enable a seamless management of different private keys and seed phrases, ensuring a seamless transition from Metamask or any other wallet into a single wallet manager (WalliD)
+- Integration with other digital ID protocols - such as PolygonID, Ceramic network, EBSI, Proof-of-humanity and others
+
 
 #### NOTE
 
