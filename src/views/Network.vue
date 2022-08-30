@@ -12,9 +12,8 @@
                 <h2 class="T1">Lukso Universal Profile</h2>
               </div>
               <h3 class="sub-title-fields">
-                You’ll need a Universal Profile to interact with Lukso network.
-                Create a new Universal Profile or import an existing using it’s
-                private key.
+                You’ll need a Universal Profile to interact with Lukso network. Create a new
+                Universal Profile or import an existing using it’s private key.
               </h3>
             </v-col>
             <v-col cols="12" class="pt-7">
@@ -43,14 +42,10 @@
           <v-row>
             <v-col>
               <a
+                @click="close()"
                 href="https://docs.lukso.tech/standards/universal-profile/introduction/"
                 target="_blank"
-                style="
-                  text-decoration: none;
-                  color: #009fb1;
-                  font-size: 12px;
-                  font-weight: 500;
-                "
+                style="text-decoration: none; color: #009fb1; font-size: 12px; font-weight: 500"
               >
                 Know more about Lukso’s Universal Profiles
               </a>
@@ -67,10 +62,7 @@
                   <ArrowBack />
                 </v-btn>
                 <h2 class="T1">
-                  {{
-                    (path === 'create' ? 'Create ' : 'Import ') +
-                    'a Universal Profile'
-                  }}
+                  {{ (path === 'create' ? 'Create ' : 'Import ') + 'a Universal Profile' }}
                 </h2>
               </div>
             </v-col>
@@ -82,9 +74,7 @@
             </v-col>
             <v-col cols="12" class="pt-0 pb-2">
               <label class="sub-title-fields">
-                {{
-                  path === 'create' ? 'Username' : 'Universal Profile Address'
-                }}
+                {{ path === 'create' ? 'Username' : 'Universal Profile Address' }}
               </label>
               <v-text-field
                 v-model="username"
@@ -101,12 +91,7 @@
               <v-btn text @click="step = 1" class="cancel-btn">Cancel</v-btn>
             </v-col>
             <v-col cols="6" class="pt-1">
-              <v-btn
-                :loading="isLoading"
-                text
-                @click="setupUniversalProfile"
-                class="advance-btn"
-              >
+              <v-btn :loading="isLoading" text @click="setupUniversalProfile" class="advance-btn">
                 {{ (path === 'create' ? 'Create ' : 'Import ') + 'Profile' }}
               </v-btn>
             </v-col>
@@ -187,12 +172,9 @@ export default {
         if (error) this.validAddressError = error;
         if (myUPAddress) this.$router.go('-1');
       } else {
-        let { myUPAddress } = await this.$store.dispatch(
-          'lukso/createUniversalProfile',
-          {
-            username: this.username,
-          }
-        );
+        let { myUPAddress } = await this.$store.dispatch('lukso/createUniversalProfile', {
+          username: this.username,
+        });
         if (myUPAddress) this.$router.go('-1');
       }
 
@@ -201,10 +183,7 @@ export default {
     checkForm() {
       this.validAddressError = '';
 
-      if (
-        this.path === 'import' &&
-        !this.validateAddress(this.username).isValid
-      ) {
+      if (this.path === 'import' && !this.validateAddress(this.username).isValid) {
         this.validAddressError = 'Please enter a valid address';
       } else {
         return;
