@@ -1,4 +1,4 @@
-#About WalliD wallet
+# About WalliD wallet
 
 WalliD wallet is an aggregator of digital ID protocols and networks and allows users to create and manage an Ethereum wallet (address, public and private keys) through a javascript enabled browser extension. <br>
 It enables users' authentication on dApps or centralized Webapps and it provides a seamless experience to manage all kinds of digital IDs or non-finantial assets (decentralized and centralized) and allow for a self-sovereign storage of multiple wallet or Digital keys in the browser local memory, empowering users to provide a proof-of-ownership over all assets from those networks in dApps or centralized webapps.<br> 
@@ -10,7 +10,7 @@ Detailed information about the _scripts_ folder can be found bellow.
 
 ---
 
-##LUKSO buildup Hackathon 2022 implementation:
+## LUKSO buildup Hackathon 2022 implementation:
 
 During the network hackthon we implemented the features and methods that allow users to have a native LUKSO experience, more specifically:
 
