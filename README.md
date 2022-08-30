@@ -114,10 +114,18 @@ As part of our mission to build WalliD wallet as an aggregator of all EVM compat
 - Integration with other digital ID protocols - such as PolygonID, Ceramic network, EBSI, Proof-of-humanity and others
 
 
-#### NOTE
+#### Note
 
 This extension is built using ManifestV2. Google has recently launched ManifestV3 which introduces a big shift to the extensions platform, notably the replacement of background pages for service workers.
 
-#### REQUIREMENTS
+#### Requirements
 
 - Node v16.13.2
+
+#### Team members
+
+- [Filipe Veiga](https://www.linkedin.com/in/fiveiga/) - filipe.veiga@wallid.io
+- [Vitor Viana](https://www.linkedin.com/in/vviana/) - vitor.viana@wallid.io
+- [Beatriz Pereira](https://www.linkedin.com/in/beatrizpereira215/) - beatriz.pereira@wallid.io
+- [Guilherme Arsénio](https://www.linkedin.com/in/guilherme-ars%C3%A9nio-4b6a1a148/) - guilherme.arsenio@wallid.io
+- [Nuno Feio](https://www.linkedin.com/in/nunofeio/) - nuno.feio@wallid.io
