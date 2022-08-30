@@ -7,6 +7,7 @@ The `src` folder contains all the code that describes the plugin's behaviour and
 ---
 
 ## LUKSO buildup Hackathon 2022 implementation:
+> Go to [Lukso-build branch](https://github.com/walliDprotocol/WalliD-Wallet/tree/lukso-build) to access all folders and files built during LUKSO Buildup Hackathon
 
 During the hackthon we implemented the features and methods that allow users to have a native LUKSO experience, more specifically:
 
