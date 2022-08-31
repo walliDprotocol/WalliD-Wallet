@@ -99,8 +99,11 @@ The content-script provides a way for the plugin to interact with WebApps. The s
 
 WalliD wallet is a product built by WalliD and most of the features that allowed for users to authenticate on dApps (through wallet connect) or centralized WebApps and to store centralized digital IDs (such as PKI-based IDs or Web2 accounts) or prove their ownership were already developed. More specifically:
 
-- Guilherme
-- 
+- Wallet signature - a signature based on the wallet private key
+- Web2 account storage - possibility to store online accounts to then prove their ownership
+- IDs storage - store centralized IDs and prove your ownership
+- Signature validation - verify signatures using the private key
+- Assets management and visualization - delete and view IDs and online accounts 
 
 ## What's next in our development pipeline:
 
